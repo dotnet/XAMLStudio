@@ -232,6 +232,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.Toolkit.Future\Microsoft.Toolkit.Future.csproj">
+      <Project>{ba818f63-02d8-4ce7-b6fb-475678144c07}</Project>
+      <Name>Microsoft.Toolkit.Future</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

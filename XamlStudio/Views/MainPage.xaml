@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ex="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+    xmlns:future="using:Microsoft.Toolkit.Uwp.UI.Controls.Future"
     Style="{StaticResource PageStyle}"
     mc:Ignorable="d">
 
@@ -27,27 +28,32 @@
                     ex:NavigationViewExtensions.SelectedIndex="0"
                     ex:NavigationViewExtensions.CollapseOnClick="True">
             <NavigationView.MenuItems>
-                <NavigationViewItem Content="Explorer" Tag="Some Text">
+                <NavigationViewItem Content="Explorer" Tag="EXPLORER">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE8C8;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Source Control" Tag="Some Other Text">
+                <NavigationViewItem Content="Image Sources" Tag="IMAGES">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xF22C;"/>
+                        <FontIcon Glyph="&#xEB9F;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Debug" Tag="More Text">
+                <NavigationViewItem Content="Data Sources" Tag="DATA SOURCE">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xEE94;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Debug" Tag="BINDING DEBUGGER">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xEBE8;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Extensions" Tag="Additional Text">
+                <NavigationViewItem Content="Toolbox" Tag="TOOLBOX">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE74C;"/>
+                        <FontIcon Glyph="&#xE821;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Search" Tag="Final Text">
+                <NavigationViewItem Content="Search" Tag="SEARCH">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE094;"/>
                     </NavigationViewItem.Icon>
@@ -63,16 +69,26 @@
                 </Grid.RowDefinitions>
                 <Border Grid.Row="0"
                     Background="LightGray">
-                    <TextBlock x:Name="Header"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            Margin="16,0,0,0"
-                            Foreground="Black"
-                            Text="{Binding ElementName=NavMenu, Path=SelectedItem.Content}" />
+                    <future:SwitchPresenter Value="{Binding ElementName=NavMenu, Path=SelectedItem.Content}">
+                        <future:Case Value="Settings">
+                            <TextBlock HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"
+                                       Margin="16,0,0,0"
+                                       Foreground="Black"
+                                       Text="SETTINGS" />
+                        </future:Case>
+                        <future:Case IsDefault="True">
+                            <TextBlock HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"
+                                       Margin="16,0,0,0"
+                                       Foreground="Black"
+                                       Text="{Binding ElementName=NavMenu, Path=SelectedItem.Tag}" />
+                        </future:Case>
+                    </future:SwitchPresenter>
                 </Border>
                 <TextBlock Grid.Row="1"
                        Margin="8"
-                       Text="{Binding ElementName=NavMenu, Path=SelectedItem.Tag}"/>
+                       Text="{Binding ElementName=NavMenu, Path=SelectedItem.Content}"/>
             </Grid>
         </NavigationView>
         <Grid Grid.Column="1" Margin="16">
