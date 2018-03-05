@@ -4,6 +4,7 @@
     xmlns:local="using:Microsoft.Toolkit.Future">
 
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///Microsoft.Toolkit.Future/Controls/ContentSizer/ContentSizer.xaml" />
         <ResourceDictionary Source="ms-appx:///Microsoft.Toolkit.Future/Controls/SwitchPresenter/SwitchPresenter.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
