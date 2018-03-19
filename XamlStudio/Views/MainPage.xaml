@@ -5,7 +5,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ex="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+    xmlns:exf="using:Microsoft.Toolkit.Uwp.UI.Extensions.Future"
     xmlns:future="using:Microsoft.Toolkit.Uwp.UI.Controls.Future"
+    xmlns:local="using:XamlStudio.Views"
     Style="{StaticResource PageStyle}"
     mc:Ignorable="d">
 
@@ -25,8 +27,8 @@
         <NavigationView x:Name="NavMenu"
                     Style="{StaticResource VSCodeActivityBarStyle}"
                     MenuItemContainerStyle="{StaticResource LargeIconNavigationViewItemStyle}"
-                    ex:NavigationViewExtensions.SelectedIndex="0"
-                    ex:NavigationViewExtensions.CollapseOnClick="True">
+                    exf:NavigationViewExtensions.SelectedIndex="0"
+                    exf:NavigationViewExtensions.CollapseOnClick="True">
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="Explorer" Tag="EXPLORER">
                     <NavigationViewItem.Icon>
@@ -93,9 +95,15 @@
                         </future:Case>
                     </future:SwitchPresenter>
                 </Border>
-                <TextBlock Grid.Row="1"
-                       Margin="8"
-                       Text="{Binding ElementName=NavMenu, Path=SelectedItem.Content}"/>
+                <future:SwitchPresenter Value="{Binding ElementName=NavMenu, Path=SelectedItem.Content}" Grid.Row="1">
+                    <future:Case Value="Explorer">
+                        <local:Explorer/>
+                    </future:Case>
+                    <future:Case IsDefault="True">
+                        <TextBlock Margin="8"
+                                   Text="{Binding ElementName=NavMenu, Path=SelectedItem.Content}"/>
+                    </future:Case>
+                </future:SwitchPresenter>
             </Grid>
         </NavigationView>
         <Grid Grid.Column="1" Margin="16">

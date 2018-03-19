@@ -1,0 +1,41 @@
+﻿<Page
+    x:Class="XamlStudio.Views.Explorer"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:XamlStudio.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:xc="using:WinRTXamlToolkit.Controls"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:future="using:Microsoft.Toolkit.Uwp.UI.Controls.Future"
+    mc:Ignorable="d">
+
+    <!--<Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///WinRTXamlToolkit/Controls/TreeView/TreeViewMouse.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>-->
+
+    <StackPanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <controls:Expander Header="OPEN EDITORS">
+            <ListBox/>
+        </controls:Expander>
+        <future:SwitchPresenter>
+            <future:Case IsDefault="True">
+                <controls:Expander Header="NO FOLDER OPENED" IsExpanded="True">
+                    <StackPanel Margin="16">
+                        <TextBlock>You have not yet opened a folder.</TextBlock>
+                        <Button Margin="0,8,0,0">Open Folder</Button>
+                    </StackPanel>
+                </controls:Expander>
+            </future:Case>
+            <future:Case Value="True">
+                <controls:Expander Header="{Binding FolderName}">
+                    <xc:TreeView/>
+                </controls:Expander>
+            </future:Case>
+        </future:SwitchPresenter>
+    </StackPanel>
+</Page>

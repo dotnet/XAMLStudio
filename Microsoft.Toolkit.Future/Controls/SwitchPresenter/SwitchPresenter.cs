@@ -151,7 +151,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Future
                 // Disconnect old content from visual tree.
                 if (CurrentCase != null && CurrentCase.Content != null)
                 {
-                    VisualTreeHelper.DisconnectChildrenRecursive(CurrentCase.Content);
+                    // TODO: If we disconnect here, we need to recreate later?
+                    // Provide Option?
+                    //VisualTreeHelper.DisconnectChildrenRecursive(CurrentCase.Content);
                 }
 
                 // Hookup new content.

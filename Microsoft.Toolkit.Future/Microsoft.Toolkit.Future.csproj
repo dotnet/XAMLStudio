@@ -112,6 +112,7 @@
     <Compile Include="Controls\SwitchPresenter\Case.cs" />
     <Compile Include="Controls\SwitchPresenter\CaseCollection.cs" />
     <Compile Include="Controls\SwitchPresenter\SwitchPresenter.cs" />
+    <Compile Include="Extensions\NavigationView\NavigationViewExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Microsoft.Toolkit.Future.rd.xml" />
   </ItemGroup>
