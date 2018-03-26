@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using XamlStudio.ViewModels;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -22,6 +23,8 @@ namespace XamlStudio.Views
     /// </summary>
     public sealed partial class Explorer : Page
     {
+        public MainViewModel MainViewModel { get; set; }
+
         public Explorer()
         {
             this.InitializeComponent();

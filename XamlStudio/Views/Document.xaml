@@ -1,0 +1,82 @@
+﻿<UserControl
+    x:Class="XamlStudio.Views.Document"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:XamlPad.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
+    xmlns:xp="using:XamlPad.Extensions.Converters"
+    xmlns:monaco="using:Monaco"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <UserControl.Resources>
+        <converters:BoolNegationConverter x:Key="BoolNegationConverter"/>
+        <!--<xp:StringToUriConverter x:Key="StringToUriConverter"/>
+        <xp:XamlBindingWrapperConverter x:Key="XamlBindingWrapper"/>-->
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="11" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"
+              x:Name="XamlRoot"
+              Grid.Row="0"/>
+
+        <!--Row Grid Splitter-->
+        <controls:GridSplitter
+        Grid.Row="1"
+        Height="11"
+        Background="Black"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch">
+            <controls:GridSplitter.Element>
+                <Grid>
+                    <TextBlock HorizontalAlignment="Center"
+                            IsHitTestVisible="False"
+                            VerticalAlignment="Center"
+                            Text="&#xE76F;"
+                            Foreground="White"
+                            FontFamily="Segoe MDL2 Assets">
+                    </TextBlock>
+                </Grid>
+            </controls:GridSplitter.Element>
+        </controls:GridSplitter>
+
+        <monaco:CodeEditor Grid.Row="2"
+                       x:Name="CodeEditor"
+                       CodeLanguage="xml" 
+                       Text="{x:Bind ViewModel.Document.Content, Mode=TwoWay}">
+            <i:Interaction.Behaviors>
+                <ic:EventTriggerBehavior EventName="LostFocus">
+                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.UpdateXamlCommand}" />
+                </ic:EventTriggerBehavior>
+                <ic:EventTriggerBehavior EventName="KeyDown">
+                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.KeyDownCommand}" />
+                </ic:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+        </monaco:CodeEditor>
+
+        <controls:Loading x:Name="LoadingControl" 
+                          IsLoading="{x:Bind CodeEditor.IsLoaded, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}"
+                          HorizontalContentAlignment="Stretch" 
+                          VerticalContentAlignment="Stretch"
+                          Grid.Row="0"
+                          Grid.RowSpan="3"
+                          Background="Black" 
+                          Opacity="0.6">
+            <ProgressRing IsActive="True" 
+                          Foreground="{ThemeResource SystemControlForegroundAccentBrush}" 
+                          Height="64"
+                          Width="64"/>
+        </controls:Loading>
+    </Grid>
+</UserControl>

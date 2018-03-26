@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:XamlStudio.Views"
+    xmlns:model="using:XamlStudio.Models"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:xc="using:WinRTXamlToolkit.Controls"
@@ -122,8 +123,14 @@
         </Style>               
     </Page.Resources>
 
-    <StackPanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Border Style="{StaticResource VSCodeAppBarHeaderStyle}">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Border Style="{StaticResource VSCodeAppBarHeaderStyle}"
+                Grid.Row="0">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -132,17 +139,25 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Style="{StaticResource VSCodeAppBarHeaderTextStyle}">EXPLORER</TextBlock>
                 <Button Grid.Column="1" Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
-                    <SymbolIcon Symbol="OpenFile" fex:SymbolIconExtensions.FontSize="12"/>
+                    <SymbolIcon Symbol="OpenFile" fex:SymbolIconExtensions.FontSize="12" />
                 </Button>
-                <Button Grid.Column="2" Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
-                    <SymbolIcon Symbol="Add" fex:SymbolIconExtensions.FontSize="12"/>
+                <Button Grid.Column="2" Style="{StaticResource VSCodeAppBarHeaderButtonStyle}"
+                        Command="{x:Bind MainViewModel.NewDocumentCommand}">
+                    <SymbolIcon Symbol="Add" fex:SymbolIconExtensions.FontSize="12" />
                 </Button>
             </Grid>
         </Border>
-        <controls:Expander Header="OPEN EDITORS">
-            <ListBox/>
+        <controls:Expander Header="OPEN EDITORS" IsExpanded="True"
+                           Grid.Row="1">
+            <ListBox ItemsSource="{x:Bind MainViewModel.OpenFiles}" SelectedItem="{x:Bind MainViewModel.ActiveFile, Mode=TwoWay}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate x:DataType="model:XamlDocument">
+                        <TextBlock Text="{Binding Title}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </controls:Expander>
-        <future:SwitchPresenter>
+        <future:SwitchPresenter Grid.Row="2">
             <future:Case IsDefault="True">
                 <controls:Expander Header="NO FOLDER OPENED" IsExpanded="True">
                     <StackPanel Margin="16">
@@ -157,5 +172,5 @@
                 </controls:Expander>
             </future:Case>
         </future:SwitchPresenter>
-    </StackPanel>
+    </Grid>
 </Page>

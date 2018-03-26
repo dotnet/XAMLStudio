@@ -140,6 +140,7 @@
     <Compile Include="Helpers\RelayCommand.cs" />
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
     <Compile Include="Models\WorkspaceWindow.cs" />
+    <Compile Include="Models\XamlDocument.cs" />
     <Compile Include="Services\ActivationService.cs" />
     <Compile Include="Activation\DefaultLaunchActivationHandler.cs" />
     <Compile Include="Services\NavigationService.cs" />
@@ -149,10 +150,15 @@
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="Services\ViewLifetimeControl.cs" />
     <Compile Include="Services\WindowManagerService.cs" />
+    <Compile Include="ViewModels\DocumentViewModel.cs" />
     <Compile Include="ViewModels\ExplorerViewModel.cs" />
+    <Compile Include="ViewModels\MainViewModel.Commands.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\SettingsPanelViewModel.cs" />
     <Compile Include="ViewModels\UriSchemeExampleViewModel.cs" />
+    <Compile Include="Views\Document.xaml.cs">
+      <DependentUpon>Document.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Explorer.xaml.cs">
       <DependentUpon>Explorer.xaml</DependentUpon>
     </Compile>
@@ -196,6 +202,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Views\Document.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Explorer.xaml">
       <SubType>Designer</SubType>

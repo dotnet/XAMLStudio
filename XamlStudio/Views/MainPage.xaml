@@ -75,7 +75,7 @@
 
                 <future:SwitchPresenter Value="{Binding ElementName=NavMenu, Path=SelectedItem.Content}">
                     <future:Case Value="Explorer">
-                        <local:Explorer />
+                        <local:Explorer MainViewModel="{x:Bind ViewModel}"/>
                     </future:Case>
                     <future:Case Value="Settings">
                         <Border Background="DarkGray">
@@ -98,8 +98,19 @@
                 </future:SwitchPresenter>
             </Grid>
         </NavigationView>
-        <Grid Grid.Column="1" Margin="16">
-            <TextBlock>Main App Content Area</TextBlock>
+        <Grid Grid.Column="1">
+            <future:SwitchPresenter x:Name="MainContent"
+                                    Value="{x:Bind ViewModel.ActiveFile.IsWelcome, Mode=OneWay}"
+                                    TargetType="x:Boolean">
+                <future:Case Value="True">
+                    <TextBlock FontSize="16"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center">Welcome to XAML Studio!</TextBlock>
+                </future:Case>
+                <future:Case Value="False">
+                    <local:Document LoadedDocument="{x:Bind ViewModel.ActiveFile, Mode=OneWay}" />
+                </future:Case>
+            </future:SwitchPresenter>
         </Grid>
     </Grid>
 </Page>

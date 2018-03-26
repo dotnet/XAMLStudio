@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
@@ -16,7 +17,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Future
         public Case CurrentCase
         {
             get { return (Case)GetValue(CurrentCaseProperty); }
-            set { SetValue(CurrentCaseProperty, value); }
+            private set { SetValue(CurrentCaseProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for CurrentCase.  This enables animation, styling, binding, etc...
@@ -42,6 +43,16 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Future
         // Using a DependencyProperty as the backing store for Value.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register(nameof(Value), typeof(object), typeof(SwitchPresenter), new PropertyMetadata(null, new PropertyChangedCallback(OnValuePropertyChanged)));
+
+        public Type TargetType
+        {
+            get { return (Type)GetValue(DataTypeProperty); }
+            set { SetValue(DataTypeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for DataType.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty DataTypeProperty =
+            DependencyProperty.Register(nameof(TargetType), typeof(Type), typeof(SwitchPresenter), new PropertyMetadata(null));
 
         private static void OnSwitchCasesPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -132,7 +143,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Future
                     continue;
                 }
 
-                if (xcase.Value != null && xcase.Value.Equals(Value))
+                if (xcase.Value != null && CompareValues(Value, xcase.Value))
                 {
                     newcase = xcase;
                     break;
@@ -161,6 +172,73 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Future
 
                 CurrentCase = newcase;
             }
+        }
+
+        /// <summary>
+        /// Compares two values using the TargetType.
+        /// </summary>
+        /// <param name="compare">Our main value in our SwitchPresenter.</param>
+        /// <param name="value">The value from the case to compare to.</param>
+        /// <returns></returns>
+        private bool CompareValues(object compare, object value)
+        {
+            if (compare == null || value == null)
+            {
+                return compare == value;
+            }
+            
+            if (TargetType == null || 
+                (TargetType == compare.GetType() &&
+                 TargetType == value.GetType())) 
+            {
+                // Default direct object comparison or we're all the proper type
+                return compare.Equals(value);
+            }
+            else if (compare.GetType() == TargetType)
+            {
+                // If we have a TargetType and the first value is ther right type
+                // Then our 2nd value isn't, so convert to string and coerce.
+                var valueBase2 = ConvertValue(TargetType, value.ToString());
+
+                return compare.Equals(valueBase2);
+            }
+            
+            // Neither of our two values matches the type so
+            // we'll convert both to a String and try and coerce it to the proper type.
+            var compareBase = ConvertValue(TargetType, compare.ToString());
+
+            var valueBase = ConvertValue(TargetType, value.ToString());
+
+            return compareBase.Equals(valueBase);
+        }
+
+        private object ConvertValue(Type targetType, string value)
+        {
+            // https://docs.microsoft.com/en-us/windows/uwp/xaml-platform/xaml-intrinsic-data-types
+            if (targetType == typeof(bool)) // x:Boolean
+            {
+                bool.TryParse(value, out bool result);
+                return result;
+            }
+            else if (targetType == typeof(int)) // x:Int32
+            {
+                int.TryParse(value, out int result);
+                return result;
+            }
+            else if (targetType == typeof(double)) // x:Double
+            {
+                double.TryParse(value, out double result);
+                return result;
+            }
+            else if (targetType == typeof(string)) // x:String
+            {
+                return value;
+            }
+
+            // TODO: Add reflection that looks for 'TryParse' method on object
+            // Or CreateFromString class attribute?
+
+            return value;
         }
     }
 }
