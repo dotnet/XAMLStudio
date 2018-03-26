@@ -10,6 +10,7 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:future="using:Microsoft.Toolkit.Uwp.UI.Controls.Future"
     xmlns:fex="using:Microsoft.Toolkit.Uwp.UI.Extensions.Future"
+    xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
     mc:Ignorable="d">
 
     <!--<Page.Resources>
@@ -120,13 +121,14 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-        </Style>               
+        </Style>
+        <converters:BoolToObjectConverter x:Key="BoolToGridLength" TrueValue="*" FalseValue="Auto" />
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="{Binding ElementName=OpenEditorsExpander, Path=IsExpanded, Converter={StaticResource BoolToGridLength}}"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Border Style="{StaticResource VSCodeAppBarHeaderStyle}"
@@ -147,7 +149,9 @@
                 </Button>
             </Grid>
         </Border>
-        <controls:Expander Header="OPEN EDITORS" IsExpanded="True"
+        <controls:Expander x:Name="OpenEditorsExpander"
+                           Header="OPEN EDITORS" IsExpanded="True"
+                           VerticalContentAlignment="Top"
                            Grid.Row="1">
             <ListBox ItemsSource="{x:Bind MainViewModel.OpenFiles}" SelectedItem="{x:Bind MainViewModel.ActiveFile, Mode=TwoWay}">
                 <ListBox.ItemTemplate>
@@ -157,7 +161,8 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </controls:Expander>
-        <future:SwitchPresenter Grid.Row="2">
+        <future:SwitchPresenter x:Name="FolderExpander"
+                                Grid.Row="2">
             <future:Case IsDefault="True">
                 <controls:Expander Header="NO FOLDER OPENED" IsExpanded="True">
                     <StackPanel Margin="16">

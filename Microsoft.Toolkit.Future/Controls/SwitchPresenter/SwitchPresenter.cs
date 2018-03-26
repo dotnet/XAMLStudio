@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -198,47 +199,36 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Future
             {
                 // If we have a TargetType and the first value is ther right type
                 // Then our 2nd value isn't, so convert to string and coerce.
-                var valueBase2 = ConvertValue(TargetType, value.ToString());
+                var valueBase2 = ConvertValue(TargetType, value);
 
                 return compare.Equals(valueBase2);
             }
             
             // Neither of our two values matches the type so
             // we'll convert both to a String and try and coerce it to the proper type.
-            var compareBase = ConvertValue(TargetType, compare.ToString());
+            var compareBase = ConvertValue(TargetType, compare);
 
-            var valueBase = ConvertValue(TargetType, value.ToString());
+            var valueBase = ConvertValue(TargetType, value);
 
             return compareBase.Equals(valueBase);
         }
 
-        private object ConvertValue(Type targetType, string value)
+        /// <summary>
+        /// Helper method to convert a value from a source type to a target type.
+        /// </summary>
+        /// <param name="value">The value to convert</param>
+        /// <param name="targetType">The target type</param>
+        /// <returns>The converted value</returns>
+        internal static object ConvertValue(Type targetType, object value)
         {
-            // https://docs.microsoft.com/en-us/windows/uwp/xaml-platform/xaml-intrinsic-data-types
-            if (targetType == typeof(bool)) // x:Boolean
-            {
-                bool.TryParse(value, out bool result);
-                return result;
-            }
-            else if (targetType == typeof(int)) // x:Int32
-            {
-                int.TryParse(value, out int result);
-                return result;
-            }
-            else if (targetType == typeof(double)) // x:Double
-            {
-                double.TryParse(value, out double result);
-                return result;
-            }
-            else if (targetType == typeof(string)) // x:String
+            if (targetType.IsInstanceOfType(value))
             {
                 return value;
             }
-
-            // TODO: Add reflection that looks for 'TryParse' method on object
-            // Or CreateFromString class attribute?
-
-            return value;
+            else
+            {
+                return XamlBindingHelper.ConvertValue(targetType, value);
+            }
         }
     }
 }

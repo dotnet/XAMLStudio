@@ -42,7 +42,6 @@ namespace XamlStudio.Views
                 var document = (sender as Document);
                 if (document != null) {
                     // TODO: Move these to a central spot for the control itself vs. the document.
-                    document.CodeEditor.Options.Language = "xml"; // TODO: Workaround for https://github.com/hawkerm/monaco-editor-uwp/issues/10
                     document.CodeEditor.Options.Folding = true;
 
                     document.ViewModel.Document = args.NewValue as XamlDocument;
