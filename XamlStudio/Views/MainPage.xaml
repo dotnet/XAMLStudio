@@ -78,13 +78,14 @@
                         <local:Explorer MainViewModel="{x:Bind ViewModel}"/>
                     </future:Case>
                     <future:Case Value="Settings">
-                        <Border Background="DarkGray">
+                        <!--<Border Background="DarkGray">
                             <TextBlock HorizontalAlignment="Left"
                                         VerticalAlignment="Center"
                                         Margin="16,0,0,0"
                                         Foreground="Black"
                                         Text="SETTINGS" />
-                        </Border>
+                        </Border>-->
+                        <local:SettingsPanelPage />
                     </future:Case>
                     <future:Case IsDefault="True">
                         <Border Background="DarkGray">
