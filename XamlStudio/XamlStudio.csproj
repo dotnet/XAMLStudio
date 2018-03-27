@@ -145,12 +145,15 @@
     <Compile Include="Activation\DefaultLaunchActivationHandler.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\OnBackgroundEnteringEventArgs.cs" />
+    <Compile Include="Services\SettingsService.cs" />
+    <Compile Include="Services\SettingsService.Properties.cs" />
     <Compile Include="Services\SuspendAndResumeService.cs" />
     <Compile Include="Services\SuspensionState.cs" />
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="Services\ViewLifetimeControl.cs" />
     <Compile Include="Services\WindowManagerService.cs" />
     <Compile Include="ViewModels\DocumentViewModel.cs" />
+    <Compile Include="ViewModels\DocumentViewModel.Methods.cs" />
     <Compile Include="ViewModels\ExplorerViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.Commands.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
@@ -259,6 +262,10 @@
     <ProjectReference Include="..\Microsoft.Toolkit.Future\Microsoft.Toolkit.Future.csproj">
       <Project>{ba818f63-02d8-4ce7-b6fb-475678144c07}</Project>
       <Name>Microsoft.Toolkit.Future</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XamlStudio.Toolkit\XamlStudio.Toolkit.csproj">
+      <Project>{E8DC98C8-3BEE-430B-B844-AD5B57CA859C}</Project>
+      <Name>XamlStudio.Toolkit</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

@@ -9,15 +9,15 @@
     xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
-    xmlns:xp="using:XamlPad.Extensions.Converters"
+    xmlns:xstc="using:XamlStudio.Toolkit.Converters"
     xmlns:monaco="using:Monaco"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
     <UserControl.Resources>
         <converters:BoolNegationConverter x:Key="BoolNegationConverter"/>
-        <!--<xp:StringToUriConverter x:Key="StringToUriConverter"/>
-        <xp:XamlBindingWrapperConverter x:Key="XamlBindingWrapper"/>-->
+        <xstc:StringToUriConverter x:Key="StringToUriConverter"/>
+        <xstc:XamlBindingWrapperConverter x:Key="XamlBindingWrapper"/>
     </UserControl.Resources>
 
     <Grid>

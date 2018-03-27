@@ -41,19 +41,7 @@ namespace XamlStudio.Views
             {
                 var document = (sender as Document);
                 if (document != null) {
-                    // TODO: Move these to a central spot for the control itself vs. the document.
-                    document.CodeEditor.Options.Folding = true;
-
                     document.ViewModel.Document = args.NewValue as XamlDocument;
-
-                    // Pass Reference to our Control so we can 'render' to it.
-                    document.ViewModel.XamlRoot = document.XamlRoot;
-
-                    // Listen for Line Highlighting Changes and Update our Editor
-                    document.ViewModel.Compiled += (sender2, args2) =>
-                    {
-                        document.CodeEditor.Decorations = document.ViewModel.LineDecorations;
-                    };
 
                     // Render XAML
                     document.ViewModel.UpdateXamlCommand.Execute(null);
@@ -64,7 +52,18 @@ namespace XamlStudio.Views
         {
             this.InitializeComponent();
 
-            this.ViewModel = new DocumentViewModel();
+            ViewModel = new DocumentViewModel();
+
+            // Pass Reference to our Control so we can 'render' to it.
+            ViewModel.XamlRoot = XamlRoot;
+
+            // Listen for Line Highlighting Changes and Update our Editor
+            ViewModel.Compiled += (sender2, args2) =>
+            {
+                CodeEditor.Decorations = ViewModel.LineDecorations;
+            };
+
+            CodeEditor.Options.Folding = true;
         }
     }
 }
