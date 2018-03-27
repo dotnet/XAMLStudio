@@ -25,32 +25,18 @@ namespace XamlStudio.ViewModels
             }
         }
 
-        private void NewDocument(RoutedEventArgs args)
+        private ICommand _openDocumentCommand;
+        public ICommand OpenDocumentCommand
         {
-            OpenFiles.Add(new Models.XamlDocument("Untitled-" + _untitledCount++)
+            get
             {
-                Content =
-@"<Page
-    xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
-    xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""
-    xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
-    xmlns:mc=""http://schemas.openxmlformats.org/markup-compatibility/2006""
-    mc:Ignorable=""d"">
+                if (_openDocumentCommand == null)
+                {
+                    _openDocumentCommand = new RelayCommand<RoutedEventArgs>(OpenDocument);
+                }
 
-    <Grid Background=""{ThemeResource ApplicationPageBackgroundThemeBrush}"">
-        <TextBlock>
-            <Run FontSize=""24"">Get Started with XAML Studio</Run><LineBreak/>
-            <Run> Modify this text below to see a live preview.</Run>
-        </TextBlock>
-    </Grid>
-</Page>"
-            });
-            ////Documents.Add(new DocumentViewModel(TemplatedDocument()));
-
-            ////SelectedDocument = Documents.Last();
-
-            // Select Workspace Page
-            ////NavigationService.Navigate(typeof(WorkspacePage));
+                return _openDocumentCommand;
+            }
         }
     }
 }

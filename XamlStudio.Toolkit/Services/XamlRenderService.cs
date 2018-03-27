@@ -310,8 +310,19 @@ namespace XamlStudio.Toolkit.Services
                     return content;
                 }
 
+                // Need 'x' namespace for resource key in our converter wrapper...
+                if (!content.Contains("xmlns:x"))
+                {
+                    // Find the end of the first tag
+                    var oti = content.IndexOf(">");
+                    if (oti != -1)
+                    {
+                        content = content.Substring(0, oti) + @" xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""" + content.Substring(oti);
+                    }
+                }
+
                 // Inject our extension namespace (if needed), so we have access to our Binding Wrapper.
-                if (!content.Contains("xmlns:xstc"))
+                if (!content.Contains("xmlns:xstc="))
                 {
                     // Find the end of the first tag
                     var oti = content.IndexOf(">");

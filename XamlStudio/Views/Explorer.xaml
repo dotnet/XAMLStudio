@@ -140,7 +140,8 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Style="{StaticResource VSCodeAppBarHeaderTextStyle}">EXPLORER</TextBlock>
-                <Button Grid.Column="1" Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
+                <Button Grid.Column="1" Style="{StaticResource VSCodeAppBarHeaderButtonStyle}"
+                        Command="{x:Bind MainViewModel.OpenDocumentCommand}">
                     <SymbolIcon Symbol="OpenFile" fex:SymbolIconExtensions.FontSize="12" />
                 </Button>
                 <Button Grid.Column="2" Style="{StaticResource VSCodeAppBarHeaderButtonStyle}"

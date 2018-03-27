@@ -156,6 +156,7 @@
     <Compile Include="ViewModels\DocumentViewModel.Methods.cs" />
     <Compile Include="ViewModels\ExplorerViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.Commands.cs" />
+    <Compile Include="ViewModels\MainViewModel.Commands.Impl.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\SettingsPanelViewModel.cs" />
     <Compile Include="ViewModels\UriSchemeExampleViewModel.cs" />
