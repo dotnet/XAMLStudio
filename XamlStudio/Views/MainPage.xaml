@@ -77,6 +77,9 @@
                     <future:Case Value="Explorer">
                         <local:Explorer MainViewModel="{x:Bind ViewModel}"/>
                     </future:Case>
+                    <future:Case Value="Debug">
+                        <local:Binding MainViewModel="{x:Bind ViewModel}"/>
+                    </future:Case>
                     <future:Case Value="Settings">
                         <!--<Border Background="DarkGray">
                             <TextBlock HorizontalAlignment="Left"
@@ -85,7 +88,7 @@
                                         Foreground="Black"
                                         Text="SETTINGS" />
                         </Border>-->
-                        <local:SettingsPanelPage />
+                        <local:SettingsPanelPage MainViewModel="{x:Bind ViewModel}"/>
                     </future:Case>
                     <future:Case IsDefault="True">
                         <Border Background="DarkGray">
@@ -109,7 +112,7 @@
                                VerticalAlignment="Center">Welcome to XAML Studio!</TextBlock>
                 </future:Case>
                 <future:Case Value="False">
-                    <local:Document LoadedDocument="{x:Bind ViewModel.ActiveFile, Mode=OneWay}" />
+                    <local:Document x:Name="Document" LoadedDocument="{x:Bind ViewModel.ActiveFile, Mode=OneWay}" MainViewModel="{x:Bind ViewModel}" />
                 </future:Case>
             </future:SwitchPresenter>
         </Grid>

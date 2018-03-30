@@ -22,17 +22,17 @@ namespace XamlStudio.ViewModels
 
             LineDecorations.Clear(); // Clear out old errors
 
-            xamlRenderer.IsBindingDebuggingEnabled = SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value;
+            XamlRenderer.IsBindingDebuggingEnabled = SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value;
 
             // Pre-parse            
             var content = Document.Content;
 
-            UIElement element = await xamlRenderer.Render(content);
+            UIElement element = await XamlRenderer.Render(content);
 
             if (element == null)
             {
                 // Highlight Errors
-                foreach (var error in xamlRenderer.Errors)
+                foreach (var error in XamlRenderer.Errors)
                 {
                     LineDecorations.Add(new IModelDeltaDecoration(new Range(error.StartLine, error.StartColumn, error.EndLine, error.EndColumn),
                         new IModelDecorationOptions()
@@ -73,7 +73,7 @@ namespace XamlStudio.ViewModels
         private void CreateBindingDecorations()
         {
             // Highlight Bindings
-            foreach (var binding in XamlBindingWrapperManager.Instance.GetBindings(xamlRenderer.Id))
+            foreach (var binding in XamlRenderer.Bindings)
             {
                 // TODO: Does monaco-editor support inplace updating?  If so, should look into plumbing that
                 switch (binding.LastKnownBindingState)

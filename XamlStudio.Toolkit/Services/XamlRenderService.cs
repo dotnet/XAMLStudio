@@ -14,7 +14,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media.Imaging;
-using XamlStudio.Toolkit.Services;
+using XamlStudio.Toolkit.Models;
 
 namespace XamlStudio.Toolkit.Services
 {
@@ -57,10 +57,15 @@ namespace XamlStudio.Toolkit.Services
         public bool IsBindingDebuggingEnabled { get; set; }
 
         /// <summary>
+        /// Gets the list of Bindings found when <see cref="IsBindingDebuggingEnabled"/> is turned on.  Cleared and Populated after a call to Render.
+        /// </summary>
+        public IEnumerable<XamlBindingInfo> Bindings { get { return XamlBindingWrapperManager.Instance.GetBindings(Id); } }
+
+        /// <summary>
         /// Set the explicit DataContext used on the root UIElement.
         /// </summary>
         public object DataContext { get; set; }
-
+        
         public XamlRenderService()
         {
             XamlBindingWrapperManager.Instance.Register(this.Id, this);

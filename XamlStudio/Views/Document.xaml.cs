@@ -27,6 +27,8 @@ namespace XamlStudio.Views
     {
         private string[] _decorations = Array.Empty<string>();
 
+        public MainViewModel MainViewModel { get; set; }
+
         public DocumentViewModel ViewModel { get; private set; }
 
         public XamlDocument LoadedDocument
@@ -64,6 +66,13 @@ namespace XamlStudio.Views
             };
 
             CodeEditor.Options.Folding = true;
+
+            Loaded += Document_Loaded;
+        }
+
+        private void Document_Loaded(object sender, RoutedEventArgs e)
+        {
+            MainViewModel.DocumentViewModel = ViewModel;   
         }
     }
 }

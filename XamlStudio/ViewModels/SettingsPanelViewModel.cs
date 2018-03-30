@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 using Windows.ApplicationModel;
 using Windows.UI.Xaml;
-
+using Windows.UI.Xaml.Controls;
 using XamlStudio.Helpers;
 using XamlStudio.Services;
 
@@ -73,8 +73,11 @@ namespace XamlStudio.ViewModels
             }
         }
 
+        public ICommand SwitchPowerBindingCommand { get; private set; }
+
         public SettingsPanelViewModel()
         {
+            SwitchPowerBindingCommand = new RelayCommand<RoutedEventArgs>(SwitchPowerBinding);
         }
 
         public void Initialize()
@@ -89,6 +92,11 @@ namespace XamlStudio.ViewModels
             var version = packageId.Version;
 
             return $"{package.DisplayName} - {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+        }
+
+        private void SwitchPowerBinding(RoutedEventArgs args)
+        {
+            SettingsService.Instance.IsPowerBindingDebuggingEnabled = (args.OriginalSource as ToggleSwitch).IsOn;
         }
     }
 }

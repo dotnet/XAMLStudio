@@ -9,7 +9,9 @@ namespace XamlStudio.Views
 {
     public sealed partial class SettingsPanelPage : Page
     {
-        public SettingsPanelViewModel ViewModel { get; } = new SettingsPanelViewModel();
+        public SettingsPanelViewModel ViewModel { get { return MainViewModel.SettingsViewModel; } }
+
+        public MainViewModel MainViewModel { get; set; }
 
         //// TODO WTS: Change the URL for your privacy policy in the Resource File, currently set to https://YourPrivacyUrlGoesHere
 

@@ -84,7 +84,7 @@ namespace XamlStudio.ViewModels
             }
         }
 
-        private XamlRenderService xamlRenderer { get; } = new XamlRenderService();
+        public XamlRenderService XamlRenderer { get; } = new XamlRenderService();
 
         public DocumentViewModel()
         {
