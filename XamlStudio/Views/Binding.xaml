@@ -14,12 +14,32 @@
     xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:services="using:XamlStudio.Services"
+    xmlns:models="using:XamlStudio.Toolkit.Models"
+    xmlns:globalization="using:System.Globalization"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <DataTemplate x:Key="ConversionRecordTemplate" x:DataType="models:ConversionRecord">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock Text="{x:Bind Value.ToString()}" Grid.Column="0"/>
+                <TextBlock Text="{x:Bind Result.ToString()}" Grid.Column="1"/>
+                <TextBlock Text="{x:Bind TimeStamp.ToString('HH:mm:ss.fffffff', globalization:CultureInfo.CurrentCulture)}" Style="{ThemeResource CaptionTextBlockStyle}" Grid.Row="1"/>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Border Style="{StaticResource VSCodeAppBarHeaderStyle}"
                 Grid.Row="0"
@@ -27,11 +47,17 @@
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="96"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="90"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Style="{StaticResource VSCodeAppBarHeaderTextStyle}">BINDING DEBUGGER</TextBlock>
+                <TextBlock Style="{StaticResource VSCodeAppBarHeaderTextStyle}">DEBUG</TextBlock>
+                <ComboBox x:Name="BindingViewMode" Grid.Column="1" SelectedIndex="1"
+                          Margin="0,0,12,0">
+                    <x:String>Bindings</x:String>
+                    <x:String>History</x:String>
+                </ComboBox>
                 <ToggleSwitch
-                    Grid.Column="1"
+                    Grid.Column="2"
                     x:Uid="Settings_PowerBindingToggle"
                     x:Name="PowerBindingToggle"
                     IsOn="{x:Bind services:SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value, Mode=OneWay}"
@@ -40,11 +66,37 @@
                     <i:Interaction.Behaviors>
                         <ic:EventTriggerBehavior EventName="Toggled">
                             <ic:InvokeCommandAction Command="{x:Bind MainViewModel.SettingsViewModel.SwitchPowerBindingCommand}"/>
+                            <ic:ChangePropertyAction TargetObject="{x:Bind MainViewModel.DocumentViewModel}" PropertyName="HasCompiled" Value="false" />
+                            <ic:InvokeCommandAction Command="{x:Bind MainViewModel.DocumentViewModel.UpdateXamlCommand}"/>
                         </ic:EventTriggerBehavior>
                     </i:Interaction.Behaviors>
                 </ToggleSwitch>
             </Grid>
         </Border>
-        <ListView Grid.Row="1" ItemsSource="{x:Bind MainViewModel.DocumentViewModel.XamlRenderer.Bindings, Mode=OneWay}"/>
+        <future:SwitchPresenter Value="{x:Bind BindingViewMode.SelectedValue, Mode=OneWay}" Grid.Row="1">
+            <future:Case Value="Bindings">
+                <ListView ItemsSource="{x:Bind MainViewModel.DocumentViewModel.Result.Bindings, Mode=OneWay}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="models:XamlBindingInfo">
+                            <controls:Expander Header="{x:Bind OriginalBindingString}"
+                                               HorizontalContentAlignment="Stretch">
+                                <!-- TODO: Use ACV here too. -->
+                                <ListView ItemsSource="{x:Bind BindingHistory}"
+                                          ItemTemplate="{StaticResource ConversionRecordTemplate}"/>
+                            </controls:Expander>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </future:Case>
+            <future:Case Value="History">
+                <ListView ItemsSource="{x:Bind MainViewModel.DocumentViewModel.BindingHistory, Mode=OneWay}"
+                          ItemTemplate="{StaticResource ConversionRecordTemplate}" />
+            </future:Case>
+        </future:SwitchPresenter>
+        <TextBlock Grid.Row="1"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   TextWrapping="WrapWholeWords"
+                   Visibility="{x:Bind fex:Bind.NotVisible(services:SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value), Mode=OneWay}">Turn on Binding Debugging to see information here.</TextBlock>
     </Grid>
 </Page>

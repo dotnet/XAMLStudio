@@ -1,7 +1,9 @@
 ﻿using Collections.Generic;
+using Microsoft.Toolkit.Uwp.UI;
 using Monaco.Editor;
 using Monaco.Helpers;
 using System;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Windows.System.Threading;
 using Windows.UI;
@@ -10,6 +12,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using XamlStudio.Helpers;
 using XamlStudio.Models;
+using XamlStudio.Toolkit.Models;
 using XamlStudio.Toolkit.Services;
 
 namespace XamlStudio.ViewModels
@@ -27,6 +30,25 @@ namespace XamlStudio.ViewModels
             set {
                 Set(ref _document, value);
                 HasCompiled = false; // TODO: Reset compiled flag so we can re-render, probably want to cache elements previously rendered in XamlDocument, so we can re-add on document switch
+            }
+        }
+
+        private XamlRenderResultContext _result;
+        public XamlRenderResultContext Result
+        {
+            get { return _result; }
+            set { Set(ref _result, value); }
+        }
+
+        private ObservableCollection<ConversionRecord> _bindingHistory = new ObservableCollection<ConversionRecord>();
+        public AdvancedCollectionView BindingHistory
+        {
+            get
+            {
+                var acv = new AdvancedCollectionView(_bindingHistory);
+                acv.SortDescriptions.Add(new SortDescription("TimeStamp", SortDirection.Descending));
+
+                return acv;
             }
         }
 

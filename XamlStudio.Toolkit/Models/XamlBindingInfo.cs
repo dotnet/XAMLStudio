@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace XamlStudio.Toolkit.Models
             ConversionError,
         }
 
-        public delegate void BindingUpdatedHandler(XamlBindingInfo sender, object newValue);
+        public delegate void BindingUpdatedHandler(XamlBindingInfo sender, ConversionRecord record, object newValue);
 
         public event BindingUpdatedHandler BindingUpdated;
 
@@ -37,7 +38,7 @@ namespace XamlStudio.Toolkit.Models
         public int Length { get { return this.OriginalBindingString.Length; } }
 
         // TODO: Create a Binding Log window in Xaml Studio which shows all binding events and lets you group/sort/search by time, value, status (etc...)
-        public List<ConversionRecord> BindingHistory { get; set; } = new List<ConversionRecord>();
+        public ObservableCollection<ConversionRecord> BindingHistory { get; set; } = new ObservableCollection<ConversionRecord>();
 
         // TODO: Make Observable?
 
@@ -87,27 +88,33 @@ namespace XamlStudio.Toolkit.Models
 
         public object NewValue(object value)
         {
-            this.BindingHistory.Add(new ConversionRecord(value));
+            var record = new ConversionRecord(value);
 
-            BindingUpdated?.Invoke(this, value);
+            this.BindingHistory.Add(record);
+
+            BindingUpdated?.Invoke(this, record, value);
 
             return value;
         }
 
         public object NewConversion(object value, object result)
         {
-            this.BindingHistory.Add(new ConversionRecord(value, result));
+            var record = new ConversionRecord(value, result);
 
-            BindingUpdated?.Invoke(this, result);
+            this.BindingHistory.Add(record);
+
+            BindingUpdated?.Invoke(this, record, result);
 
             return result;
         }
 
         public object NewException(object value, Exception error)
         {
-            this.BindingHistory.Add(new ConversionRecord(value, error));
+            var record = new ConversionRecord(value, error);
 
-            BindingUpdated?.Invoke(this, error);
+            this.BindingHistory.Add(record);
+
+            BindingUpdated?.Invoke(this, record, error);
 
             // Pass null in so binding can use default null fallback if it exists on binding fail?
             return null;

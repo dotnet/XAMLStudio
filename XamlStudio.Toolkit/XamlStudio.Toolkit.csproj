@@ -110,6 +110,8 @@
     <Compile Include="Converters\XamlBindingWrapperConverter.cs" />
     <Compile Include="Models\ConversionRecord.cs" />
     <Compile Include="Models\XamlBindingInfo.cs" />
+    <Compile Include="Models\XamlExceptionRange.cs" />
+    <Compile Include="Models\XamlRenderResultContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IdGenerator.cs" />
     <Compile Include="Services\XamlBindingWrapperManager.cs" />

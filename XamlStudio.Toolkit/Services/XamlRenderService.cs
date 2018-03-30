@@ -37,19 +37,9 @@ namespace XamlStudio.Toolkit.Services
         public int Id { get; } = IdGenerator.Next();
 
         /// <summary>
-        /// Last errors from call to Render.
+        /// StorageFolder root folder to look for images and d:DesignData files from.
         /// </summary>
-        public IList<XamlExceptionRange> Errors { get; set; } = new List<XamlExceptionRange>();
-
-        /// <summary>
-        /// StorageFolder root folder to look for d:DesignData files from. (support .json currently)
-        /// </summary>
-        public StorageFolder DataRoot { get; set; }
-
-        /// <summary>
-        /// StorageFolder root folder to start searching for images from.
-        /// </summary>
-        public StorageFolder ImageRoot { get; set; }
+        public StorageFolder ResourceRoot { get; set; }
 
         /// <summary>
         /// Gets or sets the setting for enabling binding debugger.
@@ -71,9 +61,9 @@ namespace XamlStudio.Toolkit.Services
             XamlBindingWrapperManager.Instance.Register(this.Id, this);
         }
 
-        public async Task<UIElement> Render(string content)
+        public async Task<XamlRenderResultContext> Render(string content)
         {
-            Errors.Clear();
+            var result = new XamlRenderResultContext() { Content = content };
             XamlBindingWrapperManager.Instance.Clear(this.Id);  // Remove previous Binding Tracking
 
             /*if (LoadedAssemblies == null)
@@ -139,7 +129,7 @@ namespace XamlStudio.Toolkit.Services
                     column = uint.Parse(msg.Substring(pl + 9, msg.IndexOf("]", pl) - pl - 9));
                 }
 
-                Errors.Add(new XamlExceptionRange(msg, e, line, column, line, column + 8)); // TODO: Inspect Content at this position and go until space / EOL
+                result.Errors.Add(new XamlExceptionRange(msg, e, line, column, line, column + 8)); // TODO: Inspect Content at this position and go until space / EOL
             }
 
             // Need to look for Design-Time 'd:' properties and link to object somehow for modification afterwards as they're ignored by parser usually with mc:Ignorable="d"
@@ -147,6 +137,7 @@ namespace XamlStudio.Toolkit.Services
             try
             {
                 xaml.LoadXml(content);
+                result.Document = xaml;
             }
             catch (Exception e)
             {
@@ -169,7 +160,7 @@ namespace XamlStudio.Toolkit.Services
                     column = uint.Parse(msg.Substring(pl + 8, msg.IndexOf(".", pl) - pl - 8));
                 }
 
-                Errors.Add(new XamlExceptionRange(msg, e, line, column, line, column + 8)); // TODO: Inspect Content at this position and go until space / EOL
+                result.Errors.Add(new XamlExceptionRange(msg, e, line, column, line, column + 8)); // TODO: Inspect Content at this position and go until space / EOL
             }
 
             if (xaml.ChildNodes.Count > 0)
@@ -181,6 +172,7 @@ namespace XamlStudio.Toolkit.Services
                 if (element is FrameworkElement fwe)
                 {
                     fwe.DataContext = this.DataContext == null ? element : this.DataContext;
+                    result.DataContext = fwe.DataContext;
 
                     if (root.Attributes.GetNamedItem("d:DesignWidth") is XmlAttribute dwidth)
                     {
@@ -198,7 +190,7 @@ namespace XamlStudio.Toolkit.Services
                         }
                     }
 
-                    if (root.Attributes.GetNamedItem("d:DataContext") is XmlAttribute ddatacontext && DataRoot != null)
+                    if (root.Attributes.GetNamedItem("d:DataContext") is XmlAttribute ddatacontext && ResourceRoot != null)
                     {
                         var dc = ddatacontext.Value;
                         var ddi = dc.IndexOf("d:DesignData");
@@ -220,10 +212,11 @@ namespace XamlStudio.Toolkit.Services
                                 if (ei != -1)
                                 {
                                     var source = dd.Substring(si + 6, ei - si - 6).Trim('=', ' ');
-                                    var data = await LoadDataSource(DataRoot, source);
+                                    var data = await LoadDataSource(ResourceRoot, source);
                                     if (data != null && element is FrameworkElement)
                                     {
                                         (element as FrameworkElement).DataContext = data;
+                                        result.DataContext = data;
                                     }
                                 }
                             }
@@ -247,7 +240,7 @@ namespace XamlStudio.Toolkit.Services
 
             if (element != null)
             {
-                if (ImageRoot != null)
+                if (ResourceRoot != null)
                 {
                     // Look for Image Objects in order to replace their Sources with our Images Loaded from Disk.
                     Visit(element, async (child) =>
@@ -268,7 +261,7 @@ namespace XamlStudio.Toolkit.Services
                                     uri = uri.Substring(21);
                                 }
 
-                                var imagefile = await GetFileFromPath(ImageRoot, uri);
+                                var imagefile = await GetFileFromPath(ResourceRoot, uri);
                                 var bitmapImage = new BitmapImage();
                                 if (imagefile != null)
                                 {
@@ -284,9 +277,12 @@ namespace XamlStudio.Toolkit.Services
                         }
                     });
                 }
+
+                result.Bindings = XamlBindingWrapperManager.Instance.GetBindings(this.Id);
+                result.Element = element;
             }
 
-            return element;
+            return result;
         }
 
         private const string InitialElementPattern = "<(?<Type>\\w+)";
@@ -608,25 +604,6 @@ namespace XamlStudio.Toolkit.Services
             }
 
             return ContentPropertySearch(type.GetTypeInfo().BaseType);
-        }
-    }
-
-    /// <summary>
-    /// Xaml Parsing Error Message and Location.
-    /// </summary>
-    public sealed class XamlExceptionRange: Exception
-    {
-        public uint StartLine { get; set; }
-        public uint StartColumn { get; set; }
-        public uint EndLine { get; set; }
-        public uint EndColumn { get; set; }
-
-        public XamlExceptionRange(string message, Exception error, uint startline, uint startcol, uint endline, uint endcol): base(message, error)
-        {
-            StartLine = startline;
-            StartColumn = startcol;
-            EndLine = endline;
-            EndColumn = endcol;
         }
     }
 }

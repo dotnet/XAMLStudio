@@ -21,18 +21,19 @@ namespace XamlStudio.ViewModels
             }
 
             LineDecorations.Clear(); // Clear out old errors
+            _bindingHistory.Clear();
 
             XamlRenderer.IsBindingDebuggingEnabled = SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value;
 
             // Pre-parse            
             var content = Document.Content;
 
-            UIElement element = await XamlRenderer.Render(content);
+            Result = await XamlRenderer.Render(content);
 
-            if (element == null)
+            if (Result.Element == null)
             {
                 // Highlight Errors
-                foreach (var error in XamlRenderer.Errors)
+                foreach (var error in Result.Errors)
                 {
                     LineDecorations.Add(new IModelDeltaDecoration(new Range(error.StartLine, error.StartColumn, error.EndLine, error.EndColumn),
                         new IModelDecorationOptions()
@@ -52,19 +53,21 @@ namespace XamlStudio.ViewModels
             }
 
             // Only Update if we have a new well-parsed element.
-            if (element != null)
+            if (Result.Element != null)
             {
                 // Add element to main panel
                 XamlRoot.Children.Clear();
-                XamlRoot.Children.Add(element);
+                XamlRoot.Children.Add(Result.Element);
             }
 
             HasCompiled = true;
             Compiled?.Invoke(this, new EventArgs());
         }
 
-        private void BindingUpdated(XamlBindingInfo binding, object newvalue)
+        private void BindingUpdated(XamlBindingInfo binding, ConversionRecord record, object newvalue)
         {
+            _bindingHistory.Add(record);
+
             LineDecorations.Clear();
             this.CreateBindingDecorations();
             Compiled?.Invoke(this, new EventArgs());
