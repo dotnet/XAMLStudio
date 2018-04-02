@@ -48,6 +48,7 @@
         </Border>
         <controls:Expander x:Name="OpenEditorsExpander"
                            Header="OPEN EDITORS" IsExpanded="True"
+                           HeaderStyle="{StaticResource VSCodeExpanderStyle}"
                            VerticalContentAlignment="Top"
                            Grid.Row="1">
             <ListBox ItemsSource="{x:Bind MainViewModel.OpenFiles}" SelectedItem="{x:Bind MainViewModel.ActiveFile, Mode=TwoWay}">
@@ -61,7 +62,8 @@
         <future:SwitchPresenter x:Name="FolderExpander"
                                 Grid.Row="2">
             <future:Case IsDefault="True">
-                <controls:Expander Header="NO FOLDER OPENED" IsExpanded="True">
+                <controls:Expander Header="NO FOLDER OPENED" IsExpanded="True"
+                                   HeaderStyle="{StaticResource VSCodeExpanderStyle}">
                     <StackPanel Margin="16">
                         <TextBlock>You have not yet opened a folder.</TextBlock>
                         <Button Margin="0,8,0,0">Open Folder</Button>
@@ -69,7 +71,8 @@
                 </controls:Expander>
             </future:Case>
             <future:Case Value="True">
-                <controls:Expander Header="{Binding FolderName}">
+                <controls:Expander Header="{Binding FolderName}" IsExpanded="True"
+                                   HeaderStyle="{StaticResource VSCodeExpanderStyle}">
                     <xc:TreeView/>
                 </controls:Expander>
             </future:Case>

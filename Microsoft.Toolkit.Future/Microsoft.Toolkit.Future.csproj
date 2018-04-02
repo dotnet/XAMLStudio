@@ -123,7 +123,7 @@
       <Version>6.0.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
-      <Version>2.2.0</Version>
+      <Version>3.0.0-build.39</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

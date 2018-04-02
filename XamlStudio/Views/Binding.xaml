@@ -79,6 +79,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="models:XamlBindingInfo">
                             <controls:Expander Header="{x:Bind OriginalBindingString}"
+                                               HeaderStyle="{StaticResource VSCodeExpanderStyle}"
                                                HorizontalContentAlignment="Stretch">
                                 <!-- TODO: Use ACV here too. -->
                                 <ListView ItemsSource="{x:Bind BindingHistory}"
