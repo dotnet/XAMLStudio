@@ -114,6 +114,12 @@
     <Compile Include="Controls\SwitchPresenter\SwitchPresenter.cs" />
     <Compile Include="Extensions\Bind.cs" />
     <Compile Include="Extensions\NavigationView\NavigationViewExtensions.cs" />
+    <Compile Include="Extensions\Pivot\GetPivotCloseButtonCommandConverter.cs" />
+    <Compile Include="Extensions\Pivot\GetPivotGlyphConverter.cs" />
+    <Compile Include="Extensions\Pivot\GetPivotImageConverter.cs" />
+    <Compile Include="Extensions\Pivot\GetPivotItemConverter.cs" />
+    <Compile Include="Extensions\Pivot\PivotExtensions.cs" />
+    <Compile Include="Extensions\Pivot\PivotExtensions.Properties.cs" />
     <Compile Include="Extensions\SymbolIcon\SymbolIconExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Microsoft.Toolkit.Future.rd.xml" />
@@ -136,6 +142,22 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Extensions\Pivot\Pivot.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Extensions\Pivot\Styles\MSEdgePivotStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Extensions\Pivot\Styles\MSEdgeTabStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Extensions\Pivot\Styles\SystemTabStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>

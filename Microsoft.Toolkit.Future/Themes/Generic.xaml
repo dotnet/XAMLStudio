@@ -6,5 +6,6 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///Microsoft.Toolkit.Future/Controls/ContentSizer/ContentSizer.xaml" />
         <ResourceDictionary Source="ms-appx:///Microsoft.Toolkit.Future/Controls/SwitchPresenter/SwitchPresenter.xaml" />
+        <ResourceDictionary Source="ms-appx:///Microsoft.Toolkit.Future/Extensions/Pivot/Pivot.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
