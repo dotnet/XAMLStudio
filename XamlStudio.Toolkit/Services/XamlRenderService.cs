@@ -351,6 +351,8 @@ namespace XamlStudio.Toolkit.Services
                 }
             }
 
+            int offset = 0;
+
             foreach (Match binding in BindingSearcher.Matches(content))
             {
                 var isXBind = binding.Groups["Type"]?.Value == "x:Bind";
@@ -359,8 +361,8 @@ namespace XamlStudio.Toolkit.Services
                 var original = binding.Value;
 
                 // Calculate Editor Based Position // TODO: Make sure we're not out of line with earlier modification steps
-                uint line = 1 + (uint)content.Substring(0, binding.Index).Count(c => c == '\n');
-                var position = binding.Index - content.LastIndexOf('\n', binding.Index);
+                uint line = 1 + (uint)content.Substring(0, binding.Index + offset).Count(c => c == '\n');
+                var position = binding.Index + offset - content.LastIndexOf('\n', binding.Index + offset);
 
                 var bindingInfo = new Models.XamlBindingInfo(line, (uint)position, original);
 
@@ -392,6 +394,9 @@ namespace XamlStudio.Toolkit.Services
                         // Inject back to original string
                         content = content.Replace(newbindingstr, str);
 
+                        // Update positions for next strings
+                        offset += (str.Length - newbindingstr.Length);
+
                         newbindingstr = str;
                     }
                     else if (property.Groups["Property"]?.Value == "ConverterParameter")
@@ -407,6 +412,9 @@ namespace XamlStudio.Toolkit.Services
                         // Inject back to original string
                         content = content.Replace(newbindingstr, str);
 
+                        // Update positions for next strings
+                        offset += (str.Length - newbindingstr.Length);
+
                         newbindingstr = str;
                     }
                 }
@@ -419,13 +427,21 @@ namespace XamlStudio.Toolkit.Services
                     
                     content = content.Replace(newbindingstr, str);
 
+                    // Update positions for next strings
+                    offset += (str.Length - newbindingstr.Length);
+
                     newbindingstr = str;
                 }
 
                 if (!foundConverterParameter)
                 {
+                    var str = newbindingstr.Substring(0, newbindingstr.Length - 2) + ",ConverterParameter=" + bindingInfo.Id + "}" + quoteChar;
+
                     // If no converterparameter on binding, add ours
-                    content = content.Replace(newbindingstr, newbindingstr.Substring(0, newbindingstr.Length - 2) + ",ConverterParameter=" + bindingInfo.Id + "}" + quoteChar);
+                    content = content.Replace(newbindingstr, str);
+
+                    // Update positions for next strings
+                    offset += (str.Length - newbindingstr.Length);
                 }
             }
 
