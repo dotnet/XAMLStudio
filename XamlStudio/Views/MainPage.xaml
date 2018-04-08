@@ -33,32 +33,32 @@
                         exf:NavigationViewExtensions.SelectedIndex="0"
                         exf:NavigationViewExtensions.CollapseOnClick="True">
             <NavigationView.MenuItems>
-                <NavigationViewItem Content="Explorer" Tag="EXPLORER">
+                <NavigationViewItem x:Uid="MainPage_NavMenu_Explorer">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE8C8;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Image Sources" Tag="IMAGES">
+                <NavigationViewItem x:Uid="MainPage_NavMenu_ImageSources">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xEB9F;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Data Sources" Tag="DATA SOURCE">
+                <NavigationViewItem x:Uid="MainPage_NavMenu_DataSources">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xEE94;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Debug" Tag="BINDING DEBUGGER">
+                <NavigationViewItem x:Uid="MainPage_NavMenu_Debug">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xEBE8;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Toolbox" Tag="TOOLBOX">
+                <NavigationViewItem x:Uid="MainPage_NavMenu_Toolbox">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE821;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Search" Tag="SEARCH">
+                <NavigationViewItem x:Uid="MainPage_NavMenu_Search">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE094;"/>
                     </NavigationViewItem.Icon>
@@ -77,20 +77,13 @@
                 </future:ContentSizer>
 
                 <future:SwitchPresenter Value="{Binding ElementName=NavMenu, Path=SelectedItem.Content}">
-                    <future:Case Value="Explorer">
+                    <future:Case Value="{x:Bind exf:Bind.LocalizedString('MainPage_NavMenu_Explorer/Content')}">
                         <local:Explorer MainViewModel="{x:Bind ViewModel}"/>
                     </future:Case>
-                    <future:Case Value="Debug">
+                    <future:Case Value="{x:Bind exf:Bind.LocalizedString('MainPage_NavMenu_Debug/Content')}">
                         <local:Binding MainViewModel="{x:Bind ViewModel}"/>
                     </future:Case>
-                    <future:Case Value="Settings">
-                        <!--<Border Background="DarkGray">
-                            <TextBlock HorizontalAlignment="Left"
-                                        VerticalAlignment="Center"
-                                        Margin="16,0,0,0"
-                                        Foreground="Black"
-                                        Text="SETTINGS" />
-                        </Border>-->
+                    <future:Case Value="{x:Bind exf:Bind.LocalizedString('MainPage_NavMenu_Settings/Content')}">
                         <local:SettingsPanelPage MainViewModel="{x:Bind ViewModel}"/>
                     </future:Case>
                     <future:Case IsDefault="True">

@@ -3,12 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 
 namespace Microsoft.Toolkit.Uwp.UI.Extensions.Future
 {
     public static class Bind
     {
+        private static ResourceLoader _resLoader = ResourceLoader.GetForCurrentView();
+
+        public static string LocalizedString(this string resourceKey)
+        {
+            return _resLoader.GetString(resourceKey);
+        }
+
         /*public static T Ternary<T>(bool expression, object trueObj, object falseObj)
         {
             return (T)(expression ? trueObj : falseObj);

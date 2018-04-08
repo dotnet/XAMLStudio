@@ -145,35 +145,34 @@
     <value>Light</value>
     <comment>Light theme text for SettingsPanel</comment>
   </data>
-  <data name="SettingsPanel_About.Text" xml:space="preserve">    
+  <data name="SettingsPanel_About.Text" xml:space="preserve">
     <value>About this application</value>
     <comment>About this application title for SettingsPanel</comment>
   </data>
-  <data name="SettingsPanel_AboutDescription.Text" xml:space="preserve">    
+  <data name="SettingsPanel_AboutDescription.Text" xml:space="preserve">
     <value>Settings page placeholder text.  Your app description goes here.</value>
     <comment>About this application description for SettingsPanel</comment>
   </data>
-  <data name="SettingsPanel_PrivacyTermsLink.Content" xml:space="preserve">    
+  <data name="SettingsPanel_PrivacyTermsLink.Content" xml:space="preserve">
     <value>Privacy Statement</value>
     <comment>Privacy Statement link content for SettingsPanel</comment>
   </data>
-  <data name="SettingsPanel_PrivacyTermsLink.NavigateUri" xml:space="preserve">  
+  <data name="SettingsPanel_PrivacyTermsLink.NavigateUri" xml:space="preserve">
     <value>https://YourPrivacyUrlGoesHere/</value>
     <comment>Here is your Privacy Statement url for SettingsPanel</comment>
   </data>
-  <data name="SettingsPanel_Personalization.Text" xml:space="preserve">   
+  <data name="SettingsPanel_Personalization.Text" xml:space="preserve">
     <value>Personalization</value>
     <comment>Personalization text for SettingsPanel</comment>
   </data>
-  <data name="ExceptionEnumToBooleanConverterValueMustBeAnEnum" xml:space="preserve">   
+  <data name="ExceptionEnumToBooleanConverterValueMustBeAnEnum" xml:space="preserve">
     <value>value must be an Enum!</value>
     <comment>Value must be an Enum in enum to boolean converter</comment>
   </data>
-  <data name="ExceptionEnumToBooleanConverterParameterMustBeAnEnumName" xml:space="preserve">   
+  <data name="ExceptionEnumToBooleanConverterParameterMustBeAnEnumName" xml:space="preserve">
     <value>parameter must be an Enum name!</value>
     <comment>Parameter must be an Enum name in enum to boolean converter</comment>
   </data>
-  NavigateUri
   <data name="UriSchemeExample_Title.Text" xml:space="preserve">
     <value>URI Scheme Example</value>
     <comment>Page Title for URI Scheme Example</comment>
@@ -185,5 +184,53 @@
   <data name="FeedbackHub_Link.Content" xml:space="preserve">
     <value>Feedback</value>
     <comment>Displayed as the link to launching the Feedback Hub.</comment>
+  </data>
+  <data name="MainPage_NavMenu_DataSources.Content" xml:space="preserve">
+    <value>Data Source</value>
+    <comment>DataSources ActivityBar Tooltip</comment>
+  </data>
+  <data name="MainPage_NavMenu_DataSources.Tag" xml:space="preserve">
+    <value>DATA SOURCE</value>
+    <comment>DataSources ActivityBar Title</comment>
+  </data>
+  <data name="MainPage_NavMenu_Debug.Content" xml:space="preserve">
+    <value>Debug Bindings</value>
+    <comment>Debug ActivityBar Tooltip</comment>
+  </data>
+  <data name="MainPage_NavMenu_Debug.Tag" xml:space="preserve">
+    <value>BINDING DEBUGGER</value>
+    <comment>Debug ActivityBar Title</comment>
+  </data>
+  <data name="MainPage_NavMenu_Explorer.Content" xml:space="preserve">
+    <value>Explorer</value>
+    <comment>Explorer ActivityBar Tooltip</comment>
+  </data>
+  <data name="MainPage_NavMenu_Explorer.Tag" xml:space="preserve">
+    <value>EXPLORER</value>
+    <comment>Explorer ActivityBar Title</comment>
+  </data>
+  <data name="MainPage_NavMenu_ImageSources.Content" xml:space="preserve">
+    <value>Image Sources</value>
+    <comment>ImageSources ActivityBar Tooltip</comment>
+  </data>
+  <data name="MainPage_NavMenu_ImageSources.Tag" xml:space="preserve">
+    <value>IMAGES</value>
+    <comment>ImageSources ActivityBar Title</comment>
+  </data>
+  <data name="MainPage_NavMenu_Search.Content" xml:space="preserve">
+    <value>Search</value>
+    <comment>Search ActivityBar Tooltip</comment>
+  </data>
+  <data name="MainPage_NavMenu_Search.Tag" xml:space="preserve">
+    <value>SEARCH</value>
+    <comment>Search ActivityBar Title</comment>
+  </data>
+  <data name="MainPage_NavMenu_Toolbox.Content" xml:space="preserve">
+    <value>Toolbox</value>
+    <comment>Toolbox ActivityBar Tooltip</comment>
+  </data>
+  <data name="MainPage_NavMenu_Toolbox.Tag" xml:space="preserve">
+    <value>TOOLBOX</value>
+    <comment>Toolbox ActivityBar Title</comment>
   </data>
 </root>
