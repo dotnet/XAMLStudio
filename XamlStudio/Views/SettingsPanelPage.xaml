@@ -4,9 +4,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
     Style="{StaticResource PageStyle}"
     xmlns:helper="using:XamlStudio.Helpers"
     xmlns:xaml="using:Windows.UI.Xaml"
+    xmlns:sys="using:System"
     mc:Ignorable="d">
     <Page.Resources>
         <helper:EnumToBooleanConverter x:Key="EnumToBooleanConverter" EnumType="ElementTheme" />
@@ -21,68 +24,146 @@
                 Grid.Row="0">
             <TextBlock Style="{StaticResource VSCodeAppBarHeaderTextStyle}">SETTINGS</TextBlock>
         </Border>
-        <StackPanel Margin="{StaticResource MediumLeftRightMargin}" Grid.Row="1">
-            <TextBlock
-                x:Uid="SettingsPanel_Personalization"
-                Style="{StaticResource SubtitleTextBlockStyle}" />
-
-            <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
+        <ScrollViewer Grid.Row="1">
+            <StackPanel Margin="{StaticResource MediumLeftRightMargin}">
                 <TextBlock
-                    x:Uid="SettingsPanel_Theme"
-                    Style="{StaticResource BodyTextStyle}" />
+                    x:Uid="SettingsPanel_XAML"
+                    Margin="{StaticResource EightTopMargin}"
+                    Style="{StaticResource SubtitleTextBlockStyle}" />
+
+                <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
+                    <TextBlock
+                        x:Uid="SettingsPanel_AutoCompile"
+                        Style="{StaticResource BodyTextStyle}"/>
+                    <ToggleSwitch
+                        x:Uid="SettingsPanel_AutoCompileToggle"
+                        x:Name="AutoCompileToggle"
+                        IsOn="{x:Bind ViewModel.Settings.IsAutoCompileEnabled.Value, Mode=OneWay}"
+                        Margin="0,4,0,0">
+                        <i:Interaction.Behaviors>
+                            <ic:EventTriggerBehavior EventName="Toggled">
+                                <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchAutoCompileCommand}"/>
+                            </ic:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+                    </ToggleSwitch>
+                </StackPanel>
+
+                <StackPanel Margin="{StaticResource SettingsSubheaderMargin}"
+                            Visibility="{x:Bind AutoCompileToggle.IsOn, Mode=OneWay}">
+                    <TextBlock
+                        x:Uid="SettingsPanel_AutoCompileDelay"
+                        Style="{StaticResource BodyTextStyle}"/>
+                    <Grid Margin="0,4,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="30"/>
+                        </Grid.ColumnDefinitions>
+                        <Slider
+                            x:Uid="SettingsPanel_AutoCompileDelaySlider"
+                            x:Name="AutoCompileDelaySlider"
+                            Grid.Column="0"
+                            Minimum="0.5" Maximum="5"
+                            SmallChange="0.1" LargeChange="1"
+                            StepFrequency="0.1" TickFrequency="1"
+                            TickPlacement="Outside"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Stretch"
+                            Value="{x:Bind ViewModel.Settings.AutoCompileDelay.Value, Mode=OneWay}">
+                            <i:Interaction.Behaviors>
+                                <ic:EventTriggerBehavior EventName="ValueChanged">
+                                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.DelayChangedCommand}"/>
+                                </ic:EventTriggerBehavior>
+                            </i:Interaction.Behaviors>
+                        </Slider>
+                        <TextBlock 
+                            MinWidth="30"
+                            Grid.Column="1"
+                            Margin="12,8,0,0"
+                            Text="{x:Bind sys:String.Format('{0:0.0}', AutoCompileDelaySlider.Value), Mode=OneWay}"/>
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
+                    <TextBlock
+                        x:Uid="SettingsPanel_PowerBinding"
+                        Style="{StaticResource BodyTextStyle}"/>
+                    <ToggleSwitch
+                        x:Uid="SettingsPanel_PowerBindingToggle"
+                        x:Name="PowerBindingToggle"
+                        IsOn="{x:Bind ViewModel.Settings.IsPowerBindingDebuggingEnabled.Value, Mode=OneWay}"
+                        Margin="0,4,0,0">
+                        <i:Interaction.Behaviors>
+                            <ic:EventTriggerBehavior EventName="Toggled">
+                                <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchPowerBindingCommand}"/>
+                            </ic:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+                    </ToggleSwitch>
+                </StackPanel>
+            
+                <TextBlock
+                    x:Uid="SettingsPanel_Personalization"
+                    Style="{StaticResource SubtitleTextBlockStyle}" />
+
+                <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
+                    <TextBlock
+                        x:Uid="SettingsPanel_Theme"
+                        Style="{StaticResource BodyTextStyle}" />
+
+                    <StackPanel Margin="{StaticResource EightTopMargin}">
+                        <RadioButton
+                            x:Uid="SettingsPanel_Theme_Light"
+                            GroupName="AppTheme"
+                            IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}"
+                            Command="{x:Bind ViewModel.SwitchThemeCommand}">
+                            <RadioButton.CommandParameter>
+                                <xaml:ElementTheme>Light</xaml:ElementTheme>
+                            </RadioButton.CommandParameter>
+                        </RadioButton>
+                        <RadioButton
+                            x:Uid="SettingsPanel_Theme_Dark"
+                            GroupName="AppTheme"
+                            IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}"
+                            Command="{x:Bind ViewModel.SwitchThemeCommand}">
+                            <RadioButton.CommandParameter>
+                                <xaml:ElementTheme>Dark</xaml:ElementTheme>
+                            </RadioButton.CommandParameter>
+                        </RadioButton>
+                        <RadioButton
+                            x:Uid="SettingsPanel_Theme_Default"
+                            GroupName="AppTheme"
+                            IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default, Mode=OneWay}"
+                            Command="{x:Bind ViewModel.SwitchThemeCommand}">
+                            <RadioButton.CommandParameter>
+                                <xaml:ElementTheme>Default</xaml:ElementTheme>
+                            </RadioButton.CommandParameter>
+                        </RadioButton>
+                    </StackPanel>
+                </StackPanel>
+
+                <TextBlock
+                        x:Uid="SettingsPanel_About"
+                        Style="{StaticResource SubtitleTextBlockStyle}"/>
 
                 <StackPanel Margin="{StaticResource EightTopMargin}">
-                    <RadioButton
-                        x:Uid="SettingsPanel_Theme_Light"
-                        GroupName="AppTheme"
-                        IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}"
-                        Command="{x:Bind ViewModel.SwitchThemeCommand}">
-                        <RadioButton.CommandParameter>
-                            <xaml:ElementTheme>Light</xaml:ElementTheme>
-                        </RadioButton.CommandParameter>
-                    </RadioButton>
-                    <RadioButton
-                        x:Uid="SettingsPanel_Theme_Dark"
-                        GroupName="AppTheme"
-                        IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}"
-                        Command="{x:Bind ViewModel.SwitchThemeCommand}">
-                        <RadioButton.CommandParameter>
-                            <xaml:ElementTheme>Dark</xaml:ElementTheme>
-                        </RadioButton.CommandParameter>
-                    </RadioButton>
-                    <RadioButton
-                        x:Uid="SettingsPanel_Theme_Default"
-                        GroupName="AppTheme"
-                        IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default, Mode=OneWay}"
-                        Command="{x:Bind ViewModel.SwitchThemeCommand}">
-                        <RadioButton.CommandParameter>
-                            <xaml:ElementTheme>Default</xaml:ElementTheme>
-                        </RadioButton.CommandParameter>
-                    </RadioButton>
+                    <TextBlock
+                        Text="{x:Bind ViewModel.VersionDescription, Mode=OneWay}"
+                        Style="{StaticResource BodyTextStyle}"/>
+
+                    <TextBlock
+                        x:Uid="SettingsPanel_AboutDescription"
+                        Style="{StaticResource BodyTextStyle}"/>
+
+                    <HyperlinkButton
+                        x:Uid="SettingsPanel_PrivacyTermsLink"
+                        Margin="{StaticResource EightTopMargin}" />
+
+                    <HyperlinkButton
+                        Margin="{StaticResource EightTopMargin}"
+                        x:Uid="FeedbackHub_Link"
+                        Command="{x:Bind ViewModel.LaunchFeedbackHubCommand}"
+                        Visibility="{x:Bind ViewModel.FeedbackLinkVisibility}" />
                 </StackPanel>
             </StackPanel>
-
-            <TextBlock
-                    x:Uid="SettingsPanel_About"
-                    Style="{StaticResource SubtitleTextBlockStyle}"/>
-
-            <StackPanel Margin="{StaticResource EightTopMargin}">
-                <TextBlock
-                    Text="{x:Bind ViewModel.VersionDescription, Mode=OneWay}" />
-                <TextBlock
-                    x:Uid="SettingsPanel_AboutDescription"
-                    Margin="{StaticResource EightTopMargin}" />
-
-                <HyperlinkButton
-                    x:Uid="SettingsPanel_PrivacyTermsLink"
-                    Margin="{StaticResource EightTopMargin}" />
-
-                <HyperlinkButton
-                    Margin="{StaticResource EightTopMargin}"
-                    x:Uid="FeedbackHub_Link"
-                    Command="{x:Bind ViewModel.LaunchFeedbackHubCommand}"
-                    Visibility="{x:Bind ViewModel.FeedbackLinkVisibility}" />
-            </StackPanel>
-        </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Page>

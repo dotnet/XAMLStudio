@@ -4,6 +4,7 @@ using System.Windows.Input;
 using Windows.ApplicationModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using XamlStudio.Helpers;
 using XamlStudio.Services;
 
@@ -73,15 +74,18 @@ namespace XamlStudio.ViewModels
             }
         }
 
+        public SettingsService Settings { get; } = SettingsService.Instance;
+
         public ICommand SwitchPowerBindingCommand { get; private set; }
+        public ICommand SwitchAutoCompileCommand { get; private set; }
+        public ICommand DelayChangedCommand { get; private set; }
 
         public SettingsPanelViewModel()
         {
+            SwitchAutoCompileCommand = new RelayCommand<RoutedEventArgs>(SwitchAutoCompile);
             SwitchPowerBindingCommand = new RelayCommand<RoutedEventArgs>(SwitchPowerBinding);
-        }
+            DelayChangedCommand = new RelayCommand<RangeBaseValueChangedEventArgs>(DelayChanged);
 
-        public void Initialize()
-        {
             VersionDescription = GetVersionDescription();
         }
 
@@ -91,12 +95,22 @@ namespace XamlStudio.ViewModels
             var packageId = package.Id;
             var version = packageId.Version;
 
-            return $"{package.DisplayName} - {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+            return $"v{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+        }
+
+        private void SwitchAutoCompile(RoutedEventArgs args)
+        {
+            Settings.IsAutoCompileEnabled = (args.OriginalSource as ToggleSwitch).IsOn;
         }
 
         private void SwitchPowerBinding(RoutedEventArgs args)
         {
-            SettingsService.Instance.IsPowerBindingDebuggingEnabled = (args.OriginalSource as ToggleSwitch).IsOn;
+            Settings.IsPowerBindingDebuggingEnabled = (args.OriginalSource as ToggleSwitch).IsOn;
+        }
+
+        private void DelayChanged(RangeBaseValueChangedEventArgs args)
+        {
+            Settings.AutoCompileDelay = args.NewValue;
         }
     }
 }

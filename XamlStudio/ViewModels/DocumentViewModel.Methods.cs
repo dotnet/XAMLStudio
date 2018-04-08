@@ -15,7 +15,7 @@ namespace XamlStudio.ViewModels
         private async void UpdateXaml(RoutedEventArgs args)
         {
             // Check if nothing to do
-            if (this.Document.Content == null || this.Document.Content.Length == 0 || HasCompiled)
+            if (Document.Content == null || Document.Content.Length == 0 || HasCompiled)
             {
                 return;
             }
@@ -76,7 +76,7 @@ namespace XamlStudio.ViewModels
         private void CreateBindingDecorations()
         {
             // Highlight Bindings
-            foreach (var binding in XamlRenderer.Bindings)
+            foreach (var binding in Result.Bindings)
             {
                 // TODO: Does monaco-editor support inplace updating?  If so, should look into plumbing that
                 switch (binding.LastKnownBindingState)

@@ -32,6 +32,16 @@ namespace XamlStudio.Toolkit.Services
     public class XamlRenderService
     {
         /// <summary>
+        /// Prefix used for xmlns Namespaces.
+        /// </summary>
+        public const string XmlnsPrefix = "xmlns";
+
+        /// <summary>
+        /// Path of required XAML xmlns Namespace for parsing.
+        /// </summary>
+        public const string XmlnsRequiredPath = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
+
+        /// <summary>
         /// Unique Id for this Service.
         /// </summary>
         public int Id { get; } = IdGenerator.Next();
@@ -45,11 +55,6 @@ namespace XamlStudio.Toolkit.Services
         /// Gets or sets the setting for enabling binding debugger.
         /// </summary>
         public bool IsBindingDebuggingEnabled { get; set; }
-
-        /// <summary>
-        /// Gets the list of Bindings found when <see cref="IsBindingDebuggingEnabled"/> is turned on.  Cleared and Populated after a call to Render.
-        /// </summary>
-        public IEnumerable<XamlBindingInfo> Bindings { get { return XamlBindingWrapperManager.Instance.GetBindings(Id); } }
 
         /// <summary>
         /// Set the explicit DataContext used on the root UIElement.

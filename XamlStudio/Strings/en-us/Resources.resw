@@ -146,11 +146,12 @@
     <comment>Light theme text for SettingsPanel</comment>
   </data>
   <data name="SettingsPanel_About.Text" xml:space="preserve">
-    <value>About this application</value>
+    <value>About</value>
     <comment>About this application title for SettingsPanel</comment>
   </data>
   <data name="SettingsPanel_AboutDescription.Text" xml:space="preserve">
-    <value>Settings page placeholder text.  Your app description goes here.</value>
+    <value>XAML Studio is a developer tool for rapidly prototyping UWP based XAML applications.  A Microsoft Garage project.
+By: Michael A. Hawker</value>
     <comment>About this application description for SettingsPanel</comment>
   </data>
   <data name="SettingsPanel_PrivacyTermsLink.Content" xml:space="preserve">
@@ -232,5 +233,37 @@
   <data name="MainPage_NavMenu_Toolbox.Tag" xml:space="preserve">
     <value>TOOLBOX</value>
     <comment>Toolbox ActivityBar Title</comment>
+  </data>
+  <data name="SettingsPanel_AutoCompile.Text" xml:space="preserve">
+    <value>Immediate Compilation</value>
+    <comment>Auto Compile toggle title for SettingsPanel</comment>
+  </data>
+  <data name="SettingsPanel_AutoCompileDelay.Text" xml:space="preserve">
+    <value>Auto-Compile Delay (in seconds after no input)</value>
+    <comment>Auto Compile Delay description for SettingsPanel</comment>
+  </data>
+  <data name="SettingsPanel_AutoCompileToggle.OffContent" xml:space="preserve">
+    <value>Off (Compile with F5 or Ctrl+Enter)</value>
+    <comment>Turn Auto compile off option for SettingsPanel</comment>
+  </data>
+  <data name="SettingsPanel_AutoCompileToggle.OnContent" xml:space="preserve">
+    <value>On</value>
+    <comment>Turn Auto compile on option for SettingsPanel</comment>
+  </data>
+  <data name="SettingsPanel_PowerBinding.Text" xml:space="preserve">
+    <value>Power Binding Debugger</value>
+    <comment>Power Binding Debugger toggle title for SettingsPanel</comment>
+  </data>
+  <data name="SettingsPanel_PowerBindingToggle.OffContent" xml:space="preserve">
+    <value>Off</value>
+    <comment>Turn Power Binding off option for SettingsPanel</comment>
+  </data>
+  <data name="SettingsPanel_PowerBindingToggle.OnContent" xml:space="preserve">
+    <value>On</value>
+    <comment>Turn Power Binding on option for SettingsPanel</comment>
+  </data>
+  <data name="SettingsPanel_XAML.Text" xml:space="preserve">
+    <value>XAML Compilation</value>
+    <comment>XAML Compilation text for SettingsPanel</comment>
   </data>
 </root>

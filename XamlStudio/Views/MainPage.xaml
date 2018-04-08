@@ -83,7 +83,7 @@
                     <future:Case Value="{x:Bind exf:Bind.LocalizedString('MainPage_NavMenu_Debug/Content')}">
                         <local:Binding MainViewModel="{x:Bind ViewModel}"/>
                     </future:Case>
-                    <future:Case Value="{x:Bind exf:Bind.LocalizedString('MainPage_NavMenu_Settings/Content')}">
+                    <future:Case Value="Settings"><!-- It seems NavigationView always has this as 'Settings'? -->
                         <local:SettingsPanelPage MainViewModel="{x:Bind ViewModel}"/>
                     </future:Case>
                     <future:Case IsDefault="True">
