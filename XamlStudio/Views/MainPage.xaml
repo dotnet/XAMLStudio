@@ -131,9 +131,15 @@
                                 Value="{x:Bind ViewModel.ActiveFile.IsWelcome, Mode=OneWay}"
                                 TargetType="x:Boolean">
             <future:Case Value="True">
-                <TextBlock FontSize="16"
+                <Grid>
+                    <StackPanel Padding="8">
+                        <TextBlock FontFamily="Segoe UI" FontSize="32" FontStyle="Italic" FontWeight="SemiLight" FontStretch="UltraCondensed">&lt;XAML/&gt;</TextBlock>
+                        <TextBlock Margin="4,-12,0,0" FontFamily="Segoe UI" FontSize="32" FontWeight="ExtraBlack" FontStretch="UltraExpanded">STUDIO</TextBlock>
+                    </StackPanel>
+                    <TextBlock FontSize="16"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center">Welcome to XAML Studio!</TextBlock>
+                </Grid>
             </future:Case>
             <future:Case Value="False">
                 <local:Document x:Name="Document" LoadedDocument="{x:Bind ViewModel.ActiveFile, Mode=OneWay}" MainViewModel="{x:Bind ViewModel}" />
