@@ -5,6 +5,7 @@ using Windows.ApplicationModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Markup;
 using XamlStudio.Helpers;
 using XamlStudio.Services;
 
@@ -76,16 +77,12 @@ namespace XamlStudio.ViewModels
 
         public SettingsService Settings { get; } = SettingsService.Instance;
 
-        public ICommand SwitchPowerBindingCommand { get; private set; }
-        public ICommand SwitchAutoCompileCommand { get; private set; }
-        public ICommand SwitchUpdateContentCommand { get; private set; }
+        public ICommand SwitchToggleCommand { get; private set; }
         public ICommand DelayChangedCommand { get; private set; }
 
         public SettingsPanelViewModel()
         {
-            SwitchAutoCompileCommand = new RelayCommand<RoutedEventArgs>(SwitchAutoCompile);
-            SwitchPowerBindingCommand = new RelayCommand<RoutedEventArgs>(SwitchPowerBinding);
-            SwitchUpdateContentCommand = new RelayCommand<RoutedEventArgs>(SwitchUpdateContent);
+            SwitchToggleCommand = new RelayCommand<RoutedEventArgs>(SwitchToggle);
             DelayChangedCommand = new RelayCommand<RangeBaseValueChangedEventArgs>(DelayChanged);
 
             VersionDescription = GetVersionDescription();
@@ -100,21 +97,11 @@ namespace XamlStudio.ViewModels
             return $"v{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
         }
 
-        //// TODO: Investigate if we can generalize this pattern better.
-
-        private void SwitchAutoCompile(RoutedEventArgs args)
+        private void SwitchToggle(RoutedEventArgs args)
         {
-            Settings.IsAutoCompileEnabled = (args.OriginalSource as ToggleSwitch).IsOn;
-        }
+            var toggle = (args.OriginalSource as ToggleSwitch);
 
-        private void SwitchPowerBinding(RoutedEventArgs args)
-        {
-            Settings.IsPowerBindingDebuggingEnabled = (args.OriginalSource as ToggleSwitch).IsOn;
-        }
-
-        private void SwitchUpdateContent(RoutedEventArgs args)
-        {
-            Settings.IsContentUpdatedWithSuggested = (args.OriginalSource as ToggleSwitch).IsOn;
+            Settings.Set(toggle.IsOn, toggle.Tag as string);
         }
 
         private void DelayChanged(RangeBaseValueChangedEventArgs args)

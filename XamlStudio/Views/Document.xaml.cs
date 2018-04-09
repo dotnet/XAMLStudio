@@ -74,5 +74,19 @@ namespace XamlStudio.Views
         {
             MainViewModel.DocumentViewModel = ViewModel;   
         }
+
+        private void CodeEditor_KeyDown(Monaco.CodeEditor sender, Monaco.Helpers.WebKeyEventArgs args)
+        {
+            // Workaround to https://github.com/hawkerm/monaco-editor-uwp/issues/6
+            // as SelectedText doesn't support modifications it can't be binded to from the CodeEditor itself.
+            // That or the PropertyChanged isn't firing for somereason on SelectedText change.
+            if (args.KeyCode == 116)
+            {
+                ViewModel.SelectedText = CodeEditor.SelectedText;
+            }
+
+            // Now pass onto VM now that we have SelectedText set.
+            ViewModel.KeyDownCommand.Execute(args);
+        }
     }
 }

@@ -24,6 +24,14 @@ namespace XamlStudio.Services
             set { Set(value); }
         }
 
+        [DefaultValue(false)]
+        public bool? IsCompileSelectionEnabled
+        {
+            get { return Task.Run(() => Get<bool?>()).Result; }
+            //get { return Get<bool?>().ConfigureAwait(false).GetAwaiter().GetResult(); }
+            set { Set(value); }
+        }
+
         [DefaultValue(true)]
         public bool? IsPowerBindingDebuggingEnabled
         {

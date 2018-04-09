@@ -54,14 +54,15 @@
         <monaco:CodeEditor Grid.Row="2"
                        x:Name="CodeEditor"
                        CodeLanguage="xml" 
-                       Text="{x:Bind ViewModel.Document.Content, Mode=TwoWay}">
+                       Text="{x:Bind ViewModel.Document.Content, Mode=TwoWay}"
+                       KeyDown="CodeEditor_KeyDown">
             <i:Interaction.Behaviors>
                 <ic:EventTriggerBehavior EventName="LostFocus">
                     <ic:InvokeCommandAction Command="{x:Bind ViewModel.UpdateXamlCommand}" />
                 </ic:EventTriggerBehavior>
-                <ic:EventTriggerBehavior EventName="KeyDown">
+                <!--<ic:EventTriggerBehavior EventName="KeyDown">
                     <ic:InvokeCommandAction Command="{x:Bind ViewModel.KeyDownCommand}" />
-                </ic:EventTriggerBehavior>
+                </ic:EventTriggerBehavior>-->
             </i:Interaction.Behaviors>
         </monaco:CodeEditor>
 

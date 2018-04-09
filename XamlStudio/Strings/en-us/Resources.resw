@@ -234,7 +234,7 @@ By: Michael A. Hawker</value>
     <value>TOOLBOX</value>
     <comment>Toolbox ActivityBar Title</comment>
   </data>
-  <data name="SettingsPanel_AutoCompile.Text" xml:space="preserve">
+  <data name="SettingsPanel_AutoCompileToggle.Header" xml:space="preserve">
     <value>Immediate Compilation</value>
     <comment>Auto Compile toggle title for SettingsPanel</comment>
   </data>
@@ -250,7 +250,7 @@ By: Michael A. Hawker</value>
     <value>On</value>
     <comment>Turn Auto compile on option for SettingsPanel</comment>
   </data>
-  <data name="SettingsPanel_PowerBinding.Text" xml:space="preserve">
+  <data name="SettingsPanel_PowerBindingToggle.Header" xml:space="preserve">
     <value>Power Binding Debugger</value>
     <comment>Power Binding Debugger toggle title for SettingsPanel</comment>
   </data>
@@ -266,16 +266,31 @@ By: Michael A. Hawker</value>
     <value>XAML Compilation</value>
     <comment>XAML Compilation text for SettingsPanel</comment>
   </data>
+  <data name="SettingsPanel_SelectionCompileToggle.Header" xml:space="preserve">
+    <value>Compile Selected Text with F5</value>
+    <comment>Compile Selected Text option for SettingsPanel</comment>
+  </data>
+  <data name="SettingsPanel_SelectionCompileToggle.OffContent" xml:space="preserve">
+    <value>Off</value>
+    <comment>Compile Selected Text off option for SettingsPanel</comment>
+  </data>
+  <data name="SettingsPanel_SelectionCompileToggle.OnContent" xml:space="preserve">
+    <value>On</value>
+    <comment>Compile Selected Text on option for SettingsPanel</comment>
+  </data>
+  <data name="SettingsPanel_SelectionCompileToggle.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>When enabled, pressing F5 will only compile the selected text instead of the entire XAML document.  Useful for testing subsections of XAML.</value>
+  </data>
   <data name="SettingsPanel_UpdateContentToggle.Header" xml:space="preserve">
     <value>Update XAML with Suggestions</value>
     <comment>Update XAML with missing xmlns namespaces automatically when enabled in SettingsPanel</comment>
   </data>
   <data name="SettingsPanel_UpdateContentToggle.OffContent" xml:space="preserve">
     <value>Off</value>
-    <comment>Turn Update Content on option for SettingsPanel</comment>
+    <comment>Turn Update Content off option for SettingsPanel</comment>
   </data>
   <data name="SettingsPanel_UpdateContentToggle.OnContent" xml:space="preserve">
     <value>On</value>
-    <comment>Turn Update Content off option for SettingsPanel</comment>
+    <comment>Turn Update Content on option for SettingsPanel</comment>
   </data>
 </root>

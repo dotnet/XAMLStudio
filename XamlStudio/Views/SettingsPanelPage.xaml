@@ -14,7 +14,7 @@
     <Page.Resources>
         <helper:EnumToBooleanConverter x:Key="EnumToBooleanConverter" EnumType="ElementTheme" />
         <DataTemplate x:Key="ToggleHeaderTemplate">
-            <TextBlock Text="{Binding}" Style="{StaticResource BodyTextStyle}"/>
+            <TextBlock Text="{Binding}" Style="{StaticResource BodyTextStyle}"/> <!-- TODO: ToolTipService.ToolTip="{Binding Path=(ToolTipService.ToolTip), RelativeSource={RelativeSource TemplatedParent}}" -->
         </DataTemplate>
     </Page.Resources>
 
@@ -29,23 +29,23 @@
         </Border>
         <ScrollViewer Grid.Row="1">
             <StackPanel Margin="{StaticResource MediumLeftRightMargin}">
+                <!-- TODO: Make each of these sections collapsable in an expander? -->
                 <TextBlock
                     x:Uid="SettingsPanel_XAML"
                     Margin="{StaticResource EightTopMargin}"
                     Style="{StaticResource SubtitleTextBlockStyle}" />
 
                 <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
-                    <TextBlock
-                        x:Uid="SettingsPanel_AutoCompile"
-                        Style="{StaticResource BodyTextStyle}"/>
                     <ToggleSwitch
                         x:Uid="SettingsPanel_AutoCompileToggle"
                         x:Name="AutoCompileToggle"
+                        HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
                         IsOn="{x:Bind ViewModel.Settings.IsAutoCompileEnabled.Value, Mode=OneWay}"
+                        Tag="IsAutoCompileEnabled"
                         Margin="0,4,0,0">
                         <i:Interaction.Behaviors>
                             <ic:EventTriggerBehavior EventName="Toggled">
-                                <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchAutoCompileCommand}"/>
+                                <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand}"/>
                             </ic:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
                     </ToggleSwitch>
@@ -87,17 +87,32 @@
                 </StackPanel>
 
                 <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
-                    <TextBlock
-                        x:Uid="SettingsPanel_PowerBinding"
-                        Style="{StaticResource BodyTextStyle}"/>
                     <ToggleSwitch
-                        x:Uid="SettingsPanel_PowerBindingToggle"
-                        x:Name="PowerBindingToggle"
-                        IsOn="{x:Bind ViewModel.Settings.IsPowerBindingDebuggingEnabled.Value, Mode=OneWay}"
+                        x:Uid="SettingsPanel_SelectionCompileToggle"
+                        x:Name="SelectionCompileToggle"
+                        HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
+                        IsOn="{x:Bind ViewModel.Settings.IsCompileSelectionEnabled.Value, Mode=OneWay}"
+                        Tag="IsCompileSelectionEnabled"
                         Margin="0,4,0,0">
                         <i:Interaction.Behaviors>
                             <ic:EventTriggerBehavior EventName="Toggled">
-                                <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchPowerBindingCommand}"/>
+                                <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand}"/>
+                            </ic:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+                    </ToggleSwitch>
+                </StackPanel>
+
+                <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
+                    <ToggleSwitch
+                        x:Uid="SettingsPanel_PowerBindingToggle"
+                        x:Name="PowerBindingToggle"
+                        HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
+                        IsOn="{x:Bind ViewModel.Settings.IsPowerBindingDebuggingEnabled.Value, Mode=OneWay}"
+                        Tag="IsPowerBindingDebuggingEnabled"
+                        Margin="0,4,0,0">
+                        <i:Interaction.Behaviors>
+                            <ic:EventTriggerBehavior EventName="Toggled">
+                                <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand}"/>
                             </ic:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
                     </ToggleSwitch>
@@ -109,10 +124,11 @@
                         x:Name="UpdateContentToggle"
                         HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
                         IsOn="{x:Bind ViewModel.Settings.IsContentUpdatedWithSuggested.Value, Mode=OneWay}"
+                        Tag="IsContentUpdatedWithSuggested"
                         Margin="0,4,0,0">
                         <i:Interaction.Behaviors>
                             <ic:EventTriggerBehavior EventName="Toggled">
-                                <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchUpdateContentCommand}"/>
+                                <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand}"/>
                             </ic:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
                     </ToggleSwitch>

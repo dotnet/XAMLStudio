@@ -61,11 +61,12 @@
                     x:Uid="Settings_PowerBindingToggle"
                     x:Name="PowerBindingToggle"
                     IsOn="{x:Bind services:SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value, Mode=OneWay}"
+                    Tag="IsPowerBindingDebuggingEnabled"
                     Margin="0,-8,0,0"
                     Height="32">
                     <i:Interaction.Behaviors>
                         <ic:EventTriggerBehavior EventName="Toggled">
-                            <ic:InvokeCommandAction Command="{x:Bind MainViewModel.SettingsViewModel.SwitchPowerBindingCommand}"/>
+                            <ic:InvokeCommandAction Command="{x:Bind MainViewModel.SettingsViewModel.SwitchToggleCommand}"/>
                             <ic:ChangePropertyAction TargetObject="{x:Bind MainViewModel.DocumentViewModel}" PropertyName="HasCompiled" Value="false" />
                             <ic:InvokeCommandAction Command="{x:Bind MainViewModel.DocumentViewModel.UpdateXamlCommand}"/>
                         </ic:EventTriggerBehavior>

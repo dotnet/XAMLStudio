@@ -33,6 +33,16 @@ namespace XamlStudio.ViewModels
             }
         }
 
+        /// <summary>
+        /// Selected Text in the Editor
+        /// </summary>
+        private string _selection;
+        public string SelectedText
+        {
+            get { return _selection; }
+            set { Set(ref _selection, value); }
+        }
+
         private XamlRenderResultContext _result;
         public XamlRenderResultContext Result
         {

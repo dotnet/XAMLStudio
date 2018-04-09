@@ -74,6 +74,57 @@ namespace XamlStudio.ViewModels
             Compiled?.Invoke(this, new EventArgs());
         }
 
+        private async void SelectiveRenderXaml(string content)
+        {
+            HasCompiled = false;
+
+            // TODO: reuse code above better
+            LineDecorations.Clear(); // Clear out old errors
+            _bindingHistory.Clear();
+
+            var settings = new XamlRenderSettings()
+            {
+                IsBindingDebuggingEnabled = SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value,
+                KeepSuggestedContentSameLength = true,
+            };
+
+            Result = await XamlRenderer.RenderAsync(content, settings);
+
+            if (Result.Element == null)
+            {
+                // TODO: Need to offset with location in document...
+
+                // Highlight Errors
+                foreach (var error in Result.Errors)
+                {
+                    LineDecorations.Add(new IModelDeltaDecoration(new Range(error.StartLine, error.StartColumn, error.EndLine, error.EndColumn),
+                        new IModelDecorationOptions()
+                        {
+                            IsWholeLine = false,
+                            ClassName = this._errorStyle,
+                            HoverMessage = new string[]
+                            {
+                                error.Message
+                            }
+                        }));
+                }
+            }
+            else
+            {
+                CreateBindingDecorations();
+            }
+
+            // Only Update if we have a new well-parsed element.
+            if (Result.Element != null)
+            {
+                // Add element to main panel
+                XamlRoot.Children.Clear();
+                XamlRoot.Children.Add(Result.Element);
+            }
+
+            Compiled?.Invoke(this, new EventArgs());
+        }
+
         private void BindingUpdated(XamlBindingInfo binding, ConversionRecord record, object newvalue)
         {
             _bindingHistory.Add(record);
@@ -154,7 +205,16 @@ namespace XamlStudio.ViewModels
             if ((args.KeyCode == 13 && args.CtrlKey) ||
                  args.KeyCode == 116)
             {
-                UpdateXaml(null);
+                if (args.KeyCode == 116 &&
+                    SettingsService.Instance.IsCompileSelectionEnabled.Value == true &&
+                    !string.IsNullOrWhiteSpace(SelectedText))
+                {
+                    SelectiveRenderXaml(SelectedText);
+                }
+                else
+                {
+                    UpdateXaml(null);
+                }
 
                 // Eat key stroke
                 args.Handled = true;

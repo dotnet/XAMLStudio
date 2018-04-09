@@ -28,7 +28,7 @@ namespace XamlStudio.Services
         // Internal Cache
         private static Dictionary<string, object> _settings = new Dictionary<string, object>();
 
-        protected async Task<T> Get<T>([CallerMemberName]string propertyName = null)
+        public async Task<T> Get<T>([CallerMemberName]string propertyName = null)
         {
             if (propertyName == null)
             {
@@ -57,7 +57,7 @@ namespace XamlStudio.Services
             return (T)_settings[propertyName];
         }
 
-        protected async void Set<T>(T value, [CallerMemberName]string propertyName = null)
+        public async void Set<T>(T value, [CallerMemberName]string propertyName = null)
         {
             // Check if anything's changed.
             if (propertyName == null || _settings.ContainsKey(propertyName) && Equals(_settings[propertyName], value))
