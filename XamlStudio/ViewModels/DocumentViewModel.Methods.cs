@@ -23,12 +23,22 @@ namespace XamlStudio.ViewModels
             LineDecorations.Clear(); // Clear out old errors
             _bindingHistory.Clear();
 
-            XamlRenderer.IsBindingDebuggingEnabled = SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value;
+            var settings = new XamlRenderSettings()
+            {
+                IsBindingDebuggingEnabled = SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value,
+                KeepSuggestedContentSameLength = !SettingsService.Instance.IsContentUpdatedWithSuggested.Value,
+            };
 
             // Pre-parse            
             var content = Document.Content;
 
-            Result = await XamlRenderer.Render(content);
+            Result = await XamlRenderer.RenderAsync(content, settings);
+
+            if (!settings.KeepSuggestedContentSameLength)
+            {
+                // Update our document with suggested changes.
+                Document.Content = Result.SuggestedContent;
+            }
 
             if (Result.Element == null)
             {

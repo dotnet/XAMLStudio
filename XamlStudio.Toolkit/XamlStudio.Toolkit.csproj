@@ -112,9 +112,15 @@
     <Compile Include="Models\XamlBindingInfo.cs" />
     <Compile Include="Models\XamlExceptionRange.cs" />
     <Compile Include="Models\XamlRenderResultContext.cs" />
+    <Compile Include="Models\XamlRenderSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IdGenerator.cs" />
     <Compile Include="Services\XamlBindingWrapperManager.cs" />
+    <Compile Include="Services\XamlRenderService.ParseBinding.cs" />
+    <Compile Include="Services\XamlRenderService.ParsePost.cs" />
+    <Compile Include="Services\XamlRenderService.ParsePre.cs" />
+    <Compile Include="Services\XamlRenderService.ParseXml.cs" />
+    <Compile Include="Services\XamlRenderService.Properties.cs" />
     <Compile Include="Services\XamlRenderService.cs" />
     <EmbeddedResource Include="Properties\XamlStudio.Toolkit.rd.xml" />
   </ItemGroup>

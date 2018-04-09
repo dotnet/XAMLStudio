@@ -45,7 +45,7 @@ namespace XamlStudio.Views
                 if (document != null) {
                     document.ViewModel.Document = args.NewValue as XamlDocument;
 
-                    // Render XAML
+                    // RenderAsync XAML
                     document.ViewModel.UpdateXamlCommand.Execute(null);
                 }
             }));

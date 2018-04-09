@@ -13,6 +13,9 @@
     mc:Ignorable="d">
     <Page.Resources>
         <helper:EnumToBooleanConverter x:Key="EnumToBooleanConverter" EnumType="ElementTheme" />
+        <DataTemplate x:Key="ToggleHeaderTemplate">
+            <TextBlock Text="{Binding}" Style="{StaticResource BodyTextStyle}"/>
+        </DataTemplate>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -95,6 +98,21 @@
                         <i:Interaction.Behaviors>
                             <ic:EventTriggerBehavior EventName="Toggled">
                                 <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchPowerBindingCommand}"/>
+                            </ic:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+                    </ToggleSwitch>
+                </StackPanel>
+
+                <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
+                    <ToggleSwitch
+                        x:Uid="SettingsPanel_UpdateContentToggle"
+                        x:Name="UpdateContentToggle"
+                        HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
+                        IsOn="{x:Bind ViewModel.Settings.IsContentUpdatedWithSuggested.Value, Mode=OneWay}"
+                        Margin="0,4,0,0">
+                        <i:Interaction.Behaviors>
+                            <ic:EventTriggerBehavior EventName="Toggled">
+                                <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchUpdateContentCommand}"/>
                             </ic:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
                     </ToggleSwitch>

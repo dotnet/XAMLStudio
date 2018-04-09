@@ -266,4 +266,16 @@ By: Michael A. Hawker</value>
     <value>XAML Compilation</value>
     <comment>XAML Compilation text for SettingsPanel</comment>
   </data>
+  <data name="SettingsPanel_UpdateContentToggle.Header" xml:space="preserve">
+    <value>Update XAML with Suggestions</value>
+    <comment>Update XAML with missing xmlns namespaces automatically when enabled in SettingsPanel</comment>
+  </data>
+  <data name="SettingsPanel_UpdateContentToggle.OffContent" xml:space="preserve">
+    <value>Off</value>
+    <comment>Turn Update Content on option for SettingsPanel</comment>
+  </data>
+  <data name="SettingsPanel_UpdateContentToggle.OnContent" xml:space="preserve">
+    <value>On</value>
+    <comment>Turn Update Content off option for SettingsPanel</comment>
+  </data>
 </root>

@@ -29,47 +29,38 @@ namespace XamlStudio.Toolkit.Services
     ///     https://docs.microsoft.com/en-us/windows/uwp/data-binding/data-binding-in-depth
     ///     https://blogs.msdn.microsoft.com/mcsuksoldev/2010/08/27/designdata-mvvm-support-in-blend-vs2010-and-wpfsilverlight/
     /// </summary>
-    public class XamlRenderService
-    {
-        /// <summary>
-        /// Prefix used for xmlns Namespaces.
-        /// </summary>
-        public const string XmlnsPrefix = "xmlns";
-
-        /// <summary>
-        /// Path of required XAML xmlns Namespace for parsing.
-        /// </summary>
-        public const string XmlnsRequiredPath = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
-
-        /// <summary>
-        /// Unique Id for this Service.
-        /// </summary>
-        public int Id { get; } = IdGenerator.Next();
-
-        /// <summary>
-        /// StorageFolder root folder to look for images and d:DesignData files from.
-        /// </summary>
-        public StorageFolder ResourceRoot { get; set; }
-
-        /// <summary>
-        /// Gets or sets the setting for enabling binding debugger.
-        /// </summary>
-        public bool IsBindingDebuggingEnabled { get; set; }
-
-        /// <summary>
-        /// Set the explicit DataContext used on the root UIElement.
-        /// </summary>
-        public object DataContext { get; set; }
-        
+    public partial class XamlRenderService
+    {        
         public XamlRenderService()
         {
             XamlBindingWrapperManager.Instance.Register(this.Id, this);
         }
 
-        public async Task<XamlRenderResultContext> Render(string content)
+        public async Task<XamlRenderResultContext> RenderAsync(string content, XamlRenderSettings settings = null)
         {
-            var result = new XamlRenderResultContext() { Content = content };
-            XamlBindingWrapperManager.Instance.Clear(this.Id);  // Remove previous Binding Tracking
+            // Use default settings if none provided.
+            if (settings == null)
+            {
+                settings = new XamlRenderSettings();
+            }
+
+            // Remove previous Binding Tracking
+            XamlBindingWrapperManager.Instance.Clear(this.Id);
+
+            // Hold all outcomes of this process in an object we'll return when done.
+            var result = new XamlRenderResultContext(content);
+
+            // If we're doing Binding Debugging, we have some required prefixes, so make sure we have them.
+            if (settings.IsBindingDebuggingEnabled)
+            {
+                // TODO: Feel like this should be in PreProcessXmlns
+                // also should be added to RenderedContent but not Suggested...
+                settings.KnownNamespaces["x"] = XmlnsPathX;
+                settings.KnownNamespaces[XmlnsPrefixXstc] = XmlnsPathXstc;
+            }
+
+            // Start by pre-processing raw string to add any missing namespaces.
+            PreProcessXmlns(ref result, ref settings);
 
             /*if (LoadedAssemblies == null)
             {
@@ -78,35 +69,35 @@ namespace XamlStudio.Toolkit.Services
 
             // TODO: Need to be better at being non-destructive of original content when passing to different parsers which need to reference the original content.
 
-            // Pre-parse            
-            if (!content.Contains("xmlns")) // TODO: add flag about using pre-parsing or not.
-            {
-                // TODO: Should use Regex to skip over initial comments and ?xml and such.
-                // Find the end of the first tag // TODO: Support single tagged content only as well '/>'
-                var oti = content.IndexOf(">");
-                if (oti != -1)
-                {
-                    content = content.Substring(0, oti) + @" xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""" + content.Substring(oti);
-                }
-            }
 
             // TODO: have 'common' namespace list and inject needed namespaces found in document.  Should warn and provide way for user in editor to add in so they can copy-paste
 
             // TODO: Decide if we have option to save 'help' back to Document
 
             // TODO: Record Line, Start, and Length of Changes to re-adjust error messages back to original positions.
-            if (IsBindingDebuggingEnabled)
+            if (settings.IsBindingDebuggingEnabled)
             {
-                content = InterceptBindings(content);
+                InterceptBindings(ref result);
             }
 
-            // Attempt Render
+            // Attempt RenderAsync
             UIElement element = null;
             try
             {
-                var obj = XamlReader.LoadWithInitialTemplateValidation(content); // TODO: Add Flag to change which function to use.
+                object obj = null;
+                if (settings.IsInitialTemplateValidated)
+                {
+                    obj = XamlReader.LoadWithInitialTemplateValidation(result.RenderedContent);
+                }
+                else
+                {
+                    obj = XamlReader.Load(result.RenderedContent);
+                }
+
                 if (!(obj is UIElement))
                 {
+                    // TODO: ResourceDictionaries should be loadable, but they're just DependencyObject
+                    // Investigate for future usages.
                     throw new NotSupportedException("Content must be a UIElement.");
                 }
                 element = obj as UIElement;
@@ -176,7 +167,7 @@ namespace XamlStudio.Toolkit.Services
                 // May get overwritten by d:DesignData loading later.
                 if (element is FrameworkElement fwe)
                 {
-                    fwe.DataContext = this.DataContext == null ? element : this.DataContext;
+                    fwe.DataContext = settings.DataContext == null ? element : settings.DataContext;
                     result.DataContext = fwe.DataContext;
 
                     if (root.Attributes.GetNamedItem("d:DesignWidth") is XmlAttribute dwidth)
@@ -195,7 +186,7 @@ namespace XamlStudio.Toolkit.Services
                         }
                     }
 
-                    if (root.Attributes.GetNamedItem("d:DataContext") is XmlAttribute ddatacontext && ResourceRoot != null)
+                    if (root.Attributes.GetNamedItem("d:DataContext") is XmlAttribute ddatacontext && settings.ResourceRoot != null)
                     {
                         var dc = ddatacontext.Value;
                         var ddi = dc.IndexOf("d:DesignData");
@@ -217,7 +208,7 @@ namespace XamlStudio.Toolkit.Services
                                 if (ei != -1)
                                 {
                                     var source = dd.Substring(si + 6, ei - si - 6).Trim('=', ' ');
-                                    var data = await LoadDataSource(ResourceRoot, source);
+                                    var data = await LoadDataSource(settings.ResourceRoot, source);
                                     if (data != null && element is FrameworkElement)
                                     {
                                         (element as FrameworkElement).DataContext = data;
@@ -229,7 +220,7 @@ namespace XamlStudio.Toolkit.Services
                     }
 
                     // Load Binding Converters
-                    if (IsBindingDebuggingEnabled)
+                    if (settings.IsBindingDebuggingEnabled)
                     {
                         foreach (var binding in XamlBindingWrapperManager.Instance.GetBindings(this.Id))
                         {
@@ -245,7 +236,7 @@ namespace XamlStudio.Toolkit.Services
 
             if (element != null)
             {
-                if (ResourceRoot != null)
+                if (settings.ResourceRoot != null)
                 {
                     // Look for Image Objects in order to replace their Sources with our Images Loaded from Disk.
                     Visit(element, async (child) =>
@@ -266,7 +257,7 @@ namespace XamlStudio.Toolkit.Services
                                     uri = uri.Substring(21);
                                 }
 
-                                var imagefile = await GetFileFromPath(ResourceRoot, uri);
+                                var imagefile = await GetFileFromPath(settings.ResourceRoot, uri);
                                 var bitmapImage = new BitmapImage();
                                 if (imagefile != null)
                                 {
@@ -288,184 +279,6 @@ namespace XamlStudio.Toolkit.Services
             }
 
             return result;
-        }
-
-        private const string InitialElementPattern = "<(?<Type>\\w+)";
-        private const string BindingSearcherPattern = "([\"']){\\s*(?<Type>(?:Binding)|(?:x:Bind)).*?}\\1"; // \1 matches initial single or double quote used in first capturing group.
-        private const string BindingPropertiesPattern = "((?<Property>(?:BindBack)|(?:Converter)|(?:ConverterLanguage)|(?:ConverterParameter)|(?:ElementName)|(?:FallbackValue)|(?:Mode)|(?:Path)|(?:RelativeSource)|(?:Source)|(?:TargetNullValue)|(?:UpdateSourceTrigger))\\s*=\\s*(?<Value>.*?(?({)({(?>{(?<DEPTH>)|}(?<-DEPTH>)|.?)*(?(DEPTH)(?!))}(?=[,}]))|(.*?(?=[,}])))))+";
-        private static Regex InitialElementSearcher = new Regex(InitialElementPattern, RegexOptions.Compiled);
-        private static Regex BindingSearcher = new Regex(BindingSearcherPattern, RegexOptions.Compiled | RegexOptions.Singleline);
-        private static Regex BindingPropertyExtractor = new Regex(BindingPropertiesPattern, RegexOptions.Compiled | RegexOptions.Singleline);
-
-        /// <summary>
-        /// Replace Binding Expressions with equivalents but intercepted by our own converter for additional logic/redirection.
-        /// </summary>
-        /// <param name="content"></param>
-        /// <returns></returns>
-        private string InterceptBindings(string content)
-        {
-            // Need to inject Converter Resource into FrameworkElement
-            Match type = InitialElementSearcher.Match(content);
-            if (type.Success)
-            {
-                var typename = type.Groups["Type"]?.Value;
-
-                if (!IsFrameworkElement(typename))
-                {
-                    // We can't inject resources (like our binding wrapper) into non-framework elements.
-                    return content;
-                }
-
-                // Need 'x' namespace for resource key in our converter wrapper...
-                if (!content.Contains("xmlns:x"))
-                {
-                    // Find the end of the first tag
-                    var oti = content.IndexOf(">");
-                    if (oti != -1)
-                    {
-                        content = content.Substring(0, oti) + @" xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""" + content.Substring(oti);
-                    }
-                }
-
-                // Inject our extension namespace (if needed), so we have access to our Binding Wrapper.
-                if (!content.Contains("xmlns:xstc="))
-                {
-                    // Find the end of the first tag
-                    var oti = content.IndexOf(">");
-                    if (oti != -1)
-                    {
-                        content = content.Substring(0, oti) + @" xmlns:xstc=""using:XamlStudio.Toolkit.Converters""" + content.Substring(oti);
-                    }
-                }
-
-                var resourceSearch = "<" + typename + ".Resources>";
-                const string converter = "<xstc:XamlBindingWrapperConverter x:Key=\"XamlBindingWrapper\"/>";
-
-                if (content.IndexOf(resourceSearch) != -1)
-                {
-                    content = content.Replace(resourceSearch, resourceSearch + converter);
-                }
-                else
-                {
-                    // If we don't have an existing resource section, add one right after our initial type tag.
-                    var oti = content.IndexOf(">");
-                    if (oti != -1)
-                    {
-                        content = content.Substring(0, oti + 1) + resourceSearch + converter + "</" + typename + ".Resources>" + content.Substring(oti + 1);
-                    }
-                }
-            }
-
-            int offset = 0;
-
-            foreach (Match binding in BindingSearcher.Matches(content))
-            {
-                var isXBind = binding.Groups["Type"]?.Value == "x:Bind";
-                var quoteChar = binding.Value[0]; // Grab the ' or " char surrounding our binding expression.
-
-                var original = binding.Value;
-
-                // Calculate Editor Based Position // TODO: Make sure we're not out of line with earlier modification steps
-                uint line = 1 + (uint)content.Substring(0, binding.Index + offset).Count(c => c == '\n');
-                var position = binding.Index + offset - content.LastIndexOf('\n', binding.Index + offset);
-
-                var bindingInfo = new Models.XamlBindingInfo(line, (uint)position, original);
-
-                XamlBindingWrapperManager.Instance.AddNewBinding(this.Id, bindingInfo);
-
-                const string newBinding = "{StaticResource XamlBindingWrapper}";
-                var foundConverter = false;
-                var foundConverterParameter = false;
-
-                // Copy of ongoing permutations to original binding string holder
-                var newbindingstr = string.Empty + original;
-
-                foreach (Match property in BindingPropertyExtractor.Matches(binding.Value))
-                {
-                    if (property.Groups["Property"]?.Value == "Converter")
-                    {
-                        foundConverter = true;
-
-                        var value = property.Groups["Value"].Value;
-                        var space = value.IndexOf(" ");
-
-                        var converterkey = value.Substring(space + 1, value.Length - space - 2);
-                        
-                        bindingInfo.ConverterKey = converterkey;
-
-                        // Replace converter with our new one
-                        var str = newbindingstr.Replace(property.Groups["Value"].Value, newBinding);
-
-                        // Inject back to original string
-                        content = content.Replace(newbindingstr, str);
-
-                        // Update positions for next strings
-                        offset += (str.Length - newbindingstr.Length);
-
-                        newbindingstr = str;
-                    }
-                    else if (property.Groups["Property"]?.Value == "ConverterParameter")
-                    {
-                        foundConverterParameter = true;
-
-                        // TODO: Retrieve original converter parameter if resource??? (Probably have to do same as Converter, not sure how common/capabilties
-                        bindingInfo.ConverterParameter = property.Groups["Value"].Value;
-
-                        // Our new converter parameter is 'Id{Binding ...}'
-                        var str = newbindingstr.Replace(property.Groups["Value"].Value, string.Empty + bindingInfo.Id);
-
-                        // Inject back to original string
-                        content = content.Replace(newbindingstr, str);
-
-                        // Update positions for next strings
-                        offset += (str.Length - newbindingstr.Length);
-
-                        newbindingstr = str;
-                    }
-                }
-
-                if (!foundConverter)
-                {
-                    // TODO: BUGBUG need to remember changes to string above too, as don't know if we had a parameter without a converter (odd?)
-                    // If no converter on binding, add ours
-                    var str = binding.Value.Substring(0, binding.Value.Length - 2) + ",Converter=" + newBinding + "}" + quoteChar;
-                    
-                    content = content.Replace(newbindingstr, str);
-
-                    // Update positions for next strings
-                    offset += (str.Length - newbindingstr.Length);
-
-                    newbindingstr = str;
-                }
-
-                if (!foundConverterParameter)
-                {
-                    var str = newbindingstr.Substring(0, newbindingstr.Length - 2) + ",ConverterParameter=" + bindingInfo.Id + "}" + quoteChar;
-
-                    // If no converterparameter on binding, add ours
-                    content = content.Replace(newbindingstr, str);
-
-                    // Update positions for next strings
-                    offset += (str.Length - newbindingstr.Length);
-                }
-            }
-
-            return content;
-        }
-
-        private static bool IsFrameworkElement(string typename)
-        {
-            // Look for other UI controls in Main Assembly.
-            var foundtype = typeof(FrameworkElement).GetTypeInfo().Assembly.GetTypes().FirstOrDefault(type => type.Name == typename);
-
-            // TODO: Look at other assemblies for custom framemwork element types of other libs?
-
-            if (foundtype == null)
-            {
-                return false;
-            }
-
-            return typeof(FrameworkElement).GetTypeInfo().IsAssignableFrom(foundtype.GetTypeInfo());
         }
 
         /*private static List<Assembly> LoadedAssemblies { get; set; }
