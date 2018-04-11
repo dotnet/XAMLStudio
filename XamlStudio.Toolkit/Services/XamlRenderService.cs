@@ -50,29 +50,23 @@ namespace XamlStudio.Toolkit.Services
             // Hold all outcomes of this process in an object we'll return when done.
             var result = new XamlRenderResultContext(content);
 
+            // Load extra Metadata about other available types.
+            if (LoadedAssemblies == null)
+            {
+                await LoadAssembliesAsync();
+            }
+
             // If we're doing Binding Debugging, we have some required prefixes, so make sure we have them.
             if (settings.IsBindingDebuggingEnabled)
             {
                 // TODO: Feel like this should be in PreProcessXmlns
                 // also should be added to RenderedContent but not Suggested...
-                settings.KnownNamespaces["x"] = XmlnsPathX;
-                settings.KnownNamespaces[XmlnsPrefixXstc] = XmlnsPathXstc;
+                settings.KnownNamespaces.Add(new XmlnsNamespace("x", XmlnsPathX));
+                settings.KnownNamespaces.Add(new XmlnsNamespace(XmlnsPrefixXstc, XmlnsPathXstc));
             }
 
             // Start by pre-processing raw string to add any missing namespaces.
             PreProcessXmlns(ref result, ref settings);
-
-            /*if (LoadedAssemblies == null)
-            {
-                await LoadAssembliesAsync();
-            }*/
-
-            // TODO: Need to be better at being non-destructive of original content when passing to different parsers which need to reference the original content.
-
-
-            // TODO: have 'common' namespace list and inject needed namespaces found in document.  Should warn and provide way for user in editor to add in so they can copy-paste
-
-            // TODO: Decide if we have option to save 'help' back to Document
 
             // TODO: Record Line, Start, and Length of Changes to re-adjust error messages back to original positions.
             if (settings.IsBindingDebuggingEnabled)
@@ -132,7 +126,7 @@ namespace XamlStudio.Toolkit.Services
             XmlDocument xaml = new XmlDocument();
             try
             {
-                xaml.LoadXml(content);
+                xaml.LoadXml(result.RenderedContent);
                 result.Document = xaml;
             }
             catch (Exception e)
@@ -280,30 +274,6 @@ namespace XamlStudio.Toolkit.Services
 
             return result;
         }
-
-        /*private static List<Assembly> LoadedAssemblies { get; set; }
-
-        private static async Task LoadAssembliesAsync()
-        {
-            LoadedAssemblies = new List<Assembly>();
-
-            var files = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFilesAsync();
-            if (files == null)
-                return;
-
-            foreach (var file in files.Where(file => file.FileType == ".dll" || file.FileType == ".exe"))
-            {
-                try
-                {
-                    LoadedAssemblies.Add(Assembly.Load(new AssemblyName(file.DisplayName)));
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                }
-
-            }
-        }*/
 
         /// <summary>
         /// Given a StorageFolder and path loads a Data file to load as an object.

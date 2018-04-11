@@ -15,6 +15,13 @@ namespace XamlStudio.Views
             InitializeComponent();
 
             ViewModel = new MainViewModel();
+
+            Loaded += MainPage_Loaded;
+        }
+
+        private async void MainPage_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            await ViewModel.SettingsViewModel.Settings.InitializeAndLoad();
         }
     }
 }

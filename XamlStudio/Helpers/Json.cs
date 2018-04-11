@@ -15,12 +15,30 @@ namespace XamlStudio.Helpers
             });
         }
 
+        public static async Task<object> ToObjectAsync(string value, Type type)
+        {
+            return await Task.Run(() =>
+            {
+                return JsonConvert.DeserializeObject(value, type);
+            });
+        }
+
         public static async Task<string> StringifyAsync(object value)
         {
             return await Task.Run<string>(() =>
             {
                 return JsonConvert.SerializeObject(value);
             });
+        }
+
+        public static object GetDefault(this Type type)
+        {
+            if (type.IsValueType)
+            {
+                return Activator.CreateInstance(type);
+            }
+
+            return null;
         }
     }
 }

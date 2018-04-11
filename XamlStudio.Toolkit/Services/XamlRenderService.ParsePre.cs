@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -16,8 +17,8 @@ namespace XamlStudio.Toolkit.Services
     
     public partial class XamlRenderService
     {
-        private const string RegexPattern_FirstTagAfterComment = @"^.*?(?!(<\?|<!))<.*?>";
-        private const string RegexPattern_ElementName = "<(?<Type>\\w+)";
+        private const string RegexPattern_FirstTagAfterComment = @"^.*?(?!(<\?|<!))<[^<]*?>";
+        private const string RegexPattern_ElementName = "<((?<Prefix>\\w+):)?(?<Type>\\w+)";
 
         private static Regex _initialTagSearcher = new Regex(RegexPattern_FirstTagAfterComment, RegexOptions.Compiled);
         private static Regex _elementNameSearcher = new Regex(RegexPattern_ElementName, RegexOptions.Compiled);
@@ -37,7 +38,7 @@ namespace XamlStudio.Toolkit.Services
             if (match.Success)
             {
                 // Keep track of which namespaces we have to inject.
-                var namespaces = new List<(string name, string path)>();
+                var namespaces = new List<XmlnsNamespace>();
 
                 var value = match.Value;
 
@@ -46,6 +47,7 @@ namespace XamlStudio.Toolkit.Services
                 var type = _elementNameSearcher.Match(value);
                 if (type.Success)
                 {
+                    ////var prefix = type.Groups["Prefix"]?.Value;
                     var typename = type.Groups["Type"]?.Value;
 
                     context.ElementType = GetTypeFromName(typename);
@@ -65,17 +67,19 @@ namespace XamlStudio.Toolkit.Services
                     }
 
                     // Add to our list of namespaces we need to add.
-                    namespaces.Add((XmlnsPrefix, XmlnsRequiredPath));
+                    namespaces.Add(new XmlnsNamespace(XmlnsPrefix, XmlnsRequiredPath));
                 }
                 
                 // Look to see if we're trying to use any namespaces we know about
                 foreach (var ns in settings.KnownNamespaces)
                 {
-                    var lookup = XmlnsPrefix + ':' + ns.Key;
-                    if (content.Contains(lookup) && !value.Contains(lookup))
+                    var usage = ns.Name + ":";
+                    var included = XmlnsPrefix + ':' + ns.Name;
+
+                    if (content.Contains(usage) && !value.Contains(included))
                     {
                         // If our first tag doesn't have the namespace, but we see it, then it's missing...
-                        namespaces.Add((ns.Key, ns.Value));
+                        namespaces.Add(ns);
                     }
                 }
 
@@ -89,9 +93,14 @@ namespace XamlStudio.Toolkit.Services
                         i++;
 
                         sb.Append(" ");
-                        sb.Append(ns.name);
+                        if (ns.Name != XmlnsPrefix)
+                        {
+                            sb.Append(XmlnsPrefix);
+                            sb.Append(":");
+                        }
+                        sb.Append(ns.Name);
                         sb.Append("=\"");
-                        sb.Append(ns.path);
+                        sb.Append(ns.Path);
                         sb.Append("\"");
                         if (!settings.KeepSuggestedContentSameLength && i < namespaces.Count)
                         {
@@ -112,7 +121,15 @@ namespace XamlStudio.Toolkit.Services
 
         public static Type GetTypeFromName(string typename)
         {
-            // TODO: Do we need to look at other assemblies for custom framemwork element types of other libs?
+            foreach (var assem in LoadedAssemblies)
+            {
+                var type = assem.GetExportedTypes().FirstOrDefault(t => t.Name == typename);
+                if (type != null)
+                {
+                    // TODO: Do we need to worry about conflicting names across assemblies and pass in the namespace to this function?
+                    return type;
+                }
+            }
 
             // Look for other UI controls in Main Assembly.
             return typeof(FrameworkElement).GetTypeInfo().Assembly.GetTypes().FirstOrDefault(type => type.Name == typename);
@@ -126,6 +143,29 @@ namespace XamlStudio.Toolkit.Services
             }
 
             return typeof(FrameworkElement).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo());
+        }
+
+        private static List<Assembly> LoadedAssemblies { get; set; }
+
+        internal static async Task LoadAssembliesAsync()
+        {
+            LoadedAssemblies = new List<Assembly>();
+
+            var files = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFilesAsync();
+            if (files == null)
+                return;
+
+            foreach (var file in files.Where(file => file.FileType == ".dll" || file.FileType == ".exe"))
+            {
+                try
+                {
+                    LoadedAssemblies.Add(Assembly.Load(new AssemblyName(file.DisplayName)));
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+            }
         }
     }
 }

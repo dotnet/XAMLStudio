@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -25,39 +26,63 @@ namespace XamlStudio.Services
             }
         }
 
+        public async Task InitializeAndLoad()
+        {
+            foreach (var prop in GetType().GetProperties())
+            {
+                var attr = prop.GetCustomAttribute(typeof(DefaultValueAttribute)) as DefaultValueAttribute;
+
+                if (attr != null && !_settings.ContainsKey(prop.Name))
+                {
+                    var value = await ApplicationData.Current.LocalSettings.ReadAsync(prop.Name, prop.PropertyType);
+                    // If we don't have a value yet, see if we've defined a default.
+                    if (value == null || value.Equals(prop.PropertyType.GetDefault()) ||
+                       (value is string && String.IsNullOrEmpty(value as string)))
+                    {
+                        // If we don't have a value yet, see if we've defined a default.
+                        if (attr.LoadFromUri)
+                        {
+                            // Load from our application resources.
+                            var uri = new Uri(attr.Value.ToString());
+
+                            if (uri != null)
+                            {
+                                var file = await StorageFile.GetFileFromApplicationUriAsync(uri);
+
+                                var text = await FileIO.ReadTextAsync(file);
+
+                                _settings[prop.Name] = JsonConvert.DeserializeObject(text, prop.PropertyType);
+                            }
+                        }
+                        else
+                        {
+                            // Use the provided value.
+                            _settings[prop.Name] = attr.Value;
+                        }
+                    }
+                    else
+                    {
+                        // Cache loaded value.
+                        _settings[prop.Name] = value;
+                    }
+                }
+            }
+        }
+
         // Internal Cache
         private static Dictionary<string, object> _settings = new Dictionary<string, object>();
 
-        public async Task<T> Get<T>([CallerMemberName]string propertyName = null)
+        public T Get<T>([CallerMemberName]string propertyName = null)
         {
-            if (propertyName == null)
+            if (propertyName == null || !_settings.ContainsKey(propertyName))
             {
                 return default(T);
-            }
-
-            // If we don't have our setting in our cache, then fetch it from storage.
-            if (!_settings.ContainsKey(propertyName))
-            {
-                var value = await ApplicationData.Current.LocalSettings.ReadAsync<T>(propertyName);
-                // If we don't have a value yet, see if we've defined a default.
-                if (value == null || value.Equals(default(T)) ||
-                   (value is string && String.IsNullOrEmpty(value as string)))
-                {
-                    var attr = this.GetType().GetProperty(propertyName).GetCustomAttribute(typeof(DefaultValueAttribute)) as DefaultValueAttribute;
-                    if (attr != null)
-                    {
-                        value = (T)attr.Value;
-                    }
-                }
-
-                // Cache our property value.
-                _settings[propertyName] = value;
             }
 
             return (T)_settings[propertyName];
         }
 
-        public async void Set<T>(T value, [CallerMemberName]string propertyName = null)
+        public void Set<T>(T value, [CallerMemberName]string propertyName = null)
         {
             // Check if anything's changed.
             if (propertyName == null || _settings.ContainsKey(propertyName) && Equals(_settings[propertyName], value))
@@ -67,8 +92,8 @@ namespace XamlStudio.Services
 
             // Store value in our cache.
             _settings[propertyName] = value;
-            // Save it out to stroage.
-            await ApplicationData.Current.LocalSettings.SaveAsync<T>(propertyName, value);
+            // Save it out to storage.
+            ApplicationData.Current.LocalSettings.SaveAsync<T>(propertyName, value);
 
             // Notify others of change.
             OnPropertyChanged(propertyName);
@@ -81,6 +106,8 @@ namespace XamlStudio.Services
     public class DefaultValueAttribute : Attribute
     {
         public object Value { get; set; }
+
+        public bool LoadFromUri { get; set; }
 
         public DefaultValueAttribute(object value)
         {

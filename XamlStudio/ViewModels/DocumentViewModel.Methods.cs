@@ -27,6 +27,7 @@ namespace XamlStudio.ViewModels
             {
                 IsBindingDebuggingEnabled = SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value,
                 KeepSuggestedContentSameLength = !SettingsService.Instance.IsContentUpdatedWithSuggested.Value,
+                KnownNamespaces = SettingsService.Instance.KnownNamespaces,
             };
 
             // Pre-parse            
@@ -86,6 +87,7 @@ namespace XamlStudio.ViewModels
             {
                 IsBindingDebuggingEnabled = SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value,
                 KeepSuggestedContentSameLength = true,
+                KnownNamespaces = SettingsService.Instance.KnownNamespaces,
             };
 
             Result = await XamlRenderer.RenderAsync(content, settings);

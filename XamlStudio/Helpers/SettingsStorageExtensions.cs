@@ -62,6 +62,18 @@ namespace XamlStudio.Helpers
             return default(T);
         }
 
+        public static async Task<object> ReadAsync(this ApplicationDataContainer settings, string key, Type type)
+        {
+            object obj = null;
+
+            if (settings.Values.TryGetValue(key, out obj))
+            {
+                return await Json.ToObjectAsync((string)obj, type);
+            }
+
+            return null;
+        }
+
         public static async Task<StorageFile> SaveFileAsync(this StorageFolder folder, byte[] content, string fileName, CreationCollisionOption options = CreationCollisionOption.ReplaceExisting)
         {
             if (content == null)

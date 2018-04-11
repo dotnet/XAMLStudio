@@ -133,7 +133,23 @@
                         </i:Interaction.Behaviors>
                     </ToggleSwitch>
                 </StackPanel>
-            
+
+                <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
+                    <TextBlock
+                        Text="Known Namespaces"
+                        Style="{StaticResource BodyTextStyle}"/>
+                    <ListBox ItemsSource="{x:Bind ViewModel.Settings.KnownNamespaces}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Name}"/>
+                                    <TextBlock Text="{Binding Path}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+
                 <TextBlock
                     x:Uid="SettingsPanel_Personalization"
                     Style="{StaticResource SubtitleTextBlockStyle}" />

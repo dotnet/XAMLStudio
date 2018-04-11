@@ -1,0 +1,34 @@
+﻿[
+  {
+    "name": "x",
+    "path": "http://schemas.microsoft.com/winfx/2006/xaml"
+  },
+  {
+    "name": "d",
+    "path": "http://schemas.microsoft.com/expression/blend/2008"
+  },
+  {
+    "name": "mc",
+    "path": "http://schemas.openxmlformats.org/markup-compatibility/2006"
+  },
+  {
+    "name": "ex",
+    "path": "using:Microsoft.Toolkit.Uwp.UI.Extensions"
+  },
+  {
+    "name": "controls",
+    "path": "using:Microsoft.Toolkit.Uwp.UI.Controls"
+  },
+  {
+    "name": "converters",
+    "path": "using:Microsoft.Toolkit.Uwp.UI.Converters"
+  },
+  {
+    "name": "i",
+    "path": "using:Microsoft.Xaml.Interactivity"
+  },
+  {
+    "name": "ic",
+    "path": "using:Microsoft.Xaml.Interactions.Core"
+  }
+]

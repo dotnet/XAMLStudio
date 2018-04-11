@@ -12,10 +12,22 @@ namespace XamlStudio.Toolkit.Models
     /// </summary>
     public class XamlRenderSettings
     {
+        private List<XmlnsNamespace> _namespaces = new List<XmlnsNamespace>();
         /// <summary>
         /// Gets the dictionary of known namespaces to automatically try and add if missing in given content to Render.
         /// </summary>
-        public Dictionary<string, string> KnownNamespaces { get; private set; } = new Dictionary<string, string>();
+        public List<XmlnsNamespace> KnownNamespaces
+        {
+            get
+            {
+                return _namespaces;
+            }
+            set
+            {
+                // Make a copy of the incoming value as we don't want to be destructive.
+                _namespaces = value.ToArray().ToList();
+            }
+        }
 
         /// <summary>
         /// StorageFolder root folder to look for images and d:DesignData files from.

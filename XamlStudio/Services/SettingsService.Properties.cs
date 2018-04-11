@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
+using XamlStudio.Toolkit.Models;
 
 namespace XamlStudio.Services
 {
@@ -11,46 +13,48 @@ namespace XamlStudio.Services
         [DefaultValue(true)]
         public bool? IsAutoCompileEnabled
         {
-            get { return Task.Run(() => Get<bool?>()).Result; }
-            //get { return Get<bool?>().ConfigureAwait(false).GetAwaiter().GetResult(); }
+            get { return Get<bool?>(); }
             set { Set(value); }
         }
 
         [DefaultValue(0.8)]
         public double? AutoCompileDelay
         {
-            get { return Task.Run(() => Get<double?>()).Result; }
-            //get { return Get<double?>().ConfigureAwait(false).GetAwaiter().GetResult(); }
+            get { return Get<double?>(); }
             set { Set(value); }
         }
 
         [DefaultValue(false)]
         public bool? IsCompileSelectionEnabled
         {
-            get { return Task.Run(() => Get<bool?>()).Result; }
-            //get { return Get<bool?>().ConfigureAwait(false).GetAwaiter().GetResult(); }
+            get { return Get<bool?>(); }
             set { Set(value); }
         }
 
         [DefaultValue(true)]
         public bool? IsPowerBindingDebuggingEnabled
         {
-            get { return Task.Run(() => Get<bool?>()).Result; }
-            //get { return Get<bool?>().ConfigureAwait(false).GetAwaiter().GetResult(); }
+            get { return Get<bool?>(); }
             set { Set(value); }
         }
 
         [DefaultValue(true)]
         public bool? IsContentUpdatedWithSuggested
         {
-            get { return Task.Run(() => Get<bool?>()).Result; }
-            //get { return Get<bool?>().ConfigureAwait(false).GetAwaiter().GetResult(); }
+            get { return Get<bool?>(); }
+            set { Set(value); }
+        }
+
+        [DefaultValue("ms-appx:///Strings/xmlns.json", LoadFromUri = true)]
+        public List<XmlnsNamespace> KnownNamespaces
+        {
+            get { return Get<List<XmlnsNamespace>>(); }
             set { Set(value); }
         }
 
         public string DefaultWorkspaceFolderToken
         {
-            get { return Task.Run(() => Get<string>()).Result; }
+            get { return Get<string>(); }
             set { Set(value); }
         }
 
