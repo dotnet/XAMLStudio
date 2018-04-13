@@ -1,5 +1,5 @@
 ﻿using System;
-
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using XamlStudio.Models;
 using XamlStudio.ViewModels;
@@ -17,6 +17,13 @@ namespace XamlStudio.Views
             ViewModel = new MainViewModel();
 
             Loaded += MainPage_Loaded;
+
+            Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown; ;
+        }
+
+        private void CoreWindow_KeyDown(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs args)
+        {
+            ViewModel.KeyDownCommand.Execute(args);
         }
 
         private async void MainPage_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)

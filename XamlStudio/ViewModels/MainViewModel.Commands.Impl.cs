@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
+using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -188,6 +189,64 @@ namespace XamlStudio.ViewModels
             }
 
             return false;
+        }
+
+        // Ctrl+Shift+Tab
+        private void PreviousDocument(RoutedEventArgs args)
+        {
+            var index = OpenFiles.IndexOf(ActiveFile);
+            index = index == 0 ? OpenFiles.Count - 1 : index - 1;
+
+            ActiveFile = OpenFiles[index];
+        }
+
+        // Ctrl+Tab
+        private void NextDocument(RoutedEventArgs args)
+        {
+            var index = OpenFiles.IndexOf(ActiveFile);
+            index = index == OpenFiles.Count - 1 ? 0 : index + 1;
+
+            ActiveFile = OpenFiles[index];
+        }
+
+        private void KeyDown(KeyEventArgs args)
+        {
+            var ctrl = (Window.Current.CoreWindow.GetKeyState(Windows.System.VirtualKey.Control) & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+            if (ctrl)
+            {
+                switch (args.VirtualKey)
+                {
+                    // New
+                    case Windows.System.VirtualKey.N:
+                        NewDocumentCommand.Execute(null);
+                        break;
+                    // Open
+                    case Windows.System.VirtualKey.O:
+                        OpenDocumentCommand.Execute(null);
+                        break;
+                    // Save
+                    case Windows.System.VirtualKey.S:
+                        SaveDocumentCommand.Execute(null);
+                        break;
+                    // Close
+                    case Windows.System.VirtualKey.W:
+                    case Windows.System.VirtualKey.F4:
+                        CloseActiveDocumentCommand.Execute(null);
+                        break;
+                    // Prev/Next Document
+                    case Windows.System.VirtualKey.Tab:
+                        var shift = (Window.Current.CoreWindow.GetKeyState(Windows.System.VirtualKey.Shift) & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+                        if (shift)
+                        {
+                            PreviousDocumentCommand.Execute(null);
+                        }
+                        else
+                        {
+                            NextDocumentCommand.Execute(null);
+                        }
+                        break;
+                }
+            }
         }
     }
 }

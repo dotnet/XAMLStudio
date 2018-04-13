@@ -110,7 +110,7 @@
                exf:PivotExtensions.IsContentVisible="False">
             <Pivot.HeaderTemplate>
                 <DataTemplate x:DataType="models:XamlDocument">
-                    <TextBlock Text="{x:Bind Title}"/>
+                    <TextBlock Text="{x:Bind Title, Mode=OneWay}"/>
                 </DataTemplate>
             </Pivot.HeaderTemplate>
             <Pivot.RightHeader>

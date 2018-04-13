@@ -298,4 +298,20 @@ By: Michael A. Hawker</value>
     <value>When enabled, the XAML document will be updated to include any missing namespaces or other elements that would have prevented it from compiling. See Known Namespaces.</value>
     <comment>Update Content option description for SettingsPanel</comment>
   </data>
+  <data name="Application_CloseConfirm" xml:space="preserve">
+    <value>Do you want to save changes to {0}?</value>
+    <comment>Closing a changed document warning message.</comment>
+  </data>
+  <data name="Application_CloseConfirmCancel" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>Cancel and go back to document</comment>
+  </data>
+  <data name="Application_CloseConfirmDontSave" xml:space="preserve">
+    <value>Don't Save</value>
+    <comment>Close and don't save document.</comment>
+  </data>
+  <data name="Application_CloseConfirmSave" xml:space="preserve">
+    <value>Save</value>
+    <comment>Close and save document.</comment>
+  </data>
 </root>
