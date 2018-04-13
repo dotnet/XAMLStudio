@@ -57,9 +57,9 @@
                        Text="{x:Bind ViewModel.Document.Content, Mode=TwoWay}"
                        KeyDown="CodeEditor_KeyDown">
             <i:Interaction.Behaviors>
-                <ic:EventTriggerBehavior EventName="LostFocus">
+                <!--<ic:EventTriggerBehavior EventName="LostFocus">
                     <ic:InvokeCommandAction Command="{x:Bind ViewModel.UpdateXamlCommand}" />
-                </ic:EventTriggerBehavior>
+                </ic:EventTriggerBehavior>-->
                 <!--<ic:EventTriggerBehavior EventName="KeyDown">
                     <ic:InvokeCommandAction Command="{x:Bind ViewModel.KeyDownCommand}" />
                 </ic:EventTriggerBehavior>-->

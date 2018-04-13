@@ -23,11 +23,10 @@ namespace XamlStudio.ViewModels
             LineDecorations.Clear(); // Clear out old errors
             _bindingHistory.Clear();
 
-            var settings = new XamlRenderSettings()
+            var settings = new XamlRenderSettings(SettingsService.Instance.KnownNamespaces)
             {
                 IsBindingDebuggingEnabled = SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value,
                 KeepSuggestedContentSameLength = !SettingsService.Instance.IsContentUpdatedWithSuggested.Value,
-                KnownNamespaces = SettingsService.Instance.KnownNamespaces,
             };
 
             // Pre-parse            
@@ -83,11 +82,10 @@ namespace XamlStudio.ViewModels
             LineDecorations.Clear(); // Clear out old errors
             _bindingHistory.Clear();
 
-            var settings = new XamlRenderSettings()
+            var settings = new XamlRenderSettings(SettingsService.Instance.KnownNamespaces)
             {
                 IsBindingDebuggingEnabled = SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value,
-                KeepSuggestedContentSameLength = true,
-                KnownNamespaces = SettingsService.Instance.KnownNamespaces,
+                KeepSuggestedContentSameLength = true
             };
 
             Result = await XamlRenderer.RenderAsync(content, settings);

@@ -12,11 +12,11 @@ namespace XamlStudio.Toolkit.Models
     /// </summary>
     public class XamlRenderSettings
     {
-        private List<XmlnsNamespace> _namespaces = new List<XmlnsNamespace>();
+        private HashSet<XmlnsNamespace> _namespaces = new HashSet<XmlnsNamespace>();
         /// <summary>
         /// Gets the dictionary of known namespaces to automatically try and add if missing in given content to Render.
         /// </summary>
-        public List<XmlnsNamespace> KnownNamespaces
+        public HashSet<XmlnsNamespace> KnownNamespaces
         {
             get
             {
@@ -25,7 +25,7 @@ namespace XamlStudio.Toolkit.Models
             set
             {
                 // Make a copy of the incoming value as we don't want to be destructive.
-                _namespaces = value.ToArray().ToList();
+                _namespaces = new HashSet<XmlnsNamespace>(value);
             }
         }
 
@@ -58,5 +58,17 @@ namespace XamlStudio.Toolkit.Models
         /// Set the explicit DataContext used on the root UIElement.
         /// </summary>
         public object DataContext { get; set; }
+
+        /// <summary>
+        /// Constructs a new <see cref="XamlRenderSettings"/> object to use with <see cref="Services.XamlRenderService.RenderAsync(string, XamlRenderSettings)"/>.
+        /// </summary>
+        /// <param name="namespaces">Optional list of known namespaces for assistance.  <see cref="XamlRenderResultContext.SuggestedContent"/>.</param>
+        public XamlRenderSettings(IEnumerable<XmlnsNamespace> namespaces = null)
+        {
+            if (namespaces != null)
+            {
+                _namespaces = new HashSet<XmlnsNamespace>(namespaces);
+            }
+        }
     }
 }
