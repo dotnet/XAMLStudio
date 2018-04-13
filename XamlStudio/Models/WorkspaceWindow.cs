@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using Windows.Storage;
+using Windows.UI.Xaml;
 using XamlStudio.Helpers;
 
 namespace XamlStudio.Models
 {
     public class WorkspaceWindow: Observable
     {
-        private XamlDocument _activeFile;
         public XamlDocument ActiveFile
         {
-            get { return _activeFile; }
-            set { Set(ref _activeFile, value); }
+            get { return (XamlDocument)GetValue(ActiveFileProperty); }
+            set { SetValue(ActiveFileProperty, value); }
         }
+
+        // Using a DependencyProperty as the backing store for ActiveFile.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ActiveFileProperty =
+            DependencyProperty.Register(nameof(ActiveFile), typeof(XamlDocument), typeof(WorkspaceWindow), new PropertyMetadata(null));
 
         public bool IsWorkspaceOpen { get; private set; }
 

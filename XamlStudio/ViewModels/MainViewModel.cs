@@ -21,9 +21,5 @@ namespace XamlStudio.ViewModels
 
         private SettingsPanelViewModel _settingsVM = new SettingsPanelViewModel();
         public SettingsPanelViewModel SettingsViewModel => _settingsVM;
-
-        public MainViewModel()
-        {
-        }
     }
 }

@@ -99,10 +99,13 @@
             </Grid>
         </NavigationView>
 
-        <Pivot Grid.Column="1"
+        <Pivot x:Name="DocumentTabsPivot"
+               Grid.Column="1"
+               SelectionChanged="Pivot_SelectionChanged"
                ItemsSource="{x:Bind ViewModel.OpenFiles}"
-               SelectedItem="{x:Bind ViewModel.ActiveFile, Mode=TwoWay}"
                Style="{StaticResource MSEdgePivotStyle}"
+               DataContext="{x:Bind ViewModel}"
+               exf:PivotExtensions.CloseButtonCommand="{Binding CloseActiveDocumentCommand}"
                exf:PivotExtensions.PivotHeaderItemStyle="{StaticResource MSEdgeTabStyle}"
                exf:PivotExtensions.IsContentVisible="False">
             <Pivot.HeaderTemplate>

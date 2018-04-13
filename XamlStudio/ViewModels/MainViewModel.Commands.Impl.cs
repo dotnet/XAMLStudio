@@ -3,8 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
 using Windows.Storage.Pickers;
+using Windows.Storage.Provider;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using XamlStudio.Helpers;
 using XamlStudio.Models;
 
 namespace XamlStudio.ViewModels
@@ -32,19 +37,15 @@ namespace XamlStudio.ViewModels
     </Grid>
 </Page>"
             });
-            ////Documents.Add(new DocumentViewModel(TemplatedDocument()));
 
-            ////SelectedDocument = Documents.Last();
-
-            // Select Workspace Page
-            ////NavigationService.Navigate(typeof(WorkspacePage));
+            ActiveFile = OpenFiles.Last();
         }
 
         private async void OpenDocument(RoutedEventArgs args)
         {
             var picker = new FileOpenPicker();
-            picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.List;
-            picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary;
+            picker.ViewMode = PickerViewMode.List;
+            picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
             picker.FileTypeFilter.Add(".xaml");
             picker.FileTypeFilter.Add(".xml");
             picker.FileTypeFilter.Add(".bind");
@@ -65,6 +66,128 @@ namespace XamlStudio.ViewModels
 
                 ActiveFile = doc;
             }
+        }
+
+        private async void CloseActiveDocument(PivotItem item)
+        {
+            // TODO: Why is item null here?
+
+            if (ActiveFile.HasChanged)
+            {
+                // Create the message dialog and set its content
+                var messageDialog = new MessageDialog(String.Format("Application_CloseConfirm".GetLocalized(), ActiveFile.Title.TrimEnd('*')));
+
+                // Add commands and set their callbacks; both buttons use the same callback function instead of inline event handlers
+                var saveCmd = new UICommand("Application_CloseConfirmSave".GetLocalized());
+                var dontSaveCmd = new UICommand("Application_CloseConfirmDontSave".GetLocalized());
+                var cancelCmd = new UICommand("Application_CloseConfirmCancel".GetLocalized());
+                messageDialog.Commands.Add(saveCmd);
+                messageDialog.Commands.Add(dontSaveCmd);
+                messageDialog.Commands.Add(cancelCmd);
+
+                // Set the command that will be invoked by default
+                messageDialog.DefaultCommandIndex = 0;
+
+                // Set the command to be invoked when escape is pressed
+                messageDialog.CancelCommandIndex = 2;
+
+                // Show the message dialog
+                var result = await messageDialog.ShowAsync();
+
+                if (result == saveCmd)
+                {
+                    // Important to wait here for result.
+                    if (!await SaveDocument(ActiveFile))
+                    {
+                        // Cancel closing if they cancel the save (or error).
+                        return;
+                    }
+                }
+                else if (result == cancelCmd)
+                {
+                    return;
+                }
+            }
+
+            /*if (IsOnlyNewDocumentOpen)
+            {
+                // Save and Exit if the only doc we're closing is the 'new' one.
+                await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
+                Application.Current.Exit();
+                return;
+            }*/
+            
+            var current = ActiveFile;
+
+            // Create a new Document if we're removing the last one (it will be selected)
+            if (OpenFiles.Count == 1)
+            {
+                NewDocument(null);
+            }
+            else
+            {
+                // Otherwise, figure out what the new active file is.
+                var index = OpenFiles.IndexOf(current);
+                if (index == 0)
+                {
+                    ActiveFile = OpenFiles[++index];
+                }
+                else
+                {
+                    ActiveFile = OpenFiles[--index];
+                }
+            }
+
+            // Remove what we had as active (otherwise, the active would be null and we'd hit an error)
+            OpenFiles.RemoveAt(OpenFiles.IndexOf(current));            
+        }
+
+        private async Task<bool> SaveDocument(XamlDocument document)
+        {
+            StorageFile file = null;
+
+            // Save As
+            if (!document.CanSave)
+            {
+                var savePicker = new FileSavePicker();
+                savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+                // Dropdown of file types the user can save the file as
+                savePicker.FileTypeChoices.Add("eXtended Application Markup Language", new List<string>() { ".xaml" });
+                // Default file name if the user does not type one in or select a file to replace
+                savePicker.SuggestedFileName = "New Document";
+
+                file = await savePicker.PickSaveFileAsync();
+            }
+            else
+            {
+                // Resave to Existing File
+                file = document.BackingFile;
+            }
+
+            if (file != null)
+            {
+                // Prevent updates to the remote version of the file until we finish making changes and call CompleteUpdatesAsync.
+                CachedFileManager.DeferUpdates(file);
+
+                // Update/Save Document
+                await document.SaveAsAsync(file);
+
+                // Let Windows know that we're finished changing the file so the other app can update the remote version of the file.
+                // Completing updates may require Windows to ask for user input.
+                FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
+                if (status == FileUpdateStatus.Complete)
+                {
+                    //OutputTextBlock.Text = "File " + file.Name + " was saved.";
+                    return true;
+                }
+                else
+                {
+                    //OutputTextBlock.Text = "File " + file.Name + " couldn't be saved.";
+                    return false; // Should have another status/msg here?
+                }
+            }
+
+            return false;
         }
     }
 }
