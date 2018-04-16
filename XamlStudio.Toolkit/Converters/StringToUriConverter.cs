@@ -7,6 +7,7 @@ using Windows.UI.Xaml.Data;
 
 namespace XamlStudio.Toolkit.Converters
 {
+    [Bindable]
     public sealed class StringToUriConverter: IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)

@@ -9,6 +9,7 @@ using XamlStudio.Toolkit.Services;
 
 namespace XamlStudio.Toolkit.Converters
 {
+    [Bindable]
     public sealed class XamlBindingWrapperConverter : IValueConverter
     {
         // TODO: Create Wrapper which has access to this class (for location contexts)
