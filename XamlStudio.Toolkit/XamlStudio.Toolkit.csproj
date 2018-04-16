@@ -108,6 +108,7 @@
   <ItemGroup>
     <Compile Include="Converters\StringToUriConverter.cs" />
     <Compile Include="Converters\XamlBindingWrapperConverter.cs" />
+    <Compile Include="Extensions\XmlExtensions.cs" />
     <Compile Include="Models\ConversionRecord.cs" />
     <Compile Include="Models\XamlBindingInfo.cs" />
     <Compile Include="Models\XamlExceptionRange.cs" />

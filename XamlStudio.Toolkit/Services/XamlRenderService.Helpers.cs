@@ -114,7 +114,7 @@ namespace XamlStudio.Toolkit.Services
         /// </summary>
         /// <param name="element">Root element to start from.</param>
         /// <param name="func">Function to execute.</param>
-        private static void Visit(UIElement element, Action<UIElement> func)
+        private static void VisitUIElements(UIElement element, Action<UIElement> func)
         {
             // Visit element
             func(element);
@@ -124,7 +124,7 @@ namespace XamlStudio.Toolkit.Services
                 foreach (var child in (element as Panel).Children)
                 {
                     // Visit each child in the panel
-                    Visit(child, func);
+                    VisitUIElements(child, func);
                 }
             }
             else if (element != null)
@@ -136,7 +136,7 @@ namespace XamlStudio.Toolkit.Services
                 {
                     if (element.GetType().GetProperty(contentpropname).GetValue(element) is UIElement child)
                     {
-                        Visit(child, func);
+                        VisitUIElements(child, func);
                     }
                 }
             }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Linq;
 using Windows.UI.Xaml;
 
 namespace XamlStudio.Toolkit.Models
@@ -45,9 +46,9 @@ namespace XamlStudio.Toolkit.Models
         public bool IsFrameworkElement { get; internal set; }
 
         /// <summary>
-        /// <see cref="XmlDocument"/> representing <see cref="RenderedContent"/>.
+        /// <see cref="XDocument"/> representing <see cref="RenderedContent"/>.
         /// </summary>
-        public XmlDocument Document { get; internal set; }
+        public XDocument Document { get; internal set; }
 
         /// <summary>
         /// Gets the DataContext provided to the <see cref="Services.XamlRenderService"/> or loaded from d:DesignData.

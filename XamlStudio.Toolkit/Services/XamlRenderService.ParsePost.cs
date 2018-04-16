@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Linq;
 using Windows.Storage;
 using Windows.UI.Xaml;
+using XamlStudio.Toolkit.Extensions;
 using XamlStudio.Toolkit.Models;
 
 namespace XamlStudio.Toolkit.Services
@@ -14,9 +17,9 @@ namespace XamlStudio.Toolkit.Services
         private async Task ProcessDesignDataAsync(XamlRenderResultContext context, XamlRenderSettings settings)
         {
             var xaml = context.Document;
-            if (xaml != null && xaml.ChildNodes.Count > 0)
+            if (xaml != null && xaml.Elements().Count() > 0)
             {
-                var root = xaml.ChildNodes.Item(0);
+                var root = xaml.Root;
 
                 // Set DataContext to root element or to provided DataContext (if it exists).
                 // May get overwritten by d:DesignData loading later.
@@ -25,7 +28,9 @@ namespace XamlStudio.Toolkit.Services
                     fwe.DataContext = settings.DataContext == null ? context.Element : settings.DataContext;
                     context.DataContext = fwe.DataContext;
 
-                    if (root.Attributes.GetNamedItem("d:DesignWidth") is XmlAttribute dwidth)
+                    var attributes = root.Attributes();
+
+                    if (attributes.GetNamedItem("d:DesignWidth") is XAttribute dwidth)
                     {
                         if (int.TryParse(dwidth.Value, out int width))
                         {
@@ -33,7 +38,7 @@ namespace XamlStudio.Toolkit.Services
                         }
                     }
 
-                    if (root.Attributes.GetNamedItem("d:DesignHeight") is XmlAttribute dheight)
+                    if (attributes.GetNamedItem("d:DesignHeight") is XAttribute dheight)
                     {
                         if (int.TryParse(dheight.Value, out int height))
                         {
@@ -41,7 +46,7 @@ namespace XamlStudio.Toolkit.Services
                         }
                     }
 
-                    if (root.Attributes.GetNamedItem("d:DataContext") is XmlAttribute ddatacontext && settings.ResourceRoot != null)
+                    if (attributes.GetNamedItem("d:DataContext") is XAttribute ddatacontext && settings.ResourceRoot != null)
                     {
                         var dc = ddatacontext.Value;
                         var ddi = dc.IndexOf("d:DesignData");

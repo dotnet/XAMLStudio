@@ -68,6 +68,10 @@ namespace XamlStudio.Toolkit.Services
             // Start by pre-processing raw string to add any missing namespaces.
             PreProcessXmlns(ref result, ref settings);
 
+            ReadXmlTree(ref result);
+
+            GetBindings(result);
+
             // TODO: Record Line, Start, and Length of Changes to re-adjust error messages back to original positions.
             if (settings.IsBindingDebuggingEnabled)
             {
@@ -123,9 +127,6 @@ namespace XamlStudio.Toolkit.Services
             }
 
             // Need to look for Design-Time 'd:' properties and link to object somehow for modification afterwards as they're ignored by parser usually with mc:Ignorable="d"
-
-            ReadXmlTree(ref result);
-
             await ProcessDesignDataAsync(result, settings);
 
             // Load Binding Converters
@@ -149,7 +150,7 @@ namespace XamlStudio.Toolkit.Services
                 if (settings.ResourceRoot != null)
                 {
                     // Look for Image Objects in order to replace their Sources with our Images Loaded from Disk.
-                    Visit(element, async (child) =>
+                    VisitUIElements(element, async (child) =>
                     {
                         // TODO: Generalize to support toolkit:ImageEx, toolkit:RoundImageEx, Converters?
                         if (child is Image)
