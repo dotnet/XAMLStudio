@@ -1,4 +1,9 @@
-﻿using Windows.Storage;
+﻿using System;
+using System.Threading.Tasks;
+using System.Xml;
+using Windows.Storage;
+using Windows.UI.Xaml;
+using XamlStudio.Toolkit.Models;
 
 namespace XamlStudio.Toolkit.Services
 {
@@ -6,5 +11,70 @@ namespace XamlStudio.Toolkit.Services
 
     public partial class XamlRenderService
     {
+        private async Task ProcessDesignDataAsync(XamlRenderResultContext context, XamlRenderSettings settings)
+        {
+            var xaml = context.Document;
+            if (xaml != null && xaml.ChildNodes.Count > 0)
+            {
+                var root = xaml.ChildNodes.Item(0);
+
+                // Set DataContext to root element or to provided DataContext (if it exists).
+                // May get overwritten by d:DesignData loading later.
+                if (context.Element is FrameworkElement fwe)
+                {
+                    fwe.DataContext = settings.DataContext == null ? context.Element : settings.DataContext;
+                    context.DataContext = fwe.DataContext;
+
+                    if (root.Attributes.GetNamedItem("d:DesignWidth") is XmlAttribute dwidth)
+                    {
+                        if (int.TryParse(dwidth.Value, out int width))
+                        {
+                            fwe.Width = width;
+                        }
+                    }
+
+                    if (root.Attributes.GetNamedItem("d:DesignHeight") is XmlAttribute dheight)
+                    {
+                        if (int.TryParse(dheight.Value, out int height))
+                        {
+                            fwe.Height = height;
+                        }
+                    }
+
+                    if (root.Attributes.GetNamedItem("d:DataContext") is XmlAttribute ddatacontext && settings.ResourceRoot != null)
+                    {
+                        var dc = ddatacontext.Value;
+                        var ddi = dc.IndexOf("d:DesignData");
+                        if (!String.IsNullOrWhiteSpace(dc) && ddi != -1)
+                        {
+                            // Grab inner d:DesignData Clause
+                            var dd = dc.Substring(ddi, dc.IndexOf("}", ddi) - ddi);
+
+                            // Grab source
+                            var si = dd.IndexOf("Source");
+                            if (si != -1)
+                            {
+                                var ei = dd.IndexOf(","); // Next Argument
+                                if (ei == -1)
+                                {
+                                    ei = dd.IndexOf("}"); // Or End of Bind
+                                }
+
+                                if (ei != -1)
+                                {
+                                    var source = dd.Substring(si + 6, ei - si - 6).Trim('=', ' ');
+                                    var data = await LoadDataSource(settings.ResourceRoot, source);
+                                    if (data != null && fwe != null)
+                                    {
+                                        fwe.DataContext = data;
+                                        context.DataContext = data;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

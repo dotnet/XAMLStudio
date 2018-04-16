@@ -123,107 +123,23 @@ namespace XamlStudio.Toolkit.Services
             }
 
             // Need to look for Design-Time 'd:' properties and link to object somehow for modification afterwards as they're ignored by parser usually with mc:Ignorable="d"
-            XmlDocument xaml = new XmlDocument();
-            try
+
+            ReadXmlTree(ref result);
+
+            await ProcessDesignDataAsync(result, settings);
+
+            // Load Binding Converters
+            if (result.Element is FrameworkElement fwe)
             {
-                xaml.LoadXml(result.RenderedContent);
-                result.Document = xaml;
-            }
-            catch (Exception e)
-            {
-                // Highlight Error (we'll only get one at a time).
-                string msg = e.Message;
-
-                uint line = 1;
-                uint column = 1;
-
-                // message. Line 9, position 37.
-                int il = msg.LastIndexOf("Line ");
-                if (il >= 0)
+                if (settings.IsBindingDebuggingEnabled)
                 {
-                    line = uint.Parse(msg.Substring(il + 5, msg.IndexOf(",", il) - il - 5));
-                }
-
-                int pl = msg.LastIndexOf("position ");
-                if (pl >= 0)
-                {
-                    column = uint.Parse(msg.Substring(pl + 8, msg.IndexOf(".", pl) - pl - 8));
-                }
-
-                result.Errors.Add(new XamlExceptionRange(msg, e, line, column, line, column + 8)); // TODO: Inspect Content at this position and go until space / EOL
-            }
-
-            if (xaml.ChildNodes.Count > 0)
-            {
-                var root = xaml.ChildNodes.Item(0);
-
-                // Set DataContext to root element or to provided DataContext (if it exists).
-                // May get overwritten by d:DesignData loading later.
-                if (element is FrameworkElement fwe)
-                {
-                    fwe.DataContext = settings.DataContext == null ? element : settings.DataContext;
-                    result.DataContext = fwe.DataContext;
-
-                    if (root.Attributes.GetNamedItem("d:DesignWidth") is XmlAttribute dwidth)
+                    foreach (var binding in XamlBindingWrapperManager.Instance.GetBindings(this.Id))
                     {
-                        if (int.TryParse(dwidth.Value, out int width))
+                        if (!string.IsNullOrWhiteSpace(binding.ConverterKey) && fwe.Resources.ContainsKey(binding.ConverterKey))
                         {
-                            fwe.Width = width;
+                            binding.Converter = fwe.Resources[binding.ConverterKey] as IValueConverter;
                         }
-                    }
-
-                    if (root.Attributes.GetNamedItem("d:DesignHeight") is XmlAttribute dheight)
-                    {
-                        if (int.TryParse(dheight.Value, out int height))
-                        {
-                            fwe.Height = height;
-                        }
-                    }
-
-                    if (root.Attributes.GetNamedItem("d:DataContext") is XmlAttribute ddatacontext && settings.ResourceRoot != null)
-                    {
-                        var dc = ddatacontext.Value;
-                        var ddi = dc.IndexOf("d:DesignData");
-                        if (!String.IsNullOrWhiteSpace(dc) && ddi != -1)
-                        {
-                            // Grab inner d:DesignData Clause
-                            var dd = dc.Substring(ddi, dc.IndexOf("}", ddi) - ddi);
-
-                            // Grab source
-                            var si = dd.IndexOf("Source");
-                            if (si != -1)
-                            {
-                                var ei = dd.IndexOf(","); // Next Argument
-                                if (ei == -1)
-                                {
-                                    ei = dd.IndexOf("}"); // Or End of Bind
-                                }
-
-                                if (ei != -1)
-                                {
-                                    var source = dd.Substring(si + 6, ei - si - 6).Trim('=', ' ');
-                                    var data = await LoadDataSource(settings.ResourceRoot, source);
-                                    if (data != null && element is FrameworkElement)
-                                    {
-                                        (element as FrameworkElement).DataContext = data;
-                                        result.DataContext = data;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    // Load Binding Converters
-                    if (settings.IsBindingDebuggingEnabled)
-                    {
-                        foreach (var binding in XamlBindingWrapperManager.Instance.GetBindings(this.Id))
-                        {
-                            if (!string.IsNullOrWhiteSpace(binding.ConverterKey) && fwe.Resources.ContainsKey(binding.ConverterKey))
-                            {
-                                binding.Converter = fwe.Resources[binding.ConverterKey] as IValueConverter;
-                            }
-                            // If Key not found, should already be Xaml Compiler Error and not get here.
-                        }
+                        // If Key not found, should already be Xaml Compiler Error and not get here.
                     }
                 }
             }
@@ -273,141 +189,6 @@ namespace XamlStudio.Toolkit.Services
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Given a StorageFolder and path loads a Data file to load as an object.
-        /// </summary>
-        /// <param name="source">Starting StorageFolder.</param>
-        /// <param name="path">string path.</param>
-        /// <returns></returns>
-        private static async Task<object> LoadDataSource(StorageFolder source, string path)
-        {
-            var file = await GetFileFromPath(source, path);
-
-            dynamic data = null;
-
-            if (file != null)
-            {
-                var content = await FileIO.ReadTextAsync(file);
-
-                // TODO: Do I just add errors in deserializing to the Errors bucket as well?
-                // Do I have a separate Error Bucket?
-                switch (file.FileType.ToLower())
-                {
-                    case ".json":
-                        try
-                        {
-                            data = JsonConvert.DeserializeObject<ExpandoObject>(content);
-                        }
-                        catch (Exception e)
-                        {
-
-                        }
-                        break;
-                    case ".xml":
-                        // TODO
-                        break;  
-                }
-            }
-
-            return data;
-        }
-
-        /// <summary>
-        /// Given a path, e.g. "Images\Owl.jpg", navigates the structure from StorageFolder/Files.
-        /// </summary>
-        /// <param name="root">Starting StorageFolder.</param>
-        /// <param name="path">string path.</param>
-        /// <returns></returns>
-        private static async Task<StorageFile> GetFileFromPath(StorageFolder root, string path)
-        {
-            // Flip path around and try again.
-            if (path.Contains("\\"))
-            {
-                return await GetFileFromPath(root, path.Replace("\\", "/"));
-            }
-
-            // Trim start if we have an absolute marker, as we'll still be going from the same place.
-            // TODO: Do we need to do this outside here?
-            if (path.StartsWith("/"))
-            {
-                path = path.Substring(1);
-            }
-
-            // If we have a subfolder path, we need to navigate into folder first.
-            if (path.Contains("/"))
-            {
-                var folder = path.Substring(0, path.IndexOf("/"));
-                if (await root.TryGetItemAsync(folder) is StorageFolder newroot)
-                {
-                    // Call again with subfolder and truncated path.
-                    return await GetFileFromPath(newroot, path.Substring(folder.Length + 1));
-                }
-
-                // Couldn't find sub-folder.
-                return null;
-            }
-
-            // Return file if it exists.
-            return await root.TryGetItemAsync(path) as StorageFile;
-        }
-
-        /// <summary>
-        /// Visits each element and child of the given element and passes them to the given action.
-        /// </summary>
-        /// <param name="element">Root element to start from.</param>
-        /// <param name="func">Function to execute.</param>
-        private static void Visit(UIElement element, Action<UIElement> func)
-        {
-            // Visit element
-            func(element);
-
-            if (element is Panel)
-            {
-                foreach (var child in (element as Panel).Children)
-                {
-                    // Visit each child in the panel
-                    Visit(child, func);
-                }
-            }
-            else if (element != null)
-            {
-                // Use ContentProperty Attribute to figure out which property we should look for as the 'Content' for this control
-                var contentpropname = ContentPropertySearch(element.GetType());
-                //var attr = element.GetType().GetTypeInfo().GetCustomAttribute(typeof(ContentPropertyAttribute), true) as ContentPropertyAttribute;
-                if (contentpropname != null)
-                {
-                    if (element.GetType().GetProperty(contentpropname).GetValue(element) is UIElement child)
-                    {
-                        Visit(child, func);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Retrieves the Content Property's Name for the given type.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        private static string ContentPropertySearch(Type type)
-        {
-            if (type == null)
-            {
-                return null;
-            }
-
-            // Using GetCustomAttribute directly isn't working for some reason, so we'll dig in ourselves
-            //var attr = type.GetTypeInfo().GetCustomAttribute(typeof(ContentPropertyAttribute), true);
-            var attr = type.GetTypeInfo().CustomAttributes.FirstOrDefault((element) => element.AttributeType == typeof(ContentPropertyAttribute));
-            if (attr != null)
-            {
-                //return attr as ContentPropertyAttribute;
-                return attr.NamedArguments.First().TypedValue.Value as string;
-            }
-
-            return ContentPropertySearch(type.GetTypeInfo().BaseType);
         }
     }
 }
