@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using Windows.Storage;
 using XamlStudio.Toolkit.Models;
+using XamlStudio.Toolkit.Parsers;
 
 namespace XamlStudio.Toolkit.Services
 {
@@ -76,100 +77,35 @@ namespace XamlStudio.Toolkit.Services
                     }
                 }
             }
+        }
 
-            int offset = 0;
+        // Given all binding info, return a new binding string with our shim injected.
+        private string InjectBindingConverter(string original, BindingText binding, XamlBindingInfo info)
+        {
+            const string converterShim = "{StaticResource XamlBindingWrapper}";
+            var foundConverter = !string.IsNullOrWhiteSpace(binding.Converter);
+            var foundConverterParameter = !string.IsNullOrWhiteSpace(binding.ConverterParameter);
 
-            foreach (Match binding in BindingSearcher.Matches(context.RenderedContent))
+            if (foundConverter)
             {
-                var isXBind = binding.Groups["Type"]?.Value == "x:Bind";
-                var quoteChar = binding.Value[0]; // Grab the ' or " char surrounding our binding expression.
-
-                var original = binding.Value;
-
-                // Calculate Editor Based Position // TODO: Make sure we're not out of line with earlier modification steps
-                uint line = 1 + (uint)context.RenderedContent.Substring(0, binding.Index + offset).Count(c => c == '\n');
-                var position = binding.Index + offset - context.RenderedContent.LastIndexOf('\n', binding.Index + offset);
-
-                var bindingInfo = new Models.XamlBindingInfo(line, (uint)position, original);
-
-                XamlBindingWrapperManager.Instance.AddNewBinding(this.Id, bindingInfo);
-
-                const string newBinding = "{StaticResource XamlBindingWrapper}";
-                var foundConverter = false;
-                var foundConverterParameter = false;
-
-                // Copy of ongoing permutations to original binding string holder
-                var newbindingstr = string.Empty + original;
-
-                foreach (Match property in BindingPropertyExtractor.Matches(binding.Value))
-                {
-                    if (property.Groups["Property"]?.Value == "Converter")
-                    {
-                        foundConverter = true;
-
-                        var value = property.Groups["Value"].Value;
-                        var space = value.IndexOf(" ");
-
-                        var converterkey = value.Substring(space + 1, value.Length - space - 2);
-
-                        bindingInfo.ConverterKey = converterkey;
-
-                        // Replace converter with our new one
-                        var str = newbindingstr.Replace(property.Groups["Value"].Value, newBinding);
-
-                        // Inject back to original string
-                        context.RenderedContent = context.RenderedContent.Replace(newbindingstr, str);
-
-                        // Update positions for next strings
-                        offset += (str.Length - newbindingstr.Length);
-
-                        newbindingstr = str;
-                    }
-                    else if (property.Groups["Property"]?.Value == "ConverterParameter")
-                    {
-                        foundConverterParameter = true;
-
-                        // TODO: Retrieve original converter parameter if resource??? (Probably have to do same as Converter, not sure how common/capabilties
-                        bindingInfo.ConverterParameter = property.Groups["Value"].Value;
-
-                        // Our new converter parameter is 'Id{Binding ...}'
-                        var str = newbindingstr.Replace(property.Groups["Value"].Value, string.Empty + bindingInfo.Id);
-
-                        // Inject back to original string
-                        context.RenderedContent = context.RenderedContent.Replace(newbindingstr, str);
-
-                        // Update positions for next strings
-                        offset += (str.Length - newbindingstr.Length);
-
-                        newbindingstr = str;
-                    }
-                }
-
-                if (!foundConverter)
-                {
-                    // TODO: BUGBUG need to remember changes to string above too, as don't know if we had a parameter without a converter (odd?)
-                    // If no converter on binding, add ours
-                    var str = binding.Value.Substring(0, binding.Value.Length - 2) + ",Converter=" + newBinding + "}" + quoteChar;
-
-                    context.RenderedContent = context.RenderedContent.Replace(newbindingstr, str);
-
-                    // Update positions for next strings
-                    offset += (str.Length - newbindingstr.Length);
-
-                    newbindingstr = str;
-                }
-
-                if (!foundConverterParameter)
-                {
-                    var str = newbindingstr.Substring(0, newbindingstr.Length - 2) + ",ConverterParameter=" + bindingInfo.Id + "}" + quoteChar;
-
-                    // If no converterparameter on binding, add ours
-                    context.RenderedContent = context.RenderedContent.Replace(newbindingstr, str);
-
-                    // Update positions for next strings
-                    offset += (str.Length - newbindingstr.Length);
-                }
+                original = original.Replace(binding.Converter, converterShim);
             }
+            else
+            {
+                // If no converter on binding, add ours
+                original = original.Substring(0, original.Length - 1) + ",Converter=" + converterShim + "}";
+            }
+
+            if (foundConverterParameter)
+            {
+                original = original.Replace(binding.ConverterParameter, string.Empty + info.Id);
+            }
+            else
+            {
+                original = original.Substring(0, original.Length - 1) + ",ConverterParameter=" + info.Id + "}";
+            }
+
+            return original;
         }
     }
 }

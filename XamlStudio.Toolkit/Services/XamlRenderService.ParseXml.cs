@@ -1,10 +1,12 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using Windows.Storage;
 using XamlStudio.Toolkit.Extensions;
 using XamlStudio.Toolkit.Models;
+using XamlStudio.Toolkit.Parsers;
 
 namespace XamlStudio.Toolkit.Services
 {
@@ -54,14 +56,30 @@ namespace XamlStudio.Toolkit.Services
                         if (attr.Value.StartsWith("{Binding"))
                         {
                             // Found Binding
-                            var bindingInfo = new Models.XamlBindingInfo((uint)((IXmlLineInfo)attr).LineNumber, (uint)((IXmlLineInfo)attr).LinePosition, attr.Value);
-
+                            var bindingInfo = new Models.XamlBindingInfo((uint)((IXmlLineInfo)attr).LineNumber, (uint)(((IXmlLineInfo)attr).LinePosition + attr.Name.LocalName.Length + 2), attr.Value);
+                            bindingInfo.PropertyAttribute = attr;
+                            bindingInfo.PropertyName = attr.Name.LocalName;
+                            bindingInfo.ElementTypeName = attr.Parent.Name.LocalName;
+                            bindingInfo.ElementName = attr.Parent.Attributes().GetNamedItem("{http://schemas.microsoft.com/winfx/2006/xaml}Name")?.Value;
+                            
                             XamlBindingWrapperManager.Instance.AddNewBinding(Id, bindingInfo);
 
+                            var bt = BindingParser.Parse(attr.Value);
 
+                            attr.Value = InjectBindingConverter(attr.Value, bt, bindingInfo);
                         }
                     }
                 });
+
+                // TODO: Location?
+                StringWriter sw = new StringWriter();
+
+                context.Document.Save(sw, SaveOptions.DisableFormatting);
+
+                context.RenderedContent = sw.ToString();
+
+                // Remove xml <?xml version="1.0" encoding="utf-16"?>
+                context.RenderedContent = context.RenderedContent.Substring(context.RenderedContent.IndexOf("<", 1));
             }
         }
 

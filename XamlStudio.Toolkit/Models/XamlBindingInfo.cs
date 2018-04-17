@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Windows.UI.Xaml.Data;
 using XamlStudio.Toolkit.Services;
 
@@ -12,7 +15,7 @@ namespace XamlStudio.Toolkit.Models
     /// <summary>
     /// Record to store information about a Binding and its history.
     /// </summary>
-    public class XamlBindingInfo
+    public class XamlBindingInfo : INotifyPropertyChanged
     {
         public enum XamlBindingState
         {
@@ -37,6 +40,11 @@ namespace XamlStudio.Toolkit.Models
         public uint Column { get; private set; }
         public int Length { get { return this.OriginalBindingString.Length; } }
 
+        public XAttribute PropertyAttribute { get; set; }
+        public string PropertyName { get; set; }
+        public string ElementTypeName { get; set; }
+        public string ElementName { get; set; }
+
         // TODO: Create a Binding Log window in Xaml Studio which shows all binding events and lets you group/sort/search by time, value, status (etc...)
         public ObservableCollection<ConversionRecord> BindingHistory { get; set; } = new ObservableCollection<ConversionRecord>();
 
@@ -55,7 +63,23 @@ namespace XamlStudio.Toolkit.Models
 
         public object LastConvertedResult { get { return this.BindingHistory.LastOrDefault()?.Result; } }
 
-        public object LastConvertedResultOrValue { get { return (bool)this.BindingHistory.LastOrDefault()?.HasResult ? this.BindingHistory.LastOrDefault()?.Result : this.BindingHistory.LastOrDefault()?.Value; } }
+        public object LastConvertedResultOrValue
+        {
+            get
+            {
+                if (!HasBinded)
+                {
+                    return null;
+                }
+
+                return (bool)this.BindingHistory.LastOrDefault()?.HasResult ? this.BindingHistory.LastOrDefault()?.Result : this.BindingHistory.LastOrDefault()?.Value;
+            }
+        }
+
+        public string LastConvertedResultOrValueString
+        {
+            get { return LastConvertedResultOrValue?.ToString() ?? string.Empty; }
+        }
 
         public string LastExceptionMessage { get { return this.BindingHistory.LastOrDefault()?.ExceptionObject.Message;  } }
 
@@ -94,6 +118,13 @@ namespace XamlStudio.Toolkit.Models
 
             BindingUpdated?.Invoke(this, record, value);
 
+            OnPropertyChanged(nameof(HasBinded));
+            OnPropertyChanged(nameof(FirstSetTime));
+            OnPropertyChanged(nameof(LastConvertedValue));
+            OnPropertyChanged(nameof(LastConvertedResultOrValue));
+            OnPropertyChanged(nameof(LastConvertedResultOrValueString));
+            OnPropertyChanged(nameof(LastKnownBindingState));
+
             return value;
         }
 
@@ -104,6 +135,14 @@ namespace XamlStudio.Toolkit.Models
             this.BindingHistory.Add(record);
 
             BindingUpdated?.Invoke(this, record, result);
+
+            OnPropertyChanged(nameof(HasBinded));
+            OnPropertyChanged(nameof(FirstSetTime));
+            OnPropertyChanged(nameof(LastConvertedValue));
+            OnPropertyChanged(nameof(LastConvertedResult));
+            OnPropertyChanged(nameof(LastConvertedResultOrValue));
+            OnPropertyChanged(nameof(LastConvertedResultOrValueString));
+            OnPropertyChanged(nameof(LastKnownBindingState));
 
             return result;
         }
@@ -116,8 +155,24 @@ namespace XamlStudio.Toolkit.Models
 
             BindingUpdated?.Invoke(this, record, error);
 
+            OnPropertyChanged(nameof(HasBinded));
+            OnPropertyChanged(nameof(FirstSetTime));
+            OnPropertyChanged(nameof(LastExceptionMessage));
+            OnPropertyChanged(nameof(LastKnownBindingState));
+
             // Pass null in so binding can use default null fallback if it exists on binding fail?
             return null;
         }
+
+        public override string ToString()
+        {
+            var start = string.IsNullOrWhiteSpace(ElementName) ? ElementTypeName : ElementName + "[" + ElementTypeName + "]";
+
+            return start + "." + PropertyName;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

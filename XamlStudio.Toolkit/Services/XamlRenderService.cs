@@ -75,6 +75,7 @@ namespace XamlStudio.Toolkit.Services
             // TODO: Record Line, Start, and Length of Changes to re-adjust error messages back to original positions.
             if (settings.IsBindingDebuggingEnabled)
             {
+                // TODO: Do this in XML (add required resources)
                 InterceptBindings(ref result);
             }
 

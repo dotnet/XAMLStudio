@@ -79,9 +79,11 @@
                 <ListView ItemsSource="{x:Bind MainViewModel.DocumentViewModel.Result.Bindings, Mode=OneWay}">
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="models:XamlBindingInfo">
-                            <controls:Expander Header="{x:Bind OriginalBindingString}"
-                                               HeaderStyle="{StaticResource VSCodeExpanderStyle}"
-                                               HorizontalContentAlignment="Stretch">
+                            <controls:Expander HeaderStyle="{StaticResource VSCodeExpanderStyle}"
+                                               HorizontalContentAlignment="Stretch" FontFamily="Segoe UI">
+                                <controls:Expander.Header>
+                                    <TextBlock FontFamily="Segoe UI"><Run Text="{x:Bind}"/> = <Run Text="{x:Bind LastConvertedResultOrValueString, Mode=OneWay}"/></TextBlock>
+                                </controls:Expander.Header>
                                 <!-- TODO: Use ACV here too. -->
                                 <ListView ItemsSource="{x:Bind BindingHistory}"
                                           ItemTemplate="{StaticResource ConversionRecordTemplate}"/>
