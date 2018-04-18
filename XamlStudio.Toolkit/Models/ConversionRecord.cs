@@ -23,14 +23,17 @@ namespace XamlStudio.Toolkit.Models
 
         public Exception ExceptionObject { get; private set; }
 
+        public XamlBindingInfo Parent { get; private set; }
+
         /// <summary>
         /// If there was no converter, then it's just a value that was passed thru.
         /// </summary>
         /// <param name="value"></param>
-        public ConversionRecord(object value)
+        public ConversionRecord(XamlBindingInfo parent, object value)
         {
-            this.Value = value;
-            this.IsSuccessful = true;
+            Parent = parent;
+            Value = value;
+            IsSuccessful = true;
         }
 
         /// <summary>
@@ -38,12 +41,13 @@ namespace XamlStudio.Toolkit.Models
         /// </summary>
         /// <param name="value"></param>
         /// <param name="result"></param>
-        public ConversionRecord(object value, object result)
+        public ConversionRecord(XamlBindingInfo parent, object value, object result)
         {
-            this.Value = value;
-            this.Result = result;
-            this.HasResult = true;
-            this.IsSuccessful = true;
+            Parent = parent;
+            Value = value;
+            Result = result;
+            HasResult = true;
+            IsSuccessful = true;
         }
 
         /// <summary>
@@ -51,10 +55,11 @@ namespace XamlStudio.Toolkit.Models
         /// </summary>
         /// <param name="value"></param>
         /// <param name="error"></param>
-        public ConversionRecord(object value, Exception error)
+        public ConversionRecord(XamlBindingInfo parent, object value, Exception error)
         {
-            this.Value = value;
-            this.ExceptionObject = error;
+            Parent = parent;
+            Value = value;
+            ExceptionObject = error;
         }
     }
 }

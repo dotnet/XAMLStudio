@@ -33,5 +33,15 @@ namespace XamlStudio.Views
         {
             this.InitializeComponent();
         }
+
+        private void ListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var line = (e.ClickedItem as ConversionRecord)?.Parent.Line;
+
+            if (line != null && line.HasValue)
+            {
+                MainViewModel.DocumentViewModel.NavigateToLineCommand.Execute(line.Value);
+            }
+        }
     }
 }

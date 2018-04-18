@@ -112,7 +112,7 @@ namespace XamlStudio.Toolkit.Models
 
         public object NewValue(object value)
         {
-            var record = new ConversionRecord(value);
+            var record = new ConversionRecord(this, value);
 
             this.BindingHistory.Add(record);
 
@@ -130,7 +130,7 @@ namespace XamlStudio.Toolkit.Models
 
         public object NewConversion(object value, object result)
         {
-            var record = new ConversionRecord(value, result);
+            var record = new ConversionRecord(this, value, result);
 
             this.BindingHistory.Add(record);
 
@@ -149,7 +149,7 @@ namespace XamlStudio.Toolkit.Models
 
         public object NewException(object value, Exception error)
         {
-            var record = new ConversionRecord(value, error);
+            var record = new ConversionRecord(this, value, error);
 
             this.BindingHistory.Add(record);
 

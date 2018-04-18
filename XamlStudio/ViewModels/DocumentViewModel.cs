@@ -116,6 +116,8 @@ namespace XamlStudio.ViewModels
             }
         }
 
+        public ICommand NavigateToLineCommand { get; set; }
+
         public XamlRenderService XamlRenderer { get; } = new XamlRenderService();
 
         public DocumentViewModel()

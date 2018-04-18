@@ -19,18 +19,37 @@
     mc:Ignorable="d">
 
     <Page.Resources>
+        <Style x:Key="ListViewItemContainerWideStyle" TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        </Style>
         <DataTemplate x:Key="ConversionRecordTemplate" x:DataType="models:ConversionRecord">
-            <Grid>
+            <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="0.8*"/>
+                    <ColumnDefinition Width="0.2*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <TextBlock Text="{x:Bind Value.ToString()}" Grid.Column="0"/>
-                <TextBlock Text="{x:Bind Result.ToString()}" Grid.Column="1"/>
+                <TextBlock Text="{x:Bind Value.ToString()}" Grid.Column="1" HorizontalAlignment="Right"/>
+                <TextBlock Text="{x:Bind Result.ToString()}" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right"/>
+                <TextBlock Text="{x:Bind TimeStamp.ToString('HH:mm:ss.fffffff', globalization:CultureInfo.CurrentCulture)}" Style="{ThemeResource CaptionTextBlockStyle}" Grid.Row="1"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="ConversionRecordWithParentTemplate" x:DataType="models:ConversionRecord">
+            <Grid HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.8*"/>
+                    <ColumnDefinition Width="0.2*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock Text="{x:Bind Parent.ToString()}" Grid.Column="0"/>
+                <TextBlock Text="{x:Bind Value.ToString()}" Grid.Column="1" HorizontalAlignment="Right"/>
+                <TextBlock Text="{x:Bind Result.ToString()}" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right"/>
                 <TextBlock Text="{x:Bind TimeStamp.ToString('HH:mm:ss.fffffff', globalization:CultureInfo.CurrentCulture)}" Style="{ThemeResource CaptionTextBlockStyle}" Grid.Row="1"/>
             </Grid>
         </DataTemplate>
@@ -51,7 +70,7 @@
                     <ColumnDefinition Width="90"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Style="{StaticResource VSCodeAppBarHeaderTextStyle}">DEBUG</TextBlock>
-                <ComboBox x:Name="BindingViewMode" Grid.Column="1" SelectedIndex="1"
+                <ComboBox x:Name="BindingViewMode" Grid.Column="1" SelectedIndex="0"
                           Margin="0,0,12,0">
                     <x:String>Bindings</x:String>
                     <x:String>History</x:String>
@@ -76,8 +95,8 @@
         </Border>
         <future:SwitchPresenter Value="{x:Bind BindingViewMode.SelectedValue, Mode=OneWay}" Grid.Row="1">
             <future:Case Value="Bindings">
-                <ListView ItemsSource="{x:Bind MainViewModel.DocumentViewModel.Result.Bindings, Mode=OneWay}">
-                    <ListView.ItemTemplate>
+                <ItemsControl ItemsSource="{x:Bind MainViewModel.DocumentViewModel.Result.Bindings, Mode=OneWay}">
+                    <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="models:XamlBindingInfo">
                             <controls:Expander HeaderStyle="{StaticResource VSCodeExpanderStyle}"
                                                HorizontalContentAlignment="Stretch" FontFamily="Segoe UI">
@@ -86,15 +105,23 @@
                                 </controls:Expander.Header>
                                 <!-- TODO: Use ACV here too. -->
                                 <ListView ItemsSource="{x:Bind BindingHistory}"
-                                          ItemTemplate="{StaticResource ConversionRecordTemplate}"/>
+                                          ItemTemplate="{StaticResource ConversionRecordTemplate}"
+                                          ItemContainerStyle="{StaticResource ListViewItemContainerWideStyle}"
+                                          HorizontalContentAlignment="Stretch"
+                                          IsItemClickEnabled="True"
+                                          ItemClick="ListView_ItemClick"/>
                             </controls:Expander>
                         </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </future:Case>
             <future:Case Value="History">
                 <ListView ItemsSource="{x:Bind MainViewModel.DocumentViewModel.BindingHistory, Mode=OneWay}"
-                          ItemTemplate="{StaticResource ConversionRecordTemplate}" />
+                          ItemTemplate="{StaticResource ConversionRecordWithParentTemplate}"
+                          ItemContainerStyle="{StaticResource ListViewItemContainerWideStyle}"
+                          HorizontalContentAlignment="Stretch"
+                          IsItemClickEnabled="True"
+                          ItemClick="ListView_ItemClick"/>
             </future:Case>
         </future:SwitchPresenter>
         <TextBlock Grid.Row="1"

@@ -68,11 +68,18 @@ namespace XamlStudio.Views
             CodeEditor.Options.Folding = true;
 
             Loaded += Document_Loaded;
+
+            ViewModel.NavigateToLineCommand = new RelayCommand<uint>(NavigateToLine);
         }
 
         private void Document_Loaded(object sender, RoutedEventArgs e)
         {
             MainViewModel.DocumentViewModel = ViewModel;   
+        }
+
+        private async void NavigateToLine(uint line)
+        {
+            await CodeEditor.RevealLineInCenterIfOutsideViewportAsync(line);
         }
 
         private void CodeEditor_KeyDown(Monaco.CodeEditor sender, Monaco.Helpers.WebKeyEventArgs args)
