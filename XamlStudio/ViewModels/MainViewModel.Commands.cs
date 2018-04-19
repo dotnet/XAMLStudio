@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -19,6 +20,8 @@ namespace XamlStudio.ViewModels
         public ICommand SaveDocumentCommand { get; private set; }
         public ICommand CloseActiveDocumentCommand { get; private set; }
 
+        public ICommand OpenFileCommand { get; private set; }
+
         public ICommand KeyDownCommand { get; private set; }
         public ICommand PreviousDocumentCommand { get; private set; }
         public ICommand NextDocumentCommand { get; private set; }
@@ -29,6 +32,8 @@ namespace XamlStudio.ViewModels
             OpenDocumentCommand = new RelayCommand<RoutedEventArgs>(OpenDocument);
             SaveDocumentCommand = new RelayCommand<XamlDocument>(new Action<XamlDocument>(async (args) => { await SaveDocument(args); }));
             CloseActiveDocumentCommand = new RelayCommand<PivotItem>(CloseActiveDocument);
+
+            OpenFileCommand = new RelayCommand<StorageFile>(OpenFile);
 
             KeyDownCommand = new RelayCommand<KeyEventArgs>(KeyDown);
             PreviousDocumentCommand = new RelayCommand<RoutedEventArgs>(PreviousDocument);

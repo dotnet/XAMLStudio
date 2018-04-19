@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
 using XamlStudio.Helpers;
 
 namespace XamlStudio.Services
@@ -97,6 +98,38 @@ namespace XamlStudio.Services
 
             // Notify others of change.
             OnPropertyChanged(propertyName);
+        }
+
+        public event EventHandler<StorageFile> RecentFilesChanged;
+
+        public void RememberFile(StorageFile file)
+        {
+            StorageApplicationPermissions.MostRecentlyUsedList.Add(file);
+
+            RecentFilesChanged?.Invoke(this, file);
+        }
+
+        public async Task<IEnumerable<StorageFile>> GetRecentFilesAsync(int num)
+        {
+            var files = new List<StorageFile>();
+            foreach (AccessListEntry entry in StorageApplicationPermissions.MostRecentlyUsedList.Entries)
+            {
+                string mruToken = entry.Token;
+                string mruMetadata = entry.Metadata;
+                IStorageItem item = await StorageApplicationPermissions.MostRecentlyUsedList.GetItemAsync(mruToken);
+
+                if (item.IsOfType(StorageItemTypes.File))
+                {
+                    files.Add(item as StorageFile);
+                }
+
+                if (files.Count == num)
+                {
+                    break;
+                }
+            }
+
+            return files;
         }
     }
 

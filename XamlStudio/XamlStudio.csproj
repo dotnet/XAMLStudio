@@ -178,6 +178,9 @@
     <Compile Include="Views\UriSchemeExamplePage.xaml.cs">
       <DependentUpon>UriSchemeExamplePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\WelcomePage.xaml.cs">
+      <DependentUpon>WelcomePage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
@@ -238,6 +241,10 @@
     <Page Include="Views\UriSchemeExamplePage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\WelcomePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

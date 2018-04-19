@@ -12,6 +12,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using XamlStudio.Helpers;
 using XamlStudio.Models;
+using XamlStudio.Services;
 
 namespace XamlStudio.ViewModels
 {
@@ -61,12 +62,19 @@ namespace XamlStudio.ViewModels
                     Documents.RemoveAt(0);
                 }*/
 
-                // Application now has read/write access to the picked file
-                var doc = await XamlDocument.LoadFromFileAsync(file);
-                OpenFiles.Add(doc);
-
-                ActiveFile = doc;
+                OpenFile(file);
             }
+        }
+
+        private async void OpenFile(StorageFile file)
+        {
+            // Application now has read/write access to the picked file
+            var doc = await XamlDocument.LoadFromFileAsync(file);
+            OpenFiles.Add(doc);
+
+            SettingsService.Instance.RememberFile(file);
+
+            ActiveFile = doc;
         }
 
         private async void CloseActiveDocument(PivotItem item)
@@ -178,6 +186,7 @@ namespace XamlStudio.ViewModels
                 FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
                 if (status == FileUpdateStatus.Complete)
                 {
+                    SettingsService.Instance.RememberFile(file);
                     //OutputTextBlock.Text = "File " + file.Name + " was saved.";
                     return true;
                 }
