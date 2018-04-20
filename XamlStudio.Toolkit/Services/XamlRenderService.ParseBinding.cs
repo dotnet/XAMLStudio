@@ -88,7 +88,8 @@ namespace XamlStudio.Toolkit.Services
 
             if (foundConverter)
             {
-                original = original.Replace(binding.Converter, converterShim);
+                // TODO: Do I need to worry about it not being "{StaticResource"?
+                original = original.Replace(binding.Converter, "XamlBindingWrapper");
             }
             else
             {

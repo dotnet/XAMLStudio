@@ -80,7 +80,7 @@ namespace XamlStudio.ViewModels
 
         private CssLineStyle _bindingStyleSuccess = new CssLineStyle()
         {
-            BackgroundColor = new SolidColorBrush(Colors.LawnGreen)
+            BackgroundColor = new SolidColorBrush(Colors.DarkGreen)
         };
 
         private CssLineStyle _bindingStyleError = new CssLineStyle()

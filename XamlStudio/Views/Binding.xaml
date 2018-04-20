@@ -25,8 +25,8 @@
         <DataTemplate x:Key="ConversionRecordTemplate" x:DataType="models:ConversionRecord">
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.8*"/>
-                    <ColumnDefinition Width="0.2*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition />
