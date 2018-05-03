@@ -62,7 +62,7 @@ namespace XamlStudio.ViewModels
             }
         }
 
-        public bool HasCompiled { get; private set; }
+        public bool HasCompiled { get; set; }
 
         public Panel XamlRoot { get; set; }
 
@@ -119,6 +119,8 @@ namespace XamlStudio.ViewModels
         public ICommand NavigateToLineCommand { get; set; }
 
         public XamlRenderService XamlRenderer { get; } = new XamlRenderService();
+
+        public object DataContext { get; set; }
 
         public DocumentViewModel()
         {

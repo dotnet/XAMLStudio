@@ -30,7 +30,7 @@ namespace XamlStudio.Toolkit.Services
 
                     var attributes = root.Attributes();
 
-                    if (attributes.GetNamedItem("d:DesignWidth") is XAttribute dwidth)
+                    if (attributes.GetNamedItem("{http://schemas.microsoft.com/expression/blend/2008}DesignWidth") is XAttribute dwidth)
                     {
                         if (int.TryParse(dwidth.Value, out int width))
                         {
@@ -38,7 +38,7 @@ namespace XamlStudio.Toolkit.Services
                         }
                     }
 
-                    if (attributes.GetNamedItem("d:DesignHeight") is XAttribute dheight)
+                    if (attributes.GetNamedItem("{http://schemas.microsoft.com/expression/blend/2008}DesignHeight") is XAttribute dheight)
                     {
                         if (int.TryParse(dheight.Value, out int height))
                         {
@@ -46,7 +46,7 @@ namespace XamlStudio.Toolkit.Services
                         }
                     }
 
-                    if (attributes.GetNamedItem("d:DataContext") is XAttribute ddatacontext && settings.ResourceRoot != null)
+                    if (attributes.GetNamedItem("{http://schemas.microsoft.com/expression/blend/2008}DataContext") is XAttribute ddatacontext && settings.ResourceRoot != null)
                     {
                         var dc = ddatacontext.Value;
                         var ddi = dc.IndexOf("d:DesignData");

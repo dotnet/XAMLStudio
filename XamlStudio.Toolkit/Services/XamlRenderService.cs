@@ -80,7 +80,6 @@ namespace XamlStudio.Toolkit.Services
             }
 
             // Attempt RenderAsync
-            UIElement element = null;
             try
             {
                 object obj = null;
@@ -99,7 +98,7 @@ namespace XamlStudio.Toolkit.Services
                     // Investigate for future usages.
                     throw new NotSupportedException("Content must be a UIElement.");
                 }
-                element = obj as UIElement;
+                result.Element = obj as UIElement;
             }
             catch (Exception e)
             {
@@ -146,12 +145,12 @@ namespace XamlStudio.Toolkit.Services
                 }
             }
 
-            if (element != null)
+            if (result.Element != null)
             {
                 if (settings.ResourceRoot != null)
                 {
                     // Look for Image Objects in order to replace their Sources with our Images Loaded from Disk.
-                    VisitUIElements(element, async (child) =>
+                    VisitUIElements(result.Element, async (child) =>
                     {
                         // TODO: Generalize to support toolkit:ImageEx, toolkit:RoundImageEx, Converters?
                         if (child is Image)
@@ -186,8 +185,7 @@ namespace XamlStudio.Toolkit.Services
                     });
                 }
 
-                result.Bindings = XamlBindingWrapperManager.Instance.GetBindings(this.Id);
-                result.Element = element;
+                result.Bindings = XamlBindingWrapperManager.Instance.GetBindings(Id);
             }
 
             return result;

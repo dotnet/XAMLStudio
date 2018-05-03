@@ -80,6 +80,9 @@
                     <future:Case Value="{x:Bind exf:Bind.LocalizedString('MainPage_NavMenu_Explorer/Content')}">
                         <local:Explorer MainViewModel="{x:Bind ViewModel}"/>
                     </future:Case>
+                    <future:Case Value="{x:Bind exf:Bind.LocalizedString('MainPage_NavMenu_DataSources/Content')}">
+                        <local:DataSources MainViewModel="{x:Bind ViewModel}"/>
+                    </future:Case>
                     <future:Case Value="{x:Bind exf:Bind.LocalizedString('MainPage_NavMenu_Debug/Content')}">
                         <local:Binding MainViewModel="{x:Bind ViewModel}"/>
                     </future:Case>

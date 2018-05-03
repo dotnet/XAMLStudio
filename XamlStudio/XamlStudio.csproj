@@ -134,6 +134,9 @@
     <Compile Include="Activation\ActivationHandler.cs" />
     <Compile Include="Activation\SchemeActivationHandler.cs" />
     <Compile Include="Activation\WebToAppLinkActivationHandler.cs" />
+    <Compile Include="DummyPage.xaml.cs">
+      <DependentUpon>DummyPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
     <Compile Include="Helpers\Json.cs" />
     <Compile Include="Helpers\Observable.cs" />
@@ -160,6 +163,9 @@
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\SettingsPanelViewModel.cs" />
     <Compile Include="ViewModels\UriSchemeExampleViewModel.cs" />
+    <Compile Include="Views\DataSources.xaml.cs">
+      <DependentUpon>DataSources.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Document.xaml.cs">
       <DependentUpon>Document.xaml</DependentUpon>
     </Compile>
@@ -189,6 +195,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="DummyPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Styles\Page.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -217,6 +227,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Views\DataSources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Document.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -27,6 +27,7 @@ namespace XamlStudio.ViewModels
             {
                 IsBindingDebuggingEnabled = SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value,
                 KeepSuggestedContentSameLength = !SettingsService.Instance.IsContentUpdatedWithSuggested.Value,
+                DataContext = DataContext
             };
 
             // Pre-parse            
@@ -85,7 +86,8 @@ namespace XamlStudio.ViewModels
             var settings = new XamlRenderSettings(SettingsService.Instance.KnownNamespaces)
             {
                 IsBindingDebuggingEnabled = SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value,
-                KeepSuggestedContentSameLength = true
+                KeepSuggestedContentSameLength = true,
+                DataContext = DataContext
             };
 
             Result = await XamlRenderer.RenderAsync(content, settings);
@@ -162,7 +164,7 @@ namespace XamlStudio.ViewModels
                                 ClassName = this._bindingStyleSuccess,
                                 HoverMessage = new string[]
                                     {
-                                        "Last Binding Value: " + binding.LastConvertedResultOrValue.ToString(),
+                                        "Last Binding Value: " + binding.LastConvertedResultOrValue?.ToString(),
                                         "Total Hit Count: " + binding.BindingCount
                                     }
                             }));
