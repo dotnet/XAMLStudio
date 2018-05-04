@@ -33,15 +33,30 @@ namespace XamlStudio.Toolkit.Models
         /// <summary>
         /// Element rendered by <see cref="Services.XamlRenderService.RenderAsync(string)"/> or null if rendering was unsuccessful.
         /// </summary>
-        public UIElement Element { get; internal set; }
+        public object Element { get; internal set; }
 
         /// <summary>
-        /// Gets the <see cref="Type"/> of the <see cref="Element"/> rendered.
+        /// Gets the <see cref="Type"/> of the <see cref="Element"/> from pre-parsed lookup.
         /// </summary>
         public Type ElementType { get; internal set; }
 
         /// <summary>
-        /// Gets a value indiciating if the Element is derived from <see cref="FrameworkElement"/>.
+        /// Gets the <see cref="Type"/> of the <see cref="Element"/> after a successful load.
+        /// </summary>
+        public Type ElementActualType => Element?.GetType();
+
+        /// <summary>
+        /// Gets a value indicating if the Element is derived from <see cref="UIElement"/> and can be displayed.
+        /// </summary>
+        public bool IsUIElement => Element is UIElement;
+
+        /// <summary>
+        /// Gets a value indicating if the Element is derived from <see cref="ResourceDictionary"/> and is a resource library.
+        /// </summary>
+        public bool IsResourceDictionary => Element is ResourceDictionary;
+
+        /// <summary>
+        /// Gets a value indicating if the Element is derived from <see cref="FrameworkElement"/> as determined during pre-parsing.
         /// </summary>
         public bool IsFrameworkElement { get; internal set; }
 

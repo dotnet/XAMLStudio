@@ -5,6 +5,7 @@ using System;
 using Windows.System.Threading;
 using Windows.UI.Xaml;
 using XamlStudio.Services;
+using XamlStudio.Toolkit.Controls;
 using XamlStudio.Toolkit.Models;
 using XamlStudio.Toolkit.Services;
 
@@ -63,12 +64,18 @@ namespace XamlStudio.ViewModels
                 CreateBindingDecorations();
             }
 
+            var element = Result.Element;
+            if (Result.IsResourceDictionary)
+            {
+                element = new ResourceViewer() { ResourceDictionary = element as ResourceDictionary };
+            }
+
             // Only Update if we have a new well-parsed element.
-            if (Result.Element != null)
+            if (element != null && element is UIElement)
             {
                 // Add element to main panel
                 XamlRoot.Children.Clear();
-                XamlRoot.Children.Add(Result.Element);
+                XamlRoot.Children.Add(element as UIElement);
             }
 
             HasCompiled = true;
@@ -117,11 +124,11 @@ namespace XamlStudio.ViewModels
             }
 
             // Only Update if we have a new well-parsed element.
-            if (Result.Element != null)
+            if (Result.Element != null && Result.IsUIElement)
             {
                 // Add element to main panel
                 XamlRoot.Children.Clear();
-                XamlRoot.Children.Add(Result.Element);
+                XamlRoot.Children.Add(Result.Element as UIElement);
             }
 
             Compiled?.Invoke(this, new EventArgs());

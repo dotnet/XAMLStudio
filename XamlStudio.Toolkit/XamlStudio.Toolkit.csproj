@@ -106,6 +106,10 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Controls\ResourceViewer\Helpers\ColorToHexConverter.cs" />
+    <Compile Include="Controls\ResourceViewer\ResourceKeyInfo.cs" />
+    <Compile Include="Controls\ResourceViewer\ResourceViewer.cs" />
+    <Compile Include="Controls\ResourceViewer\TemplateSelector.cs" />
     <Compile Include="Converters\StringToUriConverter.cs" />
     <Compile Include="Converters\XamlBindingWrapperConverter.cs" />
     <Compile Include="Extensions\XmlExtensions.cs" />
@@ -132,9 +136,32 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.0.1</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp">
+      <Version>3.0.0-build.39</Version>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>10.0.3</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Controls\ResourceViewer\ResourceTemplates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ResourceViewer\ResourceViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.Toolkit.Future\Microsoft.Toolkit.Future.csproj">
+      <Project>{ba818f63-02d8-4ce7-b6fb-475678144c07}</Project>
+      <Name>Microsoft.Toolkit.Future</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

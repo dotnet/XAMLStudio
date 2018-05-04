@@ -1,0 +1,9 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:XamlStudio.Toolkit">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///XamlStudio.Toolkit/Controls/ResourceViewer/ResourceViewer.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

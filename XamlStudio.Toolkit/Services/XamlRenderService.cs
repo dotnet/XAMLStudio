@@ -82,23 +82,14 @@ namespace XamlStudio.Toolkit.Services
             // Attempt RenderAsync
             try
             {
-                object obj = null;
                 if (settings.IsInitialTemplateValidated)
                 {
-                    obj = XamlReader.LoadWithInitialTemplateValidation(result.RenderedContent);
+                    result.Element = XamlReader.LoadWithInitialTemplateValidation(result.RenderedContent);
                 }
                 else
                 {
-                    obj = XamlReader.Load(result.RenderedContent);
+                    result.Element = XamlReader.Load(result.RenderedContent);
                 }
-
-                if (!(obj is UIElement))
-                {
-                    // TODO: ResourceDictionaries should be loadable, but they're just DependencyObject
-                    // Investigate for future usages.
-                    throw new NotSupportedException("Content must be a UIElement.");
-                }
-                result.Element = obj as UIElement;
             }
             catch (Exception e)
             {
@@ -145,12 +136,12 @@ namespace XamlStudio.Toolkit.Services
                 }
             }
 
-            if (result.Element != null)
+            if (result.Element != null && result.IsUIElement)
             {
                 if (settings.ResourceRoot != null)
                 {
                     // Look for Image Objects in order to replace their Sources with our Images Loaded from Disk.
-                    VisitUIElements(result.Element, async (child) =>
+                    VisitUIElements(result.Element as UIElement, async (child) =>
                     {
                         // TODO: Generalize to support toolkit:ImageEx, toolkit:RoundImageEx, Converters?
                         if (child is Image)
@@ -186,6 +177,10 @@ namespace XamlStudio.Toolkit.Services
                 }
 
                 result.Bindings = XamlBindingWrapperManager.Instance.GetBindings(Id);
+            }
+            else
+            {
+                result.Bindings = Enumerable.Empty<XamlBindingInfo>();
             }
 
             return result;

@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Diagnostics;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
@@ -25,6 +25,15 @@ namespace XamlStudio
 
             // Deferred execution until used. Check https://msdn.microsoft.com/library/dd642331(v=vs.110).aspx for further info on Lazy<T> class.
             _activationService = new Lazy<ActivationService>(CreateActivationService);
+
+            UnhandledException += App_UnhandledException;
+        }
+
+        private void App_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+        {
+            // TODO: Check if these are coming from a Render call and just ignore then.
+            Debugger.Break();
+            e.Handled = true;
         }
 
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
