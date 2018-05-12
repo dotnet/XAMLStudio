@@ -30,8 +30,8 @@
         <NavigationView x:Name="NavMenu"
                         Style="{StaticResource VSCodeActivityBarStyle}"
                         MenuItemContainerStyle="{StaticResource LargeIconNavigationViewItemStyle}"
-                        exf:NavigationViewExtensions.SelectedIndex="0"
-                        exf:NavigationViewExtensions.CollapseOnClick="True">
+                        ex:NavigationViewExtensions.SelectedIndex="0"
+                        ex:NavigationViewExtensions.CollapseOnClick="True">
             <NavigationView.MenuItems>
                 <NavigationViewItem x:Uid="MainPage_NavMenu_Explorer">
                     <NavigationViewItem.Icon>
