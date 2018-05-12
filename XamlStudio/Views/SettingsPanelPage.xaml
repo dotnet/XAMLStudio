@@ -207,11 +207,11 @@
                         x:Uid="SettingsPanel_PrivacyTermsLink"
                         Margin="{StaticResource EightTopMargin}" />
 
-                    <HyperlinkButton
+                    <!-- TODO: <HyperlinkButton
                         Margin="{StaticResource EightTopMargin}"
                         x:Uid="FeedbackHub_Link"
                         Command="{x:Bind ViewModel.LaunchFeedbackHubCommand}"
-                        Visibility="{x:Bind ViewModel.FeedbackLinkVisibility}" />
+                        Visibility="{x:Bind ViewModel.FeedbackLinkVisibility}" />-->
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

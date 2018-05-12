@@ -11,6 +11,10 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="24">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -21,9 +25,11 @@
                 <TextBlock FontFamily="Segoe UI" FontSize="32" FontStyle="Italic" FontWeight="SemiLight" FontStretch="UltraCondensed">&lt;XAML/&gt;</TextBlock>
                 <TextBlock Margin="4,-12,0,0" FontFamily="Segoe UI" FontSize="32" FontWeight="ExtraBlack" FontStretch="UltraExpanded">STUDIO</TextBlock>
             </StackPanel>
-            <TextBlock FontSize="16" Padding="16"
-                                   HorizontalAlignment="Left"
-                                   VerticalAlignment="Center">For Rapid Prototyping</TextBlock>
+            <StackPanel Padding="16" HorizontalAlignment="Left"
+                                     VerticalAlignment="Center">
+                <TextBlock FontSize="16">a Microsoft Garage project</TextBlock>
+                <TextBlock FontSize="16">For Rapid Prototyping</TextBlock>
+            </StackPanel>
         </StackPanel>
         <StackPanel Grid.Row="1" Padding="12">
             <TextBlock FontSize="24" FontWeight="Light">Get Started</TextBlock>
@@ -46,6 +52,16 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="1" Grid.RowSpan="2">
+            <TextBlock FontSize="24" FontWeight="Light" Padding="12">Known Issues</TextBlock>
+            <TextBlock Padding="12,8">- Undo/Redo history is lost when switching tabs.</TextBlock>
+            <TextBlock Padding="12,8">- Tabs disappear if window too small.</TextBlock>
+            <TextBlock Padding="12,8">- Not all toolbox items on left navigation implemented.</TextBlock>
+            <TextBlock Padding="12,8">- Can't open folders.</TextBlock>
+            <TextBlock Padding="12,8">- No 'Save As'.</TextBlock>
+            <TextBlock Padding="12,8">- Known Namespaces in Settings not configurable.</TextBlock>
+            <TextBlock Padding="12,8">- Bindings with ConverterParameters can't be debugged.</TextBlock>
         </StackPanel>
     </Grid>
 </Page>
