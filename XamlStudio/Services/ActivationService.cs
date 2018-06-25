@@ -94,6 +94,7 @@ namespace XamlStudio.Services
             yield return Singleton<SuspendAndResumeService>.Instance;
             yield return Singleton<WebToAppLinkActivationHandler>.Instance;
             yield return Singleton<SchemeActivationHandler>.Instance;
+            yield return Singleton<FileActivationHandler>.Instance;
         }
 
         private bool IsInteractive(object args)

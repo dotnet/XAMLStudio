@@ -1,14 +1,19 @@
 ﻿using System;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 using XamlStudio.Models;
+using XamlStudio.Services;
 using XamlStudio.ViewModels;
 
 namespace XamlStudio.Views
 {
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage : Page, IFileOpener
     {
         public MainViewModel ViewModel { get; }
+
+        private IStorageItem[] _filesToLoad;
 
         public MainPage()
         {
@@ -28,12 +33,38 @@ namespace XamlStudio.Views
 
         private async void MainPage_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
+            if (_filesToLoad != null)
+            {
+                // Remove Welcome Screen
+                ViewModel.OpenFiles.Clear();
+
+                //// TODO: Show Loading Ring?
+            }
+
             await ViewModel.SettingsViewModel.Settings.InitializeAndLoad();
 
             ViewModel.RegisterPropertyChangedCallback(WorkspaceWindow.ActiveFileProperty, (sender2, args) =>
             {
                 DocumentTabsPivot.SelectedItem = ViewModel.ActiveFile;
             });
+
+            if (_filesToLoad != null)
+            {
+                // Load Files
+                OpenFileItems(_filesToLoad);
+                _filesToLoad = null;
+            }
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            // Code to handle case when activating during launch.
+            base.OnNavigatedTo(e);
+
+            if (e.Parameter is IStorageItem[] files)
+            {
+                _filesToLoad = files;
+            }
         }
 
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -45,6 +76,17 @@ namespace XamlStudio.Views
                 if (doc != null && doc != ViewModel.ActiveFile)
                 {
                     ViewModel.ActiveFile = doc;
+                }
+            }
+        }
+
+        public void OpenFileItems(IStorageItem[] files)
+        {
+            foreach (var file in files)
+            {
+                if (file.IsOfType(StorageItemTypes.File))
+                {
+                    ViewModel.OpenFileCommand.Execute(file as StorageFile);
                 }
             }
         }

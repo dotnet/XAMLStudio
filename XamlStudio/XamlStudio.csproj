@@ -132,6 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activation\ActivationHandler.cs" />
+    <Compile Include="Activation\FileActivationHandler.cs" />
     <Compile Include="Activation\SchemeActivationHandler.cs" />
     <Compile Include="Activation\WebToAppLinkActivationHandler.cs" />
     <Compile Include="DummyPage.xaml.cs">
@@ -146,6 +147,7 @@
     <Compile Include="Models\XamlDocument.cs" />
     <Compile Include="Services\ActivationService.cs" />
     <Compile Include="Activation\DefaultLaunchActivationHandler.cs" />
+    <Compile Include="Services\IFileOpener.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\OnBackgroundEnteringEventArgs.cs" />
     <Compile Include="Services\SettingsService.cs" />

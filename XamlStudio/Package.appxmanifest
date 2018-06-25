@@ -22,10 +22,18 @@
       </uap:VisualElements>
       <Extensions>
         <uap:Extension Category="windows.protocol">
-          <uap:Protocol Name="wtsapp">
+          <uap:Protocol Name="xamlstudio">
             <uap:Logo>Assets\Icon.png</uap:Logo>
-            <uap:DisplayName>XamlStudio</uap:DisplayName>
+            <uap:DisplayName>Xaml Studio</uap:DisplayName>
           </uap:Protocol>
+        </uap:Extension>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="xaml">
+            <uap:DisplayName>Xaml File</uap:DisplayName>
+            <uap:SupportedFileTypes>
+              <uap:FileType ContentType="application/xaml">.xaml</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileTypeAssociation>
         </uap:Extension>
         <uap3:Extension Category="windows.appUriHandler">
           <uap3:AppUriHandler>

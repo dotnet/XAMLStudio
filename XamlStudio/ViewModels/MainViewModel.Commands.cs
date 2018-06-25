@@ -16,10 +16,16 @@ namespace XamlStudio.ViewModels
     public partial class MainViewModel
     {
         public ICommand NewDocumentCommand { get; private set; }
+        /// <summary>
+        /// Show File Dialog to Open a File.
+        /// </summary>
         public ICommand OpenDocumentCommand { get; private set; }
         public ICommand SaveDocumentCommand { get; private set; }
         public ICommand CloseActiveDocumentCommand { get; private set; }
 
+        /// <summary>
+        /// Open a File from a <see cref="StorageFile"/>.
+        /// </summary>
         public ICommand OpenFileCommand { get; private set; }
 
         public ICommand KeyDownCommand { get; private set; }

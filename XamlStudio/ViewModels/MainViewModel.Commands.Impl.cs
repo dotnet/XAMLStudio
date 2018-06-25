@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nito.AsyncEx;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,8 @@ namespace XamlStudio.ViewModels
 {
     public partial class MainViewModel
     {
+        private readonly AsyncLock _openMutex = new AsyncLock();
+
         private void NewDocument(RoutedEventArgs args)
         {
             OpenFiles.Add(new Models.XamlDocument("Untitled-" + _untitledCount++)
@@ -68,13 +71,17 @@ namespace XamlStudio.ViewModels
 
         private async void OpenFile(StorageFile file)
         {
-            // Application now has read/write access to the picked file
-            var doc = await XamlDocument.LoadFromFileAsync(file);
-            OpenFiles.Add(doc);
+            using (await _openMutex.LockAsync())
+            {
 
-            SettingsService.Instance.RememberFile(file);
+                // Application now has read/write access to the picked file
+                var doc = await XamlDocument.LoadFromFileAsync(file);
+                OpenFiles.Add(doc);
 
-            ActiveFile = doc;
+                SettingsService.Instance.RememberFile(file);
+
+                ActiveFile = doc;
+            }
         }
 
         private async void CloseActiveDocument(PivotItem item)

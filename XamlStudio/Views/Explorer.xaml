@@ -59,7 +59,7 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </controls:Expander>
-        <future:SwitchPresenter x:Name="FolderExpander"
+        <!--<future:SwitchPresenter x:Name="FolderExpander"
                                 Grid.Row="2">
             <future:Case IsDefault="True">
                 <controls:Expander Header="NO FOLDER OPENED" IsExpanded="True"
@@ -76,6 +76,6 @@
                     <xc:TreeView/>
                 </controls:Expander>
             </future:Case>
-        </future:SwitchPresenter>
+        </future:SwitchPresenter>-->
     </Grid>
 </Page>

@@ -58,7 +58,6 @@
             <TextBlock Padding="12,8">- Undo/Redo history is lost when switching tabs.</TextBlock>
             <TextBlock Padding="12,8">- Tabs disappear if window too small.</TextBlock>
             <TextBlock Padding="12,8">- Not all toolbox items on left navigation implemented.</TextBlock>
-            <TextBlock Padding="12,8">- Can't open folders.</TextBlock>
             <TextBlock Padding="12,8">- No 'Save As'.</TextBlock>
             <TextBlock Padding="12,8">- Known Namespaces in Settings not configurable.</TextBlock>
             <TextBlock Padding="12,8">- Bindings with ConverterParameters can't be debugged.</TextBlock>
