@@ -16,11 +16,19 @@
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="XamlStudio.App">
       <uap:VisualElements DisplayName="XAML Studio" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="XAML Studio is a development tool for testing and interacting with XAML in a quick and rapid prototyping environment.  It is built as a modern UWP Application to run on Windows 10 and 10S devices without needing Visual Studio." BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square310x310Logo="Assets\LargeTile.png" Square71x71Logo="Assets\SmallTile.png" ShortName="XAML Studio">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square310x310Logo" />
+          </uap:ShowNameOnTiles>
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
       <Extensions>
+        <uap3:Extension Category="windows.appUriHandler">
+          <uap3:AppUriHandler>
+            <uap3:Host Name="myapp.website.com" />
+          </uap3:AppUriHandler>
+        </uap3:Extension>
         <uap:Extension Category="windows.protocol">
           <uap:Protocol Name="xamlstudio">
             <uap:Logo>Assets\Icon.png</uap:Logo>
@@ -35,11 +43,6 @@
             </uap:SupportedFileTypes>
           </uap:FileTypeAssociation>
         </uap:Extension>
-        <uap3:Extension Category="windows.appUriHandler">
-          <uap3:AppUriHandler>
-            <uap3:Host Name="myapp.website.com" />
-          </uap3:AppUriHandler>
-        </uap3:Extension>
       </Extensions>
     </Application>
   </Applications>
