@@ -52,8 +52,7 @@
         </StackPanel>
         <StackPanel Grid.Row="1" Grid.Column="1" Grid.RowSpan="2">
             <TextBlock FontSize="24" FontWeight="Light" Padding="12">Known Issues</TextBlock>
-            <TextBlock Padding="12,8">- Undo/Redo history is lost when switching tabs.</TextBlock>
-            <TextBlock Padding="12,8">- Tabs disappear if window too small.</TextBlock>
+            <!--<TextBlock Padding="12,8">- Tabs disappear if window too small.</TextBlock> Note: Will reappear if we try and add Edge Pivot Styling, so that needs fixing. #586 -->
             <TextBlock Padding="12,8">- Not all toolbox items on left navigation implemented.</TextBlock>
             <TextBlock Padding="12,8">- No 'Save As'.</TextBlock>
             <TextBlock Padding="12,8">- Known Namespaces in Settings not configurable.</TextBlock>
