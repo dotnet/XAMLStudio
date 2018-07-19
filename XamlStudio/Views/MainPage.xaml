@@ -102,15 +102,16 @@
             </Grid>
         </NavigationView>
 
+        <!-- TODO: Style="{StaticResource MSEdgePivotStyle}" -->
         <Pivot x:Name="DocumentTabsPivot"
                Grid.Column="1"
                SelectionChanged="Pivot_SelectionChanged"
                ItemsSource="{x:Bind ViewModel.OpenFiles}"
-               Style="{StaticResource MSEdgePivotStyle}"
-               DataContext="{x:Bind ViewModel}"
-               exf:PivotExtensions.CloseButtonCommand="{Binding CloseActiveDocumentCommand}"
-               exf:PivotExtensions.PivotHeaderItemStyle="{StaticResource MSEdgeTabStyle}"
-               exf:PivotExtensions.IsContentVisible="False">
+               DataContext="{x:Bind}"
+               HorizontalAlignment="Stretch"
+               HorizontalContentAlignment="Stretch"
+               exf:PivotExtensions.CloseButtonCommand="{Binding ViewModel.CloseActiveDocumentCommand}"
+               exf:PivotExtensions.PivotHeaderItemStyle="{StaticResource MSEdgeTabStyle}">
             <Pivot.HeaderTemplate>
                 <DataTemplate x:DataType="models:XamlDocument">
                     <TextBlock Text="{x:Bind Title, Mode=OneWay}"/>
@@ -122,19 +123,27 @@
                     <SymbolIcon Symbol="Add" exf:SymbolIconExtensions.FontSize="12" />
                 </Button>
             </Pivot.RightHeader>
+            <Pivot.ItemContainerStyle>
+                <Style TargetType="PivotItem">
+                    <Setter Property="Margin" Value="0,0,0,0"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <future:SwitchPresenter Value="{Binding DataContext.ViewModel.ActiveFile.IsWelcome, Mode=OneWay, ElementName=DocumentTabsPivot}"
+                                                        HorizontalAlignment="Stretch"
+                                            TargetType="x:Boolean">
+                                    <future:Case Value="True">
+                                        <local:WelcomePage MainViewModel="{Binding DataContext.ViewModel, ElementName=DocumentTabsPivot}" HorizontalAlignment="Stretch"/>
+                                    </future:Case>
+                                    <future:Case Value="False">
+                                        <local:Document x:Name="Document" LoadedDocument="{Binding}" MainViewModel="{Binding DataContext.ViewModel, ElementName=DocumentTabsPivot}" HorizontalAlignment="Stretch"/>
+                                    </future:Case>
+                                </future:SwitchPresenter>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Pivot.ItemContainerStyle>
         </Pivot>
-            
-        <future:SwitchPresenter x:Name="MainContent"
-                                Margin="0,32,0,0"
-                                Grid.Column="1"
-                                Value="{x:Bind ViewModel.ActiveFile.IsWelcome, Mode=OneWay}"
-                                TargetType="x:Boolean">
-            <future:Case Value="True">
-                <local:WelcomePage MainViewModel="{x:Bind ViewModel}"/>
-            </future:Case>
-            <future:Case Value="False">
-                <local:Document x:Name="Document" LoadedDocument="{x:Bind ViewModel.ActiveFile, Mode=OneWay}" MainViewModel="{x:Bind ViewModel}" />
-            </future:Case>
-        </future:SwitchPresenter>
     </Grid>
 </Page>

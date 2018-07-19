@@ -190,7 +190,7 @@
                                 <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Foreground="{ThemeResource PivotNextButtonForeground}" FontSize="12" Glyph="&#xE0E3;" HorizontalAlignment="Center" MirroredWhenRightToLeft="True" UseLayoutRounding="False" VerticalAlignment="Center"/>
                             </Button>
                             <ContentPresenter x:Name="RightHeaderPresenter" ContentTemplate="{TemplateBinding RightHeaderTemplate}" Content="{TemplateBinding RightHeader}" Grid.Column="4" VerticalAlignment="Stretch"/>
-                            <ItemsPresenter x:Name="PivotItemPresenter" Grid.ColumnSpan="3" Grid.Row="1">
+                            <ItemsPresenter x:Name="PivotItemPresenter" Grid.ColumnSpan="6" Grid.Row="1">
                                 <ItemsPresenter.RenderTransform>
                                     <TransformGroup>
                                         <TranslateTransform x:Name="ItemsPresenterTranslateTransform"/>

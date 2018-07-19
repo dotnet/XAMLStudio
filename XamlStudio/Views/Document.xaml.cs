@@ -27,7 +27,23 @@ namespace XamlStudio.Views
     {
         private string[] _decorations = Array.Empty<string>();
 
-        public MainViewModel MainViewModel { get; set; }
+        public MainViewModel MainViewModel
+        {
+            get { return (MainViewModel)GetValue(MainViewModelProperty); }
+            set { SetValue(MainViewModelProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for MainViewModel.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty MainViewModelProperty =
+            DependencyProperty.Register(nameof(MainViewModel), typeof(MainViewModel), typeof(Document), new PropertyMetadata(null, (sender, args) =>
+            {
+                var document = (sender as Document);
+                if (document != null)
+                {
+                    // Set DocumentViewModel
+                    (args.NewValue as MainViewModel).DocumentViewModel = document.ViewModel;
+                }
+            }));
 
         public DocumentViewModel ViewModel { get; private set; }
 
@@ -67,14 +83,7 @@ namespace XamlStudio.Views
 
             CodeEditor.Options.Folding = true;
 
-            Loaded += Document_Loaded;
-
             ViewModel.NavigateToLineCommand = new RelayCommand<uint>(NavigateToLine);
-        }
-
-        private void Document_Loaded(object sender, RoutedEventArgs e)
-        {
-            MainViewModel.DocumentViewModel = ViewModel;   
         }
 
         private async void NavigateToLine(uint line)

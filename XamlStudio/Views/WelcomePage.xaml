@@ -20,7 +20,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="-68,-16,0,8">
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.ColumnSpan="2" Margin="-68,-16,0,8">
             <Image Source="ms-appx:///Assets/SplashScreen.scale-100.png" Width="300"/>
             <StackPanel Padding="16" HorizontalAlignment="Left"
                                      VerticalAlignment="Center" Margin="-60,0,0,0">
