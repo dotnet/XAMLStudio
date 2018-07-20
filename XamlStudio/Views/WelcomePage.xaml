@@ -53,7 +53,8 @@
         <StackPanel Grid.Row="1" Grid.Column="1" Grid.RowSpan="2">
             <TextBlock FontSize="24" FontWeight="Light" Padding="12">Known Issues</TextBlock>
             <!--<TextBlock Padding="12,8">- Tabs disappear if window too small.</TextBlock> Note: Will reappear if we try and add Edge Pivot Styling, so that needs fixing. #586 -->
-            <TextBlock Padding="12,8">- Compile Errors Don't Display in the Right Place.</TextBlock>
+            <TextBlock Padding="12,8">- Compile errors don't display in the right place in the editor
+                <LineBreak/>&#160;&#160;when binding debugging enabled.</TextBlock>
             <TextBlock Padding="12,8">- Not all toolbox items on left navigation implemented.</TextBlock>
             <TextBlock Padding="12,8">- No 'Save As'.</TextBlock>
             <TextBlock Padding="12,8">- Known Namespaces in Settings not configurable.</TextBlock>

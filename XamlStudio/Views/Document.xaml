@@ -10,11 +10,13 @@
     xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
     xmlns:xstc="using:XamlStudio.Toolkit.Converters"
     xmlns:monaco="using:Monaco"
+    xmlns:models="using:XamlStudio.Toolkit.Models"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
     <UserControl.Resources>
         <converters:BoolNegationConverter x:Key="BoolNegationConverter"/>
+        <converters:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter"/>
         <xstc:StringToUriConverter x:Key="StringToUriConverter"/>
         <xstc:XamlBindingWrapperConverter x:Key="XamlBindingWrapper"/>
     </UserControl.Resources>
@@ -29,6 +31,28 @@
         <Grid Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"
               x:Name="XamlRoot"
               Grid.Row="0"/>
+
+        <!-- Error Overlay -->
+        <Grid Background="#66000000" Grid.Row="0"
+              Visibility="{x:Bind ViewModel.Result.Errors, Mode=OneWay, Converter={StaticResource CollectionVisibilityConverter}, FallbackValue=Collapsed}">
+            <controls:DropShadowPanel HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                                      Margin="16"
+                                      OffsetX="8" OffsetY="8" ShadowOpacity="0.6" Color="Black" BlurRadius="8.0">
+                <StackPanel Padding="8" Background="{ThemeResource ContentDialogBackgroundThemeBrush}">
+                    <TextBlock FontWeight="SemiBold"
+                               Foreground="Black"
+                               Margin="0,0,0,8">Compilation Errors:</TextBlock>
+                    <ItemsControl ItemsSource="{x:Bind ViewModel.Result.Errors, Mode=OneWay}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="models:XamlExceptionRange">
+                                <TextBlock Foreground="Black"
+                                    Text="{x:Bind Message}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </controls:DropShadowPanel>
+        </Grid>
 
         <!--Row Grid Splitter-->
         <controls:GridSplitter
