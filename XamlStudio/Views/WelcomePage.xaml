@@ -31,8 +31,8 @@
         <StackPanel Grid.Row="1" Padding="12">
             <TextBlock FontSize="24" FontWeight="Light">Get Started</TextBlock>
             <StackPanel Padding="12">
-                <HyperlinkButton Command="{x:Bind MainViewModel.NewDocumentCommand}">New file</HyperlinkButton>
-                <HyperlinkButton Command="{x:Bind MainViewModel.OpenDocumentCommand}">Open file...</HyperlinkButton>
+                <HyperlinkButton Command="{x:Bind MainViewModel.NewDocumentCommand, Mode=OneWay}">New file</HyperlinkButton>
+                <HyperlinkButton Command="{x:Bind MainViewModel.OpenDocumentCommand, Mode=OneWay}">Open file...</HyperlinkButton>
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Row="2">
@@ -53,6 +53,7 @@
         <StackPanel Grid.Row="1" Grid.Column="1" Grid.RowSpan="2">
             <TextBlock FontSize="24" FontWeight="Light" Padding="12">Known Issues</TextBlock>
             <!--<TextBlock Padding="12,8">- Tabs disappear if window too small.</TextBlock> Note: Will reappear if we try and add Edge Pivot Styling, so that needs fixing. #586 -->
+            <TextBlock Padding="12,8">- Compile Errors Don't Display in the Right Place.</TextBlock>
             <TextBlock Padding="12,8">- Not all toolbox items on left navigation implemented.</TextBlock>
             <TextBlock Padding="12,8">- No 'Save As'.</TextBlock>
             <TextBlock Padding="12,8">- Known Namespaces in Settings not configurable.</TextBlock>

@@ -74,7 +74,7 @@ namespace XamlStudio.Toolkit.Services
                 // TODO: Location?
                 StringWriter sw = new StringWriter();
 
-                context.Document.Save(sw, SaveOptions.DisableFormatting);
+                context.Document.Save(sw, SaveOptions.DisableFormatting); // TODO: Bug #587
 
                 context.RenderedContent = sw.ToString();
 
