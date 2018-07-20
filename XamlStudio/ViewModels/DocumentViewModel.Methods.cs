@@ -2,6 +2,9 @@
 using Monaco.Editor;
 using Monaco.Helpers;
 using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using Windows.Storage;
 using Windows.System.Threading;
 using Windows.UI.Xaml;
 using XamlStudio.Services;
@@ -13,6 +16,7 @@ namespace XamlStudio.ViewModels
 {
     public partial class DocumentViewModel
     {
+        // TODO: Need to align these two methods for rendering.
         private async void UpdateXaml(RoutedEventArgs args)
         {
             // Check if nothing to do
@@ -21,33 +25,52 @@ namespace XamlStudio.ViewModels
                 return;
             }
 
+            var keepcontent = !SettingsService.Instance.IsContentUpdatedWithSuggested.Value;
+
+            var newcontent = await InternalRenderXamlAsync(Document.Content, 0, keepcontent);
+
+            if (!keepcontent)
+            {
+                // Update our document with suggested changes.
+                Document.Content = newcontent;
+            }
+
+            HasCompiled = true;
+        }
+
+        private async void SelectiveRenderXaml(string content)
+        {
+            HasCompiled = false;
+
+            // TODO: Need to offset line with location in document once we update monaco-uwp 0.7...
+            await InternalRenderXamlAsync(content, 0, true);
+        }
+
+        private async Task<string> InternalRenderXamlAsync(string content, uint lineoffset, bool keepContentSameLength)
+        {
             LineDecorations.Clear(); // Clear out old errors
             _bindingHistory.Clear();
 
             var settings = new XamlRenderSettings(SettingsService.Instance.KnownNamespaces)
             {
                 IsBindingDebuggingEnabled = SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value,
-                KeepSuggestedContentSameLength = !SettingsService.Instance.IsContentUpdatedWithSuggested.Value,
+                KeepSuggestedContentSameLength = keepContentSameLength,
                 DataContext = DataContext
             };
 
-            // Pre-parse            
-            var content = Document.Content;
+            // Log XAML before rendering in case issue, we can retrieve later for bugs
+            var file = await ApplicationData.Current.LocalFolder.CreateFileAsync("lastcompiled.xaml", CreationCollisionOption.ReplaceExisting);
+            await FileIO.WriteTextAsync(file, content);
+            Debug.WriteLine("Render File Out: " + file.Path);
 
             Result = await XamlRenderer.RenderAsync(content, settings);
-
-            if (!settings.KeepSuggestedContentSameLength)
-            {
-                // Update our document with suggested changes.
-                Document.Content = Result.SuggestedContent;
-            }
 
             if (Result.Element == null)
             {
                 // Highlight Errors
                 foreach (var error in Result.Errors)
                 {
-                    LineDecorations.Add(new IModelDeltaDecoration(new Range(error.StartLine, error.StartColumn, error.EndLine, error.EndColumn),
+                    LineDecorations.Add(new IModelDeltaDecoration(new Range(lineoffset + error.StartLine, error.StartColumn, lineoffset + error.EndLine, error.EndColumn),
                         new IModelDecorationOptions()
                         {
                             IsWholeLine = false,
@@ -78,60 +101,9 @@ namespace XamlStudio.ViewModels
                 XamlRoot.Children.Add(element as UIElement);
             }
 
-            HasCompiled = true;
             Compiled?.Invoke(this, new EventArgs());
-        }
 
-        private async void SelectiveRenderXaml(string content)
-        {
-            HasCompiled = false;
-
-            // TODO: reuse code above better
-            LineDecorations.Clear(); // Clear out old errors
-            _bindingHistory.Clear();
-
-            var settings = new XamlRenderSettings(SettingsService.Instance.KnownNamespaces)
-            {
-                IsBindingDebuggingEnabled = SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value,
-                KeepSuggestedContentSameLength = true,
-                DataContext = DataContext
-            };
-
-            Result = await XamlRenderer.RenderAsync(content, settings);
-
-            if (Result.Element == null)
-            {
-                // TODO: Need to offset with location in document...
-
-                // Highlight Errors
-                foreach (var error in Result.Errors)
-                {
-                    LineDecorations.Add(new IModelDeltaDecoration(new Range(error.StartLine, error.StartColumn, error.EndLine, error.EndColumn),
-                        new IModelDecorationOptions()
-                        {
-                            IsWholeLine = false,
-                            ClassName = this._errorStyle,
-                            HoverMessage = new string[]
-                            {
-                                error.Message
-                            }
-                        }));
-                }
-            }
-            else
-            {
-                CreateBindingDecorations();
-            }
-
-            // Only Update if we have a new well-parsed element.
-            if (Result.Element != null && Result.IsUIElement)
-            {
-                // Add element to main panel
-                XamlRoot.Children.Clear();
-                XamlRoot.Children.Add(Result.Element as UIElement);
-            }
-
-            Compiled?.Invoke(this, new EventArgs());
+            return Result.SuggestedContent;
         }
 
         private void BindingUpdated(XamlBindingInfo binding, ConversionRecord record, object newvalue)

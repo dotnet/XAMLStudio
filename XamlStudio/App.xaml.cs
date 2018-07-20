@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Storage;
 using Windows.UI.Xaml;
 
 using XamlStudio.Services;
@@ -31,6 +33,16 @@ namespace XamlStudio
 
         private void App_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
+            var t = new Task(async () =>
+            {
+                var file = await ApplicationData.Current.LocalFolder.CreateFileAsync("unhandlederror.txt", CreationCollisionOption.OpenIfExists);
+                await FileIO.WriteTextAsync(file, e.Message + Environment.NewLine + e.Exception.Message + Environment.NewLine + e.Exception.StackTrace);
+                Debug.WriteLine("Render Error Out: " + file.Path);
+            });
+
+            t.Start();
+            t.Wait(3000);
+
             // TODO: Check if these are coming from a Render call and just ignore then.
             Debugger.Break();
             e.Handled = true;
