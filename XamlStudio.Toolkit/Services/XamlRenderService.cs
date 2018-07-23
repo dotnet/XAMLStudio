@@ -114,7 +114,8 @@ namespace XamlStudio.Toolkit.Services
                     column = uint.Parse(msg.Substring(pl + 9, msg.IndexOf("]", pl) - pl - 9));
                 }
 
-                result.Errors.Add(new XamlExceptionRange(msg, e, line, column, line, column + 8)); // TODO: Inspect Content at this position and go until space / EOL
+                var lineContent = GetLine(result.RenderedContent, line);
+                result.Errors.Add(new XamlExceptionRange(msg, e, line, column, lineContent));
             }
 
             // Need to look for Design-Time 'd:' properties and link to object somehow for modification afterwards as they're ignored by parser usually with mc:Ignorable="d"
@@ -184,6 +185,30 @@ namespace XamlStudio.Toolkit.Services
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Get the text at a specific line.
+        /// Throws exceptions if lineNumber is out of range
+        /// </summary>
+        /// <param name="content">The content to inspect</param>
+        /// <param name="lineNumber">Target line number</param>
+        /// <returns></returns>
+        private string GetLine(string content, uint lineNumber)
+        {
+            if (lineNumber < 1 || string.IsNullOrEmpty(content))
+            {
+                return string.Empty;
+            }
+
+            var lines = content.Split("\r\n");
+
+            if (lineNumber > lines.Count() + 1)
+            {
+                return string.Empty;
+            }
+
+            return lines[lineNumber - 1];
         }
     }
 }
