@@ -9,6 +9,7 @@
     xmlns:future="using:Microsoft.Toolkit.Uwp.UI.Controls.Future"
     xmlns:local="using:XamlStudio.Views"
     xmlns:models="using:XamlStudio.Models"
+    xmlns:controls="using:XamlStudio.Controls"
     Style="{StaticResource PageStyle}"
     mc:Ignorable="d">
 
@@ -35,32 +36,32 @@
             <NavigationView.MenuItems>
                 <NavigationViewItem x:Uid="MainPage_NavMenu_Explorer">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE8C8;"/>
+                        <controls:AppFontIcon IconName="Copy"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem x:Uid="MainPage_NavMenu_ImageSources">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xEB9F;"/>
+                        <controls:AppFontIcon IconName="Photo2"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem x:Uid="MainPage_NavMenu_DataSources">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xEE94;"/>
+                        <controls:AppFontIcon IconName="Wheel"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem x:Uid="MainPage_NavMenu_Debug">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xEBE8;"/>
+                        <controls:AppFontIcon IconName="Bug"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem x:Uid="MainPage_NavMenu_Toolbox">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE821;"/>
+                        <controls:AppFontIcon IconName="Work"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem x:Uid="MainPage_NavMenu_Search">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE094;"/>
+                        <controls:AppFontIcon IconName="Search"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
             </NavigationView.MenuItems>

@@ -142,6 +142,7 @@
     <Compile Include="Activation\FileActivationHandler.cs" />
     <Compile Include="Activation\SchemeActivationHandler.cs" />
     <Compile Include="Activation\WebToAppLinkActivationHandler.cs" />
+    <Compile Include="Controls\AppFontIcon.cs" />
     <Compile Include="DummyPage.xaml.cs">
       <DependentUpon>DummyPage.xaml</DependentUpon>
     </Compile>
