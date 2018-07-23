@@ -20,10 +20,20 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.ColumnSpan="2" Margin="-68,-16,0,8">
-            <Image Source="ms-appx:///Assets/SplashScreen.scale-100.png" Width="300"/>
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="0"
+                    Grid.ColumnSpan="2"
+                    Margin="0,-16,0,8">
+            <Image Source="ms-appx:///Assets/XamlStudio.SplashScreen.png"
+                   Width="300"
+                   Stretch="UniformToFill"
+                   Margin="-48,0,0,0">
+                <Image.Projection>
+                    <PlaneProjection LocalOffsetX="-0"/>
+                </Image.Projection>
+            </Image>
             <StackPanel Padding="16" HorizontalAlignment="Left"
-                                     VerticalAlignment="Center" Margin="-60,0,0,0">
+                                     VerticalAlignment="Center" Margin="-30,0,0,0">
                 <TextBlock FontSize="16">a Microsoft Garage project</TextBlock>
                 <TextBlock FontSize="16">For Rapid Prototyping</TextBlock>
             </StackPanel>

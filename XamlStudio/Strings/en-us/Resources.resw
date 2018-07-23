@@ -314,4 +314,12 @@ By: Michael A. Hawker</value>
     <value>Save</value>
     <comment>Close and save document.</comment>
   </data>
+  <data name="AppPackageDescription" xml:space="preserve">
+    <value>XAML Studio is a development tool for testing and interacting with XAML in a quick and rapid prototyping environment.  It is built as a modern UWP Application to run on Windows 10 and 10S devices without needing Visual Studio.</value>
+    <comment>App Package Description</comment>
+  </data>
+  <data name="AppPackageDisplayName" xml:space="preserve">
+    <value>XAML Studio</value>
+    <comment>Display Name used by the application</comment>
+  </data>
 </root>

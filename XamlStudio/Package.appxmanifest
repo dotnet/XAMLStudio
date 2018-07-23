@@ -5,7 +5,7 @@
   <Properties>
     <DisplayName>XamlStudio</DisplayName>
     <PublisherDisplayName>Partner App Experience</PublisherDisplayName>
-    <Logo>Assets\StoreLogo.png</Logo>
+    <Logo>Assets\XamlStudio.StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
     <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
@@ -15,13 +15,14 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="XamlStudio.App">
-      <uap:VisualElements DisplayName="XAML Studio" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="XAML Studio is a development tool for testing and interacting with XAML in a quick and rapid prototyping environment.  It is built as a modern UWP Application to run on Windows 10 and 10S devices without needing Visual Studio." BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square310x310Logo="Assets\LargeTile.png" Square71x71Logo="Assets\SmallTile.png" ShortName="XAML Studio">
+      <uap:VisualElements DisplayName="ms-resource:AppPackageDisplayName" Square150x150Logo="Assets\XamlStudio.MedTile.png" Square44x44Logo="Assets\XamlStudio.AppList.png" Description="ms-resource:AppPackageDescription" BackgroundColor="transparent">
+        <uap:DefaultTile Wide310x150Logo="Assets\XamlStudio.WideTile.png" Square310x310Logo="Assets\XamlStudio.LargeTile.png" Square71x71Logo="Assets\XamlStudio.SmallTile.png" ShortName="ms-resource:AppPackageDisplayName">
           <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square150x150Logo" />
             <uap:ShowOn Tile="square310x310Logo" />
           </uap:ShowNameOnTiles>
         </uap:DefaultTile>
-        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:SplashScreen Image="Assets\XamlStudio.SplashScreen.png" />
       </uap:VisualElements>
       <Extensions>
         <uap3:Extension Category="windows.appUriHandler">
@@ -31,13 +32,14 @@
         </uap3:Extension>
         <uap:Extension Category="windows.protocol">
           <uap:Protocol Name="xamlstudio">
-            <uap:Logo>Assets\Icon.png</uap:Logo>
+            <uap:Logo>Assets\XamlStudio.Icon.png</uap:Logo>
             <uap:DisplayName>Xaml Studio</uap:DisplayName>
           </uap:Protocol>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
           <uap:FileTypeAssociation Name="xaml">
             <uap:DisplayName>Xaml File</uap:DisplayName>
+            <uap:Logo>Assets\XamlStudio.Icon.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="application/xaml">.xaml</uap:FileType>
             </uap:SupportedFileTypes>
