@@ -1,27 +1,30 @@
-﻿<Page
-    x:Class="XamlStudio.Views.DataSources"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:XamlStudio.Views"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+﻿<Page x:Class="XamlStudio.Views.DataSources"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="using:XamlStudio.Views"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Border Style="{StaticResource VSCodeAppBarHeaderStyle}"
-                Grid.Row="0">
+        <Border Grid.Row="0" Style="{StaticResource VSCodeAppBarHeaderStyle}">
             <TextBlock Style="{StaticResource VSCodeAppBarHeaderTextStyle}">DATA SOURCES</TextBlock>
         </Border>
-        <TextBox x:Name="LiveDataSourceUri" Header="REST Url:" Grid.Row="1" LostFocus="LiveDataSourceUri_LostFocus" Margin="4"/>
-        <ScrollViewer Grid.Row="2" Margin="0,4,0,0"
-                      HorizontalScrollMode="Enabled"
-                      HorizontalScrollBarVisibility="Visible">
-            <TextBlock x:Name="DataPayload"/>
+        <TextBox x:Name="LiveDataSourceUri"
+                 Grid.Row="1"
+                 Margin="4"
+                 Header="REST Url:"
+                 LostFocus="LiveDataSourceUri_LostFocus" />
+        <ScrollViewer Grid.Row="2"
+                      Margin="0,4,0,0"
+                      HorizontalScrollBarVisibility="Visible"
+                      HorizontalScrollMode="Enabled">
+            <TextBlock x:Name="DataPayload" />
         </ScrollViewer>
     </Grid>
 </Page>
