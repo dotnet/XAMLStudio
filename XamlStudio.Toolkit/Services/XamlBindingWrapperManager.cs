@@ -13,8 +13,8 @@ namespace XamlStudio.Toolkit.Services
     /// </summary>
     public class XamlBindingWrapperManager : Dictionary<int, XamlBindingInfo>
     {
-        private Dictionary<int, XamlRenderService> _renderers = new Dictionary<int, XamlRenderService>();
-        private Dictionary<int, List<int>> _tracker = new Dictionary<int, List<int>>();
+        private readonly Dictionary<int, XamlRenderService> _renderers = new Dictionary<int, XamlRenderService>();
+        private readonly Dictionary<int, List<int>> _tracker = new Dictionary<int, List<int>>();
 
         // http://csharpindepth.com/Articles/General/Singleton.aspx
         private static readonly XamlBindingWrapperManager _instance = new XamlBindingWrapperManager();

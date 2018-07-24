@@ -56,9 +56,9 @@ namespace XamlStudio.Toolkit.Services
                         {
                             data = JsonConvert.DeserializeObject<ExpandoObject>(content);
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
-
+                            // TODO: Would need XamlRenderResultContext here to add errors...
                         }
                         break;
                     case ".xml":

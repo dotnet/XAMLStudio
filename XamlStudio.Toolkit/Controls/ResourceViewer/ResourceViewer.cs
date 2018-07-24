@@ -67,9 +67,7 @@ namespace XamlStudio.Toolkit.Controls
 
                 if (keyinfo.Value is Style style && style.TargetType != null)
                 {
-                    var obj = Activator.CreateInstance(style.TargetType) as FrameworkElement;
-
-                    if (obj != null)
+                    if (Activator.CreateInstance(style.TargetType) is FrameworkElement obj)
                     {
                         // TODO: Add lorem ipsum to TextBlock? (If Text Property not set in style???)
 

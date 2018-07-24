@@ -31,9 +31,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Extensions.Pivot.Future
     {
         public override object Convert(object value, Type targetType, object parameter, string language)
         {
-            var pivotitem = base.Convert(value, targetType, parameter, language) as PivotItem;
-
-            if (pivotitem != null)
+            if (base.Convert(value, targetType, parameter, language) is PivotItem pivotitem)
             {
                 var source = PivotExtensions.GetImageSource(pivotitem);
 
@@ -43,7 +41,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Extensions.Pivot.Future
             return null;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        public override object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }

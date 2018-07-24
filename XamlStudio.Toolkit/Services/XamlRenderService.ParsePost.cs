@@ -25,7 +25,9 @@ namespace XamlStudio.Toolkit.Services
                 // May get overwritten by d:DesignData loading later.
                 if (context.Element is FrameworkElement fwe)
                 {
+                    #pragma warning disable IDE0029 // Use coalesce expression
                     fwe.DataContext = settings.DataContext == null ? context.Element : settings.DataContext;
+                    #pragma warning restore IDE0029 // Use coalesce expression
                     context.DataContext = fwe.DataContext;
 
                     var attributes = root.Attributes();

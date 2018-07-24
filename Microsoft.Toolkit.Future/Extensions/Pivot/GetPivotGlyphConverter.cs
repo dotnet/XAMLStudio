@@ -32,9 +32,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Extensions.Pivot.Future
         // TODO: See if I can use GetPivotItemConverter as a base class?
         public override object Convert(object value, Type targetType, object parameter, string language)
         {
-            var pivotitem = base.Convert(value, targetType, parameter, language) as PivotItem;
-
-            if (pivotitem != null)
+            if (base.Convert(value, targetType, parameter, language) is PivotItem pivotitem)
             {
                 var glyph = PivotExtensions.GetGlyph(pivotitem);
 
@@ -44,7 +42,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Extensions.Pivot.Future
             return string.Empty;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        public override object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
