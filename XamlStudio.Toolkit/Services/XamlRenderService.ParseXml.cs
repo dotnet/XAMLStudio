@@ -1,10 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
-using Windows.Storage;
 using XamlStudio.Toolkit.Extensions;
 using XamlStudio.Toolkit.Models;
 using XamlStudio.Toolkit.Parsers;

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace XamlStudio.Toolkit.Models
 {
@@ -27,7 +23,7 @@ namespace XamlStudio.Toolkit.Models
         }
 
         /// <summary>
-        /// Pass in the line content to autmoatically have the endCol calculated. This assumes exception is on one line.
+        /// Pass in the line content to automatically have the endCol calculated. This assumes exception is on one line.
         /// </summary>
         /// <param name="message"></param>
         /// <param name="error"></param>

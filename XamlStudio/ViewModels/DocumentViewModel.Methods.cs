@@ -10,7 +10,6 @@ using Windows.UI.Xaml;
 using XamlStudio.Services;
 using XamlStudio.Toolkit.Controls;
 using XamlStudio.Toolkit.Models;
-using XamlStudio.Toolkit.Services;
 
 namespace XamlStudio.ViewModels
 {

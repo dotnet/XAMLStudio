@@ -1,13 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Dynamic;
+﻿using System;
 using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Xml;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -189,7 +182,7 @@ namespace XamlStudio.Toolkit.Services
 
         /// <summary>
         /// Get the text at a specific line.
-        /// Throws exceptions if lineNumber is out of range
+        /// Returns an Empty string if the lineNumber is out of range.
         /// </summary>
         /// <param name="content">The content to inspect</param>
         /// <param name="lineNumber">Target line number</param>
