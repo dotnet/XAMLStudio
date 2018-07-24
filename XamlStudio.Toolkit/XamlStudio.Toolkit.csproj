@@ -121,6 +121,7 @@
     <Compile Include="Models\XamlRenderSettings.cs" />
     <Compile Include="Models\XmlnsNamespace.cs" />
     <Compile Include="Parsers\BindingParser.cs" />
+    <Compile Include="Parsers\BindingValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IdGenerator.cs" />
     <Compile Include="Services\XamlBindingWrapperManager.cs" />
