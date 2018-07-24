@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using Windows.Storage;
 using XamlStudio.Toolkit.Extensions;
 using XamlStudio.Toolkit.Models;
 using XamlStudio.Toolkit.Parsers;
@@ -41,7 +39,8 @@ namespace XamlStudio.Toolkit.Services
                     column = uint.Parse(msg.Substring(pl + 8, msg.IndexOf(".", pl) - pl - 8));
                 }
 
-                context.Errors.Add(new XamlExceptionRange(msg, e, line, column, line, column + 8)); // TODO: Inspect Content at this position and go until space / EOL
+                var lineContent = GetLine(context.RenderedContent, line);
+                context.Errors.Add(new XamlExceptionRange(msg, e, line, column, lineContent));
             }
         }
 

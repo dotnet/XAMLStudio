@@ -10,7 +10,6 @@ using Windows.UI.Xaml;
 using XamlStudio.Services;
 using XamlStudio.Toolkit.Controls;
 using XamlStudio.Toolkit.Models;
-using XamlStudio.Toolkit.Services;
 
 namespace XamlStudio.ViewModels
 {
@@ -73,7 +72,7 @@ namespace XamlStudio.ViewModels
                     LineDecorations.Add(new IModelDeltaDecoration(new Range(lineoffset + error.StartLine, error.StartColumn, lineoffset + error.EndLine, error.EndColumn),
                         new IModelDecorationOptions()
                         {
-                            IsWholeLine = false,
+                            IsWholeLine = error.IsWholeLine,
                             ClassName = this._errorStyle,
                             HoverMessage = new string[]
                             {
