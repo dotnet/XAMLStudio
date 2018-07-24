@@ -56,12 +56,14 @@ namespace XamlStudio.Toolkit.Services
                         if (attr.Value.StartsWith("{Binding"))
                         {
                             // Found Binding
-                            var bindingInfo = new Models.XamlBindingInfo((uint)((IXmlLineInfo)attr).LineNumber, (uint)(((IXmlLineInfo)attr).LinePosition + attr.Name.LocalName.Length + 2), attr.Value);
-                            bindingInfo.PropertyAttribute = attr;
-                            bindingInfo.PropertyName = attr.Name.LocalName;
-                            bindingInfo.ElementTypeName = attr.Parent.Name.LocalName;
-                            bindingInfo.ElementName = attr.Parent.Attributes().GetNamedItem("{http://schemas.microsoft.com/winfx/2006/xaml}Name")?.Value;
-                            
+                            var bindingInfo = new XamlBindingInfo((uint)((IXmlLineInfo)attr).LineNumber, (uint)(((IXmlLineInfo)attr).LinePosition + attr.Name.LocalName.Length + 2), attr.Value)
+                            {
+                                PropertyAttribute = attr,
+                                PropertyName = attr.Name.LocalName,
+                                ElementTypeName = attr.Parent.Name.LocalName,
+                                ElementName = attr.Parent.Attributes().GetNamedItem("{http://schemas.microsoft.com/winfx/2006/xaml}Name")?.Value
+                            };
+
                             XamlBindingWrapperManager.Instance.AddNewBinding(Id, bindingInfo);
 
                             var bt = BindingParser.Parse(attr.Value);

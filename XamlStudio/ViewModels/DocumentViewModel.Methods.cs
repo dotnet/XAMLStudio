@@ -78,7 +78,7 @@ namespace XamlStudio.ViewModels
                             HoverMessage = new string[]
                             {
                                 error.Message
-                            }
+                            }.ToMarkdownString()
                         }));
                 }
             }
@@ -132,7 +132,7 @@ namespace XamlStudio.ViewModels
                                 HoverMessage = new string[]
                                     {
                                         "Binding not Triggered Yet."
-                                    }
+                                    }.ToMarkdownString()
                             }));
                         break;
                     case XamlBindingInfo.XamlBindingState.Successful:
@@ -145,7 +145,7 @@ namespace XamlStudio.ViewModels
                                     {
                                         "Last Binding Value: " + binding.LastConvertedResultOrValue?.ToString(),
                                         "Total Hit Count: " + binding.BindingCount
-                                    }
+                                    }.ToMarkdownString()
                             }));
                         break;
                     case XamlBindingInfo.XamlBindingState.ConversionError:
@@ -157,7 +157,7 @@ namespace XamlStudio.ViewModels
                                 HoverMessage = new string[]
                                     {
                                         binding.LastExceptionMessage
-                                    }
+                                    }.ToMarkdownString()
                             }));
                         break;
                 }
