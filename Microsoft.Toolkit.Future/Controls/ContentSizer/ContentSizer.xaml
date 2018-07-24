@@ -1,18 +1,19 @@
-﻿<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Microsoft.Toolkit.Uwp.UI.Controls.Future"
-    xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions">
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+                    xmlns:local="using:Microsoft.Toolkit.Uwp.UI.Controls.Future">
 
     <Style TargetType="local:ContentSizer">
-        <Setter Property="IsTabStop" Value="True"></Setter>
-        <Setter Property="UseSystemFocusVisuals" Value="True"></Setter>
-        <Setter Property="IsFocusEngagementEnabled" Value="True"></Setter>
+        <Setter Property="IsTabStop" Value="True" />
+        <Setter Property="UseSystemFocusVisuals" Value="True" />
+        <Setter Property="IsFocusEngagementEnabled" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:ContentSizer">
-                    <Grid Background="{TemplateBinding Background}" extensions:Mouse.Cursor="{TemplateBinding GripperCursor}">
-                        <ContentPresenter Content="{TemplateBinding Content}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                    <Grid extensions:Mouse.Cursor="{TemplateBinding GripperCursor}" Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalContentAlignment="Stretch"
+                                          VerticalContentAlignment="Stretch"
+                                          Content="{TemplateBinding Content}" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

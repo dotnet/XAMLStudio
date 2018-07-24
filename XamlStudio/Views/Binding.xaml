@@ -1,133 +1,153 @@
-﻿<Page
-    x:Class="XamlStudio.Views.Binding"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:XamlStudio.Views"
-    xmlns:model="using:XamlStudio.Models"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:xc="using:WinRTXamlToolkit.Controls"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:future="using:Microsoft.Toolkit.Uwp.UI.Controls.Future"
-    xmlns:fex="using:Microsoft.Toolkit.Uwp.UI.Extensions.Future"
-    xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
-    xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:i="using:Microsoft.Xaml.Interactivity"
-    xmlns:services="using:XamlStudio.Services"
-    xmlns:models="using:XamlStudio.Toolkit.Models"
-    xmlns:globalization="using:System.Globalization"
-    mc:Ignorable="d">
+﻿<Page x:Class="XamlStudio.Views.Binding"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:fex="using:Microsoft.Toolkit.Uwp.UI.Extensions.Future"
+      xmlns:future="using:Microsoft.Toolkit.Uwp.UI.Controls.Future"
+      xmlns:globalization="using:System.Globalization"
+      xmlns:i="using:Microsoft.Xaml.Interactivity"
+      xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
+      xmlns:local="using:XamlStudio.Views"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:model="using:XamlStudio.Models"
+      xmlns:models="using:XamlStudio.Toolkit.Models"
+      xmlns:services="using:XamlStudio.Services"
+      xmlns:xc="using:WinRTXamlToolkit.Controls"
+      mc:Ignorable="d">
 
     <Page.Resources>
         <Style x:Key="ListViewItemContainerWideStyle" TargetType="ListViewItem">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         </Style>
         <DataTemplate x:Key="ConversionRecordTemplate" x:DataType="models:ConversionRecord">
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <TextBlock Text="{x:Bind Value.ToString()}" Grid.Column="1" HorizontalAlignment="Right"/>
-                <TextBlock Text="{x:Bind Result.ToString()}" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right"/>
-                <TextBlock Text="{x:Bind TimeStamp.ToString('HH:mm:ss.fffffff', globalization:CultureInfo.CurrentCulture)}" Style="{ThemeResource CaptionTextBlockStyle}" Grid.Row="1"/>
+                <TextBlock Grid.Column="1"
+                           HorizontalAlignment="Right"
+                           Text="{x:Bind Value.ToString()}" />
+                <TextBlock Grid.Row="1"
+                           Grid.Column="1"
+                           HorizontalAlignment="Right"
+                           Text="{x:Bind Result.ToString()}" />
+                <TextBlock Grid.Row="1"
+                           Style="{ThemeResource CaptionTextBlockStyle}"
+                           Text="{x:Bind TimeStamp.ToString('HH:mm:ss.fffffff', globalization:CultureInfo.CurrentCulture)}" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="ConversionRecordWithParentTemplate" x:DataType="models:ConversionRecord">
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.8*"/>
-                    <ColumnDefinition Width="0.2*"/>
+                    <ColumnDefinition Width="0.8*" />
+                    <ColumnDefinition Width="0.2*" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <TextBlock Text="{x:Bind Parent.ToString()}" Grid.Column="0"/>
-                <TextBlock Text="{x:Bind Value.ToString()}" Grid.Column="1" HorizontalAlignment="Right"/>
-                <TextBlock Text="{x:Bind Result.ToString()}" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right"/>
-                <TextBlock Text="{x:Bind TimeStamp.ToString('HH:mm:ss.fffffff', globalization:CultureInfo.CurrentCulture)}" Style="{ThemeResource CaptionTextBlockStyle}" Grid.Row="1"/>
+                <TextBlock Grid.Column="0" Text="{x:Bind Parent.ToString()}" />
+                <TextBlock Grid.Column="1"
+                           HorizontalAlignment="Right"
+                           Text="{x:Bind Value.ToString()}" />
+                <TextBlock Grid.Row="1"
+                           Grid.Column="1"
+                           HorizontalAlignment="Right"
+                           Text="{x:Bind Result.ToString()}" />
+                <TextBlock Grid.Row="1"
+                           Style="{ThemeResource CaptionTextBlockStyle}"
+                           Text="{x:Bind TimeStamp.ToString('HH:mm:ss.fffffff', globalization:CultureInfo.CurrentCulture)}" />
             </Grid>
         </DataTemplate>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Border Style="{StaticResource VSCodeAppBarHeaderStyle}"
-                Grid.Row="0"
-                HorizontalAlignment="Stretch">
+        <Border Grid.Row="0"
+                HorizontalAlignment="Stretch"
+                Style="{StaticResource VSCodeAppBarHeaderStyle}">
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="90"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="90" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Style="{StaticResource VSCodeAppBarHeaderTextStyle}">DEBUG</TextBlock>
-                <ComboBox x:Name="BindingViewMode" Grid.Column="1" SelectedIndex="0"
-                          Margin="0,0,12,0">
+                <ComboBox x:Name="BindingViewMode"
+                          Grid.Column="1"
+                          Margin="0,0,12,0"
+                          SelectedIndex="0">
                     <x:String>Bindings</x:String>
                     <x:String>History</x:String>
                 </ComboBox>
-                <ToggleSwitch
-                    Grid.Column="2"
-                    x:Uid="Settings_PowerBindingToggle"
-                    x:Name="PowerBindingToggle"
-                    IsOn="{x:Bind services:SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value, Mode=OneWay}"
-                    Tag="IsPowerBindingDebuggingEnabled"
-                    Margin="0,-8,0,0"
-                    Height="32">
+                <ToggleSwitch x:Name="PowerBindingToggle"
+                              x:Uid="Settings_PowerBindingToggle"
+                              Grid.Column="2"
+                              Height="32"
+                              Margin="0,-8,0,0"
+                              IsOn="{x:Bind services:SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value, Mode=OneWay}"
+                              Tag="IsPowerBindingDebuggingEnabled">
                     <i:Interaction.Behaviors>
                         <ic:EventTriggerBehavior EventName="Toggled">
-                            <ic:InvokeCommandAction Command="{x:Bind MainViewModel.SettingsViewModel.SwitchToggleCommand}"/>
-                            <ic:ChangePropertyAction TargetObject="{x:Bind MainViewModel.DocumentViewModel}" PropertyName="HasCompiled" Value="false" />
-                            <ic:InvokeCommandAction Command="{x:Bind MainViewModel.DocumentViewModel.UpdateXamlCommand}"/>
+                            <ic:InvokeCommandAction Command="{x:Bind MainViewModel.SettingsViewModel.SwitchToggleCommand}" />
+                            <ic:ChangePropertyAction PropertyName="HasCompiled"
+                                                     TargetObject="{x:Bind MainViewModel.DocumentViewModel}"
+                                                     Value="false" />
+                            <ic:InvokeCommandAction Command="{x:Bind MainViewModel.DocumentViewModel.UpdateXamlCommand}" />
                         </ic:EventTriggerBehavior>
                     </i:Interaction.Behaviors>
                 </ToggleSwitch>
             </Grid>
         </Border>
-        <future:SwitchPresenter Value="{x:Bind BindingViewMode.SelectedValue, Mode=OneWay}" Grid.Row="1">
+        <future:SwitchPresenter Grid.Row="1" Value="{x:Bind BindingViewMode.SelectedValue, Mode=OneWay}">
             <future:Case Value="Bindings">
                 <ItemsControl ItemsSource="{x:Bind MainViewModel.DocumentViewModel.Result.Bindings, Mode=OneWay}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="models:XamlBindingInfo">
-                            <controls:Expander HeaderStyle="{StaticResource VSCodeExpanderStyle}"
-                                               HorizontalContentAlignment="Stretch" FontFamily="Segoe UI">
+                            <controls:Expander HorizontalContentAlignment="Stretch"
+                                               FontFamily="Segoe UI"
+                                               HeaderStyle="{StaticResource VSCodeExpanderStyle}">
                                 <controls:Expander.Header>
-                                    <TextBlock FontFamily="Segoe UI"><Run Text="{x:Bind}"/> = <Run Text="{x:Bind LastConvertedResultOrValueString, Mode=OneWay}"/></TextBlock>
+                                    <TextBlock FontFamily="Segoe UI"><Run Text="{x:Bind}" />
+                                        =<Run Text="{x:Bind LastConvertedResultOrValueString, Mode=OneWay}" /></TextBlock>
                                 </controls:Expander.Header>
-                                <!-- TODO: Use ACV here too. -->
-                                <ListView ItemsSource="{x:Bind BindingHistory}"
-                                          ItemTemplate="{StaticResource ConversionRecordTemplate}"
-                                          ItemContainerStyle="{StaticResource ListViewItemContainerWideStyle}"
-                                          HorizontalContentAlignment="Stretch"
+                                <!--  TODO: Use ACV here too.  -->
+                                <ListView HorizontalContentAlignment="Stretch"
                                           IsItemClickEnabled="True"
-                                          ItemClick="ListView_ItemClick"/>
+                                          ItemClick="ListView_ItemClick"
+                                          ItemContainerStyle="{StaticResource ListViewItemContainerWideStyle}"
+                                          ItemTemplate="{StaticResource ConversionRecordTemplate}"
+                                          ItemsSource="{x:Bind BindingHistory}" />
                             </controls:Expander>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </future:Case>
             <future:Case Value="History">
-                <ListView ItemsSource="{x:Bind MainViewModel.DocumentViewModel.BindingHistory, Mode=OneWay}"
-                          ItemTemplate="{StaticResource ConversionRecordWithParentTemplate}"
-                          ItemContainerStyle="{StaticResource ListViewItemContainerWideStyle}"
-                          HorizontalContentAlignment="Stretch"
+                <ListView HorizontalContentAlignment="Stretch"
                           IsItemClickEnabled="True"
-                          ItemClick="ListView_ItemClick"/>
+                          ItemClick="ListView_ItemClick"
+                          ItemContainerStyle="{StaticResource ListViewItemContainerWideStyle}"
+                          ItemTemplate="{StaticResource ConversionRecordWithParentTemplate}"
+                          ItemsSource="{x:Bind MainViewModel.DocumentViewModel.BindingHistory, Mode=OneWay}" />
             </future:Case>
         </future:SwitchPresenter>
         <TextBlock Grid.Row="1"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    TextWrapping="WrapWholeWords"
-                   Visibility="{x:Bind fex:Bind.NotVisible(services:SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value), Mode=OneWay}">Turn on Binding Debugging to see information here.</TextBlock>
+                   Visibility="{x:Bind fex:Bind.NotVisible(services:SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value), Mode=OneWay}">
+            Turn on Binding Debugging to see information here.
+        </TextBlock>
     </Grid>
 </Page>

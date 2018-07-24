@@ -1,17 +1,16 @@
-﻿<Page
-    x:Class="XamlStudio.Views.MainPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ex="using:Microsoft.Toolkit.Uwp.UI.Extensions"
-    xmlns:exf="using:Microsoft.Toolkit.Uwp.UI.Extensions.Future"
-    xmlns:future="using:Microsoft.Toolkit.Uwp.UI.Controls.Future"
-    xmlns:local="using:XamlStudio.Views"
-    xmlns:models="using:XamlStudio.Models"
-    xmlns:controls="using:XamlStudio.Controls"
-    Style="{StaticResource PageStyle}"
-    mc:Ignorable="d">
+﻿<Page x:Class="XamlStudio.Views.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:controls="using:XamlStudio.Controls"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:ex="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+      xmlns:exf="using:Microsoft.Toolkit.Uwp.UI.Extensions.Future"
+      xmlns:future="using:Microsoft.Toolkit.Uwp.UI.Controls.Future"
+      xmlns:local="using:XamlStudio.Views"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:models="using:XamlStudio.Models"
+      Style="{StaticResource PageStyle}"
+      mc:Ignorable="d">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -25,119 +24,128 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" MinWidth="48"/>
+            <ColumnDefinition Width="Auto" MinWidth="48" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <NavigationView x:Name="NavMenu"
-                        Style="{StaticResource VSCodeActivityBarStyle}"
-                        MenuItemContainerStyle="{StaticResource LargeIconNavigationViewItemStyle}"
+                        ex:NavigationViewExtensions.CollapseOnClick="True"
                         ex:NavigationViewExtensions.SelectedIndex="0"
-                        ex:NavigationViewExtensions.CollapseOnClick="True">
+                        MenuItemContainerStyle="{StaticResource LargeIconNavigationViewItemStyle}"
+                        Style="{StaticResource VSCodeActivityBarStyle}">
             <NavigationView.MenuItems>
                 <NavigationViewItem x:Uid="MainPage_NavMenu_Explorer">
                     <NavigationViewItem.Icon>
-                        <controls:AppFontIcon IconName="Copy"/>
+                        <controls:AppFontIcon IconName="Copy" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem x:Uid="MainPage_NavMenu_ImageSources">
                     <NavigationViewItem.Icon>
-                        <controls:AppFontIcon IconName="Photo2"/>
+                        <controls:AppFontIcon IconName="Photo2" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem x:Uid="MainPage_NavMenu_DataSources">
                     <NavigationViewItem.Icon>
-                        <controls:AppFontIcon IconName="Wheel"/>
+                        <controls:AppFontIcon IconName="Wheel" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem x:Uid="MainPage_NavMenu_Debug">
                     <NavigationViewItem.Icon>
-                        <controls:AppFontIcon IconName="Bug"/>
+                        <controls:AppFontIcon IconName="Bug" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem x:Uid="MainPage_NavMenu_Toolbox">
                     <NavigationViewItem.Icon>
-                        <controls:AppFontIcon IconName="Work"/>
+                        <controls:AppFontIcon IconName="Work" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem x:Uid="MainPage_NavMenu_Search">
                     <NavigationViewItem.Icon>
-                        <controls:AppFontIcon IconName="Search"/>
+                        <controls:AppFontIcon IconName="Search" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
             </NavigationView.MenuItems>
 
-            <Grid x:Name="ContentGrid" MinWidth="200" Width="300"
+            <Grid x:Name="ContentGrid"
+                  Width="300"
+                  MinWidth="200"
                   BorderBrush="DarkGray"
                   BorderThickness="0,0,1,0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <future:ContentSizer Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="3" Background="DarkGray">
-                    <TextBlock/>
+                <future:ContentSizer Grid.Column="1"
+                                     Width="3"
+                                     HorizontalAlignment="Right"
+                                     VerticalAlignment="Stretch"
+                                     Background="DarkGray">
+                    <TextBlock />
                 </future:ContentSizer>
 
                 <future:SwitchPresenter Value="{Binding ElementName=NavMenu, Path=SelectedItem.Content}">
                     <future:Case Value="{x:Bind exf:Bind.LocalizedString('MainPage_NavMenu_Explorer/Content')}">
-                        <local:Explorer MainViewModel="{x:Bind ViewModel}"/>
+                        <local:Explorer MainViewModel="{x:Bind ViewModel}" />
                     </future:Case>
                     <future:Case Value="{x:Bind exf:Bind.LocalizedString('MainPage_NavMenu_DataSources/Content')}">
-                        <local:DataSources MainViewModel="{x:Bind ViewModel}"/>
+                        <local:DataSources MainViewModel="{x:Bind ViewModel}" />
                     </future:Case>
                     <future:Case Value="{x:Bind exf:Bind.LocalizedString('MainPage_NavMenu_Debug/Content')}">
-                        <local:Binding MainViewModel="{x:Bind ViewModel}"/>
+                        <local:Binding MainViewModel="{x:Bind ViewModel}" />
                     </future:Case>
-                    <future:Case Value="Settings"><!-- It seems NavigationView always has this as 'Settings'? -->
-                        <local:SettingsPanelPage MainViewModel="{x:Bind ViewModel}"/>
+                    <future:Case Value="Settings">
+                        <!--  It seems NavigationView always has this as 'Settings'?  -->
+                        <local:SettingsPanelPage MainViewModel="{x:Bind ViewModel}" />
                     </future:Case>
                     <future:Case IsDefault="True">
                         <Border Background="DarkGray">
-                            <TextBlock HorizontalAlignment="Left"
-                                        VerticalAlignment="Center"
-                                        Margin="16,0,0,0"
-                                        Foreground="Black"
-                                        Text="{Binding ElementName=NavMenu, Path=SelectedItem.Tag}" />
+                            <TextBlock Margin="16,0,0,0"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"
+                                       Foreground="Black"
+                                       Text="{Binding ElementName=NavMenu, Path=SelectedItem.Tag}" />
                         </Border>
                     </future:Case>
                 </future:SwitchPresenter>
             </Grid>
         </NavigationView>
 
-        <!-- TODO: Style="{StaticResource MSEdgePivotStyle}" -->
+        <!--  TODO: Style="{StaticResource MSEdgePivotStyle}"  -->
         <Pivot x:Name="DocumentTabsPivot"
                Grid.Column="1"
-               SelectionChanged="Pivot_SelectionChanged"
-               ItemsSource="{x:Bind ViewModel.OpenFiles}"
-               DataContext="{x:Bind}"
                HorizontalAlignment="Stretch"
                HorizontalContentAlignment="Stretch"
                exf:PivotExtensions.CloseButtonCommand="{Binding ViewModel.CloseActiveDocumentCommand}"
-               exf:PivotExtensions.PivotHeaderItemStyle="{StaticResource MSEdgeTabStyle}">
+               exf:PivotExtensions.PivotHeaderItemStyle="{StaticResource MSEdgeTabStyle}"
+               DataContext="{x:Bind}"
+               ItemsSource="{x:Bind ViewModel.OpenFiles}"
+               SelectionChanged="Pivot_SelectionChanged">
             <Pivot.HeaderTemplate>
                 <DataTemplate x:DataType="models:XamlDocument">
-                    <TextBlock Text="{x:Bind Title, Mode=OneWay}"/>
+                    <TextBlock Text="{x:Bind Title, Mode=OneWay}" />
                 </DataTemplate>
             </Pivot.HeaderTemplate>
             <Pivot.RightHeader>
-                <Button Style="{StaticResource MSEdgePivotButtonStyle}"
-                        Command="{x:Bind ViewModel.NewDocumentCommand}">
-                    <SymbolIcon Symbol="Add" exf:SymbolIconExtensions.FontSize="12" />
+                <Button Command="{x:Bind ViewModel.NewDocumentCommand}" Style="{StaticResource MSEdgePivotButtonStyle}">
+                    <SymbolIcon exf:SymbolIconExtensions.FontSize="12" Symbol="Add" />
                 </Button>
             </Pivot.RightHeader>
             <Pivot.ItemContainerStyle>
                 <Style TargetType="PivotItem">
-                    <Setter Property="Margin" Value="0,0,0,0"/>
+                    <Setter Property="Margin" Value="0,0,0,0" />
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate>
-                                <future:SwitchPresenter Value="{Binding DataContext.ViewModel.ActiveFile.IsWelcome, Mode=OneWay, ElementName=DocumentTabsPivot}"
-                                                        HorizontalAlignment="Stretch"
-                                            TargetType="x:Boolean">
+                                <future:SwitchPresenter HorizontalAlignment="Stretch"
+                                                        TargetType="x:Boolean"
+                                                        Value="{Binding DataContext.ViewModel.ActiveFile.IsWelcome, Mode=OneWay, ElementName=DocumentTabsPivot}">
                                     <future:Case Value="True">
-                                        <local:WelcomePage MainViewModel="{Binding DataContext.ViewModel, ElementName=DocumentTabsPivot}" HorizontalAlignment="Stretch"/>
+                                        <local:WelcomePage HorizontalAlignment="Stretch" MainViewModel="{Binding DataContext.ViewModel, ElementName=DocumentTabsPivot}" />
                                     </future:Case>
                                     <future:Case Value="False">
-                                        <local:Document x:Name="Document" LoadedDocument="{Binding}" MainViewModel="{Binding DataContext.ViewModel, ElementName=DocumentTabsPivot}" HorizontalAlignment="Stretch"/>
+                                        <local:Document x:Name="Document"
+                                                        HorizontalAlignment="Stretch"
+                                                        LoadedDocument="{Binding}"
+                                                        MainViewModel="{Binding DataContext.ViewModel, ElementName=DocumentTabsPivot}" />
                                     </future:Case>
                                 </future:SwitchPresenter>
                             </ControlTemplate>
