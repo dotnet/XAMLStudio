@@ -33,6 +33,8 @@ namespace XamlStudio.Views
 
         private async void MainPage_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
+            ShowHideSidePanel();
+
             if (_filesToLoad != null)
             {
                 // Remove Welcome Screen
@@ -90,5 +92,19 @@ namespace XamlStudio.Views
                 }
             }
         }
+
+        private void NavMenu_SelectionChanged(object sender, SelectionChangedEventArgs e) =>
+            ShowHideSidePanel();
+
+        private void ShowHideSidePanel()
+        {
+            if (ContentGrid != null && NavMenu != null)
+            {
+                ContentGrid.Visibility = NavMenu.SelectedIndex < 0 ? Visibility.Collapsed : Visibility.Visible;
+            }
+        }
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e) =>
+            ViewModel.OpenFiles.Add(XamlDocument.SettingsDocument());
     }
 }

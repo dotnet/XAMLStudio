@@ -186,41 +186,21 @@ By: Michael A. Hawker</value>
     <value>Feedback</value>
     <comment>Displayed as the link to launching the Feedback Hub.</comment>
   </data>
-  <data name="MainPage_NavMenu_DataSources.Content" xml:space="preserve">
-    <value>Data Source</value>
-    <comment>DataSources ActivityBar Tooltip</comment>
-  </data>
   <data name="MainPage_NavMenu_DataSources.Tag" xml:space="preserve">
     <value>DATA SOURCE</value>
     <comment>DataSources ActivityBar Title</comment>
-  </data>
-  <data name="MainPage_NavMenu_Debug.Content" xml:space="preserve">
-    <value>Debug Bindings</value>
-    <comment>Debug ActivityBar Tooltip</comment>
   </data>
   <data name="MainPage_NavMenu_Debug.Tag" xml:space="preserve">
     <value>BINDING DEBUGGER</value>
     <comment>Debug ActivityBar Title</comment>
   </data>
-  <data name="MainPage_NavMenu_Explorer.Content" xml:space="preserve">
-    <value>Explorer</value>
-    <comment>Explorer ActivityBar Tooltip</comment>
-  </data>
   <data name="MainPage_NavMenu_Explorer.Tag" xml:space="preserve">
     <value>EXPLORER</value>
     <comment>Explorer ActivityBar Title</comment>
   </data>
-  <data name="MainPage_NavMenu_ImageSources.Content" xml:space="preserve">
-    <value>Image Sources</value>
-    <comment>ImageSources ActivityBar Tooltip</comment>
-  </data>
   <data name="MainPage_NavMenu_ImageSources.Tag" xml:space="preserve">
     <value>IMAGES</value>
     <comment>ImageSources ActivityBar Title</comment>
-  </data>
-  <data name="MainPage_NavMenu_Search.Content" xml:space="preserve">
-    <value>Search</value>
-    <comment>Search ActivityBar Tooltip</comment>
   </data>
   <data name="MainPage_NavMenu_Search.Tag" xml:space="preserve">
     <value>SEARCH</value>
