@@ -4,7 +4,12 @@ namespace XamlStudio.Toolkit.Parsers
 {
     public static class BindingParser
     {
-        private const string BindingPropertiesPattern = "((?<Property>(?:BindBack)|(?:Converter)|(?:ConverterLanguage)|(?:ConverterParameter)|(?:ElementName)|(?:FallbackValue)|(?:Mode)|(?:Path)|(?:RelativeSource)|(?:Source)|(?:TargetNullValue)|(?:UpdateSourceTrigger))\\s*=\\s*(?<Value>.*?(?({)({(?>{(?<DEPTH>)|}(?<-DEPTH>)|.?)*(?(DEPTH)(?!))}(?=[,}]))|(.*?(?=[,}])))))+";
+        private const string BindingReg = "{Binding (?<Binding>.*)}";
+        private const string regProp = "(?<Property>BindBack|Converter|ConverterLanguage|ConverterParameter|ElementName|FallbackValue|Mode|Path|RelativeSource|Source|TargetNullValue|UpdateSourceTrigger)";
+        private const string regValueCurly = "(?<Value>{(?>{(?<DEPTH>)|}(?<-DEPTH>)|[^{}]+)*}(?(DEPTH)(?!)))"; //"(?<Value>.*?(?({)({(?>{(?<DEPTH>)|}(?<-DEPTH>)|.?)*(?(DEPTH)(?!))}(?=[,}]))|(.*?(?=[,}]))))";
+        private const string regValueQuote = "(?<Value>'.*?')"; //"(?<Value>.*?(?({)({(?>{(?<DEPTH>)|}(?<-DEPTH>)|.?)*(?(DEPTH)(?!))}(?=[,}]))|(.*?(?=[,}]))))";
+        private static string regValue = string.Format("({0}|{1})", regValueCurly, regValueQuote); 
+        private static string BindingPropertiesPattern = string.Format("({0}\\s*=\\s*{1})+", regProp, regValue);
         private static Regex BindingPropertyExtractor = new Regex(BindingPropertiesPattern, RegexOptions.Compiled | RegexOptions.Singleline);
 
         public static BindingValue Parse(string binding)
