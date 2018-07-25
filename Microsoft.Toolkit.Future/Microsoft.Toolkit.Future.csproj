@@ -112,6 +112,7 @@
     <Compile Include="Controls\SwitchPresenter\Case.cs" />
     <Compile Include="Controls\SwitchPresenter\CaseCollection.cs" />
     <Compile Include="Controls\SwitchPresenter\SwitchPresenter.cs" />
+    <Compile Include="Extensions\Bind.Visibility.cs" />
     <Compile Include="Extensions\Bind.Boolean.cs" />
     <Compile Include="Extensions\Bind.Math.cs" />
     <Compile Include="Extensions\Bind.cs" />

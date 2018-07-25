@@ -34,8 +34,6 @@ namespace XamlStudio.Views
 
         private async void MainPage_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            ShowHideSidePanel();
-
             if (_filesToLoad != null)
             {
                 // Remove Welcome Screen
@@ -91,17 +89,6 @@ namespace XamlStudio.Views
                 {
                     ViewModel.OpenFileCommand.Execute(file as StorageFile);
                 }
-            }
-        }
-
-        private void NavMenu_SelectionChanged(object sender, SelectionChangedEventArgs e) =>
-            ShowHideSidePanel();
-
-        private void ShowHideSidePanel()
-        {
-            if (ContentGrid != null && NavMenu != null)
-            {
-                ContentGrid.Visibility = NavMenu.SelectedIndex < 0 ? Visibility.Collapsed : Visibility.Visible;
             }
         }
 

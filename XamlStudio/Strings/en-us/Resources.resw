@@ -206,10 +206,6 @@ By: Michael A. Hawker</value>
     <value>SEARCH</value>
     <comment>Search ActivityBar Title</comment>
   </data>
-  <data name="MainPage_NavMenu_Toolbox.Content" xml:space="preserve">
-    <value>Toolbox</value>
-    <comment>Toolbox ActivityBar Tooltip</comment>
-  </data>
   <data name="MainPage_NavMenu_Toolbox.Tag" xml:space="preserve">
     <value>TOOLBOX</value>
     <comment>Toolbox ActivityBar Title</comment>

@@ -33,7 +33,6 @@
                  exf:ListBoxExtensions.AllowDeselection="True"
                  ItemContainerStyle="{StaticResource Style-ListBoxItem-CompactMenu}"
                  SelectedIndex="0"
-                 SelectionChanged="NavMenu_SelectionChanged"
                  Style="{StaticResource Style-ListBox-CompactMenu}">
             <ListBoxItem x:Uid="MainPage_NavMenu_Explorer">
                 <controls:AppFontIcon IconName="Copy" />
@@ -47,8 +46,11 @@
             <ListBoxItem x:Uid="MainPage_NavMenu_Debug">
                 <controls:AppFontIcon IconName="Bug" />
             </ListBoxItem>
-            <ListBoxItem x:Uid="MainPage_NavMenu_Search">
+            <ListBoxItem x:Uid="MainPage_NavMenu_Toolbox">
                 <controls:AppFontIcon IconName="Work" />
+            </ListBoxItem>
+            <ListBoxItem x:Uid="MainPage_NavMenu_Search">
+                <controls:AppFontIcon IconName="Search" />
             </ListBoxItem>
         </ListBox>
 
@@ -64,7 +66,8 @@
               Width="320"
               MinWidth="200"
               BorderBrush="DarkGray"
-              BorderThickness="0,0,1,0">
+              BorderThickness="0,0,1,0"
+              Visibility="{x:Bind exf:Bind.GreaterThanOrEqualToV(NavMenu.SelectedIndex, 0), Mode=OneWay, FallbackValue=Visible}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />

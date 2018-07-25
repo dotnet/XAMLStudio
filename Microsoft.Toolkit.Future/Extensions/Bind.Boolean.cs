@@ -25,9 +25,29 @@ namespace Microsoft.Toolkit.Uwp.UI.Extensions.Future
             return !value;
         }
 
+        public static bool GreaterThan(int lhs, int rhs)
+        {
+            return lhs > rhs;
+        }
+
         public static bool GreaterThan(double lhs, double rhs)
         {
             return lhs > rhs;
+        }
+
+        public static bool LessThan(int lhs, int rhs)
+        {
+            return lhs < rhs;
+        }
+
+        public static bool LessThan(double lhs, double rhs)
+        {
+            return lhs < rhs;
+        }
+
+        public static bool GreaterThanOrEqualTo(int lhs, int rhs)
+        {
+            return lhs >= rhs;
         }
 
         public static bool GreaterThanOrEqualTo(double lhs, double rhs)
@@ -35,14 +55,29 @@ namespace Microsoft.Toolkit.Uwp.UI.Extensions.Future
             return lhs >= rhs;
         }
 
+        public static bool LessThanOrEqualTo(int lhs, int rhs)
+        {
+            return lhs <= rhs;
+        }
+
         public static bool LessThanOrEqualTo(double lhs, double rhs)
         {
             return lhs <= rhs;
         }
 
+        public static bool EqualTo(int lhs, int rhs)
+        {
+            return lhs == rhs;
+        }
+
         public static bool EqualTo(double lhs, double rhs, double tolerance = 0.0)
         {
             return Math.Abs(lhs - rhs) <= tolerance;
+        }
+
+        public static bool NotEqualTo(int lhs, int rhs)
+        {
+            return lhs != rhs;
         }
 
         public static bool NotEqualTo(double lhs, double rhs, double tolerance = 0.0)
