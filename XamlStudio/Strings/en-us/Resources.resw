@@ -322,4 +322,19 @@ By: Michael A. Hawker</value>
     <value>XAML Studio</value>
     <comment>Display Name used by the application</comment>
   </data>
+  <data name="SettingsPanel_AlignmentGridToggle.Header" xml:space="preserve">
+    <value>Enabled</value>
+    <comment>Alignment Grid options header for SettingsPanel</comment>
+  </data>
+  <data name="SettingsPanel_AlignmentGridToggle.OffContent" xml:space="preserve">
+    <value>Off</value>
+    <comment>Alignment Grid off option</comment>
+  </data>
+  <data name="SettingsPanel_AlignmentGridToggle.OnContent" xml:space="preserve">
+    <value>On</value>
+    <comment>Alignment Grid on option</comment>
+  </data>
+  <data name="SettingsPanel_AlignmentGrid.Text" xml:space="preserve">
+    <value>Alignment Grid</value>
+  </data>
 </root>

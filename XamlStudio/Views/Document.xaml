@@ -10,6 +10,7 @@
              xmlns:models="using:XamlStudio.Toolkit.Models"
              xmlns:monaco="using:Monaco"
              xmlns:xstc="using:XamlStudio.Toolkit.Converters"
+             xmlns:developerTools="using:Microsoft.Toolkit.Uwp.DeveloperTools"
              d:DesignHeight="300"
              d:DesignWidth="400"
              mc:Ignorable="d">
@@ -30,6 +31,14 @@
         <Grid x:Name="XamlRoot"
               Grid.Row="0"
               Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" />
+
+        <developerTools:AlignmentGrid
+            Grid.Row="0"
+            LineBrush="Black"
+            Visibility="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled, Mode=OneWay}"
+            Opacity="{x:Bind ViewModel.Settings.AlignmentGridOpacity, Mode=OneWay}"
+            VerticalStep="{x:Bind ViewModel.Settings.AlignmentGridVerticalStep, Mode=OneWay}"
+            HorizontalStep="{x:Bind ViewModel.Settings.AlignmentGridHorizontalStep, Mode=OneWay}" />
 
         <!--  Error Overlay  -->
         <Grid Grid.Row="0"
