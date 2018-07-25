@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace XamlStudio.Toolkit.Parsers
 {
@@ -8,7 +9,7 @@ namespace XamlStudio.Toolkit.Parsers
         private const string regProp = "(?<Property>BindBack|Converter|ConverterLanguage|ConverterParameter|ElementName|FallbackValue|Mode|Path|RelativeSource|Source|TargetNullValue|UpdateSourceTrigger)";
         private const string regValueCurly = "(?<Value>{(?>{(?<DEPTH>)|}(?<-DEPTH>)|[^{}]+)*}(?(DEPTH)(?!)))"; //"(?<Value>.*?(?({)({(?>{(?<DEPTH>)|}(?<-DEPTH>)|.?)*(?(DEPTH)(?!))}(?=[,}]))|(.*?(?=[,}]))))";
         private const string regValueQuote = "(?<Value>'.*?')"; //"(?<Value>.*?(?({)({(?>{(?<DEPTH>)|}(?<-DEPTH>)|.?)*(?(DEPTH)(?!))}(?=[,}]))|(.*?(?=[,}]))))";
-        private static string regValue = string.Format("({0}|{1})", regValueCurly, regValueQuote); 
+        private static string regValue = string.Format("({0}|{1})", regValueCurly, regValueQuote);
         private static string BindingPropertiesPattern = string.Format("({0}\\s*=\\s*{1})+", regProp, regValue);
         private static Regex BindingPropertyExtractor = new Regex(BindingPropertiesPattern, RegexOptions.Compiled | RegexOptions.Singleline);
 
@@ -23,8 +24,22 @@ namespace XamlStudio.Toolkit.Parsers
             // Copy of ongoing permutations to original binding string holder
             var newbindingstr = string.Empty + original;
 
+
+
             foreach (Match property in BindingPropertyExtractor.Matches(binding))
             {
+                var names = from n in text.GetType().GetProperties() select n.Name;
+
+                names.ToList().ForEach(
+                        x =>
+                        {
+                            if (property.Groups["Property"]?.Value == x)
+                            {
+                                text.GetType().GetProperty(x).SetValue(text, property.Groups["Value"].Value);
+                            }
+                        }
+                    );
+
                 if (property.Groups["Property"]?.Value == "Converter")
                 {
                     var value = property.Groups["Value"].Value;
@@ -33,11 +48,6 @@ namespace XamlStudio.Toolkit.Parsers
                     var converterkey = value.Substring(space + 1, value.Length - space - 2);
 
                     text.Converter = converterkey;
-                }
-                else if (property.Groups["Property"]?.Value == "ConverterParameter")
-                {
-                    // TODO: Retrieve original converter parameter if resource??? (Probably have to do same as Converter, not sure how common/capabilties
-                    text.ConverterParameter = property.Groups["Value"].Value;
                 }
             }
 
