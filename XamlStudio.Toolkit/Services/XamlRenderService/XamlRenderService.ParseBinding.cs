@@ -80,7 +80,7 @@ namespace XamlStudio.Toolkit.Services
         }
 
         // Given all binding info, return a new binding string with our shim injected.
-        private string InjectBindingConverter(string original, BindingText binding, XamlBindingInfo info)
+        private string InjectBindingConverter(string original, BindingValue binding, XamlBindingInfo info)
         {
             const string converterShim = "{StaticResource XamlBindingWrapper}";
             var foundConverter = !string.IsNullOrWhiteSpace(binding.Converter);

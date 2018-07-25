@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -72,7 +73,7 @@ namespace XamlStudio.Views
             // Workaround for issue with binding to SelectedItem when closing tab.
             if (e.AddedItems.Count > 0)
             {
-                var doc = e.AddedItems[0] as XamlDocument;
+                XamlDocument doc = e.AddedItems[0] as XamlDocument;
                 if (doc != null && doc != ViewModel.ActiveFile)
                 {
                     ViewModel.ActiveFile = doc;
@@ -82,12 +83,26 @@ namespace XamlStudio.Views
 
         public void OpenFileItems(IStorageItem[] files)
         {
-            foreach (var file in files)
+            foreach (IStorageItem file in files)
             {
                 if (file.IsOfType(StorageItemTypes.File))
                 {
                     ViewModel.OpenFileCommand.Execute(file as StorageFile);
                 }
+            }
+        }
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            XamlDocument settings = ViewModel.OpenFiles.FirstOrDefault(f => f.DocumentType == DocumentType.Settings);
+            if (settings != null)
+            {
+                ViewModel.ActiveFile = settings;
+            }
+            else
+            {
+                ViewModel.OpenFiles.Add(XamlDocument.SettingsDocument());
+                ViewModel.ActiveFile = ViewModel.OpenFiles.Last();
             }
         }
     }
