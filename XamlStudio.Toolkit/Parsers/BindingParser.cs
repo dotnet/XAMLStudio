@@ -5,11 +5,11 @@ namespace XamlStudio.Toolkit.Parsers
 {
     public static class BindingParser
     {
-        private const string BindingReg = "{Binding (?<Binding>.*)}";
-        private const string regProp = "(?<Property>BindBack|Converter|ConverterLanguage|ConverterParameter|ElementName|FallbackValue|Mode|Path|RelativeSource|Source|TargetNullValue|UpdateSourceTrigger)";
-        private const string regValueCurly = "(?<Value>{(?>{(?<DEPTH>)|}(?<-DEPTH>)|[^{}]+)*}(?(DEPTH)(?!)))"; //"(?<Value>.*?(?({)({(?>{(?<DEPTH>)|}(?<-DEPTH>)|.?)*(?(DEPTH)(?!))}(?=[,}]))|(.*?(?=[,}]))))";
-        private const string regValueQuote = "(?<Value>'.*?')"; //"(?<Value>.*?(?({)({(?>{(?<DEPTH>)|}(?<-DEPTH>)|.?)*(?(DEPTH)(?!))}(?=[,}]))|(.*?(?=[,}]))))";
-        private const string regValueComma = "((?<Value>.*?),)";
+        private const string BindingReg = @"Binding\s+(?<Path>(Path=|)[^,=]*?),";
+        private const string regProp = @"(?<Property>BindBack|Converter|ConverterLanguage|ConverterParameter|ElementName|FallbackValue|Mode|Path|RelativeSource|Source|TargetNullValue|UpdateSourceTrigger)";
+        private const string regValueCurly = @"(?<Value>{(?>{(?<DEPTH>)|}(?<-DEPTH>)|[^{}]+)*}(?(DEPTH)(?!)))"; //"(?<Value>.*?(?({)({(?>{(?<DEPTH>)|}(?<-DEPTH>)|.?)*(?(DEPTH)(?!))}(?=[,}]))|(.*?(?=[,}]))))";
+        private const string regValueQuote = @"(?<Value>'.*?')"; //"(?<Value>.*?(?({)({(?>{(?<DEPTH>)|}(?<-DEPTH>)|.?)*(?(DEPTH)(?!))}(?=[,}]))|(.*?(?=[,}]))))";
+        private const string regValueComma = @"((?<Value>.*?)[,}])";
         private static string regValue = string.Format("({0})", string.Join("|", regValueCurly, regValueQuote, regValueComma));
 
         private static string BindingPropertiesPattern = string.Format("({0}\\s*=\\s*{1})+", regProp, regValue);
@@ -26,8 +26,14 @@ namespace XamlStudio.Toolkit.Parsers
             // Copy of ongoing permutations to original binding string holder
             var newbindingstr = string.Empty + original;
 
+            // Find a path if the property 'Path=' is left out
+            var pathMatch = Regex.Match(binding, BindingReg);
+            if (pathMatch.Success)
+            {
+                text.Path = pathMatch.Groups["Path"]?.Value;
+            }
 
-
+            // Find all other properties (name on BindingValue has to match the property name in binding)
             foreach (Match property in BindingPropertyExtractor.Matches(binding))
             {
                 var names = from n in text.GetType().GetProperties() select n.Name;
