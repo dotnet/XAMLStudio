@@ -49,8 +49,6 @@ namespace XamlStudio.Services.Logging
             get { return instance.Value; }
         }
 
-        public LoggingChannel LogChannel => channel;
-
         private FileLogger()
         {
             plainTextMessages = new ConcurrentQueue<string>();
@@ -131,6 +129,8 @@ namespace XamlStudio.Services.Logging
         /// </summary>
         public void Log(string message, LoggingLevel level = LoggingLevel.Information)
         {
+            channel.LogMessage(message, level);
+
             if(level >= logLevel)
             {
                 plainTextMessages.Enqueue(message);
