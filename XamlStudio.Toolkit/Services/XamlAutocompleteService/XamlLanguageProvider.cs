@@ -38,7 +38,34 @@ namespace XamlStudio.Toolkit.Services
                 // get list of assemblies
                 var namespaces = KnownNamespaces.Concat(XamlAutocompleteService.Instance.GetNamespaces(await model.GetValueAsync()));
 
-                if (context.TriggerCharacter == NamespaceTrigger)
+                if (context.TriggerCharacter == ElementTrigger)
+                {
+                    // Add control suggestions from windows namespace
+                    var defaultns = new string[] {
+                        "Windows.UI.Xaml.Controls",
+                        "Windows.UI.Xaml.Media",
+                        "Windows.UI.Xaml.Shapes",
+                    };
+
+                    foreach (var ns in defaultns)
+                    {
+                        // TODO: Cache in XamlAutocompleteService
+                        if (AppAssemblyInfo.Instance.TypesByNamespace.TryGetValue(ns, out var types))
+                        {
+                            foreach (var t in types.Where(t => t.IsSubclassOf(typeof(DependencyObject))))
+                            {
+                                items.Add(new CompletionItem(t.Name, CompletionItemKind.Class));
+                            }
+                        }
+                    }
+                    
+                    // Add namespace suggestions
+                    foreach (var ns in namespaces)
+                    {
+                        items.Add(new CompletionItem(ns.Name, CompletionItemKind.Module));
+                    }
+                }
+                else if (context.TriggerCharacter == NamespaceTrigger)
                 {
                     // TODO: Don't show these if in first tag... show suggestions from known namespaces list... (not accessible here, in App :()
                     var lastOpenedTag = XamlLanguageHelpers.GetLastOpenedTag(textUntilPosition);//areaUntilPositionInfo.ClearedText);

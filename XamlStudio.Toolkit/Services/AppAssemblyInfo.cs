@@ -49,11 +49,8 @@ namespace XamlStudio.Toolkit.Services
         {
             var assemblies = new List<Assembly>
             {
-                // Add Windows Assemblies
+                // Add Windows Assembly
                 typeof(FrameworkElement).GetTypeInfo().Assembly, // Windows.UI.Xaml
-                typeof(Button).GetTypeInfo().Assembly, // Windows.UI.Xaml.Controls
-                typeof(Brush).GetTypeInfo().Assembly, // Windows.UI.Xaml.Media
-                typeof(Line).GetTypeInfo().Assembly // Windows.UI.Xaml.Shapes
             };
 
             // Add Other Assemblies
