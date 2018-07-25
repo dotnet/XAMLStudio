@@ -7,6 +7,7 @@ using Windows.Storage;
 using Windows.UI.Xaml;
 
 using XamlStudio.Services;
+using XamlStudio.Toolkit.Helpers;
 
 namespace XamlStudio
 {
@@ -74,7 +75,7 @@ namespace XamlStudio
         private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
         {
             var deferral = e.GetDeferral();
-            await Helpers.Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
+            await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
             deferral.Complete();
         }
     }

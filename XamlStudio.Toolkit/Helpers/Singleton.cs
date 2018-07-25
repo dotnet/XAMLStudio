@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Concurrent;
 
-namespace XamlStudio.Helpers
+namespace XamlStudio.Toolkit.Helpers
 {
-    internal static class Singleton<T>
+    /// <summary>
+    /// Provides a thread-safe Singleton Pattern.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public static class Singleton<T>
         where T : new()
     {
         private static ConcurrentDictionary<Type, T> _instances = new ConcurrentDictionary<Type, T>();

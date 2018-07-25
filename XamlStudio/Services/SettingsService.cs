@@ -7,25 +7,13 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using XamlStudio.Helpers;
+using XamlStudio.Toolkit.Helpers;
 
 namespace XamlStudio.Services
 {
     public partial class SettingsService : Observable
     {
-        // http://csharpindepth.com/Articles/General/Singleton.aspx
-        private static readonly SettingsService _instance = new SettingsService();
-        // Explicit static constructor to tell C# compiler
-        // not to mark type as beforefieldinit
-        static SettingsService() { }
-        private SettingsService() { }
-
-        public static SettingsService Instance
-        {
-            get
-            {
-                return _instance;
-            }
-        }
+        public static SettingsService Instance => Singleton<SettingsService>.Instance;
 
         public async Task InitializeAndLoad()
         {

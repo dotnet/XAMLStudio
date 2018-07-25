@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using XamlStudio.Models;
 using XamlStudio.Services;
+using XamlStudio.Toolkit.Services;
 using XamlStudio.ViewModels;
 
 namespace XamlStudio.Views
@@ -34,6 +36,13 @@ namespace XamlStudio.Views
 
         private async void MainPage_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
+            // Offload from main thread to parallelize assembly loading.
+            Task t = new Task(async () =>
+            {
+                await AppAssemblyInfo.Instance.InitializeAsync();
+            });
+            t.Start();
+
             if (_filesToLoad != null)
             {
                 // Remove Welcome Screen
@@ -73,8 +82,7 @@ namespace XamlStudio.Views
             // Workaround for issue with binding to SelectedItem when closing tab.
             if (e.AddedItems.Count > 0)
             {
-                XamlDocument doc = e.AddedItems[0] as XamlDocument;
-                if (doc != null && doc != ViewModel.ActiveFile)
+                if (e.AddedItems[0] is XamlDocument doc && doc != ViewModel.ActiveFile)
                 {
                     ViewModel.ActiveFile = doc;
                 }

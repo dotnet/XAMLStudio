@@ -10,7 +10,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
 using XamlStudio.Activation;
-using XamlStudio.Helpers;
+using XamlStudio.Toolkit.Helpers;
 
 namespace XamlStudio.Services
 {

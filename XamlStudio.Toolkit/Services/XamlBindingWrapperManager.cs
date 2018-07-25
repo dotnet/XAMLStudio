@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using XamlStudio.Toolkit.Helpers;
 using XamlStudio.Toolkit.Models;
 
 namespace XamlStudio.Toolkit.Services
@@ -16,20 +17,7 @@ namespace XamlStudio.Toolkit.Services
         private readonly Dictionary<int, XamlRenderService> _renderers = new Dictionary<int, XamlRenderService>();
         private readonly Dictionary<int, List<int>> _tracker = new Dictionary<int, List<int>>();
 
-        // http://csharpindepth.com/Articles/General/Singleton.aspx
-        private static readonly XamlBindingWrapperManager _instance = new XamlBindingWrapperManager();
-        // Explicit static constructor to tell C# compiler
-        // not to mark type as beforefieldinit
-        static XamlBindingWrapperManager() { }
-        private XamlBindingWrapperManager() { }
-
-        public static XamlBindingWrapperManager Instance
-        {
-            get
-            {
-                return _instance;
-            }
-        }
+        public static XamlBindingWrapperManager Instance => Singleton<XamlBindingWrapperManager>.Instance;
 
         public void Register(int id, XamlRenderService service)
         {
