@@ -7,7 +7,15 @@ namespace XamlStudio.Views
 {
     public sealed partial class SettingsPanelPage : Page
     {
-        public SettingsPanelViewModel ViewModel { get; private set; }
+        public SettingsPanelViewModel ViewModel
+        {
+            get { return (SettingsPanelViewModel)GetValue(ViewModelProperty); }
+            set { SetValue(ViewModelProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ViewModel.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ViewModelProperty =
+            DependencyProperty.Register("ViewModel", typeof(SettingsPanelViewModel), typeof(SettingsPanelPage), new PropertyMetadata(null));
 
         public MainViewModel MainViewModel
         {
