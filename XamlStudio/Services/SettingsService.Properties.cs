@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
+using Windows.UI;
+using Windows.UI.Xaml.Media;
 using XamlStudio.Toolkit.Models;
 
 namespace XamlStudio.Services
@@ -42,6 +44,41 @@ namespace XamlStudio.Services
         public bool? IsContentUpdatedWithSuggested
         {
             get { return Get<bool?>(); }
+            set { Set(value); }
+        }
+
+        [DefaultValue(false)]
+        public bool? IsAlignmentGridEnabled
+        {
+            get { return Get<bool?>(); }
+            set { Set(value); }
+        }
+
+        [DefaultValue(4d)]
+        public double AlignmentGridHorizontalStep
+        {
+            get { return Get<double>(); }
+            set { Set(value); }
+        }
+
+        [DefaultValue(4d)]
+        public double AlignmentGridVerticalStep
+        {
+            get { return Get<double>(); }
+            set { Set(value); }
+        }
+
+        [DefaultValue(0.1d)]
+        public double AlignmentGridOpacity
+        {
+            get { return Get<double>(); }
+            set { Set(value); }
+        }
+
+        [DefaultValue("#ff000000")]
+        public string AlignmentGridColor
+        {
+            get { return Get<string>(); }
             set { Set(value); }
         }
 
