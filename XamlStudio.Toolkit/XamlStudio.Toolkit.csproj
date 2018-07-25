@@ -111,6 +111,7 @@
     <Compile Include="Controls\ResourceViewer\ResourceKeyInfo.cs" />
     <Compile Include="Controls\ResourceViewer\ResourceViewer.cs" />
     <Compile Include="Controls\ResourceViewer\TemplateSelector.cs" />
+    <Compile Include="Converters\HexToColorConverter.cs" />
     <Compile Include="Converters\StringToUriConverter.cs" />
     <Compile Include="Converters\XamlBindingWrapperConverter.cs" />
     <Compile Include="Extensions\XmlExtensions.cs" />

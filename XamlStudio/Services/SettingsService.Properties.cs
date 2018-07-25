@@ -75,6 +75,13 @@ namespace XamlStudio.Services
             set { Set(value); }
         }
 
+        [DefaultValue("#ff000000")]
+        public string AlignmentGridColor
+        {
+            get { return Get<string>(); }
+            set { Set(value); }
+        }
+
         [DefaultValue("ms-appx:///Strings/xmlns.json", LoadFromUri = true)]
         public List<XmlnsNamespace> KnownNamespaces
         {
