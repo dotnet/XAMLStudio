@@ -13,6 +13,7 @@
       mc:Ignorable="d">
     <Page.Resources>
         <xstc:HexToColorConverter x:Key="HexToColorConverter" />
+        <xstc:ColorToNameConverter x:Key="ColorToNameConverter" />
         <helper:EnumToBooleanConverter x:Key="EnumToBooleanConverter" EnumType="ElementTheme" />
         <DataTemplate x:Key="ToggleHeaderTemplate">
             <TextBlock Style="{StaticResource BodyTextStyle}" Text="{Binding}" />
@@ -196,7 +197,7 @@
                     <!-- Hidden when disabled -->
                     <StackPanel Visibility="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled.Value, Mode=OneWay}">
                         <!-- AlignmentGrid - Horizontal Step -->
-                        <TextBlock Style="{StaticResource BodyTextStyle}" Text="Horizontal Step" />
+                        <TextBlock Style="{StaticResource BodyTextStyle}" x:Uid="SettingsPanel_AlignmentGridHorizontalStep" />
                         <Grid Margin="0,4,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -222,7 +223,7 @@
                         </Grid>
 
                         <!-- AlignmentGrid - Vertical Step -->
-                        <TextBlock Style="{StaticResource BodyTextStyle}" Text="Vertical Step" />
+                        <TextBlock Style="{StaticResource BodyTextStyle}" x:Uid="SettingsPanel_AlignmentGridVerticalStep" />
                         <Grid Margin="0,4,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -248,7 +249,7 @@
                         </Grid>
 
                         <!-- AlignmentGrid - Opacity -->
-                        <TextBlock Style="{StaticResource BodyTextStyle}" Text="Opacity" />
+                        <TextBlock Style="{StaticResource BodyTextStyle}" x:Uid="SettingsPanel_AlignmentGridOpacity" />
                         <Grid Margin="0,4,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -274,6 +275,7 @@
                         </Grid>
 
                         <!-- AlignmentGrid - Color -->
+                        <TextBlock Style="{StaticResource BodyTextStyle}" x:Uid="SettingsPanel_AlignmentGridLineColor" />
                         <ComboBox
                             HorizontalAlignment="Stretch"
                             ItemsSource="{x:Bind ViewModel.Colors}"
@@ -281,12 +283,12 @@
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <Grid Width="12" Height="12" Margin="0,4,4,4">
+                                        <Grid Width="12" Height="12" Margin="0,0,4,0">
                                             <Grid.Background>
                                                 <SolidColorBrush Color="{Binding}" />
                                             </Grid.Background>
                                         </Grid>
-                                        <TextBlock Text="{Binding Converter={StaticResource HexToColorConverter}}" />
+                                        <TextBlock Text="{Binding Converter={StaticResource ColorToNameConverter}}" />
                                     </StackPanel>
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>

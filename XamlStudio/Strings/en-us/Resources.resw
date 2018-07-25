@@ -337,4 +337,20 @@ By: Michael A. Hawker</value>
   <data name="SettingsPanel_AlignmentGrid.Text" xml:space="preserve">
     <value>Alignment Grid</value>
   </data>
+  <data name="SettingsPanel_AlignmentGridHorizontalStep.Text" xml:space="preserve">
+    <value>Horizontal Step</value>
+    <comment>Set the AlignmentGrid Horizontal Step</comment>
+  </data>
+  <data name="SettingsPanel_AlignmentGridLineColor.Text" xml:space="preserve">
+    <value>Line Color</value>
+    <comment>Set the AlignmentGrid brush color</comment>
+  </data>
+  <data name="SettingsPanel_AlignmentGridOpacity.Text" xml:space="preserve">
+    <value>Opacity</value>
+    <comment>Set the AlignmentGrid Opacity</comment>
+  </data>
+  <data name="SettingsPanel_AlignmentGridVerticalStep.Text" xml:space="preserve">
+    <value>Vertical Step</value>
+    <comment>Set the AlignmentGrid Vertical Step</comment>
+  </data>
 </root>
