@@ -80,9 +80,11 @@ namespace XamlStudio
             try
             {
                 ClearExtendedExecution();
-                extendedExecutionSession = new ExtendedExecutionSession();
-                extendedExecutionSession.Reason = ExtendedExecutionReason.SavingData;
-                extendedExecutionSession.Description = "Saving data on app suspending";
+                extendedExecutionSession = new ExtendedExecutionSession
+                {
+                    Reason = ExtendedExecutionReason.SavingData,
+                    Description = "Saving data on app suspending"
+                };
                 extendedExecutionSession.Revoked += App_ExtendedExecutionRevoked;
                 ExtendedExecutionResult result = await extendedExecutionSession.RequestExtensionAsync();
 
@@ -160,7 +162,5 @@ namespace XamlStudio
 #endif
             e.Handled = true;
         }
-
-
     }
 }
