@@ -219,7 +219,7 @@
                                     Minimum="0"
                                     SmallChange="1"
                                     StepFrequency="4"
-                                    TickFrequency="1"
+                                    TickFrequency="4"
                                     TickPlacement="Outside"
                                     Value="{x:Bind ViewModel.Settings.AlignmentGridHorizontalStep, Mode=TwoWay}" />
                             <TextBlock Grid.Column="1"
@@ -245,7 +245,7 @@
                                     Minimum="0"
                                     SmallChange="1"
                                     StepFrequency="4"
-                                    TickFrequency="1"
+                                    TickFrequency="4"
                                     TickPlacement="Outside"
                                     Value="{x:Bind ViewModel.Settings.AlignmentGridVerticalStep, Mode=TwoWay}" />
                             <TextBlock Grid.Column="1"
