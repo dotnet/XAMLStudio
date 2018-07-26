@@ -40,30 +40,7 @@ namespace XamlStudio.Toolkit.Services
 
                 if (context.TriggerCharacter == ElementTrigger)
                 {
-                    // Add control suggestions from windows namespace
-                    var defaultns = new string[] {
-                        "Windows.UI.Xaml.Controls",
-                        "Windows.UI.Xaml.Media",
-                        "Windows.UI.Xaml.Shapes",
-                    };
-
-                    foreach (var ns in defaultns)
-                    {
-                        // TODO: Cache in XamlAutocompleteService
-                        if (AppAssemblyInfo.Instance.TypesByNamespace.TryGetValue(ns, out var types))
-                        {
-                            foreach (var t in types.Where(t => t.IsSubclassOf(typeof(DependencyObject))))
-                            {
-                                items.Add(new CompletionItem(t.Name, CompletionItemKind.Class));
-                            }
-                        }
-                    }
-                    
-                    // Add namespace suggestions
-                    foreach (var ns in namespaces)
-                    {
-                        items.Add(new CompletionItem(ns.Name, CompletionItemKind.Module));
-                    }
+                    XamlAutocompleteService.Instance.AddDefaultSuggestions(items, KnownNamespaces);
                 }
                 else if (context.TriggerCharacter == NamespaceTrigger)
                 {
@@ -74,17 +51,27 @@ namespace XamlStudio.Toolkit.Services
                     {
                         var prefix = lastOpenedTag.Value.TagName;
 
-                        if (namespaces.FirstOrDefault(n => n.Name == prefix) is XmlnsNamespace ns && ns.Path != null && ns.Path.StartsWith("using:"))
-                        {
-                            var @namespace = ns.Path.Split(':')[1];
+                        XamlAutocompleteService.Instance.AddNamespaceSuggestions(items, prefix, KnownNamespaces);
+                    }
+                }
+                else
+                {
+                    var lastOpenedTag = XamlLanguageHelpers.GetLastOpenedTag(textUntilPosition);//areaUntilPositionInfo.ClearedText);
 
-                            if (AppAssemblyInfo.Instance.TypesByNamespace.TryGetValue(@namespace, out var types))
-                            {
-                                foreach (var t in types) //.Where(t => t.IsAssignableFrom(typeof(DependencyObject))))
-                                {
-                                    items.Add(new CompletionItem(t.Name, CompletionItemKind.Class));
-                                }
-                            }
+                    if (lastOpenedTag.HasValue)
+                    {
+                        if (lastOpenedTag.Value.IsAttributeSearch)
+                        {
+                            // TODO: Filter out already used properties...
+                            XamlAutocompleteService.Instance.AddPropertySuggestions(items, lastOpenedTag.Value.TagName);
+                        }
+                        else if (lastOpenedTag.Value.TagName.Contains(':'))
+                        {
+                            XamlAutocompleteService.Instance.AddNamespaceSuggestions(items, lastOpenedTag.Value.TagName.Split(':')[0], KnownNamespaces);
+                        }
+                        else
+                        {
+                            XamlAutocompleteService.Instance.AddDefaultSuggestions(items, KnownNamespaces);
                         }
                     }
                 }

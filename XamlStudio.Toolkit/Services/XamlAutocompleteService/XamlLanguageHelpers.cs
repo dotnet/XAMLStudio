@@ -39,7 +39,7 @@ namespace XamlStudio.Toolkit.Services
         public static (string TagName, bool IsAttributeSearch)? GetLastOpenedTag(string text)
         {
             // get all tags inside of the content
-            var rgx = new Regex("<\\/*(?=\\S*)([a-zA-Z-]+)"); // TODO: Cache
+            var rgx = new Regex("<\\/*(?=\\S*)([a-zA-Z-:]+)"); // TODO: Cache
 
             var tags = rgx.Matches(text);
 	        if (tags.Count == 0)
@@ -74,7 +74,8 @@ namespace XamlStudio.Toolkit.Services
 					        text = text.Substring(tagPosition);
 					        return (
                                 tag,
-						        text.IndexOf('<') > text.IndexOf('>')
+                                text.Contains(" ")
+						        ////text.IndexOf('<') > text.IndexOf('>')
 					        );
 				        }
 
