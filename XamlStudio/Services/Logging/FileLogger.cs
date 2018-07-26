@@ -213,7 +213,7 @@ namespace XamlStudio.Services.Logging
                 StorageFolder targetFolder = logFolder;
                 if (targetFolder == null)
                 {
-                    targetFolder = await GetAppLogFolder();
+                    targetFolder = await GetAppLogFolderAsync();
                 }
 
                 string logFileName = GenerateLogFileName(LogFileType.EventTraceLog, DateTime.Now);
@@ -252,7 +252,7 @@ namespace XamlStudio.Services.Logging
             if(textLogFile == null)
             {
                 string filename = GenerateLogFileName(LogFileType.Text, DateTime.Now);
-                StorageFolder folder = await GetAppLogFolder();
+                StorageFolder folder = await GetAppLogFolderAsync();
                 textLogFile = await folder.CreateFileAsync(filename, CreationCollisionOption.OpenIfExists);
             }
         }
@@ -260,7 +260,7 @@ namespace XamlStudio.Services.Logging
         /// <summary>
         /// Returns the current logging folder location used by the app session.
         /// </summary>
-        public async Task<StorageFolder> GetAppLogFolder()
+        public async Task<StorageFolder> GetAppLogFolderAsync()
         {
             if(logFolder == null)
             {
