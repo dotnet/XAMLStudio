@@ -494,6 +494,7 @@
   <ItemGroup>
     <None Include=".editorconfig" />
     <Content Include="Strings\xmlns.json" />
+    <None Include="PAX_PrivateKey.pfx" />
     <None Include="XamlStudio_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
