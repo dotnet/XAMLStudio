@@ -54,28 +54,28 @@ namespace XamlStudio.Services
             set { Set(value); }
         }
 
-        [DefaultValue(4d)]
+        [DefaultValue(24d)]
         public double AlignmentGridHorizontalStep
         {
             get { return Get<double>(); }
             set { Set(value); }
         }
 
-        [DefaultValue(4d)]
+        [DefaultValue(24d)]
         public double AlignmentGridVerticalStep
         {
             get { return Get<double>(); }
             set { Set(value); }
         }
 
-        [DefaultValue(0.1d)]
+        [DefaultValue(0.5d)]
         public double AlignmentGridOpacity
         {
             get { return Get<double>(); }
             set { Set(value); }
         }
 
-        [DefaultValue("#ff000000")]
+        [DefaultValue("#ff000000")] // Black
         public string AlignmentGridColor
         {
             get { return Get<string>(); }

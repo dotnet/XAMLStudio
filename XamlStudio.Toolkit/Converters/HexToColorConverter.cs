@@ -11,16 +11,19 @@ namespace XamlStudio.Toolkit.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value == null) return null;
-
-            if (value is string hex)
+            if (value == null)
             {
-                // Invalid
-                if (!hex.StartsWith("#"))
+                if (targetType == typeof(Color))
                 {
-                    return null;
+                    return Colors.Transparent;
                 }
-
+                else if (targetType == typeof(string))
+                {
+                    return "#00000000";
+                }
+            }
+            else if (value is string hex)
+            {
                 // Add alpha value if not present
                 if (hex.Length == 7)
                 {
