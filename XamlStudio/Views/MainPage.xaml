@@ -12,16 +12,6 @@
       Style="{StaticResource PageStyle}"
       mc:Ignorable="d">
 
-    <Page.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///Microsoft.Toolkit.Uwp.UI/Extensions/NavigationView/Styles/VSCodeActivityBarStyle.xaml" />
-                <ResourceDictionary Source="ms-appx:///Microsoft.Toolkit.Future/Extensions/Pivot/Styles/MSEdgeTabStyle.xaml" />
-                <ResourceDictionary Source="ms-appx:///Microsoft.Toolkit.Future/Extensions/Pivot/Styles/MSEdgePivotStyle.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Page.Resources>
-
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -65,19 +55,26 @@
               Grid.Column="1"
               Width="320"
               MinWidth="200"
-              BorderBrush="DarkGray"
-              BorderThickness="0,0,1,0"
               Visibility="{x:Bind exf:Bind.GreaterThanOrEqualToV(NavMenu.SelectedIndex, 0), Mode=OneWay, FallbackValue=Visible}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <future:ContentSizer Grid.Column="1"
-                                 Width="3"
                                  HorizontalAlignment="Right"
                                  VerticalAlignment="Stretch"
-                                 Background="DarkGray">
-                <TextBlock />
+                                 Background="{StaticResource Brush-Blue-Dark-1}">
+                <TextBlock HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontFamily="Segoe MDL2 Assets"
+                           Foreground="{StaticResource Brush-Grey-Light-0}"
+                           IsHitTestVisible="False"
+                           RenderTransformOrigin="0.5,0.5"
+                           Text="&#xE76F;">
+                    <TextBlock.RenderTransform>
+                        <CompositeTransform Rotation="90" />
+                    </TextBlock.RenderTransform>
+                </TextBlock>
             </future:ContentSizer>
 
             <future:SwitchPresenter Value="{Binding ElementName=NavMenu, Path=SelectedItem.Tag}">
@@ -104,6 +101,7 @@
 
         <Pivot x:Name="DocumentTabsPivot"
                Grid.Column="2"
+               Margin="12"
                HorizontalAlignment="Stretch"
                HorizontalContentAlignment="Stretch"
                exf:PivotExtensions.CloseButtonCommand="{Binding ViewModel.CloseActiveDocumentCommand}"

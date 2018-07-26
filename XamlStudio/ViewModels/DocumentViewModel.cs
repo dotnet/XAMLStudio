@@ -1,4 +1,5 @@
 ﻿using Collections.Generic;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using Monaco.Editor;
 using Monaco.Helpers;
@@ -71,22 +72,22 @@ namespace XamlStudio.ViewModels
 
         private CssLineStyle _errorStyle = new CssLineStyle()
         {
-            BackgroundColor = new SolidColorBrush(Colors.DarkRed)
+            BackgroundColor = new SolidColorBrush("#FFFEB9CE".ToColor())
         };
 
         private CssLineStyle _bindingStyleUnbound = new CssLineStyle()
         {
-            BackgroundColor = new SolidColorBrush(Colors.Indigo)
+            BackgroundColor = new SolidColorBrush("#FFB4EBEF".ToColor())
         };
 
         private CssLineStyle _bindingStyleSuccess = new CssLineStyle()
         {
-            BackgroundColor = new SolidColorBrush(Colors.DarkGreen)
+            BackgroundColor = new SolidColorBrush("#FFB9FEC1".ToColor())
         };
 
         private CssLineStyle _bindingStyleError = new CssLineStyle()
         {
-            BackgroundColor = new SolidColorBrush(Colors.DarkRed)
+            BackgroundColor = new SolidColorBrush("#FFFFF689".ToColor())
         };
 
         private ICommand _updateXaml;

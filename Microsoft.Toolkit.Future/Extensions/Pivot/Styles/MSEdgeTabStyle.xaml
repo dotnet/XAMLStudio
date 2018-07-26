@@ -14,8 +14,7 @@
         <Grid x:Name="Grid"
               Width="200"
               Background="{TemplateBinding Background}"
-              BorderBrush="{ThemeResource SystemBaseLowColor}"
-              BorderThickness="0,0,1,0">
+              BorderBrush="{ThemeResource SystemBaseLowColor}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
@@ -80,10 +79,10 @@
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}" />
                             </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource Brush-Blue-Dark-2}" />
                             </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonBorder" Storyboard.TargetProperty="Background">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource Brush-Blue-Dark-2}" />
                             </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonBorder" Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
@@ -110,10 +109,10 @@
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseMediumHighBrush}" />
                             </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource Brush-Blue-Dark-2}" />
                             </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonBorder" Storyboard.TargetProperty="Background">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource Brush-Blue-Dark-2}" />
                             </ObjectAnimationUsingKeyFrames>
                         </Storyboard>
                     </VisualState>
@@ -136,10 +135,10 @@
                     <VisualState x:Name="SelectedPressed">
                         <Storyboard>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseMediumHighBrush}" />
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource Brush-Blue-Dark-2}" />
                             </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource Brush-Blue-Dark-2}" />
                             </ObjectAnimationUsingKeyFrames>
                         </Storyboard>
                     </VisualState>
@@ -173,6 +172,7 @@
                 <Border x:Name="ButtonBorder"
                         Width="32"
                         Height="32"
+                        Margin="0,0,4,0"
                         Background="{TemplateBinding Background}">
                     <Button x:Name="CloseButton"
                             Command="{Binding RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource GetPivotCloseCommand}}"
@@ -188,23 +188,20 @@
 
     <Style x:Key="MSEdgeTabStyle" TargetType="PivotHeaderItem">
         <!--<Setter Property="FontSize" Value="{ThemeResource PivotHeaderItemFontSize}" />-->
-        <Setter Property="FontFamily" Value="Segoe UI Regular" />
-        <Setter Property="FontWeight" Value="{ThemeResource PivotHeaderItemThemeFontWeight}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="CharacterSpacing" Value="{ThemeResource PivotHeaderItemCharacterSpacing}" />
         <Setter Property="Padding" Value="{ThemeResource PivotHeaderItemMargin}" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="IsTabStop" Value="False" />
 
-        <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}" />
-        <Setter Property="Foreground" Value="{ThemeResource ApplicationForegroundThemeBrush}" />
-        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentBrush}" />
+        <Setter Property="Background" Value="{StaticResource Brush-Blue-Dark-1}" />
+        <Setter Property="Foreground" Value="{StaticResource Brush-Grey-Light-0}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="BorderThickness" Value="2" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Bottom" />
-        <Setter Property="Height" Value="32" />
-        <Setter Property="MinHeight" Value="32" />
-        <Setter Property="MaxHeight" Value="32" />
+        <Setter Property="Height" Value="40" />
         <Setter Property="FontSize" Value="13" />
         <Setter Property="Template" Value="{StaticResource MSEdgeTabTemplate}" />
     </Style>
