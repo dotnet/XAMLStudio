@@ -2,7 +2,7 @@
 
     <ControlTemplate x:Key="MSEdgePivotButtonTemplate" TargetType="Button">
         <Border x:Name="Root"
-                Background="{ThemeResource PivotPreviousButtonBackground}"
+                Background="{TemplateBinding Background}"
                 BorderBrush="{ThemeResource PivotPreviousButtonBorderBrush}"
                 BorderThickness="{ThemeResource PivotNavButtonBorderThemeThickness}">
             <VisualStateManager.VisualStateGroups>
@@ -43,6 +43,7 @@
     <Style x:Key="MSEdgePivotButtonStyle" TargetType="Button">
         <Setter Property="Height" Value="32" />
         <Setter Property="Width" Value="32" />
+        <Setter Property="Background" Value="Transparent" />
         <Setter Property="Template" Value="{StaticResource MSEdgePivotButtonTemplate}" />
     </Style>
 
