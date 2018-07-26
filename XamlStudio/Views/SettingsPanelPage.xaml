@@ -176,114 +176,115 @@
                     </StackPanel>
                 </StackPanel>
 
-                <!-- AlignmentGrid Properties -->
+                <!--  AlignmentGrid Properties  -->
                 <TextBlock x:Uid="SettingsPanel_AlignmentGrid" Style="{StaticResource SubtitleTextBlockStyle}" />
 
                 <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
-                    <!-- AlignmentGrid - IsEnabled -->
+                    <!--  AlignmentGrid - IsEnabled  -->
                     <ToggleSwitch x:Name="AlignmentGridToggle"
-                                    x:Uid="SettingsPanel_AlignmentGridToggle"
-                                    Margin="0,4,0,0"
-                                    HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
-                                    IsOn="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled.Value, Mode=OneWay}"
-                                    Tag="IsAlignmentGridEnabled">
+                                  x:Uid="SettingsPanel_AlignmentGridToggle"
+                                  Margin="0,4,0,0"
+                                  HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
+                                  IsOn="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled.Value, Mode=OneWay}"
+                                  Tag="IsAlignmentGridEnabled">
                         <i:Interaction.Behaviors>
                             <ic:EventTriggerBehavior EventName="Toggled">
-                                <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand}" />
+                                <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
                             </ic:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
                     </ToggleSwitch>
 
-                    <!-- Hidden when disabled -->
+                    <!--  Hidden when disabled  -->
                     <StackPanel Visibility="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled.Value, Mode=OneWay}">
-                        <!-- AlignmentGrid - Horizontal Step -->
-                        <TextBlock Style="{StaticResource BodyTextStyle}" x:Uid="SettingsPanel_AlignmentGridHorizontalStep" />
+                        <!--  AlignmentGrid - Horizontal Step  -->
+                        <TextBlock x:Uid="SettingsPanel_AlignmentGridHorizontalStep" Style="{StaticResource BodyTextStyle}" />
                         <Grid Margin="0,4,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="30" />
                             </Grid.ColumnDefinitions>
                             <Slider x:Name="AlignmentGridHorizontalStepSlider"
-                                x:Uid="SettingsPanel_AlignmentGridHorizontalStepSlider"
-                                Grid.Column="0"
-                                HorizontalAlignment="Stretch"
-                                HorizontalContentAlignment="Stretch"
-                                LargeChange="12"
-                                Maximum="100"
-                                Minimum="0"
-                                SmallChange="1"
-                                StepFrequency="4"
-                                TickFrequency="1"
-                                TickPlacement="Outside"
-                                Value="{x:Bind ViewModel.Settings.AlignmentGridHorizontalStep, Mode=TwoWay}" />
+                                    x:Uid="SettingsPanel_AlignmentGridHorizontalStepSlider"
+                                    Grid.Column="0"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Stretch"
+                                    LargeChange="12"
+                                    Maximum="100"
+                                    Minimum="0"
+                                    SmallChange="1"
+                                    StepFrequency="4"
+                                    TickFrequency="1"
+                                    TickPlacement="Outside"
+                                    Value="{x:Bind ViewModel.Settings.AlignmentGridHorizontalStep, Mode=TwoWay}" />
                             <TextBlock Grid.Column="1"
-                                    MinWidth="30"
-                                    Margin="12,8,0,0"
-                                    Text="{x:Bind AlignmentGridHorizontalStepSlider.Value, Mode=OneWay}" />
+                                       MinWidth="30"
+                                       Margin="12,8,0,0"
+                                       Text="{x:Bind AlignmentGridHorizontalStepSlider.Value, Mode=OneWay}" />
                         </Grid>
 
-                        <!-- AlignmentGrid - Vertical Step -->
-                        <TextBlock Style="{StaticResource BodyTextStyle}" x:Uid="SettingsPanel_AlignmentGridVerticalStep" />
+                        <!--  AlignmentGrid - Vertical Step  -->
+                        <TextBlock x:Uid="SettingsPanel_AlignmentGridVerticalStep" Style="{StaticResource BodyTextStyle}" />
                         <Grid Margin="0,4,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="30" />
                             </Grid.ColumnDefinitions>
                             <Slider x:Name="AlignmentGridVerticalStepSlider"
-                                x:Uid="SettingsPanel_AlignmentGridVerticalStepSlider"
-                                Grid.Column="0"
-                                HorizontalAlignment="Stretch"
-                                HorizontalContentAlignment="Stretch"
-                                LargeChange="12"
-                                Maximum="100"
-                                Minimum="0"
-                                SmallChange="1"
-                                StepFrequency="4"
-                                TickFrequency="1"
-                                TickPlacement="Outside"
-                                Value="{x:Bind ViewModel.Settings.AlignmentGridVerticalStep, Mode=TwoWay}" />
+                                    x:Uid="SettingsPanel_AlignmentGridVerticalStepSlider"
+                                    Grid.Column="0"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Stretch"
+                                    LargeChange="12"
+                                    Maximum="100"
+                                    Minimum="0"
+                                    SmallChange="1"
+                                    StepFrequency="4"
+                                    TickFrequency="1"
+                                    TickPlacement="Outside"
+                                    Value="{x:Bind ViewModel.Settings.AlignmentGridVerticalStep, Mode=TwoWay}" />
                             <TextBlock Grid.Column="1"
-                                    MinWidth="30"
-                                    Margin="12,8,0,0"
-                                    Text="{x:Bind AlignmentGridVerticalStepSlider.Value, Mode=OneWay}" />
+                                       MinWidth="30"
+                                       Margin="12,8,0,0"
+                                       Text="{x:Bind AlignmentGridVerticalStepSlider.Value, Mode=OneWay}" />
                         </Grid>
 
-                        <!-- AlignmentGrid - Opacity -->
-                        <TextBlock Style="{StaticResource BodyTextStyle}" x:Uid="SettingsPanel_AlignmentGridOpacity" />
+                        <!--  AlignmentGrid - Opacity  -->
+                        <TextBlock x:Uid="SettingsPanel_AlignmentGridOpacity" Style="{StaticResource BodyTextStyle}" />
                         <Grid Margin="0,4,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="30" />
                             </Grid.ColumnDefinitions>
                             <Slider x:Name="AlignmentGridOpacitySlider"
-                                x:Uid="SettingsPanel_AlignmentGridOpacitySlider"
-                                Grid.Column="0"
-                                HorizontalAlignment="Stretch"
-                                HorizontalContentAlignment="Stretch"
-                                LargeChange="0.2"
-                                Maximum="1"
-                                Minimum="0"
-                                SmallChange="0.05"
-                                StepFrequency="0.1"
-                                TickFrequency="1"
-                                TickPlacement="Outside"
-                                Value="{x:Bind ViewModel.Settings.AlignmentGridOpacity, Mode=TwoWay}" />
+                                    x:Uid="SettingsPanel_AlignmentGridOpacitySlider"
+                                    Grid.Column="0"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Stretch"
+                                    LargeChange="0.2"
+                                    Maximum="1"
+                                    Minimum="0"
+                                    SmallChange="0.05"
+                                    StepFrequency="0.1"
+                                    TickFrequency="1"
+                                    TickPlacement="Outside"
+                                    Value="{x:Bind ViewModel.Settings.AlignmentGridOpacity, Mode=TwoWay}" />
                             <TextBlock Grid.Column="1"
-                                    MinWidth="30"
-                                    Margin="12,8,0,0"
-                                    Text="{x:Bind AlignmentGridOpacitySlider.Value, Mode=OneWay}" />
+                                       MinWidth="30"
+                                       Margin="12,8,0,0"
+                                       Text="{x:Bind AlignmentGridOpacitySlider.Value, Mode=OneWay}" />
                         </Grid>
 
-                        <!-- AlignmentGrid - Color -->
-                        <TextBlock Style="{StaticResource BodyTextStyle}" x:Uid="SettingsPanel_AlignmentGridLineColor" />
-                        <ComboBox
-                            HorizontalAlignment="Stretch"
-                            ItemsSource="{x:Bind ViewModel.Colors}"
-                            SelectedItem="{x:Bind ViewModel.Settings.AlignmentGridColor, Mode=TwoWay, Converter={StaticResource HexToColorConverter}}">
+                        <!--  AlignmentGrid - Color  -->
+                        <TextBlock x:Uid="SettingsPanel_AlignmentGridLineColor" Style="{StaticResource BodyTextStyle}" />
+                        <ComboBox HorizontalAlignment="Stretch"
+                                  ItemsSource="{x:Bind ViewModel.Colors, Mode=OneWay}"
+                                  SelectedItem="{x:Bind ViewModel.Settings.AlignmentGridColor, Mode=TwoWay, Converter={StaticResource HexToColorConverter}}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <Grid Width="12" Height="12" Margin="0,0,4,0">
+                                        <Grid Width="12"
+                                              Height="12"
+                                              Margin="0,0,4,0">
                                             <Grid.Background>
                                                 <SolidColorBrush Color="{Binding}" />
                                             </Grid.Background>
