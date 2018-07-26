@@ -106,7 +106,41 @@ namespace XamlStudio.Toolkit.Services
             }
         }
 
-        private static IEnumerable<PropertyInfo> GetDependencyProperties(Type type)
+        public void AddValueSuggestions(List<CompletionItem> items, string tagName, string attribute)
+        {
+            if (tagName.Contains(":"))
+            {
+                tagName = tagName.Split(':')[1];
+            }
+
+            if (XamlRenderService.GetTypeFromName(tagName) is Type type && type != null)
+            {
+                var prop = type.GetProperties().FirstOrDefault(p => p.Name == attribute);
+
+                if (prop.PropertyType.IsSubclassOf(typeof(Enum)))
+                {
+                    foreach (var value in Enum.GetNames(prop.PropertyType))
+                    {
+                        items.Add(new CompletionItem(value, CompletionItemKind.Value));
+                    }
+                }
+                // FontWeights...grrr
+                /*else if (prop.PropertyType.IsSubclassOf(typeof(ValueType)))
+                {
+                    // For now...
+                    var e = XamlRenderService.GetTypeFromName(prop.Name + "s");
+                    if (e != null && e.IsSubclassOf(typeof(Enum)))
+                    {
+                        foreach (var value in Enum.GetNames(e))
+                        {
+                            items.Add(new CompletionItem(value, CompletionItemKind.Value));
+                        }
+                    }
+                }*/
+            }
+        }
+
+        public static IEnumerable<PropertyInfo> GetDependencyProperties(Type type)
         {
             var properties = type.GetProperties(BindingFlags.Static | BindingFlags.Public)
                                  .Where(p => p.PropertyType == typeof(DependencyProperty));

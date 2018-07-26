@@ -24,7 +24,7 @@ namespace XamlStudio.Toolkit.Services
 
         public List<XmlnsNamespace> KnownNamespaces { get; set; }
 
-        public string[] TriggerCharacters => new string[] { ElementTrigger, NamespaceTrigger };
+        public string[] TriggerCharacters => new string[] { ElementTrigger, NamespaceTrigger, AttributeValueTrigger };
 
         public IAsyncOperation<CompletionList> ProvideCompletionItemsAsync(IModel model, IPosition position, CompletionContext context)
         {
@@ -52,6 +52,17 @@ namespace XamlStudio.Toolkit.Services
                         var prefix = lastOpenedTag.Value.TagName;
 
                         XamlAutocompleteService.Instance.AddNamespaceSuggestions(items, prefix, KnownNamespaces);
+                    }
+                }
+                else if (context.TriggerCharacter == AttributeValueTrigger)
+                {
+                    var lastOpenedTag = XamlLanguageHelpers.GetLastOpenedTag(textUntilPosition);
+
+                    if (lastOpenedTag.HasValue)
+                    {
+                        var attribute = textUntilPosition.Substring(textUntilPosition.LastIndexOf(" ")).Replace(" ", "").Replace("=", "").Replace("\"", "").Trim();
+
+                        XamlAutocompleteService.Instance.AddValueSuggestions(items, lastOpenedTag.Value.TagName, attribute);
                     }
                 }
                 else
