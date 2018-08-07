@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reflection;
 using System.Windows.Input;
 
 using Windows.ApplicationModel;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Markup;
 using XamlStudio.Helpers;
 using XamlStudio.Services;
 
@@ -74,6 +77,8 @@ namespace XamlStudio.ViewModels
                 return _switchThemeCommand;
             }
         }
+        
+        public ObservableCollection<Color> Colors { get; set; }
 
         public SettingsService Settings { get; } = SettingsService.Instance;
 
@@ -86,6 +91,8 @@ namespace XamlStudio.ViewModels
             DelayChangedCommand = new RelayCommand<RangeBaseValueChangedEventArgs>(DelayChanged);
 
             VersionDescription = GetVersionDescription();
+
+            Colors = new ObservableCollection<Color>(typeof(Colors).GetRuntimeProperties().Select((color) => (Color)color.GetValue(null)));
         }
 
         private string GetVersionDescription()

@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using XamlStudio.Helpers;
 using XamlStudio.Models;
+using XamlStudio.Services;
 using XamlStudio.Toolkit.Models;
 using XamlStudio.Toolkit.Services;
 
@@ -116,6 +117,8 @@ namespace XamlStudio.ViewModels
                 return _keyDownCommand;
             }
         }
+
+        public SettingsService Settings { get; } = SettingsService.Instance;
 
         public ICommand NavigateToLineCommand { get; set; }
 
