@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:genTemplate="http://schemas.microsoft.com/appx/developer/windowsTemplateStudio" IgnorableNamespaces="uap mp genTemplate">
-  <Identity Name="CC5D9C64-06FA-4304-9C2A-093E9EEFA70D" Publisher="CN=Partner App Experience" Version="0.6.0.0" />
+  <Identity Name="Microsoft.XamlStudio" Publisher="CN=Partner App Experience" Version="0.7.3.0" />
   <mp:PhoneIdentity PhoneProductId="CC5D9C64-06FA-4304-9C2A-093E9EEFA70D" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>XamlStudio</DisplayName>
@@ -8,7 +8,7 @@
     <Logo>Assets\XamlStudio.StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
-    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.16299.0" MaxVersionTested="10.0.0.0" />
   </Dependencies>
   <Resources>
     <Resource Language="x-generate" />
