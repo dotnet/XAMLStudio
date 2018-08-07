@@ -317,8 +317,6 @@
                         x:Uid="FeedbackHub_Link"
                         Command="{x:Bind ViewModel.LaunchFeedbackHubCommand, Mode=OneWay}"
                         Visibility="{x:Bind ViewModel.FeedbackLinkVisibility, Mode=OneWay}" />-->
-
-                    <Button Click="ButtonOpenLogFolder_Click">Open Log Location</Button>
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

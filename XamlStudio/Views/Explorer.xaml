@@ -22,27 +22,30 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="54" />
             <RowDefinition Height="{Binding ElementName=OpenEditorsExpander, Path=IsExpanded, Converter={StaticResource BoolToGridLength}}" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Border Grid.Row="0" Style="{StaticResource VSCodeAppBarHeaderStyle}">
+        <Border Margin="0,0,-12,0"
+                Padding="0,12,0,0"
+                Style="{StaticResource VSCodeAppBarHeaderStyle}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Style="{StaticResource VSCodeAppBarHeaderTextStyle}">EXPLORER</TextBlock>
+                <TextBlock Style="{StaticResource VSCodeAppBarHeaderTextStyle}" Text="EXPLORER" />
                 <Button Grid.Column="1"
                         Command="{x:Bind MainViewModel.OpenDocumentCommand}"
                         Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
-                    <SymbolIcon fex:SymbolIconExtensions.FontSize="12" Symbol="OpenFile" />
+                    <SymbolIcon fex:SymbolIconExtensions.FontSize="14" Symbol="OpenFile" />
                 </Button>
                 <Button Grid.Column="2"
+                        Margin="0,0,12,0"
                         Command="{x:Bind MainViewModel.NewDocumentCommand}"
                         Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
-                    <SymbolIcon fex:SymbolIconExtensions.FontSize="12" Symbol="Add" />
+                    <SymbolIcon fex:SymbolIconExtensions.FontSize="14" Symbol="Add" />
                 </Button>
             </Grid>
         </Border>
@@ -52,10 +55,15 @@
                            Header="OPEN EDITORS"
                            HeaderStyle="{StaticResource VSCodeExpanderStyle}"
                            IsExpanded="True">
-            <ListBox ItemsSource="{x:Bind MainViewModel.OpenFiles}" SelectedItem="{x:Bind MainViewModel.ActiveFile, Mode=TwoWay}">
+            <ListBox Background="Transparent"
+                     ItemContainerStyle="{StaticResource Style-ListBoxItem-Expolorer}"
+                     ItemsSource="{x:Bind MainViewModel.OpenFiles}"
+                     SelectedItem="{x:Bind MainViewModel.ActiveFile, Mode=TwoWay}">
                 <ListBox.ItemTemplate>
                     <DataTemplate x:DataType="model:XamlDocument">
-                        <TextBlock Text="{Binding Title}" />
+                        <TextBlock Margin="32,0"
+                                   FontWeight="SemiBold"
+                                   Text="{Binding Title}" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>

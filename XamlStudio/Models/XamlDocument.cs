@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
@@ -6,16 +7,24 @@ using XamlStudio.Helpers;
 
 namespace XamlStudio.Models
 {
+    [Bindable(true)]
+    public enum DocumentType
+    {
+        Document,
+        Welcome,
+        Settings
+    }
+
     public sealed class XamlDocument: Observable
     {
         /// <summary>
         /// Dummy for switching to Welcome Screen.
         /// </summary>
-        private bool _isWelcome;
-        public bool IsWelcome
+        private DocumentType _documentType;
+        public DocumentType DocumentType
         {
-            get { return _isWelcome; }
-            set { Set(ref _isWelcome, value);  }
+            get { return _documentType; }
+            set { Set(ref _documentType, value);  }
         }
 
         /// <summary>
@@ -119,7 +128,15 @@ namespace XamlStudio.Models
         {
             return new XamlDocument("Welcome")
             {
-                IsWelcome = true
+                DocumentType = DocumentType.Welcome
+            };
+        }
+
+        public static XamlDocument SettingsDocument()
+        {
+            return new XamlDocument("Settings")
+            {
+                DocumentType = DocumentType.Settings
             };
         }
     }

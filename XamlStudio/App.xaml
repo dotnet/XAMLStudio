@@ -12,6 +12,11 @@
                 <ResourceDictionary Source="/Styles/TextBlock.xaml" />
                 <ResourceDictionary Source="/Styles/Page.xaml" />
                 <ResourceDictionary Source="/Styles/VSCode.xaml" />
+                <ResourceDictionary Source="/Styles/ListBox.xaml" />
+                <ResourceDictionary Source="/Styles/Expander.xaml" />
+
+                <ResourceDictionary Source="ms-appx:///Microsoft.Toolkit.Future/Extensions/Pivot/Styles/MSEdgeTabStyle.xaml" />
+                <ResourceDictionary Source="ms-appx:///Microsoft.Toolkit.Future/Extensions/Pivot/Styles/MSEdgePivotStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

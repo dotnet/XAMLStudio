@@ -25,13 +25,13 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="11" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Grid x:Name="XamlRoot"
               Grid.Row="0"
-              Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" />
+              Background="{StaticResource Brush-Blue-Dark-2}" />
 
         <developerTools:AlignmentGrid
             Grid.Row="0"
@@ -50,22 +50,22 @@
               Visibility="{x:Bind ViewModel.Result.Errors, Mode=OneWay, Converter={StaticResource CollectionVisibilityConverter}, FallbackValue=Collapsed}">
             <controls:DropShadowPanel Margin="16"
                                       HorizontalAlignment="Center"
-                                      VerticalAlignment="Bottom"
+                                      VerticalAlignment="Center"
                                       BlurRadius="8.0"
                                       OffsetX="8"
                                       OffsetY="8"
                                       ShadowOpacity="0.6"
                                       Color="Black">
-                <StackPanel Padding="8" Background="{ThemeResource ContentDialogBackgroundThemeBrush}">
+                <StackPanel Padding="24" Background="{StaticResource Brush-Red-Light-2}">
                     <TextBlock Margin="0,0,0,8"
                                FontWeight="SemiBold"
-                               Foreground="Black">
-                        Compilation Errors:
+                               Foreground="White">
+                        Compilation Errors
                     </TextBlock>
                     <ItemsControl ItemsSource="{x:Bind ViewModel.Result.Errors, Mode=OneWay}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="models:XamlExceptionRange">
-                                <TextBlock Foreground="Black" Text="{x:Bind Message}" />
+                                <TextBlock Foreground="White" Text="{x:Bind Message}" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
@@ -75,10 +75,9 @@
 
         <!--  Row Grid Splitter  -->
         <controls:GridSplitter Grid.Row="1"
-                               Height="11"
                                HorizontalAlignment="Stretch"
                                VerticalAlignment="Stretch"
-                               Background="Black">
+                               Background="{StaticResource Brush-Blue-Dark-2}">
             <controls:GridSplitter.Element>
                 <Grid>
                     <TextBlock HorizontalAlignment="Center"
@@ -111,12 +110,12 @@
                           Grid.RowSpan="3"
                           HorizontalContentAlignment="Stretch"
                           VerticalContentAlignment="Stretch"
-                          Background="Black"
+                          Background="{StaticResource Brush-Blue-Dark-0}"
                           IsLoading="{x:Bind CodeEditor.IsLoaded, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}"
                           Opacity="0.6">
             <ProgressRing Width="64"
                           Height="64"
-                          Foreground="{ThemeResource SystemControlForegroundAccentBrush}"
+                          Foreground="{StaticResource Brush-Red-Light-2}"
                           IsActive="True" />
         </controls:Loading>
     </Grid>

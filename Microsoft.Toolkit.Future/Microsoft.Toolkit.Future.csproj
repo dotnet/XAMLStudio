@@ -112,10 +112,12 @@
     <Compile Include="Controls\SwitchPresenter\Case.cs" />
     <Compile Include="Controls\SwitchPresenter\CaseCollection.cs" />
     <Compile Include="Controls\SwitchPresenter\SwitchPresenter.cs" />
+    <Compile Include="Extensions\Bind.Visibility.cs" />
     <Compile Include="Extensions\Bind.Boolean.cs" />
     <Compile Include="Extensions\Bind.Math.cs" />
     <Compile Include="Extensions\Bind.cs" />
     <Compile Include="Extensions\ContentPresenter\ContentPresenterExtensions.cs" />
+    <Compile Include="Extensions\ListBox\ListBoxExtensions.cs" />
     <Compile Include="Extensions\NavigationView\NavigationViewExtensions.cs" />
     <Compile Include="Extensions\Pivot\GetPivotCloseButtonCommandConverter.cs" />
     <Compile Include="Extensions\Pivot\GetPivotGlyphConverter.cs" />
