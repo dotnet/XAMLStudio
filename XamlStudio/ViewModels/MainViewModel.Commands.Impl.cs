@@ -34,9 +34,9 @@ namespace XamlStudio.ViewModels
     xmlns:mc=""http://schemas.openxmlformats.org/markup-compatibility/2006""
     mc:Ignorable=""d"">
 
-    <Grid Background=""{ThemeResource ApplicationPageBackgroundThemeBrush}"" Padding=""24"">
+    <Grid Background=""#FF16212D"" Padding=""40"">
         <TextBlock>
-            <Run FontSize=""24"" Foreground=""Green"">Get Started with XAML Studio</Run><LineBreak/>
+            <Run FontSize=""24"" Foreground=""#FFFC5185"">Get Started with XAML Studio</Run><LineBreak/>
             <Run> Modify this text below to see a live preview.</Run>
         </TextBlock>
     </Grid>
