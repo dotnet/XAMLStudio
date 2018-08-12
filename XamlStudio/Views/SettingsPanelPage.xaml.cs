@@ -1,6 +1,8 @@
-﻿using Windows.UI.Xaml;
+﻿using System;
+using Windows.System;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-
+using XamlStudio.Services.Logging;
 using XamlStudio.ViewModels;
 
 namespace XamlStudio.Views
@@ -39,6 +41,11 @@ namespace XamlStudio.Views
         public SettingsPanelPage()
         {
             InitializeComponent();
+        }
+
+        private async void ButtonOpenLogFolder_Click(object sender, RoutedEventArgs e)
+        {
+            await Launcher.LaunchFolderAsync(await FileLogger.Instance.GetAppLogFolderAsync());
         }
     }
 }

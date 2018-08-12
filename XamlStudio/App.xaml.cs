@@ -4,13 +4,11 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.ExtendedExecution;
-using Windows.Storage;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 
 using XamlStudio.Services;
-using XamlStudio.Services.Logging;
 using XamlStudio.Toolkit.Helpers;
 
 namespace XamlStudio
