@@ -44,9 +44,9 @@ namespace XamlStudio.Toolkit.Services
             var result = new XamlRenderResultContext(content);
 
             // Load extra Metadata about other available types.
-            if (LoadedAssemblies == null)
+            if (!AppAssemblyInfo.Instance.IsLoaded)
             {
-                await LoadAssembliesAsync();
+                await AppAssemblyInfo.Instance.InitializeAsync();
             }
 
             // If we're doing Binding Debugging, we have some required prefixes, so make sure we have them.

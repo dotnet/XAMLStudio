@@ -52,9 +52,7 @@ namespace XamlStudio.Helpers
 
         public static async Task<T> ReadAsync<T>(this ApplicationDataContainer settings, string key)
         {
-            object obj = null;
-
-            if (settings.Values.TryGetValue(key, out obj))
+            if (settings.Values.TryGetValue(key, out object obj))
             {
                 return await Json.ToObjectAsync<T>((string)obj);
             }
@@ -64,9 +62,7 @@ namespace XamlStudio.Helpers
 
         public static async Task<object> ReadAsync(this ApplicationDataContainer settings, string key, Type type)
         {
-            object obj = null;
-
-            if (settings.Values.TryGetValue(key, out obj))
+            if (settings.Values.TryGetValue(key, out object obj))
             {
                 return await Json.ToObjectAsync((string)obj, type);
             }

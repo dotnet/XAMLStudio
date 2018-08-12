@@ -116,6 +116,7 @@
     <Compile Include="Converters\StringToUriConverter.cs" />
     <Compile Include="Converters\XamlBindingWrapperConverter.cs" />
     <Compile Include="Extensions\XmlExtensions.cs" />
+    <Compile Include="Helpers\Singleton.cs" />
     <Compile Include="Models\ConversionRecord.cs" />
     <Compile Include="Models\XamlBindingInfo.cs" />
     <Compile Include="Models\XamlExceptionRange.cs" />
@@ -125,8 +126,12 @@
     <Compile Include="Parsers\BindingParser.cs" />
     <Compile Include="Parsers\BindingValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AppAssemblyInfo.cs" />
     <Compile Include="Services\IdGenerator.cs" />
+    <Compile Include="Services\XamlAutocompleteService\XamlLanguageHelpers.cs" />
+    <Compile Include="Services\XamlAutocompleteService\XamlLanguageProvider.cs" />
     <Compile Include="Services\XamlBindingWrapperManager.cs" />
+    <Compile Include="Services\XamlAutocompleteService\XamlAutocompleteService.cs" />
     <Compile Include="Services\XamlRenderService\XamlRenderService.Helpers.cs" />
     <Compile Include="Services\XamlRenderService\XamlRenderService.ParseBinding.cs" />
     <Compile Include="Services\XamlRenderService\XamlRenderService.ParsePost.cs" />
@@ -142,6 +147,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp">
       <Version>3.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Monaco.Editor">
+      <Version>0.7.0-alpha</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>10.0.3</Version>

@@ -24,6 +24,22 @@ namespace XamlStudio.Toolkit.Services
         private static Regex _elementNameSearcher = new Regex(RegexPattern_ElementName, RegexOptions.Compiled);
 
         /// <summary>
+        /// Returns the first initial element tag after a comment.
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        public static Match GetInitialElement(string content)
+        {
+            var match = _initialTagSearcher.Match(content);
+            if (match.Success)
+            {
+                return match;
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Pre-processes raw string to inject any missing xmlns namespaces.  Returns the starting XamlRenderResultContext;
         /// </summary>
         /// <param name="content"></param>
@@ -34,8 +50,8 @@ namespace XamlStudio.Toolkit.Services
             var content = string.Copy(context.Content);
 
             // Look for the first non-meta, non-comment tag.
-            var match = _initialTagSearcher.Match(content);
-            if (match.Success)
+            var match = GetInitialElement(content);
+            if (match != null && match.Success)
             {
                 // Keep track of which namespaces we have to inject.
                 var namespaces = new List<XmlnsNamespace>();
@@ -121,18 +137,8 @@ namespace XamlStudio.Toolkit.Services
 
         public static Type GetTypeFromName(string typename)
         {
-            foreach (var assem in LoadedAssemblies)
-            {
-                var type = assem.GetExportedTypes().FirstOrDefault(t => t.Name == typename);
-                if (type != null)
-                {
-                    // TODO: Do we need to worry about conflicting names across assemblies and pass in the namespace to this function?
-                    return type;
-                }
-            }
-
-            // Look for other UI controls in Main Assembly.
-            return typeof(FrameworkElement).GetTypeInfo().Assembly.GetTypes().FirstOrDefault(type => type.Name == typename);
+            // TODO: Do we need to worry about conflicting names across assemblies and pass in the namespace to this function?
+            return AppAssemblyInfo.Instance.KnownTypes.FirstOrDefault(t => t.Name == typename);
         }
 
         internal static bool IsFrameworkElement(Type type)
@@ -143,29 +149,6 @@ namespace XamlStudio.Toolkit.Services
             }
 
             return typeof(FrameworkElement).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo());
-        }
-
-        private static List<Assembly> LoadedAssemblies { get; set; }
-
-        internal static async Task LoadAssembliesAsync()
-        {
-            LoadedAssemblies = new List<Assembly>();
-
-            var files = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFilesAsync();
-            if (files == null)
-                return;
-
-            foreach (var file in files.Where(file => file.FileType == ".dll" || file.FileType == ".exe"))
-            {
-                try
-                {
-                    LoadedAssemblies.Add(Assembly.Load(new AssemblyName(file.DisplayName)));
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                }
-            }
         }
     }
 }

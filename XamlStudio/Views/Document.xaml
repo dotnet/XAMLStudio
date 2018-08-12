@@ -94,6 +94,7 @@
                            Grid.Row="2"
                            CodeLanguage="xml"
                            KeyDown="CodeEditor_KeyDown"
+                           Loading="CodeEditor_Loading"
                            Text="{x:Bind ViewModel.Document.Content, Mode=TwoWay}">
             <i:Interaction.Behaviors>
                 <!--<ic:EventTriggerBehavior EventName="LostFocus">

@@ -11,6 +11,7 @@ using Windows.UI.Xaml;
 
 using XamlStudio.Services;
 using XamlStudio.Services.Logging;
+using XamlStudio.Toolkit.Helpers;
 
 namespace XamlStudio
 {
@@ -80,8 +81,8 @@ namespace XamlStudio
 
         private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
         {
-            Windows.Foundation.Deferral deferral = e.GetDeferral();
-            await Helpers.Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
+            var deferral = e.GetDeferral();
+            await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
             deferral.Complete();
         }
 

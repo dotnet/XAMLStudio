@@ -1,22 +1,10 @@
-﻿using Monaco.Editor;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+﻿using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using XamlStudio.Helpers;
 using XamlStudio.Models;
+using XamlStudio.Services;
+using XamlStudio.Toolkit.Services;
 using XamlStudio.ViewModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
@@ -70,10 +58,11 @@ namespace XamlStudio.Views
         {
             this.InitializeComponent();
 
-            ViewModel = new DocumentViewModel();
-
-            // Pass Reference to our Control so we can 'render' to it.
-            ViewModel.XamlRoot = XamlRoot;
+            ViewModel = new DocumentViewModel
+            {
+                // Pass Reference to our Control so we can 'render' to it.
+                XamlRoot = XamlRoot
+            };
 
             // Listen for Line Highlighting Changes and Update our Editor
             ViewModel.Compiled += (sender2, args2) =>
@@ -84,6 +73,16 @@ namespace XamlStudio.Views
             CodeEditor.Options.Folding = true;
 
             ViewModel.NavigateToLineCommand = new RelayCommand<uint>(NavigateToLine);
+        }
+
+        private async void CodeEditor_Loading(object sender, RoutedEventArgs e)
+        {
+            var languages = new Monaco.LanguagesHelper(CodeEditor);
+
+            await languages.RegisterCompletionItemProviderAsync("xml", new XamlLanguageProvider()
+            {
+                KnownNamespaces = SettingsService.Instance.KnownNamespaces
+            });
         }
 
         private async void NavigateToLine(uint line)
