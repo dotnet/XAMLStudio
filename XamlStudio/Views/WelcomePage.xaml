@@ -101,7 +101,7 @@
             <TextBlock Padding="12,8" Foreground="{StaticResource Brush-Grey-Light-0}">- Not all toolbox items on left navigation implemented.</TextBlock>
             <TextBlock Padding="12,8" Foreground="{StaticResource Brush-Grey-Light-0}">- No 'Save As'.</TextBlock>
             <TextBlock Padding="12,8" Foreground="{StaticResource Brush-Grey-Light-0}">- Known Namespaces in Settings not configurable.</TextBlock>
-            <TextBlock Padding="12,8" Foreground="{StaticResource Brush-Grey-Light-0}">- Bindings with ConverterParameters can't be debugged.</TextBlock>
+            <TextBlock Padding="12,8" Foreground="{StaticResource Brush-Grey-Light-0}">- Light Theme isn't Finished.</TextBlock>
         </StackPanel>
     </Grid>
 </Page>
