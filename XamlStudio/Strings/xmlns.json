@@ -34,5 +34,9 @@
   {
     "name": "im",
     "path": "using:Microsoft.Xaml.Interactions.Media"
+  },
+  {
+    "name": "winui",
+    "path": "using:Microsoft.UI.Xaml.Controls"
   }
 ]
