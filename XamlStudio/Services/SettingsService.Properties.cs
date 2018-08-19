@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.UI;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using XamlStudio.Toolkit.Models;
 
@@ -79,6 +80,13 @@ namespace XamlStudio.Services
         public string AlignmentGridColor
         {
             get { return Get<string>(); }
+            set { Set(value); }
+        }
+
+        [DefaultValue(ElementTheme.Default)]
+        public ElementTheme EditorTheme
+        {
+            get { return Get<ElementTheme>(); }
             set { Set(value); }
         }
 

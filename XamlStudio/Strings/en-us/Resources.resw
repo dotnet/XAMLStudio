@@ -130,7 +130,7 @@
     <comment>Page title for SettingsPanel</comment>
   </data>
   <data name="SettingsPanel_Theme.Text" xml:space="preserve">
-    <value>Choose Theme</value>
+    <value>App Theme</value>
     <comment>Choose theme text for SettingsPanel</comment>
   </data>
   <data name="SettingsPanel_Theme_Dark.Content" xml:space="preserve">
@@ -328,5 +328,9 @@ By: Michael A. Hawker</value>
   <data name="SettingsPanel_AlignmentGridVerticalStep.Text" xml:space="preserve">
     <value>Vertical Step</value>
     <comment>Set the AlignmentGrid Vertical Step</comment>
+  </data>
+  <data name="SettingsPanel_EditorTheme.Text" xml:space="preserve">
+    <value>Editor Theme</value>
+    <comment>Choose theme for Code Editor</comment>
   </data>
 </root>
