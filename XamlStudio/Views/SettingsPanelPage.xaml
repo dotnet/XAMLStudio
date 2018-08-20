@@ -21,7 +21,7 @@
         </DataTemplate>
     </Page.Resources>
 
-    <Grid Background="{StaticResource Brush-Blue-Dark-2}">
+    <Grid Background="{ThemeResource Brush-Blue-Dark-2}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -135,7 +135,7 @@
                     <TextBlock Margin="8,12"
                                Style="{StaticResource BodyTextStyle}"
                                Text="Known Namespaces" />
-                    <ListBox Background="{StaticResource Brush-Blue-Dark-1}" ItemsSource="{x:Bind ViewModel.Settings.KnownNamespaces, Mode=OneWay}">
+                    <ListBox Background="{ThemeResource Brush-Blue-Dark-1}" ItemsSource="{x:Bind ViewModel.Settings.KnownNamespaces, Mode=OneWay}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">

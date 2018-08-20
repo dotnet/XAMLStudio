@@ -9,7 +9,7 @@
       xmlns:storage="using:Windows.Storage"
       mc:Ignorable="d">
 
-    <Grid Padding="24" Background="{StaticResource Brush-Blue-Dark-2}">
+    <Grid Padding="24" Background="{ThemeResource Brush-Blue-Dark-2}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
@@ -37,12 +37,12 @@
                         Opacity="0.4">
                 <TextBlock FontSize="16"
                            FontWeight="SemiBold"
-                           Foreground="{StaticResource Brush-Grey-Light-0}">
+                           Foreground="{ThemeResource Brush-Grey-Light-0}">
                     a Microsoft Garage project
                 </TextBlock>
                 <TextBlock FontSize="16"
                            FontWeight="SemiBold"
-                           Foreground="{StaticResource Brush-Grey-Light-0}">
+                           Foreground="{ThemeResource Brush-Grey-Light-0}">
                     for Rapid Prototyping
                 </TextBlock>
             </StackPanel>
@@ -50,17 +50,17 @@
         <StackPanel Grid.Row="1" Margin="40">
             <TextBlock FontSize="22"
                        FontWeight="Bold"
-                       Foreground="{StaticResource Brush-Grey-Light-0}"
+                       Foreground="{ThemeResource Brush-Grey-Light-0}"
                        Text="Get Started" />
             <StackPanel Margin="12,12,0,0">
                 <HyperlinkButton Command="{x:Bind MainViewModel.NewDocumentCommand, Mode=OneWay}"
                                  FontWeight="SemiBold"
-                                 Foreground="{StaticResource Brush-Red-Light-1}">
+                                 Foreground="{ThemeResource Brush-Red-Light-1}">
                     New file
                 </HyperlinkButton>
                 <HyperlinkButton Command="{x:Bind MainViewModel.OpenDocumentCommand, Mode=OneWay}"
                                  FontWeight="SemiBold"
-                                 Foreground="{StaticResource Brush-Red-Light-1}">
+                                 Foreground="{ThemeResource Brush-Red-Light-1}">
                     Open file...
                 </HyperlinkButton>
             </StackPanel>
@@ -68,7 +68,7 @@
         <StackPanel Grid.Row="2" Margin="40">
             <TextBlock FontSize="22"
                        FontWeight="Bold"
-                       Foreground="{StaticResource Brush-Grey-Light-0}"
+                       Foreground="{ThemeResource Brush-Grey-Light-0}"
                        Text="Recent Files" />
             <ItemsControl x:Name="RecentFileList"
                           Margin="12,12,0,0"
@@ -80,7 +80,7 @@
                                          CommandParameter="{x:Bind}"
                                          Content="{x:Bind DisplayName}"
                                          FontWeight="SemiBold"
-                                         Foreground="{StaticResource Brush-Red-Light-1}"
+                                         Foreground="{ThemeResource Brush-Red-Light-1}"
                                          ToolTipService.ToolTip="{x:Bind Path}" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
@@ -92,16 +92,16 @@
                     Margin="40">
             <TextBlock FontSize="22"
                        FontWeight="Bold"
-                       Foreground="{StaticResource Brush-Grey-Light-0}"
+                       Foreground="{ThemeResource Brush-Grey-Light-0}"
                        Text="Known Issues" />
             <!--<TextBlock Padding="12,8">- Tabs disappear if window too small.</TextBlock> Note: Will reappear if we try and add Edge Pivot Styling, so that needs fixing. #586 -->
-            <TextBlock Padding="12,8" Foreground="{StaticResource Brush-Grey-Light-0}">
+            <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}">
                 - Compile errors don't display in the right place in the editor<LineBreak />
                 &#160;&#160;when binding debugging enabled.</TextBlock>
-            <TextBlock Padding="12,8" Foreground="{StaticResource Brush-Grey-Light-0}">- Not all toolbox items on left navigation implemented.</TextBlock>
-            <TextBlock Padding="12,8" Foreground="{StaticResource Brush-Grey-Light-0}">- No 'Save As'.</TextBlock>
-            <TextBlock Padding="12,8" Foreground="{StaticResource Brush-Grey-Light-0}">- Known Namespaces in Settings not configurable.</TextBlock>
-            <TextBlock Padding="12,8" Foreground="{StaticResource Brush-Grey-Light-0}">- Bindings with ConverterParameters can't be debugged.</TextBlock>
+            <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}">- Not all toolbox items on left navigation implemented.</TextBlock>
+            <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}">- No 'Save As'.</TextBlock>
+            <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}">- Known Namespaces in Settings not configurable.</TextBlock>
+            <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}">- Bindings with ConverterParameters can't be debugged.</TextBlock>
         </StackPanel>
     </Grid>
 </Page>
