@@ -68,7 +68,7 @@
         </DataTemplate>
     </Page.Resources>
 
-    <Grid Background="{StaticResource Brush-Blue-Dark-1}">
+    <Grid Background="{ThemeResource Brush-Blue-Dark-1}">
         <Grid.RowDefinitions>
             <RowDefinition Height="54" />
             <RowDefinition Height="Auto" />

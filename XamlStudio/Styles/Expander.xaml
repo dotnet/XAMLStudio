@@ -8,8 +8,8 @@
     <SolidColorBrush x:Key="SystemControlBackgroundChromeLowBrush" Color="{StaticResource SystemChromeLowColor}" />
 
     <Style x:Key="HeaderToggleButtonStyle" TargetType="ToggleButton">
-        <Setter Property="Background" Value="{StaticResource Brush-Blue-Dark-1}" />
-        <Setter Property="Foreground" Value="{StaticResource Brush-Grey-Light-2}" />
+        <Setter Property="Background" Value="{ThemeResource Brush-Blue-Dark-1}" />
+        <Setter Property="Foreground" Value="{ThemeResource Brush-Grey-Light-2}" />
         <Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundTransparentBrush}" />
         <Setter Property="BorderThickness" Value="{ThemeResource ToggleButtonBorderThemeThickness}" />
         <Setter Property="Padding" Value="0" />
@@ -242,7 +242,7 @@
         <Setter Property="Header" Value="Header" />
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="HeaderStyle" Value="{StaticResource HeaderToggleButtonStyle}" />
-        <Setter Property="Background" Value="{StaticResource Brush-Blue-Dark-1}" />
+        <Setter Property="Background" Value="{ThemeResource Brush-Blue-Dark-1}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="controls:Expander">
