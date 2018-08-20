@@ -125,6 +125,7 @@
     <Compile Include="Extensions\Pivot\GetPivotItemConverter.cs" />
     <Compile Include="Extensions\Pivot\PivotExtensions.cs" />
     <Compile Include="Extensions\Pivot\PivotExtensions.Properties.cs" />
+    <Compile Include="Extensions\FrameworkElement\FrameworkElementExtensions.cs" />
     <Compile Include="Extensions\SymbolIcon\SymbolIconExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Microsoft.Toolkit.Future.rd.xml" />

@@ -2,23 +2,15 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-      xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:fex="using:Microsoft.Toolkit.Uwp.UI.Extensions.Future"
       xmlns:future="using:Microsoft.Toolkit.Uwp.UI.Controls.Future"
+      xmlns:helper="using:XamlStudio.Helpers"
       xmlns:local="using:XamlStudio.Views"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:model="using:XamlStudio.Models"
       xmlns:xc="using:WinRTXamlToolkit.Controls"
       mc:Ignorable="d">
-
-    <!--<Page.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///WinRTXamlToolkit/Controls/TreeView/TreeViewMouse.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Page.Resources>-->
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
@@ -55,15 +47,45 @@
                            Header="OPEN EDITORS"
                            HeaderStyle="{StaticResource VSCodeExpanderStyle}"
                            IsExpanded="True">
-            <ListBox Background="Transparent"
+            <ListBox x:Name="OpenEditorList"
+                     Background="Transparent"
+                     DataContext="{x:Bind}"
                      ItemContainerStyle="{StaticResource Style-ListBoxItem-Expolorer}"
                      ItemsSource="{x:Bind MainViewModel.OpenFiles}"
                      SelectedItem="{x:Bind MainViewModel.ActiveFile, Mode=TwoWay}">
                 <ListBox.ItemTemplate>
                     <DataTemplate x:DataType="model:XamlDocument">
-                        <TextBlock Margin="32,0"
-                                   FontWeight="SemiBold"
-                                   Text="{Binding Title}" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Margin="32,0"
+                                       VerticalAlignment="Center"
+                                       FontWeight="SemiBold"
+                                       Text="{Binding Title}" />
+                            <StackPanel Grid.Column="1"
+                                        fex:FrameworkElementExtensions.AncestorType="ListBoxItem"
+                                        Orientation="Horizontal"
+                                        Visibility="{Binding (fex:FrameworkElementExtensions.Ancestor).IsSelected, RelativeSource={RelativeSource Self}}">
+                                <Button Padding="1"
+                                        Command="{Binding DataContext.MainViewModel.SaveDocumentCommand, ElementName=OpenEditorList}"
+                                        CommandParameter="{Binding}"
+                                        Style="{StaticResource VSCodeAppBarHeaderButtonStyle}"
+                                        Visibility="{Binding DocumentType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Document, Mode=OneWay}">
+                                    <SymbolIcon fex:SymbolIconExtensions.FontSize="16" Symbol="Save" />
+                                </Button>
+                                <Button Padding="1"
+                                        Command="{Binding DataContext.MainViewModel.SaveDocumentAsCommand, ElementName=OpenEditorList}"
+                                        CommandParameter="{Binding}"
+                                        Style="{StaticResource VSCodeAppBarHeaderButtonStyle}"
+                                        Visibility="{Binding DocumentType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Document, Mode=OneWay}">
+                                    <FontIcon FontFamily="Segoe MDL2 Assets"
+                                              FontSize="16"
+                                              Glyph="&#xEA35;" />
+                                </Button>
+                            </StackPanel>
+                        </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>

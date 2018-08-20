@@ -21,6 +21,7 @@ namespace XamlStudio.ViewModels
         /// </summary>
         public ICommand OpenDocumentCommand { get; private set; }
         public ICommand SaveDocumentCommand { get; private set; }
+        public ICommand SaveDocumentAsCommand { get; private set; }
         public ICommand CloseActiveDocumentCommand { get; private set; }
 
         /// <summary>
@@ -37,6 +38,7 @@ namespace XamlStudio.ViewModels
             NewDocumentCommand = new RelayCommand<RoutedEventArgs>(NewDocument);
             OpenDocumentCommand = new RelayCommand<RoutedEventArgs>(OpenDocument);
             SaveDocumentCommand = new RelayCommand<XamlDocument>(new Action<XamlDocument>(async (args) => { await SaveDocument(args); }));
+            SaveDocumentAsCommand = new RelayCommand<XamlDocument>(new Action<XamlDocument>(async (args) => { await SaveDocumentAs(args); }));
             CloseActiveDocumentCommand = new RelayCommand<PivotItem>(CloseActiveDocument);
 
             OpenFileCommand = new RelayCommand<StorageFile>(OpenFile);

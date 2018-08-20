@@ -386,7 +386,7 @@
         <Setter Property="Foreground" Value="{StaticResource Brush-Grey-Light-0}" />
         <Setter Property="TabNavigation" Value="Local" />
         <Setter Property="Padding" Value="12,11,12,13" />
-        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="UseSystemFocusVisuals" Value="False" />
         <Setter Property="Template">
             <Setter.Value>

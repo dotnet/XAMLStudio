@@ -115,7 +115,14 @@ namespace XamlStudio.Views
                         args.Handled = true;
                         break;
                     case 83: // S
-                        MainViewModel.SaveDocumentCommand.Execute(LoadedDocument);
+                        if (args.ShiftKey)
+                        {
+                            MainViewModel.SaveDocumentAsCommand.Execute(LoadedDocument);
+                        }
+                        else
+                        {
+                            MainViewModel.SaveDocumentCommand.Execute(LoadedDocument);
+                        }
                         args.Handled = true;
                         break;
                     case 87: // W
