@@ -40,19 +40,6 @@ namespace XamlStudio
 
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
         {
-            CustomizeTitleBar();
-
-            void CustomizeTitleBar()
-            {
-                ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
-                titleBar.BackgroundColor = titleBar.InactiveBackgroundColor = (Color)App.Current.Resources["Color-Grey-Light-1"];
-                //titleBar.ButtonBackgroundColor = titleBar.ButtonInactiveBackgroundColor = titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-                titleBar.ButtonForegroundColor = titleBar.ButtonInactiveForegroundColor = Colors.White;
-
-                //var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-                //coreTitleBar.ExtendViewIntoTitleBar = true;
-            }
-
             if (!args.PrelaunchActivated)
             {
                 AppLoggerService.LogInfo($"[AppActivation] Application activated by {args.Kind}");

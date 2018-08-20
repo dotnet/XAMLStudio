@@ -69,14 +69,14 @@ namespace XamlStudio.Services
             set { Set(value); }
         }
 
-        [DefaultValue(0.5d)]
+        [DefaultValue(0.1d)]
         public double AlignmentGridOpacity
         {
             get { return Get<double>(); }
             set { Set(value); }
         }
 
-        [DefaultValue("#ff000000")] // Black
+        [DefaultValue("#FF5F9EA0")] // CadetBlue
         public string AlignmentGridColor
         {
             get { return Get<string>(); }
