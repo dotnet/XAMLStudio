@@ -79,10 +79,10 @@
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}" />
                             </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource Brush-Blue-Dark-2}" />
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource Brush-Blue-Dark-2}" />
                             </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonBorder" Storyboard.TargetProperty="Background">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource Brush-Blue-Dark-2}" />
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource Brush-Blue-Dark-2}" />
                             </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonBorder" Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
@@ -109,10 +109,10 @@
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseMediumHighBrush}" />
                             </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource Brush-Blue-Dark-2}" />
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource Brush-Blue-Dark-2}" />
                             </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonBorder" Storyboard.TargetProperty="Background">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource Brush-Blue-Dark-2}" />
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource Brush-Blue-Dark-2}" />
                             </ObjectAnimationUsingKeyFrames>
                         </Storyboard>
                     </VisualState>
@@ -135,10 +135,10 @@
                     <VisualState x:Name="SelectedPressed">
                         <Storyboard>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource Brush-Blue-Dark-2}" />
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource Brush-Blue-Dark-2}" />
                             </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource Brush-Blue-Dark-2}" />
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource Brush-Blue-Dark-2}" />
                             </ObjectAnimationUsingKeyFrames>
                         </Storyboard>
                     </VisualState>
@@ -195,8 +195,8 @@
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="IsTabStop" Value="False" />
 
-        <Setter Property="Background" Value="{StaticResource Brush-Blue-Dark-1}" />
-        <Setter Property="Foreground" Value="{StaticResource Brush-Grey-Light-0}" />
+        <Setter Property="Background" Value="{ThemeResource Brush-Blue-Dark-1}" />
+        <Setter Property="Foreground" Value="{ThemeResource Brush-Grey-Light-0}" />
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="BorderThickness" Value="2" />
         <Setter Property="HorizontalAlignment" Value="Left" />
