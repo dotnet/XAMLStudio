@@ -99,7 +99,6 @@
                 - Compile errors don't display in the right place in the editor<LineBreak />
                 &#160;&#160;when binding debugging enabled.</TextBlock>
             <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}">- Not all toolbox items on left navigation implemented.</TextBlock>
-            <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}">- Known Namespaces in Settings not configurable.</TextBlock>
         </StackPanel>
     </Grid>
 </Page>
