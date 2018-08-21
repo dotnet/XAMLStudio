@@ -186,29 +186,29 @@ By: Michael A. Hawker</value>
     <value>Feedback</value>
     <comment>Displayed as the link to launching the Feedback Hub.</comment>
   </data>
-  <data name="MainPage_NavMenu_DataSources.Tag" xml:space="preserve">
-    <value>DATA SOURCE</value>
-    <comment>DataSources ActivityBar Title</comment>
+  <data name="MainPage_NavMenu_DataSources.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Modify Page DataContext</value>
+    <comment>DataSources ActivityBar Tooltip</comment>
   </data>
-  <data name="MainPage_NavMenu_Debug.Tag" xml:space="preserve">
-    <value>BINDING DEBUGGER</value>
-    <comment>Debug ActivityBar Title</comment>
+  <data name="MainPage_NavMenu_Debug.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Debug Bindings</value>
+    <comment>Debug ActivityBar Tooltip</comment>
   </data>
-  <data name="MainPage_NavMenu_Explorer.Tag" xml:space="preserve">
-    <value>EXPLORER</value>
-    <comment>Explorer ActivityBar Title</comment>
+  <data name="MainPage_NavMenu_Explorer.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>View Open Files</value>
+    <comment>Explorer ActivityBar Tooltip</comment>
   </data>
-  <data name="MainPage_NavMenu_ImageSources.Tag" xml:space="preserve">
-    <value>IMAGES</value>
-    <comment>ImageSources ActivityBar Title</comment>
+  <data name="MainPage_NavMenu_ImageSources.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>View Project Images</value>
+    <comment>ImageSources ActivityBar Tooltip</comment>
   </data>
-  <data name="MainPage_NavMenu_Search.Tag" xml:space="preserve">
-    <value>SEARCH</value>
-    <comment>Search ActivityBar Title</comment>
+  <data name="MainPage_NavMenu_Search.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Project Search</value>
+    <comment>Search ActivityBar Tooltip</comment>
   </data>
-  <data name="MainPage_NavMenu_Toolbox.Tag" xml:space="preserve">
-    <value>TOOLBOX</value>
-    <comment>Toolbox ActivityBar Title</comment>
+  <data name="MainPage_NavMenu_Toolbox.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Control Toolbox</value>
+    <comment>Toolbox ActivityBar Tooltip</comment>
   </data>
   <data name="SettingsPanel_AutoCompileToggle.Header" xml:space="preserve">
     <value>Immediate Compilation</value>
