@@ -333,4 +333,8 @@ By: Michael A. Hawker</value>
     <value>Editor Theme</value>
     <comment>Choose theme for Code Editor</comment>
   </data>
+  <data name="SettingsPanel_KnownNamespaces.Text" xml:space="preserve">
+    <value>Known Namespaces</value>
+    <comment>Known Namespaces Title on Settings Page</comment>
+  </data>
 </root>

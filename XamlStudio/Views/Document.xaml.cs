@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using XamlStudio.Helpers;
@@ -81,7 +82,7 @@ namespace XamlStudio.Views
 
             await languages.RegisterCompletionItemProviderAsync("xml", new XamlLanguageProvider()
             {
-                KnownNamespaces = SettingsService.Instance.KnownNamespaces
+                KnownNamespaces = SettingsService.Instance.KnownNamespaces.ToList()
             });
         }
 

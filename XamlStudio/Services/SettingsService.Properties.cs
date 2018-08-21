@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -91,9 +92,9 @@ namespace XamlStudio.Services
         }
 
         [DefaultValue("ms-appx:///Strings/xmlns.json", LoadFromUri = true)]
-        public List<XmlnsNamespace> KnownNamespaces
+        public ObservableCollection<XmlnsNamespace> KnownNamespaces
         {
-            get { return Get<List<XmlnsNamespace>>(); }
+            get { return Get<ObservableCollection<XmlnsNamespace>>(); }
             set { Set(value); }
         }
 

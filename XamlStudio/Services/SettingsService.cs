@@ -90,6 +90,14 @@ namespace XamlStudio.Services
             OnPropertyChanged(propertyName);
         }
 
+        public async Task SaveAsync(string propertyName = null)
+        {
+            if (propertyName != null && _settings.ContainsKey(propertyName))
+            {
+                await ApplicationData.Current.LocalSettings.SaveAsync(propertyName, _settings[propertyName]);
+            }
+        }
+
         public event EventHandler<StorageFile> RecentFilesChanged;
 
         public void RememberFile(StorageFile file)

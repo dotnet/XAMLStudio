@@ -3,6 +3,7 @@ using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using XamlStudio.Services.Logging;
+using XamlStudio.Toolkit.Models;
 using XamlStudio.ViewModels;
 
 namespace XamlStudio.Views
@@ -46,6 +47,47 @@ namespace XamlStudio.Views
         private async void ButtonOpenLogFolder_Click(object sender, RoutedEventArgs e)
         {
             await Launcher.LaunchFolderAsync(await FileLogger.Instance.GetAppLogFolderAsync());
+        }
+
+        private async void DataGrid_RowEditEnded(object sender, Microsoft.Toolkit.Uwp.UI.Controls.DataGridRowEditEndedEventArgs e)
+        {
+            // Save Namespaces after Edit.
+            await ViewModel.Settings.SaveAsync(nameof(ViewModel.Settings.KnownNamespaces));
+        }
+
+        private async void AddNamespaceButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Add new Row and begin editing
+            ViewModel.Settings.KnownNamespaces.Insert(0, new Toolkit.Models.XmlnsNamespace(string.Empty, string.Empty));
+
+            NamespaceDataGrid.SelectedIndex = 0;
+
+            NamespaceDataGrid.ScrollIntoView(NamespaceDataGrid.SelectedItem, null);
+
+            NamespaceDataGrid.Focus(FocusState.Keyboard);
+
+            NamespaceDataGrid.BeginEdit();
+        }
+
+        private async void RemoveNamespaceButton_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as Button;
+            if (btn != null && btn.CommandParameter != null &&
+                btn.CommandParameter is XmlnsNamespace xns)
+            {
+                ViewModel.Settings.KnownNamespaces.Remove(xns);
+
+                // Save Namespaces after Edit.
+                await ViewModel.Settings.SaveAsync(nameof(ViewModel.Settings.KnownNamespaces));
+            }
+        }
+
+        private void NamespaceDataGrid_PreparingCellForEdit(object sender, Microsoft.Toolkit.Uwp.UI.Controls.DataGridPreparingCellForEditEventArgs e)
+        {
+            if (e.EditingElement is TextBox t)
+            {
+                t.Focus(FocusState.Keyboard);
+            }
         }
     }
 }
