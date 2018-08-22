@@ -6,7 +6,7 @@ using XamlStudio.Helpers;
 
 namespace XamlStudio.Models
 {
-    public class WorkspaceWindow: Observable
+    public abstract class WorkspaceWindow: Observable
     {
         public XamlDocument ActiveFile
         {
@@ -38,11 +38,10 @@ namespace XamlStudio.Models
             OpenFiles = new ObservableCollection<XamlDocument>();
             NonWorkspaceFiles = new ObservableCollection<StorageFile>();
 
-            var welcome = XamlDocument.WelcomeDocument();
-
-            OpenFiles.Add(welcome);
-            ActiveFile = welcome;
+            Initialize();
         }
+
+        public abstract void Initialize();
 
         public static WorkspaceWindow GetDefaultWorkspace()
         {

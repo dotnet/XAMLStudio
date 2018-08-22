@@ -120,7 +120,9 @@ namespace XamlStudio.ViewModels
 
         public SettingsService Settings { get; } = SettingsService.Instance;
 
-        public ICommand NavigateToLineCommand { get; set; }
+        public ICommand NavigateToLineCommand { get; internal set; }
+
+        public ICommand InsertTextCommand { get; internal set; }
 
         public XamlRenderService XamlRenderer { get; } = new XamlRenderService();
 

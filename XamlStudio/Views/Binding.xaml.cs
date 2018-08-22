@@ -40,7 +40,7 @@ namespace XamlStudio.Views
 
             if (line != null && line.HasValue)
             {
-                MainViewModel.DocumentViewModel.NavigateToLineCommand.Execute(line.Value);
+                MainViewModel.ActiveDocumentViewModel.NavigateToLineCommand.Execute(line.Value);
             }
         }
     }

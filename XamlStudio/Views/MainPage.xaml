@@ -87,6 +87,9 @@
                 <future:Case Value="DEBUG">
                     <local:Binding MainViewModel="{x:Bind ViewModel}" />
                 </future:Case>
+                <future:Case Value="TOOLBOX">
+                    <local:Toolbox MainViewModel="{x:Bind ViewModel}" />
+                </future:Case>
                 <future:Case IsDefault="True">
                     <Border Background="DarkGray">
                         <TextBlock Margin="16,0,0,0"

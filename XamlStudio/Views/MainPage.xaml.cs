@@ -5,10 +5,13 @@ using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
 using XamlStudio.Models;
 using XamlStudio.Services;
 using XamlStudio.Toolkit.Services;
 using XamlStudio.ViewModels;
+using Windows.UI.Xaml.Controls.Primitives;
+using System.Reflection;
 
 namespace XamlStudio.Views
 {
@@ -39,7 +42,9 @@ namespace XamlStudio.Views
             // Offload from main thread to parallelize assembly loading.
             Task t = new Task(async () =>
             {
-                await AppAssemblyInfo.Instance.InitializeAsync();
+                await AppAssemblyInfo.Instance.InitializeAsync(new Assembly[] {
+                    typeof(Microsoft.UI.Xaml.Controls.NavigationView).Assembly
+                });
             });
             t.Start();
 

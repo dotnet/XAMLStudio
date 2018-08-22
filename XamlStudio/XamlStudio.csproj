@@ -160,12 +160,14 @@
     <Compile Include="Helpers\Observable.cs" />
     <Compile Include="Helpers\RelayCommand.cs" />
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
+    <Compile Include="Models\LibraryInfo.cs" />
     <Compile Include="Models\WorkspaceWindow.cs" />
     <Compile Include="Models\XamlDocument.cs" />
     <Compile Include="Services\ActivationService.cs" />
     <Compile Include="Activation\DefaultLaunchActivationHandler.cs" />
     <Compile Include="Services\AppLoggerService.cs" />
     <Compile Include="Services\IFileOpener.cs" />
+    <Compile Include="Services\LibraryService.cs" />
     <Compile Include="Services\Logging\FileLogger.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\OnBackgroundEnteringEventArgs.cs" />
@@ -184,6 +186,9 @@
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\SettingsPanelViewModel.cs" />
     <Compile Include="ViewModels\UriSchemeExampleViewModel.cs" />
+    <Compile Include="Views\Toolbox.xaml.cs">
+      <DependentUpon>Toolbox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DataSources.xaml.cs">
       <DependentUpon>DataSources.xaml</DependentUpon>
     </Compile>
@@ -256,6 +261,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Views\Toolbox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\DataSources.xaml">
       <SubType>Designer</SubType>
@@ -507,6 +516,7 @@
     <None Include=".editorconfig" />
     <Content Include="Strings\xmlns.json" />
     <None Include="PAX_PrivateKey.pfx" />
+    <Content Include="Strings\libs.json" />
     <None Include="XamlStudio_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

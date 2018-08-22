@@ -1,5 +1,7 @@
 ﻿using System;
-
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using Windows.UI.Xaml;
 using XamlStudio.Helpers;
 using XamlStudio.Models;
 
@@ -12,14 +14,46 @@ namespace XamlStudio.ViewModels
         /// </summary>
         private int _untitledCount = 1;
 
-        private DocumentViewModel _documentVM;
-        public DocumentViewModel DocumentViewModel
+        public Dictionary<XamlDocument, DocumentViewModel> DocumentViewModels { get; } = new Dictionary<XamlDocument, DocumentViewModel>();
+
+        public DocumentViewModel ActiveDocumentViewModel
         {
-            get { return _documentVM; }
-            set { Set(ref _documentVM, value); }
+            get { return (DocumentViewModel)GetValue(ActiveDocumentViewModelProperty); }
+            set { SetValue(ActiveDocumentViewModelProperty, value); }
         }
 
-        private SettingsPanelViewModel _settingsVM = new SettingsPanelViewModel();
-        public SettingsPanelViewModel SettingsViewModel => _settingsVM;
+        public static readonly DependencyProperty ActiveDocumentViewModelProperty =
+            DependencyProperty.Register(nameof(ActiveDocumentViewModelProperty), typeof(DocumentViewModel), typeof(WorkspaceWindow), new PropertyMetadata(null));
+
+        public SettingsPanelViewModel SettingsViewModel { get; } = new SettingsPanelViewModel();
+
+        public override void Initialize()
+        {
+            OpenFiles.CollectionChanged += OpenFiles_CollectionChanged;
+            RegisterPropertyChangedCallback(ActiveFileProperty, (s, dp) =>
+            {
+                ActiveDocumentViewModel = DocumentViewModels[ActiveFile];
+            });
+
+            var welcome = XamlDocument.WelcomeDocument();
+
+            OpenFiles.Add(welcome);
+            ActiveFile = welcome;
+        }
+
+        private void OpenFiles_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (var item in e.NewItems)
+                {
+                    if (item is XamlDocument xd)
+                    {
+                        // Need MainViewModel to own these so we can keep track of them all.
+                        DocumentViewModels[xd] = new DocumentViewModel() { Document = xd };
+                    }
+                }
+            }
+        }
     }
 }
