@@ -6,22 +6,25 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{ThemeResource Brush-Blue-Dark-1}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="54" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Border Grid.Row="0" Style="{StaticResource VSCodeAppBarHeaderStyle}">
-            <TextBlock Style="{StaticResource VSCodeAppBarHeaderTextStyle}">DATA SOURCES</TextBlock>
+        <Border Margin="0,0,-12,0"
+                Padding="0,12,0,0"
+                Style="{StaticResource VSCodeAppBarHeaderStyle}">
+            <TextBlock Style="{StaticResource VSCodeAppBarHeaderTextStyle}">DATA SOURCE</TextBlock>
         </Border>
+
         <TextBox x:Name="LiveDataSourceUri"
                  Grid.Row="1"
-                 Margin="4"
+                 Margin="24,12,0,24"
                  Header="REST Url:"
                  LostFocus="LiveDataSourceUri_LostFocus" />
         <ScrollViewer Grid.Row="2"
-                      Margin="0,4,0,0"
+                      Margin="24,0,0,0"
                       HorizontalScrollBarVisibility="Visible"
                       HorizontalScrollMode="Enabled">
             <TextBlock x:Name="DataPayload" />
