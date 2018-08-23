@@ -98,6 +98,12 @@
             <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}">
                 - Compile errors don't display in the right place in the editor<LineBreak />
                 &#160;&#160;when binding debugging enabled.</TextBlock>
+            <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}">
+                - Data Source Panel doesn't support static data source.
+            </TextBlock>
+            <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}">
+                - No Search or Favorites for Toolbox.
+            </TextBlock>
         </StackPanel>
     </Grid>
 </Page>

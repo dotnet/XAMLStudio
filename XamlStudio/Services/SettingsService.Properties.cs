@@ -35,7 +35,7 @@ namespace XamlStudio.Services
             set { Set(value); }
         }
 
-        [DefaultValue(true)]
+        [DefaultValue(false)]
         public bool? IsPowerBindingDebuggingEnabled
         {
             get { return Get<bool?>(); }
@@ -49,7 +49,7 @@ namespace XamlStudio.Services
             set { Set(value); }
         }
 
-        [DefaultValue(false)]
+        [DefaultValue(true)]
         public bool? IsAlignmentGridEnabled
         {
             get { return Get<bool?>(); }
