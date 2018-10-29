@@ -5,7 +5,7 @@ namespace XamlStudio.Toolkit.Parsers
 {
     public static class BindingParser
     {
-        private const string BindingReg = @"Binding\s+(?<Path>(Path=|)[^,=]*?),";
+        private const string BindingReg = @"(Binding|x:Bind)\s+(?<Path>(Path=|)[^,=]*?),";
         private const string regProp = @"(?<Property>BindBack|Converter|ConverterLanguage|ConverterParameter|ElementName|FallbackValue|Mode|Path|RelativeSource|Source|TargetNullValue|UpdateSourceTrigger)";
         private const string regValueCurly = @"(?<Value>{(?>{(?<DEPTH>)|}(?<-DEPTH>)|[^{}]+)*}(?(DEPTH)(?!)))"; //"(?<Value>.*?(?({)({(?>{(?<DEPTH>)|}(?<-DEPTH>)|.?)*(?(DEPTH)(?!))}(?=[,}]))|(.*?(?=[,}]))))";
         private const string regValueQuote = @"(?<Value>'.*?')"; //"(?<Value>.*?(?({)({(?>{(?<DEPTH>)|}(?<-DEPTH>)|.?)*(?(DEPTH)(?!))}(?=[,}]))|(.*?(?=[,}]))))";
