@@ -17,6 +17,8 @@
 
                 <ResourceDictionary Source="ms-appx:///Microsoft.Toolkit.Future/Extensions/Pivot/Styles/MSEdgeTabStyle.xaml" />
                 <ResourceDictionary Source="ms-appx:///Microsoft.Toolkit.Future/Extensions/Pivot/Styles/MSEdgePivotStyle.xaml" />
+
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

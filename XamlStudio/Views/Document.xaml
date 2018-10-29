@@ -4,13 +4,13 @@
              xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
              xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:developerTools="using:Microsoft.Toolkit.Uwp.DeveloperTools"
              xmlns:i="using:Microsoft.Xaml.Interactivity"
              xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:models="using:XamlStudio.Toolkit.Models"
              xmlns:monaco="using:Monaco"
              xmlns:xstc="using:XamlStudio.Toolkit.Converters"
-             xmlns:developerTools="using:Microsoft.Toolkit.Uwp.DeveloperTools"
              d:DesignHeight="300"
              d:DesignWidth="400"
              mc:Ignorable="d">
@@ -33,12 +33,11 @@
               Grid.Row="0"
               Background="{ThemeResource Brush-Blue-Dark-2}" />
 
-        <developerTools:AlignmentGrid
-            Grid.Row="0"
-            Visibility="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled, Mode=OneWay}"
-            Opacity="{x:Bind ViewModel.Settings.AlignmentGridOpacity, Mode=OneWay}"
-            VerticalStep="{x:Bind ViewModel.Settings.AlignmentGridVerticalStep, Mode=OneWay}"
-            HorizontalStep="{x:Bind ViewModel.Settings.AlignmentGridHorizontalStep, Mode=OneWay}">
+        <developerTools:AlignmentGrid Grid.Row="0"
+                                      HorizontalStep="{x:Bind ViewModel.Settings.AlignmentGridHorizontalStep, Mode=OneWay}"
+                                      Opacity="{x:Bind ViewModel.Settings.AlignmentGridOpacity, Mode=OneWay}"
+                                      VerticalStep="{x:Bind ViewModel.Settings.AlignmentGridVerticalStep, Mode=OneWay}"
+                                      Visibility="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled, Mode=OneWay}">
             <developerTools:AlignmentGrid.LineBrush>
                 <SolidColorBrush Color="{x:Bind ViewModel.Settings.AlignmentGridColor, Mode=OneWay, Converter={StaticResource HexToColorConverter}}" />
             </developerTools:AlignmentGrid.LineBrush>
@@ -95,6 +94,7 @@
                            CodeLanguage="xml"
                            KeyDown="CodeEditor_KeyDown"
                            Loading="CodeEditor_Loading"
+                           RequestedTheme="{x:Bind ViewModel.Settings.EditorTheme, Mode=OneWay}"
                            Text="{x:Bind ViewModel.Document.Content, Mode=TwoWay}">
             <i:Interaction.Behaviors>
                 <!--<ic:EventTriggerBehavior EventName="LostFocus">

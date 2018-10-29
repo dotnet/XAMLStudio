@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.UI;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using XamlStudio.Toolkit.Models;
 
@@ -33,7 +35,7 @@ namespace XamlStudio.Services
             set { Set(value); }
         }
 
-        [DefaultValue(true)]
+        [DefaultValue(false)]
         public bool? IsPowerBindingDebuggingEnabled
         {
             get { return Get<bool?>(); }
@@ -47,7 +49,7 @@ namespace XamlStudio.Services
             set { Set(value); }
         }
 
-        [DefaultValue(false)]
+        [DefaultValue(true)]
         public bool? IsAlignmentGridEnabled
         {
             get { return Get<bool?>(); }
@@ -68,24 +70,31 @@ namespace XamlStudio.Services
             set { Set(value); }
         }
 
-        [DefaultValue(0.5d)]
+        [DefaultValue(0.1d)]
         public double AlignmentGridOpacity
         {
             get { return Get<double>(); }
             set { Set(value); }
         }
 
-        [DefaultValue("#ff000000")] // Black
+        [DefaultValue("#FF5F9EA0")] // CadetBlue
         public string AlignmentGridColor
         {
             get { return Get<string>(); }
             set { Set(value); }
         }
 
-        [DefaultValue("ms-appx:///Strings/xmlns.json", LoadFromUri = true)]
-        public List<XmlnsNamespace> KnownNamespaces
+        [DefaultValue(ElementTheme.Default)]
+        public ElementTheme EditorTheme
         {
-            get { return Get<List<XmlnsNamespace>>(); }
+            get { return Get<ElementTheme>(); }
+            set { Set(value); }
+        }
+
+        [DefaultValue("ms-appx:///Strings/xmlns.json", LoadFromUri = true)]
+        public ObservableCollection<XmlnsNamespace> KnownNamespaces
+        {
+            get { return Get<ObservableCollection<XmlnsNamespace>>(); }
             set { Set(value); }
         }
 

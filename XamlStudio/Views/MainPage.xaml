@@ -24,24 +24,24 @@
                  ItemContainerStyle="{StaticResource Style-ListBoxItem-CompactMenu}"
                  SelectedIndex="0"
                  Style="{StaticResource Style-ListBox-CompactMenu}">
-            <ListBoxItem x:Uid="MainPage_NavMenu_Explorer">
+            <ListBoxItem x:Uid="MainPage_NavMenu_Explorer" Tag="EXPLORER">
                 <controls:AppFontIcon IconName="Copy" />
             </ListBoxItem>
-            <ListBoxItem x:Uid="MainPage_NavMenu_ImageSources">
+            <!--<ListBoxItem x:Uid="MainPage_NavMenu_ImageSources" Tag="IMAGES">
                 <controls:AppFontIcon IconName="Photo2" />
-            </ListBoxItem>
-            <ListBoxItem x:Uid="MainPage_NavMenu_DataSources">
+            </ListBoxItem>-->
+            <ListBoxItem x:Uid="MainPage_NavMenu_DataSources" Tag="DATASOURCES">
                 <controls:AppFontIcon IconName="Wheel" />
             </ListBoxItem>
-            <ListBoxItem x:Uid="MainPage_NavMenu_Debug">
+            <ListBoxItem x:Uid="MainPage_NavMenu_Debug" Tag="DEBUG">
                 <controls:AppFontIcon IconName="Bug" />
             </ListBoxItem>
-            <ListBoxItem x:Uid="MainPage_NavMenu_Toolbox">
+            <ListBoxItem x:Uid="MainPage_NavMenu_Toolbox" Tag="TOOLBOX">
                 <controls:AppFontIcon IconName="Work" />
             </ListBoxItem>
-            <ListBoxItem x:Uid="MainPage_NavMenu_Search">
+            <!--<ListBoxItem x:Uid="MainPage_NavMenu_Search" Tag="SEARCH">
                 <controls:AppFontIcon IconName="Search" />
-            </ListBoxItem>
+            </ListBoxItem>-->
         </ListBox>
 
         <Button x:Name="SettingsButton"
@@ -78,14 +78,17 @@
             </future:ContentSizer>
 
             <future:SwitchPresenter Value="{Binding ElementName=NavMenu, Path=SelectedItem.Tag}">
-                <future:Case Value="{x:Bind exf:Bind.LocalizedString('MainPage_NavMenu_Explorer/Tag')}">
+                <future:Case Value="EXPLORER">
                     <local:Explorer MainViewModel="{x:Bind ViewModel}" />
                 </future:Case>
-                <future:Case Value="{x:Bind exf:Bind.LocalizedString('MainPage_NavMenu_DataSources/Tag')}">
+                <future:Case Value="DATASOURCES">
                     <local:DataSources MainViewModel="{x:Bind ViewModel}" />
                 </future:Case>
-                <future:Case Value="{x:Bind exf:Bind.LocalizedString('MainPage_NavMenu_Debug/Tag')}">
+                <future:Case Value="DEBUG">
                     <local:Binding MainViewModel="{x:Bind ViewModel}" />
+                </future:Case>
+                <future:Case Value="TOOLBOX">
+                    <local:Toolbox MainViewModel="{x:Bind ViewModel}" />
                 </future:Case>
                 <future:Case IsDefault="True">
                     <Border Background="DarkGray">

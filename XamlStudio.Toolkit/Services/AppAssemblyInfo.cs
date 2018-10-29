@@ -26,13 +26,13 @@ namespace XamlStudio.Toolkit.Services
         public IReadOnlyList<Type> KnownTypes { get; private set; }
         public IReadOnlyDictionary<string, ReadOnlyCollection<Type>> TypesByNamespace { get; private set; }
 
-        public async Task InitializeAsync()
+        public async Task InitializeAsync(Assembly[] extraAssemblies = null)
         {
             using (await _mutex.LockAsync())
             {
                 if (!IsLoaded)
                 {
-                    await LoadAssembliesAsync();
+                    await LoadAssembliesAsync(extraAssemblies);
                     FindTypes();
                     MapTypes();
 
@@ -45,7 +45,7 @@ namespace XamlStudio.Toolkit.Services
         /// Get all extra assemblies.
         /// </summary>
         /// <returns></returns>
-        private async Task LoadAssembliesAsync()
+        private async Task LoadAssembliesAsync(Assembly[] extraAssemblies = null)
         {
             var assemblies = new List<Assembly>
             {
@@ -53,12 +53,20 @@ namespace XamlStudio.Toolkit.Services
                 typeof(FrameworkElement).GetTypeInfo().Assembly, // Windows.UI.Xaml
             };
 
+            if (extraAssemblies != null)
+            {
+                // Add any provided assemblies
+                // Current workaround for Microsoft.UI.Xaml and this limitation:
+                // https://social.msdn.microsoft.com/Forums/en-US/a78fdd8e-a108-4279-9e6b-6c87cd0a0f0f/assemblyload-of-winmd-file-possible
+                assemblies.AddRange(extraAssemblies);
+            }
+
             // Add Other Assemblies
             var files = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFilesAsync();
             if (files == null)
                 return;
 
-            foreach (var file in files.Where(file => file.FileType == ".dll" || file.FileType == ".exe"))
+            foreach (var file in files.Where(file => file.FileType == ".dll" || file.FileType == ".exe")) // || file.FileType == ".winmd"))
             {
                 try
                 {

@@ -34,7 +34,7 @@ namespace XamlStudio.ViewModels
     xmlns:mc=""http://schemas.openxmlformats.org/markup-compatibility/2006""
     mc:Ignorable=""d"">
 
-    <Grid Background=""#FF16212D"" Padding=""40"">
+    <Grid Padding=""40"">
         <TextBlock>
             <Run FontSize=""24"" Foreground=""#FFFC5185"">Get Started with XAML Studio</Run><LineBreak/>
             <Run> Modify this text below to see a live preview.</Run>
@@ -158,6 +158,39 @@ namespace XamlStudio.ViewModels
             OpenFiles.RemoveAt(OpenFiles.IndexOf(current));            
         }
 
+        // Ctrl+Shift+S
+        private async Task<bool> SaveDocumentAs(XamlDocument document)
+        {
+            // TODO: Localize
+            var name = "New Document";
+
+            if (document.CanSave)
+            {
+                name = document.BackingFile.DisplayName + " Copy";
+            }
+
+            var file = await SaveFileDialog(name);
+
+            if (file != null)
+            {
+                return await SaveFile(document, file);
+            }
+
+            return false;
+        }
+
+        private async Task<StorageFile> SaveFileDialog(string documentName)
+        {
+            var savePicker = new FileSavePicker();
+            savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+            // Dropdown of file types the user can save the file as
+            savePicker.FileTypeChoices.Add("eXtended Application Markup Language", new List<string>() { ".xaml" });
+            // Default file name if the user does not type one in or select a file to replace
+            savePicker.SuggestedFileName = documentName;
+
+            return await savePicker.PickSaveFileAsync();
+        }
+
         private async Task<bool> SaveDocument(XamlDocument document)
         {
             StorageFile file = null;
@@ -165,14 +198,7 @@ namespace XamlStudio.ViewModels
             // Save As
             if (!document.CanSave)
             {
-                var savePicker = new FileSavePicker();
-                savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
-                // Dropdown of file types the user can save the file as
-                savePicker.FileTypeChoices.Add("eXtended Application Markup Language", new List<string>() { ".xaml" });
-                // Default file name if the user does not type one in or select a file to replace
-                savePicker.SuggestedFileName = "New Document";
-
-                file = await savePicker.PickSaveFileAsync();
+                file = await SaveFileDialog("New Document");
             }
             else
             {
@@ -182,29 +208,34 @@ namespace XamlStudio.ViewModels
 
             if (file != null)
             {
-                // Prevent updates to the remote version of the file until we finish making changes and call CompleteUpdatesAsync.
-                CachedFileManager.DeferUpdates(file);
-
-                // Update/Save Document
-                await document.SaveAsAsync(file);
-
-                // Let Windows know that we're finished changing the file so the other app can update the remote version of the file.
-                // Completing updates may require Windows to ask for user input.
-                FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
-                if (status == FileUpdateStatus.Complete)
-                {
-                    SettingsService.Instance.RememberFile(file);
-                    //OutputTextBlock.Text = "File " + file.Name + " was saved.";
-                    return true;
-                }
-                else
-                {
-                    //OutputTextBlock.Text = "File " + file.Name + " couldn't be saved.";
-                    return false; // Should have another status/msg here?
-                }
+                return await SaveFile(document, file);
             }
 
             return false;
+        }
+
+        private static async Task<bool> SaveFile(XamlDocument document, StorageFile file)
+        {
+            // Prevent updates to the remote version of the file until we finish making changes and call CompleteUpdatesAsync.
+            CachedFileManager.DeferUpdates(file);
+
+            // Update/Save Document
+            await document.SaveAsAsync(file);
+
+            // Let Windows know that we're finished changing the file so the other app can update the remote version of the file.
+            // Completing updates may require Windows to ask for user input.
+            FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
+            if (status == FileUpdateStatus.Complete)
+            {
+                SettingsService.Instance.RememberFile(file);
+                //OutputTextBlock.Text = "File " + file.Name + " was saved.";
+                return true;
+            }
+            else
+            {
+                //OutputTextBlock.Text = "File " + file.Name + " couldn't be saved.";
+                return false; // Should have another status/msg here?
+            }
         }
 
         // Ctrl+Shift+Tab
@@ -228,6 +259,7 @@ namespace XamlStudio.ViewModels
         private void KeyDown(KeyEventArgs args)
         {
             var ctrl = (Window.Current.CoreWindow.GetKeyState(Windows.System.VirtualKey.Control) & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+            var shift = (Window.Current.CoreWindow.GetKeyState(Windows.System.VirtualKey.Shift) & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
             if (ctrl)
             {
                 switch (args.VirtualKey)
@@ -242,7 +274,14 @@ namespace XamlStudio.ViewModels
                         break;
                     // Save
                     case Windows.System.VirtualKey.S:
-                        SaveDocumentCommand.Execute(null);
+                        if (shift)
+                        {
+                            SaveDocumentAsCommand.Execute(null);
+                        }
+                        else
+                        {
+                            SaveDocumentCommand.Execute(null);
+                        }
                         break;
                     // Close
                     case Windows.System.VirtualKey.W:
@@ -250,8 +289,7 @@ namespace XamlStudio.ViewModels
                         CloseActiveDocumentCommand.Execute(null);
                         break;
                     // Prev/Next Document
-                    case Windows.System.VirtualKey.Tab:
-                        var shift = (Window.Current.CoreWindow.GetKeyState(Windows.System.VirtualKey.Shift) & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+                    case Windows.System.VirtualKey.Tab:                        
                         if (shift)
                         {
                             PreviousDocumentCommand.Execute(null);

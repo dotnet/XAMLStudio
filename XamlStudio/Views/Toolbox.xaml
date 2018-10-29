@@ -1,0 +1,79 @@
+﻿<Page x:Class="XamlStudio.Views.Toolbox"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:fex="using:Microsoft.Toolkit.Uwp.UI.Extensions.Future"
+      xmlns:future="using:Microsoft.Toolkit.Uwp.UI.Controls.Future"
+      xmlns:globalization="using:System.Globalization"
+      xmlns:i="using:Microsoft.Xaml.Interactivity"
+      xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
+      xmlns:local="using:XamlStudio.Views"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:model="using:XamlStudio.Models"
+      xmlns:models="using:XamlStudio.Toolkit.Models"
+      xmlns:services="using:XamlStudio.Services"
+      xmlns:system="using:System"
+      xmlns:xc="using:WinRTXamlToolkit.Controls"
+      mc:Ignorable="d">
+
+    <Page.Resources>
+        <Style x:Key="ListViewItemContainerWideStyle" TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource Brush-Blue-Dark-1}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="54" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Border Margin="0,0,-12,0"
+                Padding="0,12,0,0"
+                Style="{StaticResource VSCodeAppBarHeaderStyle}">
+            <TextBlock Style="{StaticResource VSCodeAppBarHeaderTextStyle}">TOOLBOX</TextBlock>
+        </Border>
+
+        <ScrollViewer Grid.Row="1">
+            <ItemsControl ItemsSource="{x:Bind LibraryService.Libraries, Mode=OneWay}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="model:LibraryInfo">
+                        <controls:Expander HorizontalContentAlignment="Stretch"
+                                           FontFamily="Segoe UI"
+                                           HeaderStyle="{StaticResource VSCodeExpanderStyle}">
+                            <controls:Expander.Header>
+                                <StackPanel>
+                                    <TextBlock FontFamily="Segoe UI" Text="{x:Bind Name}" />
+                                    <TextBlock FontFamily="Segoe UI"
+                                               FontSize="8"
+                                               Text="{x:Bind Namespace}" />
+                                </StackPanel>
+                            </controls:Expander.Header>
+                            <ListView HorizontalContentAlignment="Stretch"
+                                      IsItemClickEnabled="True"
+                                      ItemClick="ListView_ItemClick"
+                                      ItemContainerStyle="{StaticResource ListViewItemContainerWideStyle}"
+                                      ItemsSource="{x:Bind GetTypes()}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="system:Type">
+                                        <Grid Margin="16,0,0,0"
+                                              fex:FrameworkElementExtensions.AncestorType="ListViewItem"
+                                              DataContext="{Binding (fex:FrameworkElementExtensions.Ancestor).Content, RelativeSource={RelativeSource Self}}">
+                                            <StackPanel>
+                                                <TextBlock FontSize="14" Text="{Binding Name}" />
+                                                <TextBlock FontSize="8" Text="{Binding BaseType}" />
+                                            </StackPanel>
+                                            <HyperlinkButton HorizontalAlignment="Right" Click="HyperlinkButton_Click">Docs</HyperlinkButton>
+                                            <!--  TODO: Add Favorite Button  -->
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </controls:Expander>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</Page>

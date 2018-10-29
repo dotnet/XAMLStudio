@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System.Threading;
 using Windows.UI.Xaml;
+using XamlStudio.Helpers;
 using XamlStudio.Services;
 using XamlStudio.Toolkit.Controls;
 using XamlStudio.Toolkit.Models;

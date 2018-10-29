@@ -125,6 +125,7 @@
     <Compile Include="Extensions\Pivot\GetPivotItemConverter.cs" />
     <Compile Include="Extensions\Pivot\PivotExtensions.cs" />
     <Compile Include="Extensions\Pivot\PivotExtensions.Properties.cs" />
+    <Compile Include="Extensions\FrameworkElement\FrameworkElementExtensions.cs" />
     <Compile Include="Extensions\SymbolIcon\SymbolIconExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Microsoft.Toolkit.Future.rd.xml" />
@@ -134,7 +135,7 @@
       <Version>6.1.5</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
-      <Version>3.0.0</Version>
+      <Version>4.0.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

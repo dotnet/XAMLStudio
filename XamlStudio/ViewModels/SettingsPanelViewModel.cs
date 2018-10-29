@@ -77,7 +77,26 @@ namespace XamlStudio.ViewModels
                 return _switchThemeCommand;
             }
         }
-        
+
+        private ICommand _switchEditorThemeCommand;
+
+        public ICommand SwitchEditorThemeCommand
+        {
+            get
+            {
+                if (_switchEditorThemeCommand == null)
+                {
+                    _switchEditorThemeCommand = new RelayCommand<ElementTheme>(
+                        (param) =>
+                        {
+                            Settings.EditorTheme = param;
+                        });
+                }
+
+                return _switchEditorThemeCommand;
+            }
+        }
+
         public ObservableCollection<Color> Colors { get; set; }
 
         public SettingsService Settings { get; } = SettingsService.Instance;

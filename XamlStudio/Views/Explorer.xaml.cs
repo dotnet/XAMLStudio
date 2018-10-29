@@ -12,6 +12,8 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using XamlStudio.Helpers;
+using XamlStudio.Models;
 using XamlStudio.ViewModels;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -27,6 +29,12 @@ namespace XamlStudio.Views
 
         public Explorer()
         {
+            // Need to add this here as XAML can't load custom Enum
+            this.Resources.Add("EnumToBooleanConverter", new EnumToBooleanConverter()
+            {
+                EnumType = typeof(DocumentType)
+            });
+
             this.InitializeComponent();
         }
     }

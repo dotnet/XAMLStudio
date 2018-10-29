@@ -46,14 +46,14 @@ namespace XamlStudio.Views
 
                 var body = await response.Content.ReadAsStringAsync();
 
-                MainViewModel.DocumentViewModel.DataContext = JsonConvert.DeserializeObject<ExpandoObject>(body);
+                MainViewModel.ActiveDocumentViewModel.DataContext = JsonConvert.DeserializeObject<ExpandoObject>(body);
 
                 DataPayload.Text = body;
 
                 // TODO: Just swap out root element's data context.
                 // Re-render with new context.
-                MainViewModel.DocumentViewModel.HasCompiled = false; // force
-                MainViewModel.DocumentViewModel.UpdateXamlCommand.Execute(null);
+                MainViewModel.ActiveDocumentViewModel.HasCompiled = false; // force
+                MainViewModel.ActiveDocumentViewModel.UpdateXamlCommand.Execute(null);
             }
             catch (Exception e2)
             {

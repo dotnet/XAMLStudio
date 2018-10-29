@@ -105,9 +105,9 @@
                     <ic:EventTriggerBehavior EventName="Toggled">
                         <ic:InvokeCommandAction Command="{x:Bind MainViewModel.SettingsViewModel.SwitchToggleCommand}" />
                         <ic:ChangePropertyAction PropertyName="HasCompiled"
-                                                 TargetObject="{x:Bind MainViewModel.DocumentViewModel}"
+                                                 TargetObject="{x:Bind MainViewModel.ActiveDocumentViewModel}"
                                                  Value="false" />
-                        <ic:InvokeCommandAction Command="{x:Bind MainViewModel.DocumentViewModel.UpdateXamlCommand}" />
+                        <ic:InvokeCommandAction Command="{x:Bind MainViewModel.ActiveDocumentViewModel.UpdateXamlCommand}" />
                     </ic:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
             </ToggleSwitch>
@@ -116,7 +116,7 @@
                                 Visibility="{x:Bind services:SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value, Mode=OneWay}"
                                 Value="{x:Bind BindingViewMode.SelectedValue, Mode=OneWay}">
             <future:Case Value="Bindings">
-                <ItemsControl ItemsSource="{x:Bind MainViewModel.DocumentViewModel.Result.Bindings, Mode=OneWay}">
+                <ItemsControl ItemsSource="{x:Bind MainViewModel.ActiveDocumentViewModel.Result.Bindings, Mode=OneWay}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="models:XamlBindingInfo">
                             <controls:Expander HorizontalContentAlignment="Stretch"
@@ -144,7 +144,7 @@
                           ItemClick="ListView_ItemClick"
                           ItemContainerStyle="{StaticResource ListViewItemContainerWideStyle}"
                           ItemTemplate="{StaticResource ConversionRecordWithParentTemplate}"
-                          ItemsSource="{x:Bind MainViewModel.DocumentViewModel.BindingHistory, Mode=OneWay}" />
+                          ItemsSource="{x:Bind MainViewModel.ActiveDocumentViewModel.BindingHistory, Mode=OneWay}" />
             </future:Case>
         </future:SwitchPresenter>
         <TextBlock Grid.Row="2"
