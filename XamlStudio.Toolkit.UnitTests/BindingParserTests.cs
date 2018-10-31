@@ -43,6 +43,21 @@ namespace XamlStudio.Toolkit.UnitTests
         }
 
         [TestMethod]
+        public void BindingTest_ConverterParamVar()
+        {
+            string xaml = @"{Binding Path=MyBoolValue, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=True}";
+            var expected = new BindingValue()
+            {
+                Path = "MyBoolValue",
+                Converter = "BoolToVisibilityConverter",
+                ConverterParameter = "True"
+            };
+            var binding = BindingParser.Parse(xaml);
+            TestBinding(expected, binding);
+            PrintBinding(xaml, binding);
+        }
+
+        [TestMethod]
         public void BindingTest_Path1()
         {
             string xaml = @"{Binding ElementName=AutoCompileToggle, Path=IsOn}";
