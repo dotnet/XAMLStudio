@@ -4,7 +4,7 @@
       xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:fex="using:Microsoft.Toolkit.Uwp.UI.Extensions.Future"
+      xmlns:ex="using:Microsoft.Toolkit.Uwp.UI.Extensions"
       xmlns:future="using:Microsoft.Toolkit.Uwp.UI.Controls.Future"
       xmlns:globalization="using:System.Globalization"
       xmlns:i="using:Microsoft.Xaml.Interactivity"
@@ -58,8 +58,8 @@
                                 <ListView.ItemTemplate>
                                     <DataTemplate x:DataType="system:Type">
                                         <Grid Margin="16,0,0,0"
-                                              fex:FrameworkElementExtensions.AncestorType="ListViewItem"
-                                              DataContext="{Binding (fex:FrameworkElementExtensions.Ancestor).Content, RelativeSource={RelativeSource Self}}">
+                                              ex:FrameworkElementExtensions.AncestorType="ListViewItem"
+                                              DataContext="{Binding (ex:FrameworkElementExtensions.Ancestor).Content, RelativeSource={RelativeSource Self}}">
                                             <StackPanel>
                                                 <TextBlock FontSize="14" Text="{Binding Name}" />
                                                 <TextBlock FontSize="8" Text="{Binding BaseType}" />

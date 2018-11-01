@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:ex="using:Microsoft.Toolkit.Uwp.UI.Extensions"
       xmlns:fex="using:Microsoft.Toolkit.Uwp.UI.Extensions.Future"
       xmlns:future="using:Microsoft.Toolkit.Uwp.UI.Controls.Future"
       xmlns:helper="using:XamlStudio.Helpers"
@@ -65,9 +66,9 @@
                                        FontWeight="SemiBold"
                                        Text="{Binding Title}" />
                             <StackPanel Grid.Column="1"
-                                        fex:FrameworkElementExtensions.AncestorType="ListBoxItem"
+                                        ex:FrameworkElementExtensions.AncestorType="ListBoxItem"
                                         Orientation="Horizontal"
-                                        Visibility="{Binding (fex:FrameworkElementExtensions.Ancestor).IsSelected, RelativeSource={RelativeSource Self}}">
+                                        Visibility="{Binding (ex:FrameworkElementExtensions.Ancestor).IsSelected, RelativeSource={RelativeSource Self}}">
                                 <Button Padding="1"
                                         Command="{Binding DataContext.MainViewModel.SaveDocumentCommand, ElementName=OpenEditorList}"
                                         CommandParameter="{Binding}"

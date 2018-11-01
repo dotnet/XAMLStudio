@@ -114,11 +114,18 @@ namespace XamlStudio.Services
             {
                 string mruToken = entry.Token;
                 string mruMetadata = entry.Metadata;
-                IStorageItem item = await StorageApplicationPermissions.MostRecentlyUsedList.GetItemAsync(mruToken);
-
-                if (item.IsOfType(StorageItemTypes.File))
+                try
                 {
-                    files.Add(item as StorageFile);
+                    IStorageItem item = await StorageApplicationPermissions.MostRecentlyUsedList.GetItemAsync(mruToken);
+
+                    if (item.IsOfType(StorageItemTypes.File))
+                    {
+                        files.Add(item as StorageFile);
+                    }
+                }
+                catch (Exception e)
+                {
+                    // GetItemAsync threw exception?  Skip...
                 }
 
                 if (files.Count == num)
