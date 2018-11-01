@@ -58,11 +58,6 @@ namespace XamlStudio.Views
 
             await ViewModel.SettingsViewModel.Settings.InitializeAndLoad();
 
-            ViewModel.RegisterPropertyChangedCallback(WorkspaceWindow.ActiveFileProperty, (sender2, args) =>
-            {
-                DocumentTabsPivot.SelectedItem = ViewModel.ActiveFile;
-            });
-
             if (_filesToLoad != null)
             {
                 // Load Files
@@ -79,18 +74,6 @@ namespace XamlStudio.Views
             if (e.Parameter is IStorageItem[] files)
             {
                 _filesToLoad = files;
-            }
-        }
-
-        private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // Workaround for issue with binding to SelectedItem when closing tab.
-            if (e.AddedItems.Count > 0)
-            {
-                if (e.AddedItems[0] is XamlDocument doc && doc != ViewModel.ActiveFile)
-                {
-                    ViewModel.ActiveFile = doc;
-                }
             }
         }
 
@@ -117,6 +100,13 @@ namespace XamlStudio.Views
                 ViewModel.OpenFiles.Add(XamlDocument.SettingsDocument());
                 ViewModel.ActiveFile = ViewModel.OpenFiles.Last();
             }
+        }
+
+        private void DocumentTabs_TabClosing(object sender, Microsoft.Toolkit.Uwp.UI.Controls.TabClosingEventArgs e)
+        {
+            ViewModel.CloseActiveDocumentCommand.Execute(e.Item);
+
+            e.Cancel = true; // We'll remove item ourselves from collection when we're done in command, so don't have the TabView do it for us.
         }
     }
 }

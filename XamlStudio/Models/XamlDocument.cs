@@ -58,6 +58,16 @@ namespace XamlStudio.Models
         }
 
         /// <summary>
+        /// Is this file actively visible/engaged in the UI.
+        /// </summary>
+        private bool _active;
+        public bool IsActive
+        {
+            get { return _active; }
+            set { Set(ref _active, value); }
+        }
+
+        /// <summary>
         /// OS File backing this document.
         /// </summary>
         public StorageFile BackingFile { get; internal set; }

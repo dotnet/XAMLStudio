@@ -32,7 +32,10 @@ namespace XamlStudio.ViewModels
             OpenFiles.CollectionChanged += OpenFiles_CollectionChanged;
             RegisterPropertyChangedCallback(ActiveFileProperty, (s, dp) =>
             {
-                ActiveDocumentViewModel = DocumentViewModels[ActiveFile];
+                if (ActiveFile != null) // TabView can give us null first as it changes to the next one, is this a bug?
+                {
+                    ActiveDocumentViewModel = DocumentViewModels[ActiveFile];
+                }
             });
 
             var welcome = XamlDocument.WelcomeDocument();

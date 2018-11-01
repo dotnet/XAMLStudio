@@ -16,7 +16,7 @@ namespace XamlStudio.Models
 
         // Using a DependencyProperty as the backing store for ActiveFile.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ActiveFileProperty =
-            DependencyProperty.Register(nameof(ActiveFile), typeof(XamlDocument), typeof(WorkspaceWindow), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(ActiveFile), typeof(XamlDocument), typeof(WorkspaceWindow), new PropertyMetadata(null, ActiveFile_Changed));
 
         public bool IsWorkspaceOpen { get; private set; }
 
@@ -49,6 +49,20 @@ namespace XamlStudio.Models
             // Get Settings Folder
             // IsWorkspaceOpen = false still.
             throw new NotImplementedException();
+        }
+
+        private static void ActiveFile_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            // Mark child XamlDocument as Active File
+            if (e.OldValue != null && e.OldValue is XamlDocument xd)
+            {
+                xd.IsActive = false;
+            }
+
+            if (e.NewValue != null && e.NewValue is XamlDocument xd2)
+            {
+                xd2.IsActive = true;
+            }
         }
     }
 }

@@ -84,14 +84,14 @@ namespace XamlStudio.ViewModels
             }
         }
 
-        private async void CloseActiveDocument(PivotItem item)
+        private async void CloseActiveDocument(XamlDocument document)
         {
             // TODO: Why is item null here?
 
-            if (ActiveFile.HasChanged)
+            if (document.HasChanged)
             {
                 // Create the message dialog and set its content
-                var messageDialog = new MessageDialog(String.Format("Application_CloseConfirm".GetLocalized(), ActiveFile.Title.TrimEnd('*')));
+                var messageDialog = new MessageDialog(String.Format("Application_CloseConfirm".GetLocalized(), document.Title.TrimEnd('*')));
 
                 // Add commands and set their callbacks; both buttons use the same callback function instead of inline event handlers
                 var saveCmd = new UICommand("Application_CloseConfirmSave".GetLocalized());
@@ -133,29 +133,14 @@ namespace XamlStudio.ViewModels
                 return;
             }*/
             
-            var current = ActiveFile;
-
             // Create a new Document if we're removing the last one (it will be selected)
             if (OpenFiles.Count == 1)
             {
                 NewDocument(null);
             }
-            else
-            {
-                // Otherwise, figure out what the new active file is.
-                var index = OpenFiles.IndexOf(current);
-                if (index == 0)
-                {
-                    ActiveFile = OpenFiles[++index];
-                }
-                else
-                {
-                    ActiveFile = OpenFiles[--index];
-                }
-            }
 
             // Remove what we had as active (otherwise, the active would be null and we'd hit an error)
-            OpenFiles.RemoveAt(OpenFiles.IndexOf(current));            
+            OpenFiles.RemoveAt(OpenFiles.IndexOf(document));            
         }
 
         // Ctrl+Shift+S
