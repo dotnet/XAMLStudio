@@ -3,7 +3,6 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:controls="using:XamlStudio.Controls"
       xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
-      xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:ex="using:Microsoft.Toolkit.Uwp.UI.Extensions"
       xmlns:exf="using:Microsoft.Toolkit.Uwp.UI.Extensions.Future"
@@ -11,11 +10,27 @@
       xmlns:local="using:XamlStudio.Views"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:models="using:XamlStudio.Models"
+      xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
       Style="{StaticResource PageStyle}"
       mc:Ignorable="d">
 
     <Page.Resources>
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <StaticResource x:Key="TabViewSelectionIndicatorForeground" ResourceKey="Brush-Blue-Light-1" />
+                    <StaticResource x:Key="TabViewItemHeaderBackgroundSelected" ResourceKey="Brush-Blue-Dark-2" />
+                    <StaticResource x:Key="TabViewItemHeaderBackgroundPointerOver" ResourceKey="Brush-Blue-Light-1" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <StaticResource x:Key="TabViewSelectionIndicatorForeground" ResourceKey="Brush-Blue-Light-1" />
+                    <StaticResource x:Key="TabViewItemHeaderBackgroundSelected" ResourceKey="Brush-Blue-Dark-2" />
+                    <StaticResource x:Key="TabViewItemHeaderBackgroundPointerOver" ResourceKey="Brush-Blue-Light-1" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        </ResourceDictionary>
     </Page.Resources>
 
     <Grid>
@@ -30,7 +45,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- Main VSCode Style Navbar on Left -->
+        <!--  Main VSCode Style Navbar on Left  -->
         <ListBox x:Name="NavMenu"
                  Grid.RowSpan="2"
                  exf:ListBoxExtensions.AllowDeselection="True"
@@ -65,10 +80,10 @@
             <controls:AppFontIcon IconName="Settings" />
         </Button>
 
-        <!-- Toolbox Content -->
+        <!--  Toolbox Content  -->
         <Grid x:Name="ContentGrid"
-              Grid.Column="1"
               Grid.RowSpan="2"
+              Grid.Column="1"
               Width="320"
               MinWidth="200"
               Visibility="{x:Bind exf:Bind.GreaterThanOrEqualToV(NavMenu.SelectedIndex, 0), Mode=OneWay, FallbackValue=Visible}">
@@ -118,23 +133,23 @@
             </future:SwitchPresenter>
         </Grid>
 
-        <!-- Main Document Tabs -->
+        <!--  Main Document Tabs  -->
         <toolkit:TabView x:Name="DocumentTabs"
-                          Grid.Column="2"
-                          TabWidthBehavior="Equal"
-                          SelectedTabWidth="200"
-                          IsCloseButtonOverlay="True"
-                          CanCloseTabs="True"
-                          DataContext="{x:Bind}"
-                          TabClosing="DocumentTabs_TabClosing"
-                          SelectedItem="{x:Bind ViewModel.ActiveFile, Mode=TwoWay}"
-                          ItemsSource="{x:Bind ViewModel.OpenFiles}">
+                         Grid.Column="2"
+                         CanCloseTabs="True"
+                         DataContext="{x:Bind}"
+                         IsCloseButtonOverlay="True"
+                         ItemsSource="{x:Bind ViewModel.OpenFiles}"
+                         SelectedItem="{x:Bind ViewModel.ActiveFile, Mode=TwoWay}"
+                         SelectedTabWidth="200"
+                         TabClosing="DocumentTabs_TabClosing"
+                         TabWidthBehavior="Equal">
             <toolkit:TabView.Resources>
                 <x:Double x:Key="TabViewItemHeaderMinHeight">32</x:Double>
                 <x:Double x:Key="TabViewItemHeaderMinWidth">90</x:Double>
             </toolkit:TabView.Resources>
             <toolkit:TabView.ItemTemplate>
-                <DataTemplate/>
+                <DataTemplate />
             </toolkit:TabView.ItemTemplate>
             <toolkit:TabView.ItemHeaderTemplate>
                 <DataTemplate x:DataType="models:XamlDocument">
@@ -148,21 +163,21 @@
             </toolkit:TabView.TabActionHeader>
         </toolkit:TabView>
 
-        <!-- Tab Content -->
-        <ItemsControl ItemsSource="{x:Bind ViewModel.OpenFiles}"
+        <!--  Tab Content  -->
+        <ItemsControl Grid.Row="1"
                       Grid.Column="2"
-                      Grid.Row="1">
+                      ItemsSource="{x:Bind ViewModel.OpenFiles}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <Grid/>
+                    <Grid />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <future:SwitchPresenter HorizontalAlignment="Stretch"
                                             TargetType="x:String"
-                                            Value="{Binding DocumentType}"
-                                            Visibility="{Binding IsActive, Converter={StaticResource BoolToVisibilityConverter}}">
+                                            Visibility="{Binding IsActive, Converter={StaticResource BoolToVisibilityConverter}}"
+                                            Value="{Binding DocumentType}">
                         <future:Case Value="Welcome">
                             <local:WelcomePage HorizontalAlignment="Stretch" MainViewModel="{Binding DataContext.ViewModel, ElementName=DocumentTabs}" />
                         </future:Case>
