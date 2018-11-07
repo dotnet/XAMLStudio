@@ -205,16 +205,19 @@ namespace XamlStudio.ViewModels
             CachedFileManager.DeferUpdates(file);
 
             // Update/Save Document
-            await document.SaveAsAsync(file);
+            var result = await document.SaveAsAsync(file);
 
             // Let Windows know that we're finished changing the file so the other app can update the remote version of the file.
             // Completing updates may require Windows to ask for user input.
             FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
             if (status == FileUpdateStatus.Complete)
             {
-                SettingsService.Instance.RememberFile(file);
+                if (result)
+                {
+                    SettingsService.Instance.RememberFile(file);
+                }
                 //OutputTextBlock.Text = "File " + file.Name + " was saved.";
-                return true;
+                return result;
             }
             else
             {

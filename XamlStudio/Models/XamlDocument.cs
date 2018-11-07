@@ -88,18 +88,32 @@ namespace XamlStudio.Models
         /// Save a file back to its backing location.
         /// </summary>
         /// <returns></returns>
-        public IAsyncAction SaveAsync()
+        public IAsyncOperation<bool> SaveAsync()
         {
+            return SaveAsyncInternal().AsAsyncOperation();
+        }
+
+        private async Task<bool> SaveAsyncInternal()
+        { 
             if (!CanSave)
             {
                 throw new InvalidOperationException("Must Load or SaveAs before Save can be called.");
             }
 
-            // TODO: Check result of Write!
+            try
+            {
+                await FileIO.WriteTextAsync(this.BackingFile, this.Content);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            // We made it here without an exception, assume write success, update flag.
             HasChanged = false;
-            return FileIO.WriteTextAsync(this.BackingFile, this.Content);
+            return true;
         }
-        
+
         /// <summary>
         /// Save the file in a new location (or for the first time).
         /// 
@@ -107,14 +121,36 @@ namespace XamlStudio.Models
         /// </summary>
         /// <param name="newfile">New File Storage Location.</param>
         /// <returns></returns>
-        public IAsyncAction SaveAsAsync(StorageFile newfile)
+        public IAsyncOperation<bool> SaveAsAsync(StorageFile newfile)
         {
+            return SaveAsAsyncInternal(newfile).AsAsyncOperation();
+        }
+
+        private async Task<bool> SaveAsAsyncInternal(StorageFile newfile)
+        {
+            // Call save if this is the same file.
+            if (BackingFile.Equals(newfile))
+            {
+                return await SaveAsyncInternal();
+            }
+
+            var original = this.BackingFile;
             this.BackingFile = newfile;
 
-            // Update Title after save.
-            this.Title = newfile.DisplayName;
+            if (await SaveAsyncInternal())
+            {
+                // Update Title after save.
+                this.Title = newfile.DisplayName;
 
-            return SaveAsync();
+                return true;
+            }
+            else
+            {
+                // Restore original backing file.
+                this.BackingFile = original;
+
+                return false;
+            }
         }
 
         /// <summary>
