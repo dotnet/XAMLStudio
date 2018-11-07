@@ -113,7 +113,7 @@ namespace XamlStudio.ViewModels
                 if (result == saveCmd)
                 {
                     // Important to wait here for result.
-                    if (!await SaveDocument(ActiveFile))
+                    if (!await SaveDocument(document))
                     {
                         // Cancel closing if they cancel the save (or error).
                         return;
