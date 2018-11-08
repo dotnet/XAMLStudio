@@ -20,9 +20,9 @@ namespace XamlStudio.ViewModels
         /// Show File Dialog to Open a File.
         /// </summary>
         public ICommand OpenDocumentCommand { get; private set; }
-        public ICommand SaveDocumentCommand { get; private set; }
-        public ICommand SaveDocumentAsCommand { get; private set; }
-        public ICommand CloseActiveDocumentCommand { get; private set; }
+        public IAsyncCommand SaveDocumentCommand { get; private set; }
+        public IAsyncCommand SaveDocumentAsCommand { get; private set; }
+        public IAsyncCommand CloseActiveDocumentCommand { get; private set; }
 
         /// <summary>
         /// Open a File from a <see cref="StorageFile"/>.
@@ -37,9 +37,9 @@ namespace XamlStudio.ViewModels
         {
             NewDocumentCommand = new RelayCommand<RoutedEventArgs>(NewDocument);
             OpenDocumentCommand = new RelayCommand<RoutedEventArgs>(OpenDocument);
-            SaveDocumentCommand = new RelayCommand<XamlDocument>(new Action<XamlDocument>(async (args) => { await SaveDocument(args); }));
-            SaveDocumentAsCommand = new RelayCommand<XamlDocument>(new Action<XamlDocument>(async (args) => { await SaveDocumentAs(args); }));
-            CloseActiveDocumentCommand = new RelayCommand<XamlDocument>(CloseActiveDocument);
+            SaveDocumentCommand = new AsyncRelayCommand<XamlDocument>(SaveDocument);
+            SaveDocumentAsCommand = new AsyncRelayCommand<XamlDocument>(SaveDocumentAs);
+            CloseActiveDocumentCommand = new AsyncRelayCommand<XamlDocument>(CloseActiveDocument);
 
             OpenFileCommand = new RelayCommand<StorageFile>(OpenFile);
 

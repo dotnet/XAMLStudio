@@ -84,7 +84,7 @@ namespace XamlStudio.ViewModels
             }
         }
 
-        private async void CloseActiveDocument(XamlDocument document)
+        private async Task<bool> CloseActiveDocument(XamlDocument document)
         {
             // TODO: Why is item null here?
 
@@ -116,12 +116,12 @@ namespace XamlStudio.ViewModels
                     if (!await SaveDocument(document))
                     {
                         // Cancel closing if they cancel the save (or error).
-                        return;
+                        return false;
                     }
                 }
                 else if (result == cancelCmd)
                 {
-                    return;
+                    return false;
                 }
             }
 
@@ -140,7 +140,9 @@ namespace XamlStudio.ViewModels
             }
 
             // Remove what we had as active (otherwise, the active would be null and we'd hit an error)
-            OpenFiles.RemoveAt(OpenFiles.IndexOf(document));            
+            OpenFiles.RemoveAt(OpenFiles.IndexOf(document));
+
+            return true;
         }
 
         // Ctrl+Shift+S
