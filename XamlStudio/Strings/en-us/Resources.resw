@@ -337,4 +337,8 @@ By: Michael A. Hawker</value>
     <value>Known Namespaces</value>
     <comment>Known Namespaces Title on Settings Page</comment>
   </data>
+  <data name="Application_SaveError" xml:space="preserve">
+    <value>An issue was encountered saving file '{0}' and it could not be saved.</value>
+    <comment>Error message when encountering an issue with saving.</comment>
+  </data>
 </root>

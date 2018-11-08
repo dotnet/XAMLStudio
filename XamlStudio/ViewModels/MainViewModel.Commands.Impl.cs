@@ -217,15 +217,16 @@ namespace XamlStudio.ViewModels
                 if (result)
                 {
                     SettingsService.Instance.RememberFile(file);
+
+                    return true;
                 }
-                //OutputTextBlock.Text = "File " + file.Name + " was saved.";
-                return result;
             }
-            else
-            {
-                //OutputTextBlock.Text = "File " + file.Name + " couldn't be saved.";
-                return false; // Should have another status/msg here?
-            }
+
+            // Show error about saving
+            var messageDialog = new MessageDialog(String.Format("Application_SaveError".GetLocalized(), document.Title.TrimEnd('*')));
+            await messageDialog.ShowAsync();
+
+            return false;
         }
 
         // Ctrl+Shift+Tab
