@@ -29,7 +29,7 @@ namespace XamlStudio.Views
 
             Loaded += MainPage_Loaded;
 
-            Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown; ;
+            Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
         }
 
         private void CoreWindow_KeyDown(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs args)

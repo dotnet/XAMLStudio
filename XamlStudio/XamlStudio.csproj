@@ -182,6 +182,7 @@
     <Compile Include="ViewModels\DocumentViewModel.cs" />
     <Compile Include="ViewModels\DocumentViewModel.Methods.cs" />
     <Compile Include="ViewModels\ExplorerViewModel.cs" />
+    <Compile Include="ViewModels\ToolboxViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.Commands.cs" />
     <Compile Include="ViewModels\MainViewModel.Commands.Impl.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />

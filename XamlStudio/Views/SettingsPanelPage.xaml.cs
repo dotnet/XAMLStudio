@@ -18,7 +18,7 @@ namespace XamlStudio.Views
 
         // Using a DependencyProperty as the backing store for ViewModel.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ViewModelProperty =
-            DependencyProperty.Register("ViewModel", typeof(SettingsPanelViewModel), typeof(SettingsPanelPage), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(ViewModel), typeof(SettingsPanelViewModel), typeof(SettingsPanelPage), new PropertyMetadata(null));
 
         public MainViewModel MainViewModel
         {
@@ -55,7 +55,7 @@ namespace XamlStudio.Views
             await ViewModel.Settings.SaveAsync(nameof(ViewModel.Settings.KnownNamespaces));
         }
 
-        private async void AddNamespaceButton_Click(object sender, RoutedEventArgs e)
+        private void AddNamespaceButton_Click(object sender, RoutedEventArgs e)
         {
             // Add new Row and begin editing
             ViewModel.Settings.KnownNamespaces.Insert(0, new Toolkit.Models.XmlnsNamespace(string.Empty, string.Empty));

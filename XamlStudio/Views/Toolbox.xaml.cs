@@ -14,22 +14,25 @@ namespace XamlStudio.Views
     /// </summary>
     public sealed partial class Toolbox : Page
     {
-        public MainViewModel MainViewModel { get; set; }
+        public ToolboxViewModel ViewModel { get; } = new ToolboxViewModel();
 
-        public LibraryService LibraryService => LibraryService.Instance;
+        public MainViewModel MainViewModel { get; set; }
         
         public Toolbox()
         {
             this.InitializeComponent();
+
+            ViewModel.Initialize();
         }
 
         private void ListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var t = e.ClickedItem as Type;
-            if (t != null)
+            if (t != null && MainViewModel.ActiveDocumentViewModel != null &&
+                MainViewModel.ActiveDocumentViewModel.InsertTextCommand != null)
             {
+                // Insert tag into active document.
                 var text = "<";
-                // TODO: Insert tag into active document...
                 var xmlns = SettingsService.Instance.KnownNamespaces.FirstOrDefault(ns => ns.Path.EndsWith(t.Namespace));
                 if (xmlns != null)
                 {
@@ -52,10 +55,12 @@ namespace XamlStudio.Views
             var listview = sender as ListView;
             if (listview != null)
             {
+                #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () =>
                 {
                     listview.SelectedItem = null;
                 });
+                #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
         }
 
@@ -67,7 +72,7 @@ namespace XamlStudio.Views
                 var lvi = fe.FindAscendant<ListViewItem>();
                 if (lvi != null && lvi.Content is Type type)
                 {
-                    var link = LibraryService.GetLinkForType(type);
+                    var link = ViewModel.LibraryService.GetLinkForType(type);
                     if (!string.IsNullOrWhiteSpace(link))
                     {
                         #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -75,6 +80,14 @@ namespace XamlStudio.Views
                         #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     }
                 }
+            }
+        }
+
+        private void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                ViewModel.Filter(sender.Text);
             }
         }
     }

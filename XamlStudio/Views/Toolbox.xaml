@@ -22,11 +22,41 @@
         <Style x:Key="ListViewItemContainerWideStyle" TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         </Style>
+
+        <Style x:Key="AutoSuggestBoxNoPopupStyle" TargetType="AutoSuggestBox">
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="TextBoxStyle" Value="{StaticResource AutoSuggestBoxTextBoxStyle}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="AutoSuggestBox">
+                        <Grid>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="Orientation">
+                                    <VisualState x:Name="Landscape" />
+                                    <VisualState x:Name="Portrait" />
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <TextBox x:Name="TextBox"
+                                     Width="{TemplateBinding Width}"
+                                     Margin="0"
+                                     Canvas.ZIndex="0"
+                                     DesiredCandidateWindowAlignment="BottomEdge"
+                                     Header="{TemplateBinding Header}"
+                                     PlaceholderText="{TemplateBinding PlaceholderText}"
+                                     ScrollViewer.BringIntoViewOnFocusChange="False"
+                                     Style="{TemplateBinding TextBoxStyle}" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
 
     <Grid Background="{ThemeResource Brush-Blue-Dark-1}">
         <Grid.RowDefinitions>
             <RowDefinition Height="54" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Border Margin="0,0,-12,0"
@@ -35,45 +65,43 @@
             <TextBlock Style="{StaticResource VSCodeAppBarHeaderTextStyle}">TOOLBOX</TextBlock>
         </Border>
 
-        <ScrollViewer Grid.Row="1">
-            <ItemsControl ItemsSource="{x:Bind LibraryService.Libraries, Mode=OneWay}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="model:LibraryInfo">
-                        <controls:Expander HorizontalContentAlignment="Stretch"
-                                           FontFamily="Segoe UI"
-                                           HeaderStyle="{StaticResource VSCodeExpanderStyle}">
-                            <controls:Expander.Header>
-                                <StackPanel>
-                                    <TextBlock FontFamily="Segoe UI" Text="{x:Bind Name}" />
-                                    <TextBlock FontFamily="Segoe UI"
-                                               FontSize="8"
-                                               Text="{x:Bind Namespace}" />
-                                </StackPanel>
-                            </controls:Expander.Header>
-                            <ListView HorizontalContentAlignment="Stretch"
-                                      IsItemClickEnabled="True"
-                                      ItemClick="ListView_ItemClick"
-                                      ItemContainerStyle="{StaticResource ListViewItemContainerWideStyle}"
-                                      ItemsSource="{x:Bind GetTypes()}">
-                                <ListView.ItemTemplate>
-                                    <DataTemplate x:DataType="system:Type">
-                                        <Grid Margin="16,0,0,0"
-                                              ex:FrameworkElementExtensions.AncestorType="ListViewItem"
-                                              DataContext="{Binding (ex:FrameworkElementExtensions.Ancestor).Content, RelativeSource={RelativeSource Self}}">
-                                            <StackPanel>
-                                                <TextBlock FontSize="14" Text="{Binding Name}" />
-                                                <TextBlock FontSize="8" Text="{Binding BaseType}" />
-                                            </StackPanel>
-                                            <HyperlinkButton HorizontalAlignment="Right" Click="HyperlinkButton_Click">Docs</HyperlinkButton>
-                                            <!--  TODO: Add Favorite Button  -->
-                                        </Grid>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
-                        </controls:Expander>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+        <AutoSuggestBox Grid.Row="1"
+                        Margin="12,0,0,0"
+                        QueryIcon="Find"
+                        Style="{StaticResource AutoSuggestBoxNoPopupStyle}"
+                        TextChanged="AutoSuggestBox_TextChanged" />
+
+        <ListView Grid.Row="2"
+                  DataContext="{x:Bind ViewModel}"
+                  IsItemClickEnabled="True"
+                  ItemClick="ListView_ItemClick"
+                  ItemContainerStyle="{StaticResource ListViewItemContainerWideStyle}"
+                  ItemsSource="{x:Bind ViewModel.LibraryView.View, Mode=OneWay}">
+            <ListView.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock FontFamily="Segoe UI"
+                                       FontSize="16"
+                                       Text="{Binding Key}" />
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </ListView.GroupStyle>
+
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="system:Type">
+                    <Grid Margin="16,0,0,0"
+                          ex:FrameworkElementExtensions.AncestorType="ListViewItem"
+                          DataContext="{Binding (ex:FrameworkElementExtensions.Ancestor).Content, RelativeSource={RelativeSource Self}}">
+                        <StackPanel>
+                            <TextBlock FontSize="14" Text="{Binding Name}" />
+                            <TextBlock FontSize="8" Text="{Binding BaseType}" />
+                        </StackPanel>
+                        <HyperlinkButton HorizontalAlignment="Right" Click="HyperlinkButton_Click">Docs</HyperlinkButton>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </Page>
