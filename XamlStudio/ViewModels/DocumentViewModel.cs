@@ -5,6 +5,7 @@ using Monaco.Editor;
 using Monaco.Helpers;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using Windows.System.Threading;
 using Windows.UI;
@@ -126,7 +127,23 @@ namespace XamlStudio.ViewModels
 
         public XamlRenderService XamlRenderer { get; } = new XamlRenderService();
 
-        public object DataContext { get; set; }
+        public object DataContext
+        {
+            get { return (object)GetValue(DataContextProperty); }
+            set { SetValue(DataContextProperty, value); }
+        }
+
+        public static readonly DependencyProperty DataContextProperty =
+            DependencyProperty.Register(nameof(DataContext), typeof(object), typeof(DocumentViewModel), new PropertyMetadata(null, DataContextPropertyChanged));
+
+        public static void DataContextPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        {
+            var vm = obj as DocumentViewModel;
+            if (vm.XamlRoot.Children.FirstOrDefault() is FrameworkElement fwe)
+            {
+                fwe.DataContext = args.NewValue;
+            }
+        }
 
         public DocumentViewModel()
         {
