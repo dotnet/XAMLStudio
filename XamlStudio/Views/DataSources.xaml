@@ -4,6 +4,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="using:XamlStudio.Views"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:monaco="using:Monaco"
       mc:Ignorable="d">
 
     <Grid Background="{ThemeResource Brush-Blue-Dark-1}">
@@ -23,11 +24,9 @@
                  Margin="24,12,0,24"
                  Header="REST Url:"
                  LostFocus="LiveDataSourceUri_LostFocus" />
-        <ScrollViewer Grid.Row="2"
-                      Margin="24,0,0,0"
-                      HorizontalScrollBarVisibility="Visible"
-                      HorizontalScrollMode="Enabled">
-            <TextBlock x:Name="DataPayload" />
-        </ScrollViewer>
+        <monaco:CodeEditor x:Name="DataContextJson"
+                           Grid.Row="2"
+                           CodeLanguage="json"
+                           RequestedTheme="{x:Bind MainViewModel.SettingsViewModel.Settings.EditorTheme, Mode=OneWay}" />
     </Grid>
 </Page>

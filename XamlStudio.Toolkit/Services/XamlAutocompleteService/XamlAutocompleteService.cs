@@ -117,7 +117,7 @@ namespace XamlStudio.Toolkit.Services
             {
                 var prop = type.GetProperties().FirstOrDefault(p => p.Name == attribute);
 
-                if (prop.PropertyType.IsSubclassOf(typeof(Enum)))
+                if (prop != null && prop.PropertyType.IsSubclassOf(typeof(Enum)))
                 {
                     foreach (var value in Enum.GetNames(prop.PropertyType))
                     {

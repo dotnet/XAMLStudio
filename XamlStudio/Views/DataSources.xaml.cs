@@ -1,23 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using Monaco;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using Windows.Web.Http;
 using XamlStudio.ViewModels;
-
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace XamlStudio.Views
 {
@@ -31,6 +20,8 @@ namespace XamlStudio.Views
         public DataSources()
         {
             this.InitializeComponent();
+
+            DataContextJson.RegisterPropertyChangedCallback(CodeEditor.TextProperty, DataContextJson_TextChanged);
         }
 
         private async void LiveDataSourceUri_LostFocus(object sender, RoutedEventArgs e)
@@ -47,14 +38,68 @@ namespace XamlStudio.Views
                 var body = await response.Content.ReadAsStringAsync();
 
                 // Update DataContext
-                MainViewModel.ActiveDocumentViewModel.DataContext = JsonConvert.DeserializeObject<ExpandoObject>(body);
+                ////MainViewModel.ActiveDocumentViewModel.DataContext = JsonConvert.DeserializeObject<ExpandoObject>(body);
 
-                DataPayload.Text = body;
+                DataContextJson.Text = body;
             }
             catch (Exception e2)
             {
-                DataPayload.Text = e2.Message;
+                DataContextJson.Text = e2.Message;
             }            
+        }
+
+        private void DataContextJson_TextChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            // TODO: Consolidate with XamlRender parsing method.
+            // TODO: Consolidate with Document and it's auto-compile timer logic, go back to KeyDown?
+            // TODO: Is there a better way to consolidate this logic?  Maybe array and loop?
+            object result = null;
+            try
+            {
+                result = JsonConvert.DeserializeObject<ExpandoObject>(DataContextJson.Text);
+            }
+            catch (Exception)
+            {
+            }
+
+            if (result == null)
+            {
+                try
+                {
+                    result = JsonConvert.DeserializeObject<List<ExpandoObject>>(DataContextJson.Text);
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+            if (result == null)
+            {
+                try
+                {
+                    result = JsonConvert.DeserializeObject<List<object>>(DataContextJson.Text);
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+            if (result == null)
+            {
+                try
+                {
+                    result = JsonConvert.DeserializeObject<object>(DataContextJson.Text);
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+            if (result != null)
+            {
+                // Update DataContext if we have something.
+                MainViewModel.ActiveDocumentViewModel.DataContext = result;
+            }
         }
     }
 }
