@@ -150,7 +150,7 @@
     <comment>About this application title for SettingsPanel</comment>
   </data>
   <data name="SettingsPanel_AboutDescription.Text" xml:space="preserve">
-    <value>XAML Studio is a developer tool for rapidly prototyping UWP based XAML applications.  A Microsoft Garage project.
+    <value>XAML Studio, a Microsoft Garage project, is a developer tool for rapidly prototyping UWP based XAML applications.
 By: Michael A. Hawker</value>
     <comment>About this application description for SettingsPanel</comment>
   </data>
@@ -159,7 +159,7 @@ By: Michael A. Hawker</value>
     <comment>Privacy Statement link content for SettingsPanel</comment>
   </data>
   <data name="SettingsPanel_PrivacyTermsLink.NavigateUri" xml:space="preserve">
-    <value>https://YourPrivacyUrlGoesHere/</value>
+    <value>https://go.microsoft.com/fwlink/?LinkId=521839</value>
     <comment>Here is your Privacy Statement url for SettingsPanel</comment>
   </data>
   <data name="SettingsPanel_Personalization.Text" xml:space="preserve">
