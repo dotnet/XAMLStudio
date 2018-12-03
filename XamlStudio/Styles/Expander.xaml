@@ -5,6 +5,94 @@
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     mc:Ignorable="d">
 
+    <Style x:Key="SimpleExpanderStyle" TargetType="ToggleButton">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{ThemeResource Brush-Grey-Light-2}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundTransparentBrush}" />
+        <Setter Property="BorderThickness" Value="{ThemeResource ToggleButtonBorderThemeThickness}" />
+        <Setter Property="Padding" Value="0,2,0,2" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="UseSystemFocusVisuals" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Target="Arrow.Glyph" Value="&#xEDD6;" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="Arrow.Glyph" Value="&#xEDD6;" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <VisualState.Setters>
+                                        <Setter Target="Arrow.Glyph" Value="&#xEDD6;" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Checked">
+                                    <VisualState.Setters>
+                                        <Setter Target="Arrow.Glyph" Value="&#xF169;" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="CheckedPressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="Arrow.Glyph" Value="&#xF169;" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="CheckedDisabled">
+                                    <VisualState.Setters>
+                                        <Setter Target="Arrow.Glyph" Value="&#xF169;" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="CheckedPointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="Arrow.Glyph" Value="&#xF169;" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <FontIcon x:Name="Arrow"
+                                  Margin="0,0,8,0"
+                                  FontFamily="Segoe MDL2 Assets"
+                                  FontSize="8"
+                                  Foreground="{ThemeResource Brush-Blue-Light-1}"
+                                  Glyph="&#xEDD6;" />
+
+                        <ContentPresenter x:Name="ContentPresenter"
+                                          Grid.Column="1"
+                                          Margin="{TemplateBinding Padding}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          AutomationProperties.AccessibilityView="Raw"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          BorderThickness="{TemplateBinding BorderThickness}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          ContentTransitions="{TemplateBinding ContentTransitions}"
+                                          Foreground="{ThemeResource Brush-Blue-Light-1}"
+                                          RenderTransformOrigin="0.5,0.5" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <SolidColorBrush x:Key="SystemControlBackgroundChromeLowBrush" Color="{StaticResource SystemChromeLowColor}" />
 
     <Style x:Key="HeaderToggleButtonStyle" TargetType="ToggleButton">

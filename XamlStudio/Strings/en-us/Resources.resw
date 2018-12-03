@@ -145,7 +145,7 @@
     <value>Light</value>
     <comment>Light theme text for SettingsPanel</comment>
   </data>
-  <data name="SettingsPanel_About.Text" xml:space="preserve">
+  <data name="SettingsPanel_About.Header" xml:space="preserve">
     <value>About</value>
     <comment>About this application title for SettingsPanel</comment>
   </data>
@@ -162,7 +162,7 @@ By: Michael A. Hawker</value>
     <value>https://go.microsoft.com/fwlink/?LinkId=521839</value>
     <comment>Here is your Privacy Statement url for SettingsPanel</comment>
   </data>
-  <data name="SettingsPanel_Personalization.Text" xml:space="preserve">
+  <data name="SettingsPanel_Personalization.Header" xml:space="preserve">
     <value>Personalization</value>
     <comment>Personalization text for SettingsPanel</comment>
   </data>
@@ -238,7 +238,7 @@ By: Michael A. Hawker</value>
     <value>On</value>
     <comment>Turn Power Binding on option for SettingsPanel</comment>
   </data>
-  <data name="SettingsPanel_XAML.Text" xml:space="preserve">
+  <data name="SettingsPanel_XAML.Header" xml:space="preserve">
     <value>XAML Compilation</value>
     <comment>XAML Compilation text for SettingsPanel</comment>
   </data>
@@ -310,7 +310,7 @@ By: Michael A. Hawker</value>
     <value>On</value>
     <comment>Alignment Grid on option</comment>
   </data>
-  <data name="SettingsPanel_AlignmentGrid.Text" xml:space="preserve">
+  <data name="SettingsPanel_AlignmentGrid.Header" xml:space="preserve">
     <value>Alignment Grid</value>
   </data>
   <data name="SettingsPanel_AlignmentGridHorizontalStep.Text" xml:space="preserve">
@@ -357,5 +357,17 @@ By: Michael A. Hawker</value>
     &lt;/Grid&gt;
 &lt;/Page&gt;</value>
     <comment>Default XAML for a new Document</comment>
+  </data>
+  <data name="SettingsPanel_About_OpenLogFolderButton.Content" xml:space="preserve">
+    <value>Open Log Location</value>
+    <comment>Button Text for opening the log location.</comment>
+  </data>
+  <data name="WebZoneWarning_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>Button text for not opening the file from the web zone warning dialog.</comment>
+  </data>
+  <data name="WebZoneWarning_Open" xml:space="preserve">
+    <value>Open File</value>
+    <comment>Button text for opening a file from the web zone warning dialog.</comment>
   </data>
 </root>

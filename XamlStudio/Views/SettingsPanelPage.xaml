@@ -23,164 +23,289 @@
         </DataTemplate>
     </Page.Resources>
 
-    <Grid Background="{ThemeResource Brush-Blue-Dark-2}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Border Grid.Row="0"
-                Style="{StaticResource VSCodeAppBarHeaderStyle}"
-                Visibility="Collapsed">
-            <TextBlock Style="{StaticResource VSCodeAppBarHeaderTextStyle}">SETTINGS</TextBlock>
-        </Border>
-        <ScrollViewer Grid.Row="1">
-            <StackPanel Margin="{StaticResource MediumLeftRightMargin}">
-                <!--  TODO: Make each of these sections collapsable in an expander?  -->
-                <TextBlock x:Uid="SettingsPanel_XAML"
-                           Margin="{StaticResource EightTopMargin}"
-                           Style="{StaticResource SubtitleTextBlockStyle}" />
-
-                <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
-                    <ToggleSwitch x:Name="AutoCompileToggle"
-                                  x:Uid="SettingsPanel_AutoCompileToggle"
-                                  Margin="0,4,0,0"
-                                  HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
-                                  IsOn="{x:Bind ViewModel.Settings.IsAutoCompileEnabled.Value, Mode=OneWay}"
-                                  Tag="IsAutoCompileEnabled">
-                        <i:Interaction.Behaviors>
-                            <ic:EventTriggerBehavior EventName="Toggled">
-                                <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
-                            </ic:EventTriggerBehavior>
-                        </i:Interaction.Behaviors>
-                    </ToggleSwitch>
-                </StackPanel>
-
-                <StackPanel Margin="{StaticResource SettingsSubheaderMargin}" Visibility="{x:Bind AutoCompileToggle.IsOn, Mode=OneWay}">
-                    <TextBlock x:Uid="SettingsPanel_AutoCompileDelay" Style="{StaticResource BodyTextStyle}" />
-                    <Grid Margin="0,4,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="30" />
-                        </Grid.ColumnDefinitions>
-                        <Slider x:Name="AutoCompileDelaySlider"
-                                x:Uid="SettingsPanel_AutoCompileDelaySlider"
-                                Grid.Column="0"
-                                HorizontalAlignment="Stretch"
-                                HorizontalContentAlignment="Stretch"
-                                LargeChange="1"
-                                Maximum="5"
-                                Minimum="0.5"
-                                SmallChange="0.1"
-                                StepFrequency="0.1"
-                                TickFrequency="1"
-                                TickPlacement="Outside"
-                                Value="{x:Bind ViewModel.Settings.AutoCompileDelay.Value, Mode=OneWay}">
+    <ScrollViewer Background="{ThemeResource Brush-Blue-Dark-2}">
+        <StackPanel Margin="{StaticResource MediumLeftRightMargin}">
+            <!--  TODO: Make each of these sections collapsable in an expander?  -->
+            <controls:Expander x:Uid="SettingsPanel_XAML"
+                               HorizontalContentAlignment="Stretch"
+                               VerticalContentAlignment="Top"
+                               Background="Transparent"
+                               HeaderStyle="{StaticResource SimpleExpanderStyle}"
+                               IsExpanded="True">
+                <StackPanel Margin="8,0,0,0">
+                    <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
+                        <ToggleSwitch x:Name="AutoCompileToggle"
+                                      x:Uid="SettingsPanel_AutoCompileToggle"
+                                      Margin="0,4,0,0"
+                                      HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
+                                      IsOn="{x:Bind ViewModel.Settings.IsAutoCompileEnabled.Value, Mode=OneWay}"
+                                      Tag="IsAutoCompileEnabled">
                             <i:Interaction.Behaviors>
-                                <ic:EventTriggerBehavior EventName="ValueChanged">
-                                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.DelayChangedCommand, Mode=OneWay}" />
+                                <ic:EventTriggerBehavior EventName="Toggled">
+                                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
                                 </ic:EventTriggerBehavior>
                             </i:Interaction.Behaviors>
-                        </Slider>
-                        <TextBlock Grid.Column="1"
-                                   MinWidth="30"
-                                   Margin="12,8,0,0"
-                                   Text="{x:Bind sys:String.Format('{0:0.0}', AutoCompileDelaySlider.Value), Mode=OneWay}" />
-                    </Grid>
-                </StackPanel>
-
-                <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
-                    <ToggleSwitch x:Name="SelectionCompileToggle"
-                                  x:Uid="SettingsPanel_SelectionCompileToggle"
-                                  Margin="0,4,0,0"
-                                  HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
-                                  IsOn="{x:Bind ViewModel.Settings.IsCompileSelectionEnabled.Value, Mode=OneWay}"
-                                  Tag="IsCompileSelectionEnabled">
-                        <i:Interaction.Behaviors>
-                            <ic:EventTriggerBehavior EventName="Toggled">
-                                <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
-                            </ic:EventTriggerBehavior>
-                        </i:Interaction.Behaviors>
-                    </ToggleSwitch>
-                </StackPanel>
-
-                <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
-                    <ToggleSwitch x:Name="PowerBindingToggle"
-                                  x:Uid="SettingsPanel_PowerBindingToggle"
-                                  Margin="0,4,0,0"
-                                  HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
-                                  IsOn="{x:Bind ViewModel.Settings.IsPowerBindingDebuggingEnabled.Value, Mode=OneWay}"
-                                  Tag="IsPowerBindingDebuggingEnabled">
-                        <i:Interaction.Behaviors>
-                            <ic:EventTriggerBehavior EventName="Toggled">
-                                <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
-                            </ic:EventTriggerBehavior>
-                        </i:Interaction.Behaviors>
-                    </ToggleSwitch>
-                </StackPanel>
-
-                <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
-                    <ToggleSwitch x:Name="UpdateContentToggle"
-                                  x:Uid="SettingsPanel_UpdateContentToggle"
-                                  Margin="0,4,0,0"
-                                  HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
-                                  IsOn="{x:Bind ViewModel.Settings.IsContentUpdatedWithSuggested.Value, Mode=OneWay}"
-                                  Tag="IsContentUpdatedWithSuggested">
-                        <i:Interaction.Behaviors>
-                            <ic:EventTriggerBehavior EventName="Toggled">
-                                <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
-                            </ic:EventTriggerBehavior>
-                        </i:Interaction.Behaviors>
-                    </ToggleSwitch>
-                </StackPanel>
-
-                <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock x:Uid="SettingsPanel_KnownNamespaces"
-                                   Margin="8,12"
-                                   Style="{StaticResource BodyTextStyle}" />
-                        <Button Click="AddNamespaceButton_Click" Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
-                            <SymbolIcon fex:SymbolIconExtensions.FontSize="14" Symbol="Add" />
-                        </Button>
+                        </ToggleSwitch>
                     </StackPanel>
-                    <controls:DataGrid x:Name="NamespaceDataGrid"
-                                       MaxHeight="450"
-                                       AutoGenerateColumns="False"
-                                       Background="{ThemeResource Brush-Blue-Dark-1}"
-                                       CanUserReorderColumns="False"
-                                       CanUserSortColumns="True"
-                                       PreparingCellForEdit="NamespaceDataGrid_PreparingCellForEdit"
-                                       IsReadOnly="False"
-                                       ItemsSource="{x:Bind ViewModel.Settings.KnownNamespaces, Mode=OneWay}"
-                                       RowEditEnded="DataGrid_RowEditEnded">
-                        <controls:DataGrid.Columns>
-                            <controls:DataGridTextColumn Width="SizeToCells"
-                                                         Binding="{Binding Name}"
-                                                         FontSize="20"
-                                                         Header="Shortcut" />
-                            <controls:DataGridTextColumn Width="SizeToCells"
-                                                         Binding="{Binding Path}"
-                                                         FontSize="20"
-                                                         Header="Namespace" />
-                            <controls:DataGridTemplateColumn>
-                                <controls:DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Click="RemoveNamespaceButton_Click"
-                                                CommandParameter="{Binding}"
-                                                Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
-                                            <SymbolIcon fex:SymbolIconExtensions.FontSize="12" Symbol="Delete" />
-                                        </Button>
-                                    </DataTemplate>
-                                </controls:DataGridTemplateColumn.CellTemplate>
-                            </controls:DataGridTemplateColumn>
-                        </controls:DataGrid.Columns>
-                    </controls:DataGrid>
+
+                    <StackPanel Margin="{StaticResource SettingsSubheaderMargin}" Visibility="{x:Bind AutoCompileToggle.IsOn, Mode=OneWay}">
+                        <TextBlock x:Uid="SettingsPanel_AutoCompileDelay" Style="{StaticResource BodyTextStyle}" />
+                        <Grid Margin="0,4,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="30" />
+                            </Grid.ColumnDefinitions>
+                            <Slider x:Name="AutoCompileDelaySlider"
+                                    x:Uid="SettingsPanel_AutoCompileDelaySlider"
+                                    Grid.Column="0"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Stretch"
+                                    LargeChange="1"
+                                    Maximum="5"
+                                    Minimum="0.5"
+                                    SmallChange="0.1"
+                                    StepFrequency="0.1"
+                                    TickFrequency="1"
+                                    TickPlacement="Outside"
+                                    Value="{x:Bind ViewModel.Settings.AutoCompileDelay.Value, Mode=OneWay}">
+                                <i:Interaction.Behaviors>
+                                    <ic:EventTriggerBehavior EventName="ValueChanged">
+                                        <ic:InvokeCommandAction Command="{x:Bind ViewModel.DelayChangedCommand, Mode=OneWay}" />
+                                    </ic:EventTriggerBehavior>
+                                </i:Interaction.Behaviors>
+                            </Slider>
+                            <TextBlock Grid.Column="1"
+                                       MinWidth="30"
+                                       Margin="12,8,0,0"
+                                       Text="{x:Bind sys:String.Format('{0:0.0}', AutoCompileDelaySlider.Value), Mode=OneWay}" />
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
+                        <ToggleSwitch x:Name="SelectionCompileToggle"
+                                      x:Uid="SettingsPanel_SelectionCompileToggle"
+                                      Margin="0,4,0,0"
+                                      HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
+                                      IsOn="{x:Bind ViewModel.Settings.IsCompileSelectionEnabled.Value, Mode=OneWay}"
+                                      Tag="IsCompileSelectionEnabled">
+                            <i:Interaction.Behaviors>
+                                <ic:EventTriggerBehavior EventName="Toggled">
+                                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
+                                </ic:EventTriggerBehavior>
+                            </i:Interaction.Behaviors>
+                        </ToggleSwitch>
+                    </StackPanel>
+
+                    <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
+                        <ToggleSwitch x:Name="PowerBindingToggle"
+                                      x:Uid="SettingsPanel_PowerBindingToggle"
+                                      Margin="0,4,0,0"
+                                      HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
+                                      IsOn="{x:Bind ViewModel.Settings.IsPowerBindingDebuggingEnabled.Value, Mode=OneWay}"
+                                      Tag="IsPowerBindingDebuggingEnabled">
+                            <i:Interaction.Behaviors>
+                                <ic:EventTriggerBehavior EventName="Toggled">
+                                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
+                                </ic:EventTriggerBehavior>
+                            </i:Interaction.Behaviors>
+                        </ToggleSwitch>
+                    </StackPanel>
+
+                    <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
+                        <ToggleSwitch x:Name="UpdateContentToggle"
+                                      x:Uid="SettingsPanel_UpdateContentToggle"
+                                      Margin="0,4,0,0"
+                                      HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
+                                      IsOn="{x:Bind ViewModel.Settings.IsContentUpdatedWithSuggested.Value, Mode=OneWay}"
+                                      Tag="IsContentUpdatedWithSuggested">
+                            <i:Interaction.Behaviors>
+                                <ic:EventTriggerBehavior EventName="Toggled">
+                                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
+                                </ic:EventTriggerBehavior>
+                            </i:Interaction.Behaviors>
+                        </ToggleSwitch>
+                    </StackPanel>
+
+                    <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock x:Uid="SettingsPanel_KnownNamespaces"
+                                       Margin="8,12"
+                                       Style="{StaticResource BodyTextStyle}" />
+                            <Button Click="AddNamespaceButton_Click" Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
+                                <SymbolIcon fex:SymbolIconExtensions.FontSize="14" Symbol="Add" />
+                            </Button>
+                        </StackPanel>
+                        <controls:DataGrid x:Name="NamespaceDataGrid"
+                                           MaxHeight="450"
+                                           AutoGenerateColumns="False"
+                                           Background="{ThemeResource Brush-Blue-Dark-1}"
+                                           CanUserReorderColumns="False"
+                                           CanUserSortColumns="True"
+                                           IsReadOnly="False"
+                                           ItemsSource="{x:Bind ViewModel.Settings.KnownNamespaces, Mode=OneWay}"
+                                           PreparingCellForEdit="NamespaceDataGrid_PreparingCellForEdit"
+                                           RowEditEnded="DataGrid_RowEditEnded">
+                            <controls:DataGrid.Columns>
+                                <controls:DataGridTextColumn Width="SizeToCells"
+                                                             Binding="{Binding Name}"
+                                                             FontSize="20"
+                                                             Header="Shortcut" />
+                                <controls:DataGridTextColumn Width="SizeToCells"
+                                                             Binding="{Binding Path}"
+                                                             FontSize="20"
+                                                             Header="Namespace" />
+                                <controls:DataGridTemplateColumn>
+                                    <controls:DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Click="RemoveNamespaceButton_Click"
+                                                    CommandParameter="{Binding}"
+                                                    Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
+                                                <SymbolIcon fex:SymbolIconExtensions.FontSize="12" Symbol="Delete" />
+                                            </Button>
+                                        </DataTemplate>
+                                    </controls:DataGridTemplateColumn.CellTemplate>
+                                </controls:DataGridTemplateColumn>
+                            </controls:DataGrid.Columns>
+                        </controls:DataGrid>
+                    </StackPanel>
                 </StackPanel>
+            </controls:Expander>
 
-                <TextBlock x:Uid="SettingsPanel_Personalization"
-                           Margin="{StaticResource EightTopMargin}"
-                           Style="{StaticResource SubtitleTextBlockStyle}" />
+            <!--  AlignmentGrid Properties  -->
+            <controls:Expander x:Uid="SettingsPanel_AlignmentGrid"
+                               HorizontalContentAlignment="Stretch"
+                               VerticalContentAlignment="Top"
+                               Background="Transparent"
+                               HeaderStyle="{StaticResource SimpleExpanderStyle}"
+                               IsExpanded="True">
+                <StackPanel Margin="8,0,0,0">
+                    <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
+                        <!--  AlignmentGrid - IsEnabled  -->
+                        <ToggleSwitch x:Name="AlignmentGridToggle"
+                                      x:Uid="SettingsPanel_AlignmentGridToggle"
+                                      Margin="0,4,0,0"
+                                      HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
+                                      IsOn="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled.Value, Mode=OneWay}"
+                                      Tag="IsAlignmentGridEnabled">
+                            <i:Interaction.Behaviors>
+                                <ic:EventTriggerBehavior EventName="Toggled">
+                                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
+                                </ic:EventTriggerBehavior>
+                            </i:Interaction.Behaviors>
+                        </ToggleSwitch>
 
-                <Grid>
+                        <!--  Hidden when disabled  -->
+                        <StackPanel Visibility="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled.Value, Mode=OneWay}">
+                            <!--  AlignmentGrid - Horizontal Step  -->
+                            <TextBlock x:Uid="SettingsPanel_AlignmentGridHorizontalStep" Style="{StaticResource BodyTextStyle}" />
+                            <Grid Margin="0,4,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="30" />
+                                </Grid.ColumnDefinitions>
+                                <Slider x:Name="AlignmentGridHorizontalStepSlider"
+                                        x:Uid="SettingsPanel_AlignmentGridHorizontalStepSlider"
+                                        Grid.Column="0"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Stretch"
+                                        LargeChange="12"
+                                        Maximum="100"
+                                        Minimum="0"
+                                        SmallChange="1"
+                                        StepFrequency="4"
+                                        TickFrequency="4"
+                                        TickPlacement="Outside"
+                                        Value="{x:Bind ViewModel.Settings.AlignmentGridHorizontalStep, Mode=TwoWay}" />
+                                <TextBlock Grid.Column="1"
+                                           MinWidth="30"
+                                           Margin="12,8,0,0"
+                                           Text="{x:Bind AlignmentGridHorizontalStepSlider.Value, Mode=OneWay}" />
+                            </Grid>
+
+                            <!--  AlignmentGrid - Vertical Step  -->
+                            <TextBlock x:Uid="SettingsPanel_AlignmentGridVerticalStep" Style="{StaticResource BodyTextStyle}" />
+                            <Grid Margin="0,4,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="30" />
+                                </Grid.ColumnDefinitions>
+                                <Slider x:Name="AlignmentGridVerticalStepSlider"
+                                        x:Uid="SettingsPanel_AlignmentGridVerticalStepSlider"
+                                        Grid.Column="0"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Stretch"
+                                        LargeChange="12"
+                                        Maximum="100"
+                                        Minimum="0"
+                                        SmallChange="1"
+                                        StepFrequency="4"
+                                        TickFrequency="4"
+                                        TickPlacement="Outside"
+                                        Value="{x:Bind ViewModel.Settings.AlignmentGridVerticalStep, Mode=TwoWay}" />
+                                <TextBlock Grid.Column="1"
+                                           MinWidth="30"
+                                           Margin="12,8,0,0"
+                                           Text="{x:Bind AlignmentGridVerticalStepSlider.Value, Mode=OneWay}" />
+                            </Grid>
+
+                            <!--  AlignmentGrid - Opacity  -->
+                            <TextBlock x:Uid="SettingsPanel_AlignmentGridOpacity" Style="{StaticResource BodyTextStyle}" />
+                            <Grid Margin="0,4,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="30" />
+                                </Grid.ColumnDefinitions>
+                                <Slider x:Name="AlignmentGridOpacitySlider"
+                                        x:Uid="SettingsPanel_AlignmentGridOpacitySlider"
+                                        Grid.Column="0"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Stretch"
+                                        LargeChange="0.2"
+                                        Maximum="1"
+                                        Minimum="0"
+                                        SmallChange="0.05"
+                                        StepFrequency="0.1"
+                                        TickFrequency="1"
+                                        TickPlacement="Outside"
+                                        Value="{x:Bind ViewModel.Settings.AlignmentGridOpacity, Mode=TwoWay}" />
+                                <TextBlock Grid.Column="1"
+                                           MinWidth="30"
+                                           Margin="12,8,0,0"
+                                           Text="{x:Bind AlignmentGridOpacitySlider.Value, Mode=OneWay}" />
+                            </Grid>
+
+                            <!--  AlignmentGrid - Color  -->
+                            <TextBlock x:Uid="SettingsPanel_AlignmentGridLineColor" Style="{StaticResource BodyTextStyle}" />
+                            <ComboBox HorizontalAlignment="Stretch"
+                                      ItemsSource="{x:Bind ViewModel.Colors, Mode=OneWay}"
+                                      SelectedItem="{x:Bind ViewModel.Settings.AlignmentGridColor, Mode=TwoWay, Converter={StaticResource HexToColorConverter}}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Grid Width="12"
+                                                  Height="12"
+                                                  Margin="0,0,4,0">
+                                                <Grid.Background>
+                                                    <SolidColorBrush Color="{Binding}" />
+                                                </Grid.Background>
+                                            </Grid>
+                                            <TextBlock Text="{Binding Converter={StaticResource ColorToNameConverter}}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </controls:Expander>
+
+            <controls:Expander x:Uid="SettingsPanel_Personalization"
+                               HorizontalContentAlignment="Stretch"
+                               VerticalContentAlignment="Top"
+                               Background="Transparent"
+                               HeaderStyle="{StaticResource SimpleExpanderStyle}"
+                               IsExpanded="True">
+                <Grid Margin="8,0,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition />
@@ -248,146 +373,32 @@
                         </StackPanel>
                     </StackPanel>
                 </Grid>
+            </controls:Expander>
 
-                <!--  AlignmentGrid Properties  -->
-                <TextBlock x:Uid="SettingsPanel_AlignmentGrid" Style="{StaticResource SubtitleTextBlockStyle}" />
+            <controls:Expander x:Uid="SettingsPanel_About"
+                               HorizontalContentAlignment="Stretch"
+                               VerticalContentAlignment="Top"
+                               Background="Transparent"
+                               HeaderStyle="{StaticResource SimpleExpanderStyle}"
+                               IsExpanded="True">
+                <StackPanel Margin="8,0,0,0">
+                    <StackPanel Margin="{StaticResource EightTopMargin}">
+                        <TextBlock Style="{StaticResource BodyTextStyle}" Text="{x:Bind ViewModel.VersionDescription, Mode=OneWay}" />
 
-                <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
-                    <!--  AlignmentGrid - IsEnabled  -->
-                    <ToggleSwitch x:Name="AlignmentGridToggle"
-                                  x:Uid="SettingsPanel_AlignmentGridToggle"
-                                  Margin="0,4,0,0"
-                                  HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
-                                  IsOn="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled.Value, Mode=OneWay}"
-                                  Tag="IsAlignmentGridEnabled">
-                        <i:Interaction.Behaviors>
-                            <ic:EventTriggerBehavior EventName="Toggled">
-                                <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
-                            </ic:EventTriggerBehavior>
-                        </i:Interaction.Behaviors>
-                    </ToggleSwitch>
+                        <TextBlock x:Uid="SettingsPanel_AboutDescription" Style="{StaticResource BodyTextStyle}" />
 
-                    <!--  Hidden when disabled  -->
-                    <StackPanel Visibility="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled.Value, Mode=OneWay}">
-                        <!--  AlignmentGrid - Horizontal Step  -->
-                        <TextBlock x:Uid="SettingsPanel_AlignmentGridHorizontalStep" Style="{StaticResource BodyTextStyle}" />
-                        <Grid Margin="0,4,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="30" />
-                            </Grid.ColumnDefinitions>
-                            <Slider x:Name="AlignmentGridHorizontalStepSlider"
-                                    x:Uid="SettingsPanel_AlignmentGridHorizontalStepSlider"
-                                    Grid.Column="0"
-                                    HorizontalAlignment="Stretch"
-                                    HorizontalContentAlignment="Stretch"
-                                    LargeChange="12"
-                                    Maximum="100"
-                                    Minimum="0"
-                                    SmallChange="1"
-                                    StepFrequency="4"
-                                    TickFrequency="4"
-                                    TickPlacement="Outside"
-                                    Value="{x:Bind ViewModel.Settings.AlignmentGridHorizontalStep, Mode=TwoWay}" />
-                            <TextBlock Grid.Column="1"
-                                       MinWidth="30"
-                                       Margin="12,8,0,0"
-                                       Text="{x:Bind AlignmentGridHorizontalStepSlider.Value, Mode=OneWay}" />
-                        </Grid>
+                        <HyperlinkButton x:Uid="SettingsPanel_PrivacyTermsLink" Margin="{StaticResource EightTopMargin}" />
 
-                        <!--  AlignmentGrid - Vertical Step  -->
-                        <TextBlock x:Uid="SettingsPanel_AlignmentGridVerticalStep" Style="{StaticResource BodyTextStyle}" />
-                        <Grid Margin="0,4,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="30" />
-                            </Grid.ColumnDefinitions>
-                            <Slider x:Name="AlignmentGridVerticalStepSlider"
-                                    x:Uid="SettingsPanel_AlignmentGridVerticalStepSlider"
-                                    Grid.Column="0"
-                                    HorizontalAlignment="Stretch"
-                                    HorizontalContentAlignment="Stretch"
-                                    LargeChange="12"
-                                    Maximum="100"
-                                    Minimum="0"
-                                    SmallChange="1"
-                                    StepFrequency="4"
-                                    TickFrequency="4"
-                                    TickPlacement="Outside"
-                                    Value="{x:Bind ViewModel.Settings.AlignmentGridVerticalStep, Mode=TwoWay}" />
-                            <TextBlock Grid.Column="1"
-                                       MinWidth="30"
-                                       Margin="12,8,0,0"
-                                       Text="{x:Bind AlignmentGridVerticalStepSlider.Value, Mode=OneWay}" />
-                        </Grid>
-
-                        <!--  AlignmentGrid - Opacity  -->
-                        <TextBlock x:Uid="SettingsPanel_AlignmentGridOpacity" Style="{StaticResource BodyTextStyle}" />
-                        <Grid Margin="0,4,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="30" />
-                            </Grid.ColumnDefinitions>
-                            <Slider x:Name="AlignmentGridOpacitySlider"
-                                    x:Uid="SettingsPanel_AlignmentGridOpacitySlider"
-                                    Grid.Column="0"
-                                    HorizontalAlignment="Stretch"
-                                    HorizontalContentAlignment="Stretch"
-                                    LargeChange="0.2"
-                                    Maximum="1"
-                                    Minimum="0"
-                                    SmallChange="0.05"
-                                    StepFrequency="0.1"
-                                    TickFrequency="1"
-                                    TickPlacement="Outside"
-                                    Value="{x:Bind ViewModel.Settings.AlignmentGridOpacity, Mode=TwoWay}" />
-                            <TextBlock Grid.Column="1"
-                                       MinWidth="30"
-                                       Margin="12,8,0,0"
-                                       Text="{x:Bind AlignmentGridOpacitySlider.Value, Mode=OneWay}" />
-                        </Grid>
-
-                        <!--  AlignmentGrid - Color  -->
-                        <TextBlock x:Uid="SettingsPanel_AlignmentGridLineColor" Style="{StaticResource BodyTextStyle}" />
-                        <ComboBox HorizontalAlignment="Stretch"
-                                  ItemsSource="{x:Bind ViewModel.Colors, Mode=OneWay}"
-                                  SelectedItem="{x:Bind ViewModel.Settings.AlignmentGridColor, Mode=TwoWay, Converter={StaticResource HexToColorConverter}}">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Grid Width="12"
-                                              Height="12"
-                                              Margin="0,0,4,0">
-                                            <Grid.Background>
-                                                <SolidColorBrush Color="{Binding}" />
-                                            </Grid.Background>
-                                        </Grid>
-                                        <TextBlock Text="{Binding Converter={StaticResource ColorToNameConverter}}" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-                    </StackPanel>
-                </StackPanel>
-
-                <TextBlock x:Uid="SettingsPanel_About" Style="{StaticResource SubtitleTextBlockStyle}" />
-
-                <StackPanel Margin="{StaticResource EightTopMargin}">
-                    <TextBlock Style="{StaticResource BodyTextStyle}" Text="{x:Bind ViewModel.VersionDescription, Mode=OneWay}" />
-
-                    <TextBlock x:Uid="SettingsPanel_AboutDescription" Style="{StaticResource BodyTextStyle}" />
-
-                    <HyperlinkButton x:Uid="SettingsPanel_PrivacyTermsLink" Margin="{StaticResource EightTopMargin}" />
-
-                    <!-- TODO: <HyperlinkButton
+                        <!-- TODO: <HyperlinkButton
                         Margin="{StaticResource EightTopMargin}"
                         x:Uid="FeedbackHub_Link"
                         Command="{x:Bind ViewModel.LaunchFeedbackHubCommand, Mode=OneWay}"
                         Visibility="{x:Bind ViewModel.FeedbackLinkVisibility, Mode=OneWay}" />-->
 
-                    <Button Click="ButtonOpenLogFolder_Click">Open Log Location</Button>
+                        <Button x:Uid="SettingsPanel_About_OpenLogFolderButton" Click="ButtonOpenLogFolder_Click" />
+                    </StackPanel>
                 </StackPanel>
-            </StackPanel>
-        </ScrollViewer>
-    </Grid>
+            </controls:Expander>
+        </StackPanel>
+    </ScrollViewer>
 </Page>
