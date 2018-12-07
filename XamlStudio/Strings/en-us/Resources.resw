@@ -341,4 +341,21 @@ By: Michael A. Hawker</value>
     <value>An issue was encountered saving file '{0}' and it could not be saved.</value>
     <comment>Error message when encountering an issue with saving.</comment>
   </data>
+  <data name="NewDocumentTemplate" xml:space="preserve">
+    <value>&lt;Page
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"&gt;
+
+    &lt;Grid Padding="40"&gt;
+        &lt;TextBlock&gt;
+            &lt;Run FontSize="24" Foreground="#FFFC5185"&gt;Get Started with XAML Studio&lt;/Run&gt;&lt;LineBreak/&gt;
+            &lt;Run&gt; Modify this text below to see a live preview.&lt;/Run&gt;
+        &lt;/TextBlock&gt;
+    &lt;/Grid&gt;
+&lt;/Page&gt;</value>
+    <comment>Default XAML for a new Document</comment>
+  </data>
 </root>

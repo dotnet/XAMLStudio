@@ -25,22 +25,8 @@ namespace XamlStudio.ViewModels
         {
             OpenFiles.Add(new Models.XamlDocument("Untitled-" + _untitledCount++)
             {
-                // TODO: Make this template somewhere editable
-                Content =
-@"<Page
-    xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
-    xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""
-    xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
-    xmlns:mc=""http://schemas.openxmlformats.org/markup-compatibility/2006""
-    mc:Ignorable=""d"">
-
-    <Grid Padding=""40"">
-        <TextBlock>
-            <Run FontSize=""24"" Foreground=""#FFFC5185"">Get Started with XAML Studio</Run><LineBreak/>
-            <Run> Modify this text below to see a live preview.</Run>
-        </TextBlock>
-    </Grid>
-</Page>"
+                // TODO: Make this template somewhere user-editable?
+                Content = "NewDocumentTemplate".GetLocalized()
             });
 
             ActiveFile = OpenFiles.Last();
