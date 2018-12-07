@@ -27,8 +27,8 @@ namespace XamlStudio.Services
         /// </summary>
         public static void Initialize()
         {
-            FileLogger.Instance.Initialize();
             fileLogger = FileLogger.Instance;
+            FileLogger.Instance.Initialize();
 
             ResetSessionId();
 
