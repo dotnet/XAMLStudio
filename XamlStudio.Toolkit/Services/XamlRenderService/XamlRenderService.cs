@@ -194,7 +194,7 @@ namespace XamlStudio.Toolkit.Services
                 return string.Empty;
             }
 
-            var lines = content.Split("\r\n");
+            var lines = content.Split("\n");
 
             if (lineNumber > lines.Count() + 1)
             {
