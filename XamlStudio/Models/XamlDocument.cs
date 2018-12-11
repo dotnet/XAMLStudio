@@ -129,7 +129,7 @@ namespace XamlStudio.Models
         private async Task<bool> SaveAsAsyncInternal(StorageFile newfile)
         {
             // Call save if this is the same file.
-            if (BackingFile.Equals(newfile))
+            if (BackingFile?.Equals(newfile) == true)
             {
                 return await SaveAsyncInternal();
             }
