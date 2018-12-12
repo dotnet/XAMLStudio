@@ -36,25 +36,31 @@ namespace XamlStudio.Toolkit.Services
 
                 // TODO: Need to force inject these to RenderedContent in PreProcessXmlns step.
 
-                // Need 'x' namespace for resource key in our converter wrapper...
-                if (!context.RenderedContent.Contains("xmlns:x"))
-                {
-                    // Find the end of the first tag
-                    var oti = context.RenderedContent.IndexOf(">");
-                    if (oti != -1)
-                    {
-                        context.RenderedContent = context.RenderedContent.Substring(0, oti) + @" xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""" + context.RenderedContent.Substring(oti);
-                    }
-                }
+                // Find the end of the first tag
+                var match = GetInitialElement(context.RenderedContent);
 
-                // Inject our extension namespace (if needed), so we have access to our Binding Wrapper.
-                if (!context.RenderedContent.Contains("xmlns:xstc="))
+                if (match?.Success == true)
                 {
-                    // Find the end of the first tag
-                    var oti = context.RenderedContent.IndexOf(">");
-                    if (oti != -1)
+                    // Need 'x' namespace for resource key in our converter wrapper...
+                    if (!context.RenderedContent.Contains("xmlns:x"))
                     {
-                        context.RenderedContent = context.RenderedContent.Substring(0, oti) + @" xmlns:xstc=""using:XamlStudio.Toolkit.Converters""" + context.RenderedContent.Substring(oti);
+                        // Find the end of the first tag
+                        var oti = context.RenderedContent.IndexOf(">", match.Index + 1);
+                        if (oti != -1)
+                        {
+                            context.RenderedContent = context.RenderedContent.Substring(0, oti) + @" xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""" + context.RenderedContent.Substring(oti);
+                        }
+                    }
+
+                    // Inject our extension namespace (if needed), so we have access to our Binding Wrapper.
+                    if (!context.RenderedContent.Contains("xmlns:xstc="))
+                    {
+                        // Find the end of the first tag
+                        var oti = context.RenderedContent.IndexOf(">", match.Index + 1);
+                        if (oti != -1)
+                        {
+                            context.RenderedContent = context.RenderedContent.Substring(0, oti) + @" xmlns:xstc=""using:XamlStudio.Toolkit.Converters""" + context.RenderedContent.Substring(oti);
+                        }
                     }
                 }
 
@@ -65,16 +71,20 @@ namespace XamlStudio.Toolkit.Services
                 {
                     context.RenderedContent = context.RenderedContent.Replace(resourceSearch, resourceSearch + converter);
                 }
-                else
+                else if (match?.Success == true)
                 {
                     // TODO: should use preparser stuff here for end of tag.  
-                    // BUGBUG: Also need to account for a closed tag...
+                    // BUGBUG: Also need to account for a single closed tag...
                     // If we don't have an existing resource section, add one right after our initial type tag.
-                    var oti = context.RenderedContent.IndexOf(">");
+                    var oti = context.RenderedContent.IndexOf(">", match.Index);
                     if (oti != -1)
                     {
                         context.RenderedContent = context.RenderedContent.Substring(0, oti + 1) + resourceSearch + converter + "</" + typename + ".Resources>" + context.RenderedContent.Substring(oti + 1);
                     }
+                }
+                else
+                {
+                    // TODO: If we don't know the first tag??? Don't think this should happen?
                 }
             }
         }

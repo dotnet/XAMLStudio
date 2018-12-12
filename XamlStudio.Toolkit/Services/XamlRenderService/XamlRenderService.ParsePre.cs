@@ -17,7 +17,7 @@ namespace XamlStudio.Toolkit.Services
     
     public partial class XamlRenderService
     {
-        private const string RegexPattern_FirstTagAfterComment = @"^.*?(?!(<\?|<!))<[^<]*?>";
+        private const string RegexPattern_FirstTagAfterComment = @"(?!(<\?|<!))*<[^<!\?]*?>";
         private const string RegexPattern_ElementName = "<((?<Prefix>\\w+):)?(?<Type>\\w+)";
 
         private static Regex _initialTagSearcher = new Regex(RegexPattern_FirstTagAfterComment, RegexOptions.Compiled);
