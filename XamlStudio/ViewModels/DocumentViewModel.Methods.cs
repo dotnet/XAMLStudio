@@ -46,14 +46,14 @@ namespace XamlStudio.ViewModels
             await InternalRenderXamlAsync(content, 0, true);
         }
 
-        private async Task<string> InternalRenderXamlAsync(string content, uint lineoffset, bool keepContentSameLength)
+        private async Task<string> InternalRenderXamlAsync(string content, uint lineoffset, bool keepContentSameLength, bool overrideBinding = false)
         {
             LineDecorations.Clear(); // Clear out old errors
             _bindingHistory.Clear();
 
             var settings = new XamlRenderSettings(SettingsService.Instance.KnownNamespaces)
             {
-                IsBindingDebuggingEnabled = SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value,
+                IsBindingDebuggingEnabled = overrideBinding ? false : SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value,
                 KeepSuggestedContentSameLength = keepContentSameLength,
                 DataContext = DataContext
             };
@@ -63,12 +63,20 @@ namespace XamlStudio.ViewModels
             await FileIO.WriteTextAsync(file, content);
             Debug.WriteLine("Render File Out: " + file.Path);
 
-            Result = await XamlRenderer.RenderAsync(content, settings);
+            // Store in temp to prevent double-display of errors due to issue below needing double-render...
+            var testResult = await XamlRenderer.RenderAsync(content, settings);
 
-            if (Result.Element == null)
+            if (testResult.Element == null)
             {
+                // TODO: Need to investigate why we get strange XamlBindingWrapperConverter ctor error with other errors...
+                if (settings.IsBindingDebuggingEnabled)
+                {
+                    // For now, if we encounter an issue while parsing with our power binding, turn it off temporarily to try again.
+                    return await InternalRenderXamlAsync(content, lineoffset, keepContentSameLength, true);
+                }
+
                 // Highlight Errors
-                foreach (var error in Result.Errors)
+                foreach (var error in testResult.Errors)
                 {
                     LineDecorations.Add(new IModelDeltaDecoration(new Range(lineoffset + error.StartLine, error.StartColumn, lineoffset + error.EndLine, error.EndColumn),
                         new IModelDecorationOptions()
@@ -81,9 +89,13 @@ namespace XamlStudio.ViewModels
                             }.ToMarkdownString()
                         }));
                 }
+
+                Result = testResult;
             }
             else
             {
+                Result = testResult;
+
                 CreateBindingDecorations();
             }
 

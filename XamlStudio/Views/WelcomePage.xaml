@@ -95,9 +95,6 @@
                        Foreground="{ThemeResource Brush-Grey-Light-0}"
                        Text="Known Issues" />
             <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}">
-                - Compile errors don't display in the right place in the editor<LineBreak />
-                &#160;&#160;when binding debugging enabled.</TextBlock>
-            <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}">
                 - Data Source Panel needs Open Local, Open Remote, and Save buttons.
             </TextBlock>
             <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}">
