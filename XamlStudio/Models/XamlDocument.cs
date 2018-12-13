@@ -43,7 +43,7 @@ namespace XamlStudio.Models
         private string _title;
         public string Title
         {
-            get { return _title + (_dirty ? "*": ""); }
+            get { return (_dirty ? "*": "") + _title; }
             set { Set(ref _title, value); }
         }
 
