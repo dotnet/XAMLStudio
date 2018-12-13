@@ -81,7 +81,7 @@
                         </Grid>
                     </StackPanel>
 
-                    <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
+                    <!--<StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
                         <ToggleSwitch x:Name="SelectionCompileToggle"
                                       x:Uid="SettingsPanel_SelectionCompileToggle"
                                       Margin="0,4,0,0"
@@ -94,7 +94,7 @@
                                 </ic:EventTriggerBehavior>
                             </i:Interaction.Behaviors>
                         </ToggleSwitch>
-                    </StackPanel>
+                    </StackPanel>-->
 
                     <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
                         <ToggleSwitch x:Name="PowerBindingToggle"

@@ -33,6 +33,8 @@ namespace XamlStudio.ViewModels
             {
                 // Update our document with suggested changes.
                 Document.Content = newcontent;
+
+                // BUGBUG: TODO: Need to restore cursor location!
             }
 
             HasCompiled = true;
@@ -198,16 +200,16 @@ namespace XamlStudio.ViewModels
             if ((args.KeyCode == 13 && args.CtrlKey) ||
                  args.KeyCode == 116)
             {
-                if (args.KeyCode == 116 &&
-                    SettingsService.Instance.IsCompileSelectionEnabled.Value == true &&
-                    !string.IsNullOrWhiteSpace(SelectedText))
-                {
-                    SelectiveRenderXaml(SelectedText);
-                }
-                else
-                {
+                ////if (args.KeyCode == 116 &&
+                ////    SettingsService.Instance.IsCompileSelectionEnabled.Value == true &&
+                ////    !string.IsNullOrWhiteSpace(SelectedText))
+                ////{
+                ////    SelectiveRenderXaml(SelectedText);
+                ////}
+                ////else
+                ////{
                     UpdateXaml(null);
-                }
+                ////}
 
                 // Eat key stroke
                 args.Handled = true;

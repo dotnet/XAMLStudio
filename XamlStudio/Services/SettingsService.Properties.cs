@@ -28,12 +28,12 @@ namespace XamlStudio.Services
             set { Set(value); }
         }
 
-        [DefaultValue(false)]
-        public bool? IsCompileSelectionEnabled
-        {
-            get { return Get<bool?>(); }
-            set { Set(value); }
-        }
+        ////[DefaultValue(false)]
+        ////public bool? IsCompileSelectionEnabled
+        ////{
+        ////    get { return Get<bool?>(); }
+        ////    set { Set(value); }
+        ////}
 
         [DefaultValue(false)]
         public bool? IsPowerBindingDebuggingEnabled
