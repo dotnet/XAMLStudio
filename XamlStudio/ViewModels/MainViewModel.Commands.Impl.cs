@@ -139,7 +139,7 @@ namespace XamlStudio.ViewModels
 
             if (document.CanSave)
             {
-                name = document.BackingFile.DisplayName + " Copy";
+                name = document.DisplayName + " Copy";
             }
 
             var file = await SaveFileDialog(name);

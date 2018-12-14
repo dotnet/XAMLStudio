@@ -98,9 +98,6 @@
                 - Data Source Panel needs Open Local, Open Remote, and Save buttons.
             </TextBlock>
             <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}">
-                - Should save files/workbench state on exit to reload on start.
-            </TextBlock>
-            <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}">
                 - Figure out what to put here when there's no issues...
             </TextBlock>
         </StackPanel>

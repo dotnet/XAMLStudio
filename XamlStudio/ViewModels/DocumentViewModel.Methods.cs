@@ -1,6 +1,7 @@
 ﻿using Monaco;
 using Monaco.Editor;
 using Monaco.Helpers;
+using Nito.AsyncEx;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -10,12 +11,15 @@ using Windows.UI.Xaml;
 using XamlStudio.Helpers;
 using XamlStudio.Services;
 using XamlStudio.Toolkit.Controls;
+using XamlStudio.Toolkit.Helpers;
 using XamlStudio.Toolkit.Models;
 
 namespace XamlStudio.ViewModels
 {
     public partial class DocumentViewModel
     {
+        private readonly AsyncLock _renderMutex = new AsyncLock();
+
         // TODO: Need to align these two methods for rendering.
         private async void UpdateXaml(RoutedEventArgs args)
         {
@@ -60,10 +64,17 @@ namespace XamlStudio.ViewModels
                 DataContext = DataContext
             };
 
-            // Log XAML before rendering in case issue, we can retrieve later for bugs
-            var file = await ApplicationData.Current.LocalFolder.CreateFileAsync("lastcompiled.xaml", CreationCollisionOption.ReplaceExisting);
-            await FileIO.WriteTextAsync(file, content);
-            Debug.WriteLine("Render File Out: " + file.Path);
+            // Only render one at a time to not stomp on files.
+            using (await _renderMutex.LockAsync())
+            {
+                // Save out workbench in case of error.  Should this just be done in unhandled exception case?
+                await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
+
+                // Log XAML before rendering in case issue, we can retrieve later for bugs
+                var file = await ApplicationData.Current.LocalFolder.CreateFileAsync("lastcompiled.xaml", CreationCollisionOption.ReplaceExisting);
+                await FileIO.WriteTextAsync(file, content);
+                Debug.WriteLine("Render File Out: " + file.Path);
+            }
 
             // Store in temp to prevent double-display of errors due to issue below needing double-render...
             var testResult = await XamlRenderer.RenderAsync(content, settings);

@@ -1,8 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
 using XamlStudio.Helpers;
 
 namespace XamlStudio.Models
@@ -15,7 +19,7 @@ namespace XamlStudio.Models
         Settings
     }
 
-    public sealed class XamlDocument: Observable
+    public sealed class XamlDocument: SimpleObservable
     {
         /// <summary>
         /// Dummy for switching to Welcome Screen.
@@ -44,7 +48,7 @@ namespace XamlStudio.Models
         public string Title
         {
             get { return (_dirty ? "*": "") + _title; }
-            set { Set(ref _title, value); }
+            set { Set(ref _title, value.Trim('*')); }
         }
 
         private bool _dirty;
@@ -53,7 +57,7 @@ namespace XamlStudio.Models
             get { return _dirty; }
             set {
                 Set(ref _dirty, value);
-                OnPropertyChanged("Title"); // Update Title based on dirty flag
+                OnPropertyChanged(nameof(Title)); // Update Title based on dirty flag
             }
         }
 
@@ -67,12 +71,20 @@ namespace XamlStudio.Models
             set { Set(ref _active, value); }
         }
 
-        /// <summary>
-        /// OS File backing this document.
-        /// </summary>
-        public StorageFile BackingFile { get; internal set; }
+        public string StorageToken { get; set; }
 
-        public bool CanSave { get { return this.BackingFile != null; } }
+        /// <summary>
+        /// OS File backing this document.  Needed for Defer Updates, don't use.
+        /// </summary>
+        [JsonIgnore]
+        internal StorageFile BackingFile { get; set; }
+
+        [JsonIgnore]
+        public string DisplayName { get { return BackingFile.DisplayName; } }
+
+        public bool CanSave { get { return BackingFile != null; } }
+
+        internal XamlDocument() { }
 
         public XamlDocument(string title)
         {
@@ -82,6 +94,22 @@ namespace XamlStudio.Models
         private XamlDocument(StorageFile file)
         {
             this.BackingFile = file;
+
+            // Should this be here vs. in a separate ViewModel stuff?
+            if (string.IsNullOrWhiteSpace(StorageToken))
+            {
+                StorageToken = Guid.NewGuid().ToString();
+            }
+
+            StorageApplicationPermissions.FutureAccessList.AddOrReplace(StorageToken, BackingFile);
+        }
+
+        internal async Task RestoreFileAsync()
+        {
+            if (!string.IsNullOrWhiteSpace(StorageToken))
+            {
+                BackingFile = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(StorageToken);
+            }
         }
 
         /// <summary>
@@ -141,6 +169,10 @@ namespace XamlStudio.Models
             {
                 // Update Title after save.
                 this.Title = newfile.DisplayName;
+
+                // Save new token to access list.
+                StorageToken = Guid.NewGuid().ToString();
+                StorageApplicationPermissions.FutureAccessList.AddOrReplace(StorageToken, BackingFile);
 
                 return true;
             }

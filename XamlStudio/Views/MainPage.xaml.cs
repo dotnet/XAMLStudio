@@ -1,17 +1,17 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
 using XamlStudio.Models;
 using XamlStudio.Services;
 using XamlStudio.Toolkit.Services;
 using XamlStudio.ViewModels;
-using Windows.UI.Xaml.Controls.Primitives;
 using System.Reflection;
+using XamlStudio.Toolkit.Helpers;
+using Newtonsoft.Json;
+using System.Collections.ObjectModel;
 
 namespace XamlStudio.Views
 {
@@ -20,6 +20,7 @@ namespace XamlStudio.Views
         public MainViewModel ViewModel { get; }
 
         private IStorageItem[] _filesToLoad;
+        private XamlDocument[] _filesToRestore;
 
         public MainPage()
         {
@@ -30,6 +31,14 @@ namespace XamlStudio.Views
             Loaded += MainPage_Loaded;
 
             Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
+
+            Singleton<SuspendAndResumeService>.Instance.OnBackgroundEntering += Instance_OnBackgroundEntering;
+        }
+
+        private void Instance_OnBackgroundEntering(object sender, OnBackgroundEnteringEventArgs e)
+        {
+            // Save State of Documents here
+            e.SuspensionState.OpenFiles = ViewModel.OpenFiles.ToArray();
         }
 
         private void CoreWindow_KeyDown(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs args)
@@ -58,6 +67,12 @@ namespace XamlStudio.Views
 
             await ViewModel.SettingsViewModel.Settings.InitializeAndLoad();
 
+            if (_filesToRestore != null && _filesToRestore.Length > 0)
+            {
+                await ViewModel.RestoreWorkspaceAsync(_filesToRestore);
+                _filesToRestore = null;
+            }
+
             if (_filesToLoad != null)
             {
                 // Load Files
@@ -71,9 +86,14 @@ namespace XamlStudio.Views
             // Code to handle case when activating during launch.
             base.OnNavigatedTo(e);
 
+            // TODO: Handle both restoring workspace and opening files?
             if (e.Parameter is IStorageItem[] files)
             {
                 _filesToLoad = files;
+            }
+            else if (e.Parameter is SuspensionState state)
+            {
+                _filesToRestore = state.OpenFiles;
             }
         }
 

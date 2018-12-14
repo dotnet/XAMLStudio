@@ -34,9 +34,9 @@
               Background="{ThemeResource Brush-Blue-Dark-2}" />
 
         <developerTools:AlignmentGrid Grid.Row="0"
-                                      HorizontalStep="{x:Bind ViewModel.Settings.AlignmentGridHorizontalStep, Mode=OneWay}"
+                                      HorizontalStep="{x:Bind ViewModel.Settings.AlignmentGridHorizontalStep, Mode=OneWay, FallbackValue=8}"
                                       Opacity="{x:Bind ViewModel.Settings.AlignmentGridOpacity, Mode=OneWay}"
-                                      VerticalStep="{x:Bind ViewModel.Settings.AlignmentGridVerticalStep, Mode=OneWay}"
+                                      VerticalStep="{x:Bind ViewModel.Settings.AlignmentGridVerticalStep, Mode=OneWay, FallbackValue=8}"
                                       Visibility="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled, Mode=OneWay}">
             <developerTools:AlignmentGrid.LineBrush>
                 <SolidColorBrush Color="{x:Bind ViewModel.Settings.AlignmentGridColor, Mode=OneWay, Converter={StaticResource HexToColorConverter}}" />

@@ -98,33 +98,33 @@ namespace XamlStudio.Services
             set { Set(value); }
         }
 
-        public string DefaultWorkspaceFolderToken
-        {
-            get { return Get<string>(); }
-            set { Set(value); }
-        }
+        ////public string DefaultWorkspaceFolderToken
+        ////{
+        ////    get { return Get<string>(); }
+        ////    set { Set(value); }
+        ////}
 
-        public StorageFolder DefaultWorkspaceFolder
-        {
-            get
-            {
-                var foldertoken = DefaultWorkspaceFolderToken;
-                if (String.IsNullOrEmpty(foldertoken))
-                {
-                    return null;
-                }
+        ////public StorageFolder DefaultWorkspaceFolder
+        ////{
+        ////    get
+        ////    {
+        ////        var foldertoken = DefaultWorkspaceFolderToken;
+        ////        if (String.IsNullOrEmpty(foldertoken))
+        ////        {
+        ////            return null;
+        ////        }
 
-                return Task.Run(async () => {
-                    try
-                    {
-                        return await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(foldertoken);
-                    }
-                    catch (Exception)
-                    {
-                        return null;
-                    }
-                }).Result;
-            }
-        }
+        ////        return Task.Run(async () => {
+        ////            try
+        ////            {
+        ////                return await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(foldertoken);
+        ////            }
+        ////            catch (Exception)
+        ////            {
+        ////                return null;
+        ////            }
+        ////        }).Result;
+        ////    }
+        ////}
     }
 }
