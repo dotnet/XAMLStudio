@@ -20,7 +20,7 @@ namespace XamlStudio.Views
         public MainViewModel ViewModel { get; }
 
         private IStorageItem[] _filesToLoad;
-        private XamlDocument[] _filesToRestore;
+        private SuspensionState _restoreState;
 
         public MainPage()
         {
@@ -39,6 +39,9 @@ namespace XamlStudio.Views
         {
             // Save State of Documents here
             e.SuspensionState.OpenFiles = ViewModel.OpenFiles.ToArray();
+
+            // Save Open Drawer, null = closed.
+            e.SuspensionState.OpenActivity = (NavMenu.SelectedItems.FirstOrDefault() as ListBoxItem)?.Tag?.ToString();
         }
 
         private void CoreWindow_KeyDown(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs args)
@@ -67,10 +70,22 @@ namespace XamlStudio.Views
 
             await ViewModel.SettingsViewModel.Settings.InitializeAndLoad();
 
-            if (_filesToRestore != null && _filesToRestore.Length > 0)
+            if (_restoreState != null)
             {
-                await ViewModel.RestoreWorkspaceAsync(_filesToRestore);
-                _filesToRestore = null;
+                if (!string.IsNullOrWhiteSpace(_restoreState.OpenActivity))
+                {
+                    NavMenu.SelectedItem = NavMenu.Items.FirstOrDefault(item => (item as ListBoxItem).Tag.ToString() == _restoreState.OpenActivity);
+                }
+                else
+                {
+                    NavMenu.SelectedItem = null;
+                }
+
+                if (_restoreState.OpenFiles != null && _restoreState.OpenFiles.Length > 0)
+                {
+                    await ViewModel.RestoreWorkspaceAsync(_restoreState.OpenFiles);
+                    _restoreState = null;
+                }
             }
 
             if (_filesToLoad != null)
@@ -93,7 +108,7 @@ namespace XamlStudio.Views
             }
             else if (e.Parameter is SuspensionState state)
             {
-                _filesToRestore = state.OpenFiles;
+                _restoreState = state;
             }
         }
 
