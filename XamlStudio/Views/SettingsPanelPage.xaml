@@ -25,7 +25,7 @@
 
     <ScrollViewer Background="{ThemeResource Brush-Blue-Dark-2}">
         <StackPanel Margin="{StaticResource MediumLeftRightMargin}">
-            <!--  TODO: Make each of these sections collapsable in an expander?  -->
+            <!--  XAML Properties  -->
             <controls:Expander x:Uid="SettingsPanel_XAML"
                                HorizontalContentAlignment="Stretch"
                                VerticalContentAlignment="Top"
@@ -129,7 +129,7 @@
                     <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock x:Uid="SettingsPanel_KnownNamespaces"
-                                       Margin="8,12"
+                                       Margin="0,8,0,12"
                                        Style="{StaticResource BodyTextStyle}" />
                             <Button Click="AddNamespaceButton_Click" Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
                                 <SymbolIcon fex:SymbolIconExtensions.FontSize="14" Symbol="Add" />
@@ -197,7 +197,9 @@
                         <!--  Hidden when disabled  -->
                         <StackPanel Visibility="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled.Value, Mode=OneWay}">
                             <!--  AlignmentGrid - Horizontal Step  -->
-                            <TextBlock x:Uid="SettingsPanel_AlignmentGridHorizontalStep" Style="{StaticResource BodyTextStyle}" />
+                            <TextBlock x:Uid="SettingsPanel_AlignmentGridHorizontalStep"
+                                       Margin="0,12,0,0"
+                                       Style="{StaticResource BodyTextStyle}" />
                             <Grid Margin="0,4,0,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
@@ -223,7 +225,9 @@
                             </Grid>
 
                             <!--  AlignmentGrid - Vertical Step  -->
-                            <TextBlock x:Uid="SettingsPanel_AlignmentGridVerticalStep" Style="{StaticResource BodyTextStyle}" />
+                            <TextBlock x:Uid="SettingsPanel_AlignmentGridVerticalStep"
+                                       Margin="0,12,0,0"
+                                       Style="{StaticResource BodyTextStyle}" />
                             <Grid Margin="0,4,0,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
@@ -249,7 +253,9 @@
                             </Grid>
 
                             <!--  AlignmentGrid - Opacity  -->
-                            <TextBlock x:Uid="SettingsPanel_AlignmentGridOpacity" Style="{StaticResource BodyTextStyle}" />
+                            <TextBlock x:Uid="SettingsPanel_AlignmentGridOpacity"
+                                       Margin="0,12,0,0"
+                                       Style="{StaticResource BodyTextStyle}" />
                             <Grid Margin="0,4,0,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
@@ -275,7 +281,9 @@
                             </Grid>
 
                             <!--  AlignmentGrid - Color  -->
-                            <TextBlock x:Uid="SettingsPanel_AlignmentGridLineColor" Style="{StaticResource BodyTextStyle}" />
+                            <TextBlock x:Uid="SettingsPanel_AlignmentGridLineColor"
+                                       Margin="0,12,0,4"
+                                       Style="{StaticResource BodyTextStyle}" />
                             <ComboBox HorizontalAlignment="Stretch"
                                       ItemsSource="{x:Bind ViewModel.Colors, Mode=OneWay}"
                                       SelectedItem="{x:Bind ViewModel.Settings.AlignmentGridColor, Mode=TwoWay, Converter={StaticResource HexToColorConverter}}">
@@ -381,22 +389,37 @@
                                Background="Transparent"
                                HeaderStyle="{StaticResource SimpleExpanderStyle}"
                                IsExpanded="True">
-                <StackPanel Margin="8,0,0,0">
-                    <StackPanel Margin="{StaticResource EightTopMargin}">
-                        <TextBlock Style="{StaticResource BodyTextStyle}" Text="{x:Bind ViewModel.VersionDescription, Mode=OneWay}" />
+                <StackPanel Margin="20,0,0,0">
+                    <TextBlock x:Uid="SettingsPanel_About_Description" Style="{StaticResource BodyTextStyle}" />
 
-                        <TextBlock x:Uid="SettingsPanel_AboutDescription" Style="{StaticResource BodyTextStyle}" />
+                    <TextBlock Style="{StaticResource BodyTextStyle}" Text="{x:Bind ViewModel.VersionDescription, Mode=OneWay}" />
 
-                        <HyperlinkButton x:Uid="SettingsPanel_PrivacyTermsLink" Margin="{StaticResource EightTopMargin}" />
+                    <TextBlock x:Uid="SettingsPanel_About_Credits"
+                               Margin="0,8,0,0"
+                               Style="{StaticResource BodyTextStyle}" />
 
-                        <!-- TODO: <HyperlinkButton
-                        Margin="{StaticResource EightTopMargin}"
-                        x:Uid="FeedbackHub_Link"
-                        Command="{x:Bind ViewModel.LaunchFeedbackHubCommand, Mode=OneWay}"
-                        Visibility="{x:Bind ViewModel.FeedbackLinkVisibility, Mode=OneWay}" />-->
+                    <HyperlinkButton x:Uid="SettingsPanel_PrivacyTermsLink" Margin="0,8,0,0" />
+
+                    <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
+                        <ToggleSwitch x:Name="AnalyticsToggle"
+                                      x:Uid="SettingsPanel_AnalyticsToggle"
+                                      Margin="0,-2,0,0"
+                                      HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
+                                      IsOn="{x:Bind IsAnalyticsOn, Mode=TwoWay}" />
+                    </StackPanel>
+
+                    <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
+                        <Button x:Uid="SettingsPanel_About_OpenFeedbackHub"
+                                Margin="0,0,12,0"
+                                Click="ButtonOpenFeedbackHub_Click"
+                                Visibility="{x:Bind FeedbackVisibility}" />
 
                         <Button x:Uid="SettingsPanel_About_OpenLogFolderButton" Click="ButtonOpenLogFolder_Click" />
                     </StackPanel>
+
+                    <TextBlock x:Uid="SettingsPanel_About_Copyright"
+                               Margin="0,12,0,0"
+                               Style="{StaticResource BodyTextStyle}" />
                 </StackPanel>
             </controls:Expander>
         </StackPanel>

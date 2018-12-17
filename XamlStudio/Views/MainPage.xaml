@@ -51,6 +51,7 @@
                  exf:ListBoxExtensions.AllowDeselection="True"
                  ItemContainerStyle="{StaticResource Style-ListBoxItem-CompactMenu}"
                  SelectedIndex="0"
+                 SelectionChanged="NavMenu_SelectionChanged"
                  Style="{StaticResource Style-ListBox-CompactMenu}">
             <ListBoxItem x:Uid="MainPage_NavMenu_Explorer" Tag="EXPLORER">
                 <controls:AppFontIcon IconName="Copy" />

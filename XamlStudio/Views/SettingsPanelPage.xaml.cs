@@ -1,5 +1,11 @@
-﻿using System;
+﻿using Microsoft.AppCenter.Analytics;
+using Microsoft.Services.Store.Engagement;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Windows.Foundation.Metadata;
 using Windows.System;
+using Windows.System.Threading;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using XamlStudio.Services.Logging;
@@ -37,11 +43,66 @@ namespace XamlStudio.Views
                 }
             }));
 
+        public bool IsAnalyticsOn
+        {
+            get { return (bool)GetValue(IsAnalyticsOnProperty); }
+            set { SetValue(IsAnalyticsOnProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsAnalyticsOn.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsAnalyticsOnProperty =
+            DependencyProperty.Register(nameof(IsAnalyticsOn), typeof(bool), typeof(SettingsPanelPage), new PropertyMetadata(true, (sender, args) =>
+            {
+                SettingsPanelPage document = (sender as SettingsPanelPage);
+                bool value = (bool)args.NewValue;
+                if (document != null)
+                {
+                    // Do here to catch turning off.
+                    if (!value)
+                    {
+                        Analytics.TrackEvent("Settings_Toggle", new Dictionary<string, string>()
+                        {
+                            { "Setting", "IsAnalyticsOn" },
+                            { "Value", "False" }
+                        });
+                    }
+
+                    // Try and wait to send event above before we disable analytics.
+                    ThreadPoolTimer.CreateTimer((e) =>
+                    {
+                        #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        document.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, async () =>
+                        {
+                            await Analytics.SetEnabledAsync(value);
+
+                            // Do here to catch turning on.
+                            if (value)
+                            {
+                                Analytics.TrackEvent("Settings_Toggle", new Dictionary<string, string>()
+                                {
+                                    { "Setting", "IsAnalyticsOn" },
+                                    { "Value", "True" }
+                                });
+                            }
+                        });
+                        #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    }, TimeSpan.FromSeconds(5)); // Need to wait a long time or the last tracking event will never be submitted
+                }
+            }));
+
         //// TODO WTS: Change the URL for your privacy policy in the Resource File, currently set to https://YourPrivacyUrlGoesHere
 
         public SettingsPanelPage()
         {
             InitializeComponent();
+
+            // Get current Analytics setting
+            #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            {
+                IsAnalyticsOn = await AreAnalyticsOn();
+            });
+            #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
         private async void ButtonOpenLogFolder_Click(object sender, RoutedEventArgs e)
@@ -53,6 +114,13 @@ namespace XamlStudio.Views
         {
             // Save Namespaces after Edit.
             await ViewModel.Settings.SaveAsync(nameof(ViewModel.Settings.KnownNamespaces));
+
+            var ns = e.Row.DataContext as XmlnsNamespace;
+            Analytics.TrackEvent("Settings_EditNamespaces", new Dictionary<string, string> {
+                { "Location", "Toolbox" },
+                { "Name", ns.Name },
+                { "Path", ns.Path },
+            });
         }
 
         private void AddNamespaceButton_Click(object sender, RoutedEventArgs e)
@@ -79,6 +147,12 @@ namespace XamlStudio.Views
 
                 // Save Namespaces after Edit.
                 await ViewModel.Settings.SaveAsync(nameof(ViewModel.Settings.KnownNamespaces));
+
+                Analytics.TrackEvent("Settings_RemoveNamespace", new Dictionary<string, string> {
+                    { "Location", "Toolbox" },
+                    { "Name", xns.Name },
+                    { "Path", xns.Path },
+                });
             }
         }
 
@@ -88,6 +162,33 @@ namespace XamlStudio.Views
             {
                 t.Focus(FocusState.Keyboard);
             }
+        }
+
+        private async Task<bool> AreAnalyticsOn()
+        {
+            return await Analytics.IsEnabledAsync();
+        }
+
+        public Visibility FeedbackVisibility => StoreServicesFeedbackLauncher.IsSupported() ? Visibility.Visible : Visibility.Collapsed;
+
+        private async void ButtonOpenFeedbackHub_Click(object sender, RoutedEventArgs e)
+        {
+            // This launcher is part of the Store Services SDK https://docs.microsoft.com/en-us/windows/uwp/monetize/microsoft-store-services-sdk
+            if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 7))
+            {
+                // 1809 'workaround' for now. BUG 19698552
+                await Launcher.LaunchUriAsync(new Uri("windows-feedback:?contextid=143"));
+            }
+            else
+            {
+                var launcher = StoreServicesFeedbackLauncher.GetDefault();
+                await launcher.LaunchAsync();
+            }
+
+            Analytics.TrackEvent("Open_FeedbackHub", new Dictionary<string, string>()
+            {
+                { "Location", "About" }
+            });
         }
     }
 }

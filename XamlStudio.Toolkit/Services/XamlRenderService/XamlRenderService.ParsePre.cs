@@ -70,6 +70,8 @@ namespace XamlStudio.Toolkit.Services
                     context.IsFrameworkElement = IsFrameworkElement(context.ElementType);
                 }
 
+                // TODO: Get existing list of namespaces.
+
                 // Injection site.
                 var endOfTag = match.Index + match.Length - 1;
 
@@ -128,6 +130,8 @@ namespace XamlStudio.Toolkit.Services
                     // Inject xmlns base-path into tag on same line.
                     content = content.Substring(0, endOfTag) + sb.ToString() + content.Substring(endOfTag);
                 }
+
+                context.DetectedNamespaces = namespaces.ToArray();
             }
 
             // Update our content holders.

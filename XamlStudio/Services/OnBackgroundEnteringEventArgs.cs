@@ -8,10 +8,13 @@ namespace XamlStudio.Services
 
         public Type Target { get; private set; }
 
-        public OnBackgroundEnteringEventArgs(SuspensionState suspensionState, Type target)
+        public bool IsOutsideSuspend { get; private set; }
+
+        public OnBackgroundEnteringEventArgs(SuspensionState suspensionState, Type target, bool outsideSuspend)
         {
             SuspensionState = suspensionState;
             Target = target;
+            IsOutsideSuspend = outsideSuspend;
         }
     }
 }

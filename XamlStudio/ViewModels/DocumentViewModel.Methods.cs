@@ -1,14 +1,16 @@
-﻿using Monaco;
+﻿using Microsoft.AppCenter.Analytics;
+using Monaco;
 using Monaco.Editor;
 using Monaco.Helpers;
 using Nito.AsyncEx;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System.Threading;
 using Windows.UI.Xaml;
-using XamlStudio.Helpers;
 using XamlStudio.Services;
 using XamlStudio.Toolkit.Controls;
 using XamlStudio.Toolkit.Helpers;
@@ -54,8 +56,15 @@ namespace XamlStudio.ViewModels
 
         private async Task<string> InternalRenderXamlAsync(string content, uint lineoffset, bool keepContentSameLength, bool overrideBinding = false)
         {
+            var start = DateTime.UtcNow.Ticks;
+            var render_analytics = new Dictionary<string, string>();
+
             LineDecorations.Clear(); // Clear out old errors
             _bindingHistory.Clear();
+
+            render_analytics.Add("HasBindingDebugging", SettingsService.Instance.IsPowerBindingDebuggingEnabled.ToString());
+            render_analytics.Add("HasBindingOverride", overrideBinding.ToString());
+            render_analytics.Add("ContentLength", content.Length.ToString());
 
             var settings = new XamlRenderSettings(SettingsService.Instance.KnownNamespaces)
             {
@@ -64,20 +73,33 @@ namespace XamlStudio.ViewModels
                 DataContext = DataContext
             };
 
-            // Only render one at a time to not stomp on files.
-            using (await _renderMutex.LockAsync())
+            // If we override the binding, we're calling it from within and already saved.
+            if (!overrideBinding)
             {
-                // Save out workbench in case of error.  Should this just be done in unhandled exception case?
-                await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
+                // Only render one at a time to not stomp on files.
+                using (await _renderMutex.LockAsync())
+                {
+                    // Save out workbench in case of error.  Should this just be done in unhandled exception case?
+                await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync(Document.Id);
 
-                // Log XAML before rendering in case issue, we can retrieve later for bugs
-                var file = await ApplicationData.Current.LocalFolder.CreateFileAsync("lastcompiled.xaml", CreationCollisionOption.ReplaceExisting);
-                await FileIO.WriteTextAsync(file, content);
-                Debug.WriteLine("Render File Out: " + file.Path);
+                    // Log XAML before rendering in case issue, we can retrieve later for bugs
+                    var file = await ApplicationData.Current.LocalFolder.CreateFileAsync("lastcompiled.xaml", CreationCollisionOption.ReplaceExisting);
+                    await FileIO.WriteTextAsync(file, content);
+                    Debug.WriteLine("Render File Out: " + file.Path);
+                }
             }
 
             // Store in temp to prevent double-display of errors due to issue below needing double-render...
             var testResult = await XamlRenderer.RenderAsync(content, settings);
+
+            if (testResult.Document != null)
+            {
+                render_analytics.Add("NumDocumentNodes", testResult.Document.Descendants().Count().ToString());
+            }
+            render_analytics.Add("ElementType", "" + testResult?.ElementType);
+            render_analytics.Add("KnownNamespaces", "" + testResult?.DetectedNamespaces?.Length);
+            render_analytics.Add("NumErrors", "" + testResult?.Errors?.Count);
+            render_analytics.Add("HasContentSuggestions", (testResult.Content.Length != testResult.SuggestedContent.Length).ToString());
 
             if (testResult.Element == null)
             {
@@ -89,6 +111,7 @@ namespace XamlStudio.ViewModels
                 }
 
                 // Highlight Errors
+                var summary = new List<string>();
                 foreach (var error in testResult.Errors)
                 {
                     LineDecorations.Add(new IModelDeltaDecoration(new Range(lineoffset + error.StartLine, error.StartColumn, lineoffset + error.EndLine, error.EndColumn),
@@ -101,7 +124,10 @@ namespace XamlStudio.ViewModels
                                 error.Message
                             }.ToMarkdownString()
                         }));
+                    summary.Add(error.Message);
                 }
+
+                render_analytics.Add("ErrorMessages", string.Join(" | ", summary));
 
                 Result = testResult;
             }
@@ -127,6 +153,9 @@ namespace XamlStudio.ViewModels
             }
 
             Compiled?.Invoke(this, new EventArgs());
+
+            render_analytics.Add("TotalRenderTimeSec", Math.Round((DateTime.UtcNow.Ticks - start) / 10000000d, 2).ToString());
+            Analytics.TrackEvent("Render_XAML", render_analytics);
 
             return Result.SuggestedContent;
         }

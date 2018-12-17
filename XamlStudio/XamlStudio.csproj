@@ -99,6 +99,12 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AppCenter.Analytics">
+      <Version>1.11.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AppCenter.Crashes">
+      <Version>1.11.0</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.1.5</Version>
     </PackageReference>
@@ -119,7 +125,7 @@
     </PackageReference>
     <!-- Nuget package references -->
     <PackageReference Include="Microsoft.Services.Store.Engagement">
-      <Version>10.1711.28001</Version>
+      <Version>10.1810.16002</Version>
     </PackageReference>
     <PackageReference Include="Monaco.Editor">
       <Version>0.7.0-alpha</Version>
@@ -155,6 +161,7 @@
     <Compile Include="DummyPage.xaml.cs">
       <DependentUpon>DummyPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\CultureInfoHelper.cs" />
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
     <Compile Include="Helpers\Json.cs" />
     <Compile Include="Helpers\SimpleObservable.cs" />
@@ -163,6 +170,7 @@
     <Compile Include="Helpers\RelayCommand.cs" />
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
     <Compile Include="Models\LibraryInfo.cs" />
+    <Compile Include="Models\UnhandledException.cs" />
     <Compile Include="Models\WorkspaceWindow.cs" />
     <Compile Include="Models\XamlDocument.cs" />
     <Compile Include="Services\ActivationService.cs" />

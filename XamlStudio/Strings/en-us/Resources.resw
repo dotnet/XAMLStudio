@@ -149,9 +149,8 @@
     <value>About</value>
     <comment>About this application title for SettingsPanel</comment>
   </data>
-  <data name="SettingsPanel_AboutDescription.Text" xml:space="preserve">
-    <value>XAML Studio, a Microsoft Garage project, is a developer tool for rapidly prototyping UWP based XAML applications.
-By: Michael A. Hawker</value>
+  <data name="SettingsPanel_About_Description.Text" xml:space="preserve">
+    <value>XAML Studio, a Microsoft Garage project, is a developer tool for rapidly prototyping UWP based XAML applications.</value>
     <comment>About this application description for SettingsPanel</comment>
   </data>
   <data name="SettingsPanel_PrivacyTermsLink.Content" xml:space="preserve">
@@ -183,8 +182,8 @@ By: Michael A. Hawker</value>
     <comment>View disposed</comment>
   </data>
   <data name="FeedbackHub_Link.Content" xml:space="preserve">
-    <value>Feedback</value>
-    <comment>Displayed as the link to launching the Feedback Hub.</comment>
+    <value>Provide Feedback</value>
+    <comment>Label of button in settings to open the Feedback Hub.</comment>
   </data>
   <data name="MainPage_NavMenu_DataSources.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Modify Page DataContext</value>
@@ -362,12 +361,57 @@ By: Michael A. Hawker</value>
     <value>Open Log Location</value>
     <comment>Button Text for opening the log location.</comment>
   </data>
-  <data name="WebZoneWarning_Cancel" xml:space="preserve">
-    <value>Cancel</value>
-    <comment>Button text for not opening the file from the web zone warning dialog.</comment>
+  <data name="SettingsPanel_About_Copyright.Text" xml:space="preserve">
+    <value>Copyright 2018 Microsoft</value>
+    <comment>Copyright Statement in About Box</comment>
   </data>
-  <data name="WebZoneWarning_Open" xml:space="preserve">
-    <value>Open File</value>
-    <comment>Button text for opening a file from the web zone warning dialog.</comment>
+  <data name="SettingsPanel_About_Credits.Text" xml:space="preserve">
+    <value>Developed By: Michael A. Hawker
+Special Thanks To: Justin Liu, Nick Treitman, Lainie Huston, Mike Pell, the 'Partners, Analytics, and essential eXperiences' Team, and the Microsoft Garage.</value>
+    <comment>By lines for credits on the About screen</comment>
+  </data>
+  <data name="SettingsPanel_AnalyticsToggle.Header" xml:space="preserve">
+    <value>Send Anonymous Usage Data to Improve XAML Studio</value>
+    <comment>Toggle for Analytics</comment>
+  </data>
+  <data name="SettingsPanel_AnalyticsToggle.OffContent" xml:space="preserve">
+    <value>No</value>
+    <comment>Don't Send usage data option in Settings Panel</comment>
+  </data>
+  <data name="SettingsPanel_AnalyticsToggle.OnContent" xml:space="preserve">
+    <value>Yes</value>
+    <comment>Send usage data option in Settings Panel</comment>
+  </data>
+  <data name="Document_Compile" xml:space="preserve">
+    <value>Auto-Compile is turned off, Press F5 or Ctrl+Enter to Display</value>
+    <comment>Text displayed on document load if auto-compile is turned off.</comment>
+  </data>
+  <data name="Document_ErrorsHeader" xml:space="preserve">
+    <value>Compilation Errors</value>
+    <comment>Text displayed at top of message that appears when there are compilation errors.</comment>
+  </data>
+  <data name="MainPage_UnhandledException_Continue" xml:space="preserve">
+    <value>Continue</value>
+    <comment>Label of button to continue to Xaml Studio App from dialog.</comment>
+  </data>
+  <data name="MainPage_UnhandledException_Message" xml:space="preserve">
+    <value>An unexpected error has occured while rendering this document.  Auto-compile has been disabled.
+
+Error: "{0}"
+
+Please help us by reporting this issue in Feedback Hub.</value>
+    <comment>Message displayed when the app starts and was terminated due to a big issue.</comment>
+  </data>
+  <data name="MainPage_UnhandledException_OpenFeedbackHub" xml:space="preserve">
+    <value>Open Feedback Hub</value>
+    <comment>Label of button to open feedback hub to report issue in dialog.</comment>
+  </data>
+  <data name="MainPage_UnhandledException_Title" xml:space="preserve">
+    <value>Unexpected Error</value>
+    <comment>Title of message dialog displayed when the app starts and was closed due to an issue.</comment>
+  </data>
+  <data name="SettingsPanel_About_OpenFeedbackHub.Content" xml:space="preserve">
+    <value>Open Feedback Hub</value>
+    <comment>Button label for opening feedback hub from about in settings page.</comment>
   </data>
 </root>

@@ -24,17 +24,19 @@ namespace XamlStudio.Services
         // TODO WTS: This event is fired just before the app enters in background. Subscribe to this event if you want to save your current state.
         public event EventHandler<OnBackgroundEnteringEventArgs> OnBackgroundEntering;
 
-        public async Task SaveStateAsync()
+        public async Task SaveStateAsync(string renderId = null)
         {
             using (await _suspendMutex.LockAsync())
             {
                 var suspensionState = new SuspensionState()
                 {
+                    FromRender = renderId != null,
+                    LastRenderedId = renderId,
                     SuspensionDate = DateTime.Now
                 };
 
                 var target = OnBackgroundEntering?.Target.GetType();
-                var onBackgroundEnteringArgs = new OnBackgroundEnteringEventArgs(suspensionState, target);
+                var onBackgroundEnteringArgs = new OnBackgroundEnteringEventArgs(suspensionState, target, suspensionState.FromRender);
 
                 OnBackgroundEntering?.Invoke(this, onBackgroundEnteringArgs);
 

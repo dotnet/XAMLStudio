@@ -1,5 +1,7 @@
-﻿using Microsoft.Toolkit.Uwp.UI.Extensions;
+﻿using Microsoft.AppCenter.Analytics;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Windows.System;
 using Windows.UI.Xaml;
@@ -49,6 +51,11 @@ namespace XamlStudio.Views
                 text += t.Name + ">";
 
                 MainViewModel.ActiveDocumentViewModel.InsertTextCommand.Execute(text);
+
+                Analytics.TrackEvent("InsertCode", new Dictionary<string, string> {
+                    { "Location", "Toolbox" },
+                    { "Type", t.FullName },
+                });
             }
 
             // Clear Selection
@@ -78,6 +85,12 @@ namespace XamlStudio.Views
                         #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         Launcher.LaunchUriAsync(new Uri(link));
                         #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+                        Analytics.TrackEvent("Open_Docs", new Dictionary<string, string> {
+                            { "Location", "Toolbox" },
+                            { "Type", type.FullName },
+                            { "Uri", link },
+                        });
                     }
                 }
             }
@@ -88,6 +101,8 @@ namespace XamlStudio.Views
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
                 ViewModel.Filter(sender.Text);
+
+                // TODO: After have placeholder delay to slow this down, add analytics on more complete query rather than each stroke?
             }
         }
     }

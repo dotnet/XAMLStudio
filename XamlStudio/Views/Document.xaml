@@ -56,11 +56,10 @@
                                       ShadowOpacity="0.6"
                                       Color="Black">
                 <StackPanel Padding="24" Background="{ThemeResource Brush-Red-Light-2}">
-                    <TextBlock Margin="0,0,0,8"
+                    <TextBlock x:Uid="Document_ErrorsHeader"
+                               Margin="0,0,0,8"
                                FontWeight="SemiBold"
-                               Foreground="White">
-                        Compilation Errors
-                    </TextBlock>
+                               Foreground="White"/>
                     <ItemsControl ItemsSource="{x:Bind ViewModel.Result.Errors, Mode=OneWay}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="models:XamlExceptionRange">
@@ -94,6 +93,7 @@
                            CodeLanguage="xml"
                            KeyDown="CodeEditor_KeyDown"
                            Loading="CodeEditor_Loading"
+                           OpenLinkRequested="CodeEditor_OpenLinkRequested"
                            RequestedTheme="{x:Bind ViewModel.Settings.EditorTheme, Mode=OneWay}"
                            Text="{x:Bind ViewModel.Document.Content, Mode=TwoWay}">
             <i:Interaction.Behaviors>

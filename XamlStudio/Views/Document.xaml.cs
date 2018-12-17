@@ -1,6 +1,8 @@
-﻿using Monaco;
+﻿using Microsoft.AppCenter.Analytics;
+using Monaco;
 using Monaco.Languages;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
@@ -19,6 +21,8 @@ namespace XamlStudio.Views
     public sealed partial class Document : UserControl
     {
         private string[] _decorations = Array.Empty<string>();
+
+        private Type _lastHoverType;
 
         private object _initializeLock = new object();
 
@@ -98,8 +102,20 @@ namespace XamlStudio.Views
             ViewModel.NavigateToLineCommand = new RelayCommand<uint>(NavigateToLine);
             ViewModel.InsertTextCommand = new RelayCommand<string>(InsertText);
 
-            // RenderAsync XAML
-            ViewModel.UpdateXamlCommand.Execute(null);
+            // RenderAsync XAML if enabled by default
+            if (SettingsService.Instance.IsAutoCompileEnabled == true)
+            {
+                ViewModel.UpdateXamlCommand.Execute(null);
+            }
+            else
+            {
+                XamlRoot.Children.Add(new TextBlock()
+                {
+                    Text = "Document_Compile".GetLocalized(),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center
+                });
+            }
         }
 
         private async void CodeEditor_Loading(object sender, RoutedEventArgs e)
@@ -123,6 +139,7 @@ namespace XamlStudio.Views
                         XamlRenderService.GetTypeFromName(word.Word) is Type type &&
                         libserv.LibrariesByNamespace.TryGetValue(type.Namespace, out LibraryInfo info))
                     {
+                        _lastHoverType = type;
                         return new Hover(new string[]
                         {
                             "**" + word.Word + "** - [" + type.FullName + "](" +
@@ -210,6 +227,15 @@ namespace XamlStudio.Views
 
             // Now pass onto VM now that we have SelectedText set.
             ViewModel.KeyDownCommand.Execute(args);
+        }
+
+        private void CodeEditor_OpenLinkRequested(WebView sender, WebViewNewWindowRequestedEventArgs args)
+        {
+            Analytics.TrackEvent("Open_Docs", new Dictionary<string, string> {
+                { "Location", "CodeEditor" },
+                { "Type", _lastHoverType?.FullName ?? "Unknown" },
+                { "Uri", args.Uri.ToString() },
+            });
         }
     }
 }

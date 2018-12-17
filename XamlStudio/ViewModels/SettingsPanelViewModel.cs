@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Microsoft.AppCenter.Analytics;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 using Windows.ApplicationModel;
@@ -16,29 +19,6 @@ namespace XamlStudio.ViewModels
 {
     public class SettingsPanelViewModel : Observable
     {
-        public Visibility FeedbackLinkVisibility => Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.IsSupported() ? Visibility.Visible : Visibility.Collapsed;
-
-        private ICommand _launchFeedbackHubCommand;
-
-        public ICommand LaunchFeedbackHubCommand
-        {
-            get
-            {
-                if (_launchFeedbackHubCommand == null)
-                {
-                    _launchFeedbackHubCommand = new RelayCommand(
-                        async () =>
-                        {
-                            // This launcher is part of the Store Services SDK https://docs.microsoft.com/en-us/windows/uwp/monetize/microsoft-store-services-sdk
-                            var launcher = Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.GetDefault();
-                            await launcher.LaunchAsync();
-                        });
-                }
-
-                return _launchFeedbackHubCommand;
-            }
-        }
-
         // TODO WTS: Add other settings as necessary. For help see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/pages/settings.md
         private ElementTheme _elementTheme = ThemeSelectorService.Theme;
 
@@ -71,6 +51,11 @@ namespace XamlStudio.ViewModels
                         {
                             ElementTheme = param;
                             await ThemeSelectorService.SetThemeAsync(param);
+
+                            Analytics.TrackEvent("Settings_ChangeTheme", new Dictionary<string, string> {
+                                { "Type", "App" },
+                                { "Theme", "" + param },
+                            });
                         });
                 }
 
@@ -90,6 +75,11 @@ namespace XamlStudio.ViewModels
                         (param) =>
                         {
                             Settings.EditorTheme = param;
+
+                            Analytics.TrackEvent("Settings_ChangeTheme", new Dictionary<string, string> {
+                                { "Type", "Editor" },
+                                { "Theme", "" + param },
+                            });
                         });
                 }
 
@@ -128,11 +118,22 @@ namespace XamlStudio.ViewModels
             var toggle = (args.OriginalSource as ToggleSwitch);
 
             Settings.Set(toggle.IsOn, toggle.Tag as string);
+
+            Analytics.TrackEvent("Settings_Toggle", new Dictionary<string, string>()
+            {
+                { "Setting", toggle.Tag as string },
+                { "Value", toggle.IsOn.ToString() }
+            });
         }
 
         private void DelayChanged(RangeBaseValueChangedEventArgs args)
         {
             Settings.AutoCompileDelay = args.NewValue;
+
+            // TODO: Need to use a ThreadPoolTimer to wait for last change?
+            ////Analytics.TrackEvent("Settings_CompileDelayChanged", new Dictionary<string, string> {
+            ////    { "Value", "" + args.NewValue },
+            ////});
         }
     }
 }

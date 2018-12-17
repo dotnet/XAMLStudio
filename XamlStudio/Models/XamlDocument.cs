@@ -21,6 +21,14 @@ namespace XamlStudio.Models
 
     public sealed class XamlDocument: SimpleObservable
     {
+        private readonly string _id = Guid.NewGuid().ToString();
+
+        /// <summary>
+        /// Unique identifier for referencing across sessions.
+        /// </summary>
+        [JsonProperty]
+        public string Id { get; private set; }
+
         /// <summary>
         /// Dummy for switching to Welcome Screen.
         /// </summary>
@@ -84,14 +92,17 @@ namespace XamlStudio.Models
 
         public bool CanSave { get { return BackingFile != null; } }
 
-        internal XamlDocument() { }
+        internal XamlDocument()
+        {
+            Id = _id; // for first set unless deserialized
+        }
 
-        public XamlDocument(string title)
+        public XamlDocument(string title) : this()
         {
             this.Title = title;
         }
 
-        private XamlDocument(StorageFile file)
+        private XamlDocument(StorageFile file) : this()
         {
             this.BackingFile = file;
 

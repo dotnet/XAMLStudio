@@ -1,4 +1,5 @@
-﻿using Nito.AsyncEx;
+﻿using Microsoft.AppCenter.Analytics;
+using Nito.AsyncEx;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,8 @@ namespace XamlStudio.ViewModels
             });
 
             ActiveFile = OpenFiles.Last();
+
+            Analytics.TrackEvent("Document_New");
         }
 
         private async void OpenDocument(RoutedEventArgs args)
@@ -52,6 +55,8 @@ namespace XamlStudio.ViewModels
                 }*/
 
                 OpenFile(file);
+
+                Analytics.TrackEvent("Document_Open");
             }
         }
 
@@ -127,6 +132,8 @@ namespace XamlStudio.ViewModels
 
             // Remove what we had as active (otherwise, the active would be null and we'd hit an error)
             OpenFiles.RemoveAt(OpenFiles.IndexOf(document));
+
+            Analytics.TrackEvent("Document_Close");
 
             return true;
         }
@@ -204,6 +211,11 @@ namespace XamlStudio.ViewModels
                 {
                     SettingsService.Instance.RememberFile(file);
 
+                    Analytics.TrackEvent("Document_Save", new Dictionary<string, string>()
+                    {
+                        { "Success", "True" }
+                    });
+
                     return true;
                 }
             }
@@ -211,6 +223,11 @@ namespace XamlStudio.ViewModels
             // Show error about saving
             var messageDialog = new MessageDialog(String.Format("Application_SaveError".GetLocalized(), document.Title.TrimEnd('*')));
             await messageDialog.ShowAsync();
+
+            Analytics.TrackEvent("Document_Save", new Dictionary<string, string>()
+            {
+                { "Success", "False" }
+            });
 
             return false;
         }
@@ -222,6 +239,8 @@ namespace XamlStudio.ViewModels
             index = index == 0 ? OpenFiles.Count - 1 : index - 1;
 
             ActiveFile = OpenFiles[index];
+
+            Analytics.TrackEvent("Document_Previous");
         }
 
         // Ctrl+Tab
@@ -231,6 +250,8 @@ namespace XamlStudio.ViewModels
             index = index == OpenFiles.Count - 1 ? 0 : index + 1;
 
             ActiveFile = OpenFiles[index];
+
+            Analytics.TrackEvent("Document_Next");
         }
 
         private void KeyDown(KeyEventArgs args)
@@ -277,6 +298,14 @@ namespace XamlStudio.ViewModels
                         }
                         break;
                 }
+
+                Analytics.TrackEvent("Key_Shortcut", new Dictionary<string, string>()
+                {
+                    { "Location", "MainView" },
+                    { "Ctrl", ctrl.ToString() },
+                    { "Shift", shift.ToString() },
+                    { "Code", args.VirtualKey.ToString() }
+                });
             }
         }
     }

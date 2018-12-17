@@ -147,8 +147,9 @@ namespace XamlStudio.ViewModels
 
         public DocumentViewModel()
         {
-            ////this.Document = document;
-
+            // Placeholder
+            Result = new Toolkit.Models.XamlRenderResultContext(string.Empty);
+            
             ////xamlRenderer.ImageRoot = SettingsService.Instance.SampleFolder;
             ////xamlRenderer.DataRoot = SettingsService.Instance.SampleFolder;
         }

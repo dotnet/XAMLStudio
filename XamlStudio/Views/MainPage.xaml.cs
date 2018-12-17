@@ -1,17 +1,24 @@
-﻿using System.Linq;
+﻿using Microsoft.AppCenter.Analytics;
+using Microsoft.Services.Store.Engagement;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using Windows.Foundation.Metadata;
 using Windows.Storage;
+using Windows.System;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using XamlStudio.Helpers;
 using XamlStudio.Models;
 using XamlStudio.Services;
+using XamlStudio.Toolkit.Helpers;
 using XamlStudio.Toolkit.Services;
 using XamlStudio.ViewModels;
-using System.Reflection;
-using XamlStudio.Toolkit.Helpers;
-using Newtonsoft.Json;
-using System.Collections.ObjectModel;
 
 namespace XamlStudio.Views
 {
@@ -21,6 +28,10 @@ namespace XamlStudio.Views
 
         private IStorageItem[] _filesToLoad;
         private SuspensionState _restoreState;
+        private DateTime _sessionStart;
+        private long? _activityTime = null;
+
+        private bool _loaded = false;
 
         public MainPage()
         {
@@ -42,6 +53,19 @@ namespace XamlStudio.Views
 
             // Save Open Drawer, null = closed.
             e.SuspensionState.OpenActivity = (NavMenu.SelectedItems.FirstOrDefault() as ListBoxItem)?.Tag?.ToString();
+
+            if (_loaded && !e.IsOutsideSuspend)
+            {
+                var props = new Dictionary<string, string> {
+                    { "NumberFiles", ViewModel.OpenFiles.Count.ToString() },
+                    { "UnsavedFiles", ViewModel.OpenFiles.Count(file => file.HasChanged).ToString() },
+                    { "WelcomeOpen", ViewModel.OpenFiles.Any(file => file.DocumentType == DocumentType.Welcome).ToString() },
+                    { "SettingsOpen", ViewModel.OpenFiles.Any(file => file.DocumentType == DocumentType.Settings).ToString() },
+                    { "Activity", e.SuspensionState.OpenActivity ?? "Closed" },
+                    { "SessionTimeMin", ((TimeSpan)(DateTime.Now - _sessionStart)).TotalMinutes.ToString() }
+                };
+                Analytics.TrackEvent("Background", props);
+            }
         }
 
         private void CoreWindow_KeyDown(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs args)
@@ -83,9 +107,72 @@ namespace XamlStudio.Views
 
                 if (_restoreState.OpenFiles != null && _restoreState.OpenFiles.Length > 0)
                 {
-                    await ViewModel.RestoreWorkspaceAsync(_restoreState.OpenFiles);
-                    _restoreState = null;
-                }
+	                if (_restoreState.FromRender)
+	                {
+	                    // We encountered an error while rendering and crashed.
+	                    SettingsService.Instance.IsAutoCompileEnabled = false;
+	                }                
+
+	                await ViewModel.RestoreWorkspaceAsync(_restoreState.OpenFiles);
+
+	                if (!string.IsNullOrWhiteSpace(_restoreState.LastRenderedId))
+	                {
+	                    var document = ViewModel.DocumentViewModels.Values.FirstOrDefault(doc => doc.Document.Id == _restoreState.LastRenderedId);
+	                    if (document != null)
+	                    {
+	                        ViewModel.ActiveFile = document.Document;
+
+	                        // Store/Retrieve error...
+	                        var file = await ApplicationData.Current.LocalFolder.TryGetItemAsync("lastexception.json");
+	                        UnhandledException exception = null;
+	                        if (file != null)
+	                        {
+	                            var text = await FileIO.ReadTextAsync(file as StorageFile);
+	                            exception = JsonConvert.DeserializeObject<UnhandledException>(text);
+
+                                // TODO: Used to work, doesn't now?
+                                document.Result.Errors.Add(new Toolkit.Models.XamlExceptionRange(exception?.Message, exception?.Exception, 1, 1, 1, 1));
+                            }
+
+	                        var messageDialog = new MessageDialog(string.Format("MainPage_UnhandledException_Message".GetLocalized(), exception?.Message), "MainPage_UnhandledException_Title".GetLocalized());
+	                        messageDialog.Commands.Add(new UICommand("MainPage_UnhandledException_Continue".GetLocalized()));
+	                        var openfeedback = new UICommand("MainPage_UnhandledException_OpenFeedbackHub".GetLocalized());
+	                        messageDialog.Commands.Add(openfeedback);
+	                        messageDialog.DefaultCommandIndex = 1;
+	                        messageDialog.CancelCommandIndex = 0;
+
+	                        if (openfeedback.Equals(await messageDialog.ShowAsync()))
+	                        {
+                                // This launcher is part of the Store Services SDK https://docs.microsoft.com/en-us/windows/uwp/monetize/microsoft-store-services-sdk
+                                if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 7))
+                                {
+                                    // 1809 'workaround' for now. BUG 19698552
+                                    await Launcher.LaunchUriAsync(new Uri("windows-feedback:?contextid=143"));
+                                }
+                                else
+                                {
+                                    var launcher = StoreServicesFeedbackLauncher.GetDefault();
+                                    await launcher.LaunchAsync(new Dictionary<string, string>()
+                                    {
+                                        { "error", exception?.Message ?? "Unknown Runtime Error" },
+                                        { "stacktrace", exception?.Exception?.StackTrace?.ToString() ?? "" },
+                                        { "xaml", document.Document.Content }
+                                    });
+                                }
+                                
+                                Analytics.TrackEvent("Open_FeedbackHub", new Dictionary<string, string>()
+                                {
+                                    { "Location", "Restart" },
+                                    { "error", exception?.Message ?? "Unknown Runtime Error" },
+                                    { "stacktrace", exception?.Exception?.StackTrace?.ToString() ?? "" }
+                                });
+                            }
+	                    }
+	                }
+
+	                // Clean-up suspend state reference.
+	                _restoreState = null;
+				}
             }
 
             if (_filesToLoad != null)
@@ -94,6 +181,9 @@ namespace XamlStudio.Views
                 OpenFileItems(_filesToLoad);
                 _filesToLoad = null;
             }
+
+            _sessionStart = DateTime.Now;
+            _loaded = true;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -142,6 +232,43 @@ namespace XamlStudio.Views
             ViewModel.CloseActiveDocumentCommand.Execute(e.Item);
 
             e.Cancel = true; // We'll remove item ourselves from collection when we're done in command, so don't have the TabView do it for us.
+        }
+
+        private void NavMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_loaded)
+            {
+                var dict = new Dictionary<string, string>();
+
+                if (_activityTime != null)
+                {
+                    dict.Add("TimeOpenSec", Math.Round((DateTime.UtcNow.Ticks - _activityTime.Value) / 10000000d, 2).ToString());
+                }
+
+                if (NavMenu.SelectedItems.Count == 0)
+                {
+                    dict.Add("Name", "Closed");
+                    _activityTime = null;
+                }
+                else
+                {
+                    dict.Add("Name", (e.AddedItems.FirstOrDefault() as ListBoxItem)?.Tag.ToString());
+                    _activityTime = DateTime.UtcNow.Ticks;
+                }
+                dict.Add("Previous", (e.RemovedItems.FirstOrDefault() as ListBoxItem)?.Tag.ToString());
+                Analytics.TrackEvent("Activity", dict);
+            }
+            else
+            {
+                if (e.AddedItems.Count > 0)
+                {
+                    _activityTime = DateTime.UtcNow.Ticks;
+                }
+                else
+                {
+                    _activityTime = null;
+                }
+            }
         }
     }
 }

@@ -10,6 +10,10 @@ namespace XamlStudio.Services
 
         public XamlDocument[] OpenFiles { get; set; }
 
+        public bool FromRender { get; set; }
+
+        public string LastRenderedId { get; set; }
+
         public DateTime SuspensionDate { get; set; }
     }
 }
