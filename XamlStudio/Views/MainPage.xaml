@@ -74,9 +74,10 @@
         </ListBox>
 
         <Button x:Name="SettingsButton"
+                x:Uid="MainPage_NavMenu_Settings"
                 Grid.RowSpan="2"
                 VerticalAlignment="Bottom"
-                Click="SettingsButton_Click"
+                Command="{x:Bind ViewModel.OpenSettingsCommand}"
                 Style="{StaticResource Style-Button-CompactMenu}">
             <controls:AppFontIcon IconName="Settings" />
         </Button>
@@ -109,7 +110,7 @@
                 </TextBlock>
             </future:ContentSizer>
 
-            <future:SwitchPresenter Value="{Binding ElementName=NavMenu, Path=SelectedItem.Tag}">
+            <future:SwitchPresenter x:Name="ToolboxPresenter" Value="{Binding ElementName=NavMenu, Path=SelectedItem.Tag}">
                 <future:Case Value="EXPLORER">
                     <local:Explorer MainViewModel="{x:Bind ViewModel}" />
                 </future:Case>

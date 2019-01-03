@@ -186,15 +186,15 @@
     <comment>Label of button in settings to open the Feedback Hub.</comment>
   </data>
   <data name="MainPage_NavMenu_DataSources.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Modify Page DataContext</value>
+    <value>Modify Page DataContext (Ctrl+Shift+C)</value>
     <comment>DataSources ActivityBar Tooltip</comment>
   </data>
   <data name="MainPage_NavMenu_Debug.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Debug Bindings</value>
+    <value>Debug Bindings (Ctrl+Shift+B)</value>
     <comment>Debug ActivityBar Tooltip</comment>
   </data>
   <data name="MainPage_NavMenu_Explorer.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>View Open Files</value>
+    <value>View Open Files (Ctrl+Shift+E)</value>
     <comment>Explorer ActivityBar Tooltip</comment>
   </data>
   <data name="MainPage_NavMenu_ImageSources.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
@@ -206,7 +206,7 @@
     <comment>Search ActivityBar Tooltip</comment>
   </data>
   <data name="MainPage_NavMenu_Toolbox.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Control Toolbox</value>
+    <value>Control Toolbox (Ctrl+Shift+T)</value>
     <comment>Toolbox ActivityBar Tooltip</comment>
   </data>
   <data name="SettingsPanel_AutoCompileToggle.Header" xml:space="preserve">
@@ -367,7 +367,7 @@
   </data>
   <data name="SettingsPanel_About_Credits.Text" xml:space="preserve">
     <value>Developed By: Michael A. Hawker
-Special Thanks To: Justin Liu, Nick Treitman, Lainie Huston, Mike Pell, the 'Partners, Analytics, and essential eXperiences' Team, and the Microsoft Garage.</value>
+Special Thanks To: Justin Liu, Lainie Huston, Mike Pell, the 'Partners, Analytics, and essential eXperiences' Team, and the Microsoft Garage.</value>
     <comment>By lines for credits on the About screen</comment>
   </data>
   <data name="SettingsPanel_AnalyticsToggle.Header" xml:space="preserve">
@@ -413,5 +413,29 @@ Please help us by reporting this issue in Feedback Hub.</value>
   <data name="SettingsPanel_About_OpenFeedbackHub.Content" xml:space="preserve">
     <value>Open Feedback Hub</value>
     <comment>Button label for opening feedback hub from about in settings page.</comment>
+  </data>
+  <data name="MainPage_NavMenu_DataSources.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Data Source</value>
+    <comment>Accessibility Name for Data Source Activity</comment>
+  </data>
+  <data name="MainPage_NavMenu_Debug.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Debug</value>
+    <comment>Accessibility Name for Binding Debugger Activity</comment>
+  </data>
+  <data name="MainPage_NavMenu_Explorer.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Explorer</value>
+    <comment>Accessibility Name for Explorer Activity</comment>
+  </data>
+  <data name="MainPage_NavMenu_Settings.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Settings</value>
+    <comment>Accessibility Name for Settings</comment>
+  </data>
+  <data name="MainPage_NavMenu_Settings.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Settings (Ctrl+I)</value>
+    <comment>Tooltip for Open Settings Page Button</comment>
+  </data>
+  <data name="MainPage_NavMenu_Toolbox.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Toolbox</value>
+    <comment>Accessibility Name for Toolbox Activity</comment>
   </data>
 </root>

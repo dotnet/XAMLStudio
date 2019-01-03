@@ -18,6 +18,16 @@ namespace XamlStudio.Models
         public static readonly DependencyProperty ActiveFileProperty =
             DependencyProperty.Register(nameof(ActiveFile), typeof(XamlDocument), typeof(WorkspaceWindow), new PropertyMetadata(null, ActiveFile_Changed));
 
+        public string OpenActivity
+        {
+            get { return (string)GetValue(OpenActivityProperty); }
+            set { SetValue(OpenActivityProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for OpenActivity.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty OpenActivityProperty =
+            DependencyProperty.Register(nameof(OpenActivity), typeof(string), typeof(WorkspaceWindow), new PropertyMetadata("EXPLORER"));
+
         public bool IsWorkspaceOpen { get; private set; }
 
         // Holds the default folder or workspace folder location

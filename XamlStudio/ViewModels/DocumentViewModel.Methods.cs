@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System.Threading;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using XamlStudio.Services;
 using XamlStudio.Toolkit.Controls;
@@ -235,7 +236,7 @@ namespace XamlStudio.ViewModels
 
         private void KeyDown(WebKeyEventArgs args)
         {
-            // Handle Shortcuts.
+            // Handle Shortcuts. https://keycode.info/
             // Ctrl+Enter or F5 Update // TODO: Do we need this in the app handler too? (Thinking no)
             if ((args.KeyCode == 13 && args.CtrlKey) ||
                  args.KeyCode == 116)
@@ -253,40 +254,90 @@ namespace XamlStudio.ViewModels
 
                 // Eat key stroke
                 args.Handled = true;
-            } else if (args.CtrlKey)
+            }
+            else if (args.CtrlKey)
             {
-                // Need to duplicate this here from ShellViewModel as Control eats CoreWindow event.
-                /*switch (args.KeyCode)
+                if (args.ShiftKey)
                 {
+                    switch (args.KeyCode)
+                    {
+                        // E - Open Explorer
+                        case 69:
+                            args.Handled = true;
+                            MainViewModel.OpenActivityCommand.Execute("EXPLORER");
+                            break;
+                        // C - Open Data Context
+                        case 67:
+                            args.Handled = true;
+                            MainViewModel.OpenActivityCommand.Execute("DATASOURCES");
+                            break;
+                        // B - Open Binding Debugger
+                        case 66:
+                            args.Handled = true;
+                            MainViewModel.OpenActivityCommand.Execute("DEBUG");
+                            break;
+                        // T - Open Toolbox
+                        case 84:
+                            args.Handled = true;
+                            MainViewModel.OpenActivityCommand.Execute("TOOLBOX");
+                            break;
+                    }
+                }
+                // Need to duplicate this here from ShellViewModel as Control eats CoreWindow event.
+                switch (args.KeyCode)
+                {
+                    case 73: // I
+                        MainViewModel.OpenSettingsCommand.Execute(null);
+                        args.Handled = true;
+                        break;
                     case 78: // N
-                        (Application.Current as App).ViewModel.NewDocumentCommand.Execute(null);
+                        MainViewModel.NewDocumentCommand.Execute(null);
                         args.Handled = true;
                         break;
                     case 79: // O
-                        (Application.Current as App).ViewModel.OpenDocumentCommand.Execute(null);
+                        MainViewModel.OpenDocumentCommand.Execute(null);
                         args.Handled = true;
                         break;
                     case 83: // S
-                        (Application.Current as App).ViewModel.SaveDocumentCommand.Execute(null);
+                        if (args.ShiftKey)
+                        {
+                            MainViewModel.SaveDocumentAsCommand.Execute(MainViewModel.ActiveFile);
+                        }
+                        else
+                        {
+                            MainViewModel.SaveDocumentCommand.Execute(MainViewModel.ActiveFile);
+                        }
                         args.Handled = true;
                         break;
                     case 87: // W
                     case 115: // F4
-                        (Application.Current as App).ViewModel.CloseDocumentCommand.Execute(null);
+                        MainViewModel.CloseActiveDocumentCommand.Execute(MainViewModel.ActiveFile);
                         args.Handled = true;
                         break;
                     case 9: // TAB
                         if (args.ShiftKey)
                         {
-                            (Application.Current as App).ViewModel.PreviousDocumentCommand.Execute(null);
+                            MainViewModel.PreviousDocumentCommand.Execute(null);
                         }
                         else
                         {
-                            (Application.Current as App).ViewModel.NextDocumentCommand.Execute(null);
+                            MainViewModel.NextDocumentCommand.Execute(null);
                         }
                         args.Handled = true;
                         break;
-                }*/
+                }
+            }
+
+            if (args.Handled)
+            {
+                Analytics.TrackEvent("Key_Shortcut", new Dictionary<string, string>()
+                {
+                    { "Location", "Document" },
+                    { "Action", args.Handled.ToString() },
+                    { "Ctrl", args.CtrlKey.ToString() },
+                    { "Shift", args.ShiftKey.ToString() },
+                    { "Code", args.KeyCode.ToString() }
+                });
             }
 
             // Ignore as a change to the document if we handle it as a shortcut above or it's a special char.

@@ -179,13 +179,8 @@ namespace XamlStudio
             Debugger.Break();
 #endif
 
-            // Restart app for stability
-            #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            CoreWindow.GetForCurrentThread().Dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
-            {
-                var t = CoreApplication.RequestRestartAsync(string.Empty);
-            });
-            #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            // Restart app for stability, except on RS5 19329065/19654150
+            var t = CoreApplication.RequestRestartAsync(string.Empty);
         }
     }
 }

@@ -89,7 +89,7 @@ namespace XamlStudio.ViewModels
                     if (item is XamlDocument xd)
                     {
                         // Need MainViewModel to own these so we can keep track of them all.
-                        DocumentViewModels[xd] = new DocumentViewModel() { Document = xd };
+                        DocumentViewModels[xd] = new DocumentViewModel() { Document = xd, MainViewModel = this };
                     }
                 }
             }

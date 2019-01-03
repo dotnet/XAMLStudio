@@ -25,11 +25,6 @@
         <uap:SplashScreen Image="Assets\XamlStudio.SplashScreen.png" />
       </uap:VisualElements>
       <Extensions>
-        <uap3:Extension Category="windows.appUriHandler">
-          <uap3:AppUriHandler>
-            <uap3:Host Name="myapp.website.com" />
-          </uap3:AppUriHandler>
-        </uap3:Extension>
         <uap:Extension Category="windows.protocol">
           <uap:Protocol Name="xamlstudio">
             <uap:Logo>Assets\XamlStudio.Icon.png</uap:Logo>

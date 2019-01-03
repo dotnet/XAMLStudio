@@ -33,6 +33,9 @@ namespace XamlStudio.ViewModels
         public ICommand PreviousDocumentCommand { get; private set; }
         public ICommand NextDocumentCommand { get; private set; }
 
+        public ICommand OpenSettingsCommand { get; private set; }
+        public ICommand OpenActivityCommand { get; private set; }
+
         public MainViewModel()
         {
             NewDocumentCommand = new RelayCommand<RoutedEventArgs>(NewDocument);
@@ -46,6 +49,9 @@ namespace XamlStudio.ViewModels
             KeyDownCommand = new RelayCommand<KeyEventArgs>(KeyDown);
             PreviousDocumentCommand = new RelayCommand<RoutedEventArgs>(PreviousDocument);
             NextDocumentCommand = new RelayCommand<RoutedEventArgs>(NextDocument);
+
+            OpenSettingsCommand = new RelayCommand<RoutedEventArgs>(OpenSettingsPage);
+            OpenActivityCommand = new RelayCommand<string>(OpenActivityPanel);
         }
     }
 }

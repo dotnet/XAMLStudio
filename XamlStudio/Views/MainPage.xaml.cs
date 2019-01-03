@@ -1,5 +1,6 @@
 ﻿using Microsoft.AppCenter.Analytics;
 using Microsoft.Services.Store.Engagement;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ using Windows.System;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using XamlStudio.Helpers;
 using XamlStudio.Models;
@@ -44,6 +46,8 @@ namespace XamlStudio.Views
             Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
 
             Singleton<SuspendAndResumeService>.Instance.OnBackgroundEntering += Instance_OnBackgroundEntering;
+
+            ViewModel.RegisterPropertyChangedCallback(WorkspaceWindow.OpenActivityProperty, OpenActivityChanged);
         }
 
         private void Instance_OnBackgroundEntering(object sender, OnBackgroundEnteringEventArgs e)
@@ -213,20 +217,6 @@ namespace XamlStudio.Views
             }
         }
 
-        private void SettingsButton_Click(object sender, RoutedEventArgs e)
-        {
-            XamlDocument settings = ViewModel.OpenFiles.FirstOrDefault(f => f.DocumentType == DocumentType.Settings);
-            if (settings != null)
-            {
-                ViewModel.ActiveFile = settings;
-            }
-            else
-            {
-                ViewModel.OpenFiles.Add(XamlDocument.SettingsDocument());
-                ViewModel.ActiveFile = ViewModel.OpenFiles.Last();
-            }
-        }
-
         private void DocumentTabs_TabClosing(object sender, Microsoft.Toolkit.Uwp.UI.Controls.TabClosingEventArgs e)
         {
             ViewModel.CloseActiveDocumentCommand.Execute(e.Item);
@@ -267,6 +257,56 @@ namespace XamlStudio.Views
                 else
                 {
                     _activityTime = null;
+                }
+            }
+
+            // Sync ViewModel
+            if (ViewModel != null)
+            {
+                if (_activityTime == null)
+                {
+                    ViewModel.OpenActivity = null;
+                }
+                else
+                {
+                    ViewModel.OpenActivity = (NavMenu.SelectedItem as ListBoxItem).Tag.ToString();
+                }
+            }
+        }
+
+        private void OpenActivityChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            if (string.IsNullOrWhiteSpace(ViewModel.OpenActivity))
+            {
+                // Deselect
+                NavMenu.SelectedIndex = -1;
+                return;
+            }
+
+            // Sync from ViewModel to UI
+            foreach (var item in NavMenu.Items)
+            {
+                if (item is ListBoxItem lbi && lbi.Tag.ToString() == ViewModel.OpenActivity)
+                {
+                    NavMenu.SelectedItem = item;
+
+                    // Set Focus to Menu
+                    var T = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                    {
+                        var content = ToolboxPresenter.FindDescendant<ContentPresenter>().Content as Control;
+                        if (content != null)
+                        {
+                            content.Focus(FocusState.Keyboard);
+
+                            // This seems to work better? need to test with proper TabIndex in toolbox pages...
+                            var focusable = FocusManager.FindNextFocusableElement(FocusNavigationDirection.Next);
+                            if (focusable is Control control)
+                            {
+                                control.Focus(FocusState.Keyboard);
+                            }
+                        }
+                    });
+                    break;
                 }
             }
         }

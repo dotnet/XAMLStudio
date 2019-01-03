@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
+using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -254,58 +255,136 @@ namespace XamlStudio.ViewModels
             Analytics.TrackEvent("Document_Next");
         }
 
+        // Ctrl+I
+        private void OpenSettingsPage(RoutedEventArgs args)
+        {
+            XamlDocument settings = OpenFiles.FirstOrDefault(f => f.DocumentType == DocumentType.Settings);
+            if (settings != null)
+            {
+                ActiveFile = settings;
+            }
+            else
+            {
+                OpenFiles.Add(XamlDocument.SettingsDocument());
+                ActiveFile = OpenFiles.Last();
+            }
+
+            Analytics.TrackEvent("Open_Settings");
+        }
+
+        // Ctrl+Shift+?
+        private void OpenActivityPanel(string activity)
+        {
+            if (activity == OpenActivity)
+            {
+                // Close if the same as already open?
+                OpenActivity = null;
+            }
+            else
+            {
+                OpenActivity = activity;
+            }
+        }
+
         private void KeyDown(KeyEventArgs args)
         {
-            var ctrl = (Window.Current.CoreWindow.GetKeyState(Windows.System.VirtualKey.Control) & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
-            var shift = (Window.Current.CoreWindow.GetKeyState(Windows.System.VirtualKey.Shift) & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+            var ctrl = (Window.Current.CoreWindow.GetKeyState(VirtualKey.Control) & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+            var shift = (Window.Current.CoreWindow.GetKeyState(VirtualKey.Shift) & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+            var active = false;
+            // Need to duplicate in DocumentViewModel for the Editor too, TODO: Figure out centralization or create editor commands?
             if (ctrl)
             {
-                switch (args.VirtualKey)
+                if (shift)
                 {
-                    // New
-                    case Windows.System.VirtualKey.N:
-                        NewDocumentCommand.Execute(null);
-                        break;
-                    // Open
-                    case Windows.System.VirtualKey.O:
-                        OpenDocumentCommand.Execute(null);
-                        break;
-                    // Save
-                    case Windows.System.VirtualKey.S:
-                        if (shift)
-                        {
-                            SaveDocumentAsCommand.Execute(null);
-                        }
-                        else
-                        {
-                            SaveDocumentCommand.Execute(null);
-                        }
-                        break;
-                    // Close
-                    case Windows.System.VirtualKey.W:
-                    case Windows.System.VirtualKey.F4:
-                        CloseActiveDocumentCommand.Execute(null);
-                        break;
-                    // Prev/Next Document
-                    case Windows.System.VirtualKey.Tab:                        
-                        if (shift)
-                        {
-                            PreviousDocumentCommand.Execute(null);
-                        }
-                        else
-                        {
-                            NextDocumentCommand.Execute(null);
-                        }
-                        break;
+                    // Quick Shortcuts for Things
+                    switch (args.VirtualKey)
+                    {
+                        // Open Explorer
+                        case VirtualKey.E:
+                            active = true;
+                            OpenActivityCommand.Execute("EXPLORER");
+                            break;
+                        // Open Data Context
+                        case VirtualKey.C:
+                            active = true;
+                            OpenActivityCommand.Execute("DATASOURCES");
+                            break;
+                        // Open Binding Debugger
+                        case VirtualKey.B:
+                            active = true;
+                            OpenActivityCommand.Execute("DEBUG");
+                            break;
+                        // Open Toolbox
+                        case VirtualKey.T:
+                            active = true;
+                            OpenActivityCommand.Execute("TOOLBOX");
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (args.VirtualKey)
+                    {
+                        // Open Settings
+                        case VirtualKey.I:
+                            active = true;
+                            OpenSettingsCommand.Execute(null);
+                            break;
+                        // New
+                        case VirtualKey.N:
+                            active = true;
+                            NewDocumentCommand.Execute(null);
+                            break;
+                        // Open
+                        case VirtualKey.O:
+                            active = true;
+                            OpenDocumentCommand.Execute(null);
+                            break;
+                        // Save
+                        case VirtualKey.S:
+                            if (shift)
+                            {
+                                SaveDocumentAsCommand.Execute(ActiveFile);
+                            }
+                            else
+                            {   
+                                SaveDocumentCommand.Execute(ActiveFile);
+                            }
+                            active = true;
+                            break;
+                        // Close
+                        case VirtualKey.W:
+                        case VirtualKey.F4:
+                            active = true;
+                            CloseActiveDocumentCommand.Execute(ActiveFile);
+                            break;
+                        // Prev/Next Document
+                        case VirtualKey.Tab:
+                            if (shift)
+                            {
+                                active = true;
+                                PreviousDocumentCommand.Execute(null);
+                            }
+                            else
+                            {
+                                active = true;
+                                NextDocumentCommand.Execute(null);
+                            }
+                            break;
+                    }
                 }
 
-                Analytics.TrackEvent("Key_Shortcut", new Dictionary<string, string>()
+                if (active)
                 {
-                    { "Location", "MainView" },
-                    { "Ctrl", ctrl.ToString() },
-                    { "Shift", shift.ToString() },
-                    { "Code", args.VirtualKey.ToString() }
-                });
+                    Analytics.TrackEvent("Key_Shortcut", new Dictionary<string, string>()
+                    {
+                        { "Location", "MainView" },
+                        { "Action", active.ToString() },
+                        { "Ctrl", ctrl.ToString() },
+                        { "Shift", shift.ToString() },
+                        { "Code", args.VirtualKey.ToString() }
+                    });
+                }
             }
         }
     }

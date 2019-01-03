@@ -127,6 +127,8 @@ namespace XamlStudio.ViewModels
 
         public XamlRenderService XamlRenderer { get; } = new XamlRenderService();
 
+        public MainViewModel MainViewModel { get; internal set; }
+
         public object DataContext
         {
             get { return (object)GetValue(DataContextProperty); }
