@@ -23,6 +23,7 @@
     -->
     <Assembly Name="*Application*" Dynamic="Required All" />
     
+    <Namespace Name="Windows.UI.Xaml.Controls" Serialize="Required All" /> 
     
     <!-- Add your application specific runtime directives here. -->
 
