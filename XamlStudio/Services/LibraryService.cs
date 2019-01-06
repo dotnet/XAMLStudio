@@ -57,7 +57,18 @@ namespace XamlStudio.Services
         {
             var items = new List<Type>();
 
-            if (AppAssemblyInfo.Instance.TypesByNamespace.TryGetValue(ns, out var types))
+            if (LibrariesByNamespace.TryGetValue(ns, out LibraryInfo lib) && lib.TypeHints != null && lib.TypeHints.Count > 0)
+            {
+                foreach (var tname in lib.TypeHints)
+                {
+                    var t = Type.GetType(tname, false, false);
+                    if (t != null)
+                    {
+                        items.Add(t);
+                    }
+                }
+            }
+            else if (AppAssemblyInfo.Instance.TypesByNamespace.TryGetValue(ns, out var types))
             {
                 foreach (var t in types.Where(t => t.IsSubclassOf(typeof(DependencyObject))))
                 {

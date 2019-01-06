@@ -19,6 +19,9 @@ namespace XamlStudio.Models
         [JsonProperty("docroot")]
         public string DocumentationRoot { get; set; }
 
+        [JsonProperty("typehints")]
+        public List<string> TypeHints { get; set; }
+
         // Helper for Binding
         public List<Type> GetTypes()
         {

@@ -5,12 +5,12 @@
     "docroot": "https://docs.microsoft.com/en-us/uwp/api/<typefull>"
   },
   {
-    "name": "Windows Community Toolkit",
+    "name": "Windows Community Toolkit Controls",
     "namespace": "Microsoft.Toolkit.Uwp.UI.Controls",
     "docroot": "https://docs.microsoft.com/en-us/windows/communitytoolkit/controls/<type>"
   },
   {
-    "name": "Toolkit Converters",
+    "name": "Windows Community Toolkit Converters",
     "namespace": "Microsoft.Toolkit.Uwp.UI.Converters",
     "docroot": "https://docs.microsoft.com/en-us/windows/communitytoolkit/helpers/converters"
   },
@@ -18,5 +18,72 @@
     "name": "Xaml Behaviors",
     "namespace": "Microsoft.Xaml.Interactions.Core",
     "docroot": "https://github.com/Microsoft/XamlBehaviors/wiki/<type>"
+  },
+  {
+    "name": "Progress Telerik UI Input Controls",
+    "namespace": "Telerik.UI.Xaml.Controls.Input",
+    "docroot": "https://docs.telerik.com/devtools/universal-windows-platform/controls/<type>",
+    "typehints": [
+      "Telerik.UI.Xaml.Controls.Input.RadAutoCompleteBox, Telerik.UI.Xaml.Input.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a",
+      "Telerik.UI.Xaml.Controls.Input.RadCalendar, Telerik.UI.Xaml.Input.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a",
+      "Telerik.UI.Xaml.Controls.Input.RadDatePicker, Telerik.UI.Xaml.Input.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a",
+      "Telerik.UI.Xaml.Controls.Input.RadTimePicker, Telerik.UI.Xaml.Input.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a",
+      "Telerik.UI.Xaml.Controls.Input.RadNumericBox, Telerik.UI.Xaml.Input.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a",
+      "Telerik.UI.Xaml.Controls.Input.RadRangeSlider, Telerik.UI.Xaml.Input.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a",
+      "Telerik.UI.Xaml.Controls.Input.RadRating, Telerik.UI.Xaml.Input.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a"
+    ]
+  },
+  {
+    "name": "Progress Telerik UI Controls",
+    "namespace": "Telerik.UI.Xaml.Controls.Primitives",
+    "docroot": "https://docs.telerik.com/devtools/universal-windows-platform/controls/<type>",
+    "typehints": [
+      "Telerik.UI.Xaml.Controls.Primitives.RadBusyIndicator, Telerik.UI.Xaml.Primitives.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a",
+      "Telerik.UI.Xaml.Controls.Primitives.RadExpanderControl, Telerik.UI.Xaml.Primitives.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a",
+      "Telerik.UI.Xaml.Controls.Primitives.RadHubTile, Telerik.UI.Xaml.Primitives.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a",
+      "Telerik.UI.Xaml.Controls.Primitives.RadSlideHubTile, Telerik.UI.Xaml.Primitives.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a",
+      "Telerik.UI.Xaml.Controls.Primitives.RadPictureRotatorHubTile, Telerik.UI.Xaml.Primitives.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a",
+      "Telerik.UI.Xaml.Controls.Primitives.RadMosaicHubTile, Telerik.UI.Xaml.Primitives.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a",
+      "Telerik.UI.Xaml.Controls.Primitives.RadCustomHubTile, Telerik.UI.Xaml.Primitives.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a",
+      "Telerik.UI.Xaml.Controls.Primitives.RadRadialMenu, Telerik.UI.Xaml.Primitives.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a",
+      "Telerik.UI.Xaml.Controls.Primitives.RadRangeSlider, Telerik.UI.Xaml.Primitives.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a",
+      "Telerik.UI.Xaml.Controls.Primitives.RadSideDrawer, Telerik.UI.Xaml.Primitives.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a",
+      "Telerik.UI.Xaml.Controls.Primitives.RadPaginationControl, Telerik.UI.Xaml.Primitives.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a"
+    ]
+  },
+  {
+    "name": "Windows UI Library",
+    "namespace": "Microsoft.UI.Xaml.Controls",
+    "docroot": "https://docs.microsoft.com/en-us/uwp/api/<typefull>",
+    "typehints": [
+      "Microsoft.UI.Xaml.Controls.ColorPicker, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.CommandBarFlyout, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.DropDownButton, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.FlowLayout, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.LayoutPanel, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.MenuBar, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.MenuBarItem, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.MenuBarItemFlyout, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.NavigationView, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.NavigationViewItem, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.ParallaxView, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.PersonPicture, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.RatingControl, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.RefreshContainer, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.ScrollBar2, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.Scroller, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.ScrollerView, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.SplitButton, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.StackLayout, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.SwipeControl, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.SwipeItem, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.SwipeItems, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.TextCommandBarFlyout, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.ToggleSplitButton, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.TreeView, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.TreeViewItem, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.TreeViewNode, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime",
+      "Microsoft.UI.Xaml.Controls.TwoPaneView, Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime"
+    ]
   }
 ]

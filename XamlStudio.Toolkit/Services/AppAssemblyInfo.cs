@@ -47,21 +47,15 @@ namespace XamlStudio.Toolkit.Services
         /// <returns></returns>
         private async Task LoadAssembliesAsync(Assembly[] extraAssemblies = null)
         {
-            var assemblies = new List<Assembly>
-            {
-                // Add Windows Assembly
-                typeof(FrameworkElement).GetTypeInfo().Assembly, // Windows.UI.Xaml
-            };
+            // Add any provided assemblies
+            // Current workaround for Microsoft.UI.Xaml and this limitation:
+            // https://social.msdn.microsoft.com/Forums/en-US/a78fdd8e-a108-4279-9e6b-6c87cd0a0f0f/assemblyload-of-winmd-file-possible
+            var assemblies = new HashSet<Assembly>(extraAssemblies ?? Enumerable.Empty<Assembly>());
 
-            if (extraAssemblies != null)
-            {
-                // Add any provided assemblies
-                // Current workaround for Microsoft.UI.Xaml and this limitation:
-                // https://social.msdn.microsoft.com/Forums/en-US/a78fdd8e-a108-4279-9e6b-6c87cd0a0f0f/assemblyload-of-winmd-file-possible
-                assemblies.AddRange(extraAssemblies);
-            }
-
-            // Add Other Assemblies
+            // Add Windows Assembly
+            assemblies.Add(typeof(FrameworkElement).GetTypeInfo().Assembly); // Windows.UI.Xaml
+            
+            // Add Other Assemblies (Debug Only)
             var files = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFilesAsync();
             if (files == null)
                 return;
@@ -78,7 +72,7 @@ namespace XamlStudio.Toolkit.Services
                 }
             }
 
-            LoadedAssemblies = assemblies.AsReadOnly();
+            LoadedAssemblies = assemblies.ToList().AsReadOnly();
         }
 
         /// <summary>
