@@ -91,7 +91,7 @@ namespace XamlStudio.Toolkit.Services
                 // Look to see if we're trying to use any namespaces we know about
                 foreach (var ns in settings.KnownNamespaces)
                 {
-                    var usage = ns.Name + ":";
+                    var usage = "<" + ns.Name + ":";
                     var included = XmlnsPrefix + ':' + ns.Name;
 
                     if (content.Contains(usage) && !value.Contains(included))
