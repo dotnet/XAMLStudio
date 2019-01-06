@@ -31,14 +31,14 @@ namespace XamlStudio.ViewModels
             // Ensure we've loaded
             await LibraryService.InitializeAsync();
 
-            _groupedSource = LibraryService.Libraries.SelectMany(lib => LibraryService.GetTypesForNamespace(lib.Namespace)).GroupBy(api => api.Namespace);
+            _groupedSource = LibraryService.Libraries.SelectMany(lib => LibraryService.GetTypesForNamespace(lib.Namespace)).OrderBy(api => api.Name).GroupBy(api => api.Namespace).OrderBy(group => group.Key);
 
             LibraryView.Source = _groupedSource;
         }
 
         public void Filter(string text)
         {
-            LibraryView.Source = _groupedSource.SelectMany(group => group).Where(t => t.Name.Contains(text) || t.Namespace.Contains(text) || t.BaseType.Name.Contains(text)).GroupBy(api => api.Namespace);
+            LibraryView.Source = _groupedSource.SelectMany(group => group).Where(t => t.Name.Contains(text, StringComparison.OrdinalIgnoreCase) || t.Namespace.Contains(text, StringComparison.OrdinalIgnoreCase) || t.BaseType.Name.Contains(text, StringComparison.OrdinalIgnoreCase)).GroupBy(api => api.Namespace);
         }
     }
 }
