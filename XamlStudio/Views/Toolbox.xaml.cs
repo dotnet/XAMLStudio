@@ -25,6 +25,13 @@ namespace XamlStudio.Views
             this.InitializeComponent();
 
             ViewModel.Initialize();
+
+            TypeList.Loaded += TypeList_Loaded;
+        }
+
+        private void TypeList_Loaded(object sender, RoutedEventArgs e)
+        {
+            ClearSelection();
         }
 
         private void ListView_ItemClick(object sender, ItemClickEventArgs e)
@@ -58,17 +65,51 @@ namespace XamlStudio.Views
                 });
             }
 
-            // Clear Selection
-            var listview = sender as ListView;
-            if (listview != null)
+            ClearSelection();
+        }
+
+        private void ClearSelection()
+        {
+            #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () =>
             {
-                #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () =>
+                TypeList.SelectedItem = null;
+            });
+            #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        }
+
+        private void Favorite_Click(object sender, RoutedEventArgs e)
+        {
+            var fe = sender as FrameworkElement;
+            if (fe != null)
+            {
+                var lvi = fe.FindAscendant<ListViewItem>();
+                if (lvi != null && lvi.Content is Type type)
                 {
-                    listview.SelectedItem = null;
-                });
-                #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    if (ViewModel.Favorites.Contains(type))
+                    {
+                        ViewModel.Favorites.Remove(type);
+
+                        Analytics.TrackEvent("Toolbox_Favorite", new Dictionary<string, string> {
+                            { "Operation", "Remove" },
+                            { "Type", type.FullName },
+                            { "Number", ViewModel.Favorites.Count.ToString() }
+                        });
+                    }
+                    else
+                    {
+                        ViewModel.Favorites.Add(type);
+
+                        Analytics.TrackEvent("Toolbox_Favorite", new Dictionary<string, string> {
+                            { "Operation", "Add" },
+                            { "Type", type.FullName },
+                            { "Number", ViewModel.Favorites.Count.ToString() }
+                        });
+                    }
+                }
             }
+
+            ClearSelection();
         }
 
         private void HyperlinkButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -94,16 +135,16 @@ namespace XamlStudio.Views
                     }
                 }
             }
+
+            ClearSelection();
         }
 
-        private void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
-        {
-            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
-            {
-                ViewModel.Filter(sender.Text);
-
-                // TODO: After have placeholder delay to slow this down, add analytics on more complete query rather than each stroke?
-            }
-        }
+        //private void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        //{
+        //    if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+        //    {
+        //        // TODO: After have placeholder delay to slow this down, add analytics on more complete query rather than each stroke?
+        //    }
+        //}
     }
 }

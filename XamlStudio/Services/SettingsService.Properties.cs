@@ -98,6 +98,12 @@ namespace XamlStudio.Services
             set { Set(value); }
         }
 
+        public List<string> FavoriteTypes
+        {
+            get { return Get<List<string>>(); }
+            set { Set(value); }
+        }
+
         ////public string DefaultWorkspaceFolderToken
         ////{
         ////    get { return Get<string>(); }

@@ -1,0 +1,45 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Windows.Foundation.Collections;
+using Windows.UI.Xaml.Data;
+
+namespace Microsoft.Toolkit.Future.Data
+{
+    public class Grouping<TKey, TElement> : IGrouping<TKey, TElement>, IEnumerable<TElement>, IEnumerable, ICollectionViewGroup
+    {
+        public object Group => Key;
+
+        public IObservableVector<object> GroupItems => (IObservableVector<object>)new ObservableCollection<object>((IEnumerable<object>)this);
+
+        public TKey Key { get; private set; }
+
+        private IEnumerable<TElement> Items { get; }
+
+        public Grouping(TKey key, IEnumerable<TElement> items)
+        {
+            Key = key;
+            Items = items;
+        }
+
+        public IEnumerator<TElement> GetEnumerator()
+        {
+            return Items.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return Items.GetEnumerator();
+        }
+    }
+
+    public static class EnumerableExtensions
+    {
+        public static Grouping<TKey, TElement> ToGroup<TKey, TElement>(this IEnumerable<TElement> list, TKey key) 
+            => new Grouping<TKey, TElement>(key, list);
+    }
+}

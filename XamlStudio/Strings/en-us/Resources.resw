@@ -438,4 +438,8 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>Toolbox</value>
     <comment>Accessibility Name for Toolbox Activity</comment>
   </data>
+  <data name="Toolbox_Favorites_Header" xml:space="preserve">
+    <value>Favorites</value>
+    <comment>Group Header text for where Favorites are</comment>
+  </data>
 </root>

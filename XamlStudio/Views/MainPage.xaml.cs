@@ -101,7 +101,7 @@ namespace XamlStudio.Views
                 //// TODO: Show Loading Ring?
             }
 
-            await ViewModel.SettingsViewModel.Settings.InitializeAndLoad();
+            await ViewModel.SettingsViewModel.Settings.InitializeAsync();
 
             if (_restoreState != null)
             {

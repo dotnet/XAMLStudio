@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Nito.AsyncEx;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -15,45 +16,65 @@ namespace XamlStudio.Services
     {
         public static SettingsService Instance => Singleton<SettingsService>.Instance;
 
-        public async Task InitializeAndLoad()
+        private readonly AsyncLock _initializeMutex = new AsyncLock();
+        private bool _isInitialized = false;
+
+        public SettingsService()
         {
-            foreach (var prop in GetType().GetProperties())
+            #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            InitializeAsync();
+            #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        }
+
+        public async Task InitializeAsync()
+        {
+            using (await _initializeMutex.LockAsync())
             {
-                var attr = prop.GetCustomAttribute(typeof(DefaultValueAttribute)) as DefaultValueAttribute;
-
-                if (attr != null && !_settings.ContainsKey(prop.Name))
+                if (!_isInitialized)
                 {
-                    var value = await ApplicationData.Current.LocalSettings.ReadAsync(prop.Name, prop.PropertyType);
-                    // If we don't have a value yet, see if we've defined a default.
-                    if (value == null || value.Equals(prop.PropertyType.GetDefault()) ||
-                       (value is string && String.IsNullOrEmpty(value as string)))
+                    foreach (var prop in GetType().GetProperties())
                     {
-                        // If we don't have a value yet, see if we've defined a default.
-                        if (attr.LoadFromUri)
+                        if (!_settings.ContainsKey(prop.Name))
                         {
-                            // Load from our application resources.
-                            var uri = new Uri(attr.Value.ToString());
-
-                            if (uri != null)
+                            var value = await ApplicationData.Current.LocalSettings.ReadAsync(prop.Name, prop.PropertyType);
+                            // If we don't have a value yet, see if we've defined a default.
+                            if (value == null || value.Equals(prop.PropertyType.GetDefault()) ||
+                               (value is string && string.IsNullOrEmpty(value as string)))
                             {
-                                var file = await StorageFile.GetFileFromApplicationUriAsync(uri);
+                                // If we don't have a value yet, see if we've defined a default.
+                                var attr = prop.GetCustomAttribute(typeof(DefaultValueAttribute)) as DefaultValueAttribute;
+                                if (attr != null)
+                                {
+                                    if (attr.LoadFromUri)
+                                    {
+                                        // Load from our application resources.
+                                        var uri = new Uri(attr.Value.ToString());
 
-                                var text = await FileIO.ReadTextAsync(file);
+                                        if (uri != null)
+                                        {
+                                            var file = await StorageFile.GetFileFromApplicationUriAsync(uri);
 
-                                _settings[prop.Name] = JsonConvert.DeserializeObject(text, prop.PropertyType);
+                                            var text = await FileIO.ReadTextAsync(file);
+
+                                            _settings[prop.Name] = JsonConvert.DeserializeObject(text, prop.PropertyType);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // Use the provided value.
+                                        _settings[prop.Name] = attr.Value;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                // Cache loaded value.
+                                _settings[prop.Name] = value;
                             }
                         }
-                        else
-                        {
-                            // Use the provided value.
-                            _settings[prop.Name] = attr.Value;
-                        }
                     }
-                    else
-                    {
-                        // Cache loaded value.
-                        _settings[prop.Name] = value;
-                    }
+
+                    _isInitialized = true;
                 }
             }
         }

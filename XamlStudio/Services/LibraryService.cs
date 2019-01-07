@@ -23,7 +23,7 @@ namespace XamlStudio.Services
         public Dictionary<string, LibraryInfo> LibrariesByNamespace { get; private set; }
 
         private readonly AsyncLock _initializeMutex = new AsyncLock();
-        private bool isInitialized = false;
+        private bool _isInitialized = false;
 
         public LibraryService()
         {
@@ -36,7 +36,7 @@ namespace XamlStudio.Services
         {
             using (await _initializeMutex.LockAsync())
             {
-                if (!isInitialized)
+                if (!_isInitialized)
                 {
                     await AppAssemblyInfo.Instance.InitializeAsync();
 
@@ -48,7 +48,7 @@ namespace XamlStudio.Services
 
                     LibrariesByNamespace = Libraries.ToDictionary(item => item.Namespace);
 
-                    isInitialized = true;
+                    _isInitialized = true;
                 }
             }
         }

@@ -6,6 +6,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:ex="using:Microsoft.Toolkit.Uwp.UI.Extensions"
       xmlns:future="using:Microsoft.Toolkit.Uwp.UI.Controls.Future"
+      xmlns:futureConverters="using:Microsoft.Toolkit.Future.Converters"
       xmlns:globalization="using:System.Globalization"
       xmlns:i="using:Microsoft.Xaml.Interactivity"
       xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
@@ -16,9 +17,13 @@
       xmlns:services="using:XamlStudio.Services"
       xmlns:system="using:System"
       xmlns:xc="using:WinRTXamlToolkit.Controls"
+      x:Name="ToolboxPage"
       mc:Ignorable="d">
 
     <Page.Resources>
+        <futureConverters:CollectionContainsConverter x:Key="CollectionContainsVisibilityConverter" Collection="{Binding ViewModel.Favorites, ElementName=ToolboxPage}" />
+        <!-- TrueValue="Visible" FalseValue="Collapsed"/-->
+
         <Style x:Key="ListViewItemContainerWideStyle" TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         </Style>
@@ -69,9 +74,10 @@
                         Margin="12,0,0,0"
                         QueryIcon="Find"
                         Style="{StaticResource AutoSuggestBoxNoPopupStyle}"
-                        TextChanged="AutoSuggestBox_TextChanged" />
+                        Text="{x:Bind ViewModel.Filter, Mode=TwoWay}" />
 
-        <ListView Grid.Row="2"
+        <ListView x:Name="TypeList"
+                  Grid.Row="2"
                   DataContext="{x:Bind ViewModel}"
                   IsItemClickEnabled="True"
                   ItemClick="ListView_ItemClick"
@@ -98,7 +104,27 @@
                             <TextBlock FontSize="14" Text="{Binding Name}" />
                             <TextBlock FontSize="8" Text="{Binding BaseType}" />
                         </StackPanel>
-                        <HyperlinkButton HorizontalAlignment="Right" Click="HyperlinkButton_Click">Docs</HyperlinkButton>
+                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Margin="0,0,4,0">
+                            <!-- TODO: Encapsulate this in a togglebutton or something with a different style? -->
+                            <HyperlinkButton Click="Favorite_Click" Margin="0,0,4,0">
+                                <StackPanel>
+                                    <FontIcon FontFamily="Segoe MDL2 Assets"
+                                              FontSize="16"
+                                              Glyph="&#xEB51;"
+                                              Visibility="{Binding Converter={StaticResource CollectionContainsVisibilityConverter}, ConverterParameter=True}"/>
+                                    <FontIcon x:Name="Favorited"
+                                              FontFamily="Segoe MDL2 Assets"
+                                              FontSize="16"
+                                              Glyph="&#xEB52;"
+                                              Visibility="{Binding Converter={StaticResource CollectionContainsVisibilityConverter}}" />
+                                </StackPanel>
+                            </HyperlinkButton>
+                            <HyperlinkButton Click="HyperlinkButton_Click">
+                                <FontIcon FontFamily="Segoe MDL2 Assets"
+                                                  FontSize="16"
+                                                  Glyph="&#xE9CE;" />
+                            </HyperlinkButton>
+                        </StackPanel>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
