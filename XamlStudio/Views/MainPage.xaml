@@ -151,15 +151,16 @@
                 <x:Double x:Key="TabViewItemHeaderMinWidth">90</x:Double>
             </toolkit:TabView.Resources>
             <toolkit:TabView.ItemTemplate>
-                <DataTemplate />
+                <DataTemplate/>
             </toolkit:TabView.ItemTemplate>
             <toolkit:TabView.ItemHeaderTemplate>
                 <DataTemplate x:DataType="models:XamlDocument">
-                    <TextBlock Text="{x:Bind Title, Mode=OneWay}" />
+                    <TextBlock Text="{x:Bind Title, Mode=OneWay}"/>
                 </DataTemplate>
             </toolkit:TabView.ItemHeaderTemplate>
             <toolkit:TabView.TabActionHeader>
-                <Button Command="{x:Bind ViewModel.NewDocumentCommand}" Style="{StaticResource MSEdgePivotButtonStyle}">
+                <Button x:Uid="MainPage_Button_New"
+                        Command="{x:Bind ViewModel.NewDocumentCommand}" Style="{StaticResource MSEdgePivotButtonStyle}">
                     <SymbolIcon exf:SymbolIconExtensions.FontSize="12" Symbol="Add" />
                 </Button>
             </toolkit:TabView.TabActionHeader>

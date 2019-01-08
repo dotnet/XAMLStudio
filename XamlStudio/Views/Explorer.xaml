@@ -28,13 +28,15 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Style="{StaticResource VSCodeAppBarHeaderTextStyle}" Text="EXPLORER" />
+                <TextBlock x:Uid="Explorer_Header" Style="{StaticResource VSCodeAppBarHeaderTextStyle}" />
                 <Button Grid.Column="1"
+                        x:Uid="Explorer_Button_Open"
                         Command="{x:Bind MainViewModel.OpenDocumentCommand}"
                         Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
                     <SymbolIcon fex:SymbolIconExtensions.FontSize="14" Symbol="OpenFile" />
                 </Button>
                 <Button Grid.Column="2"
+                        x:Uid="Explorer_Button_New"
                         Margin="0,0,12,0"
                         Command="{x:Bind MainViewModel.NewDocumentCommand}"
                         Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
@@ -42,21 +44,22 @@
                 </Button>
             </Grid>
         </Border>
-        <controls:Expander x:Name="OpenEditorsExpander"
+        <!--<controls:Expander x:Name="OpenEditorsExpander"
                            Grid.Row="1"
                            VerticalContentAlignment="Top"
                            Header="OPEN EDITORS"
                            HeaderStyle="{StaticResource VSCodeExpanderStyle}"
-                           IsExpanded="True">
+                           IsExpanded="True">-->
             <ListBox x:Name="OpenEditorList"
-                     Background="Transparent"
+                     Grid.Row="1"
+                     Background="{ThemeResource Brush-Blue-Dark-1}"
                      DataContext="{x:Bind}"
                      ItemContainerStyle="{StaticResource Style-ListBoxItem-Expolorer}"
                      ItemsSource="{x:Bind MainViewModel.OpenFiles}"
                      SelectedItem="{x:Bind MainViewModel.ActiveFile, Mode=TwoWay}">
                 <ListBox.ItemTemplate>
                     <DataTemplate x:DataType="model:XamlDocument">
-                        <Grid>
+                        <Grid AutomationProperties.Name="{Binding Title}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
@@ -70,6 +73,7 @@
                                         Orientation="Horizontal"
                                         Visibility="{Binding (ex:FrameworkElementExtensions.Ancestor).IsSelected, RelativeSource={RelativeSource Self}}">
                                 <Button Padding="1"
+                                        x:Uid="Explorer_Button_Save"
                                         Command="{Binding DataContext.MainViewModel.SaveDocumentCommand, ElementName=OpenEditorList}"
                                         CommandParameter="{Binding}"
                                         Style="{StaticResource VSCodeAppBarHeaderButtonStyle}"
@@ -77,6 +81,7 @@
                                     <SymbolIcon fex:SymbolIconExtensions.FontSize="16" Symbol="Save" />
                                 </Button>
                                 <Button Padding="1"
+                                        x:Uid="Explorer_Button_SaveAs"
                                         Command="{Binding DataContext.MainViewModel.SaveDocumentAsCommand, ElementName=OpenEditorList}"
                                         CommandParameter="{Binding}"
                                         Style="{StaticResource VSCodeAppBarHeaderButtonStyle}"
@@ -90,7 +95,7 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-        </controls:Expander>
+        <!--</controls:Expander>-->
         <!--<future:SwitchPresenter x:Name="FolderExpander"
                                 Grid.Row="2">
             <future:Case IsDefault="True">

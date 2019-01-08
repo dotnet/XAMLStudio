@@ -442,4 +442,88 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>Favorites</value>
     <comment>Group Header text for where Favorites are</comment>
   </data>
+  <data name="DataSource_Header.Text" xml:space="preserve">
+    <value>DATA SOURCE</value>
+    <comment>Text at top of Data Source Panel</comment>
+  </data>
+  <data name="Debug_Header.Text" xml:space="preserve">
+    <value>DEBUG</value>
+    <comment>Text at top of Debug Panel</comment>
+  </data>
+  <data name="Explorer_Button_New.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>New Document</value>
+    <comment>Accessibility Name for New Document Button on Explorer Panel</comment>
+  </data>
+  <data name="Explorer_Button_New.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>New Document (Ctrl+N)</value>
+    <comment>Tooltip for New Document Button on Explorer Panel</comment>
+  </data>
+  <data name="Explorer_Button_Open.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Open Document</value>
+    <comment>Accessibility Name for Open Document Button on Explorer Panel</comment>
+  </data>
+  <data name="Explorer_Button_Open.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open Document (Ctrl+O)</value>
+    <comment>Tooltip for Open Document Button on Explorer Panel</comment>
+  </data>
+  <data name="Explorer_Button_Save.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Save Document</value>
+    <comment>Accessibility Name for Save Document Button on document items in Explorer Panel</comment>
+  </data>
+  <data name="Explorer_Button_Save.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Save Document (Ctrl+S)</value>
+    <comment>Tooltip for Save Document Button on document item in Explorer Panel</comment>
+  </data>
+  <data name="Explorer_Button_SaveAs.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Save Document As</value>
+    <comment>Accessibility Name for Save Document As on document items in Explorer Panel</comment>
+  </data>
+  <data name="Explorer_Button_SaveAs.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Save Document As (Ctrl+Shift+S)</value>
+    <comment>Tooltip for Save Document As Button on document items in Explorer Panel</comment>
+  </data>
+  <data name="Explorer_Header.Text" xml:space="preserve">
+    <value>EXPLORER</value>
+    <comment>Text at top of Explorer Panel</comment>
+  </data>
+  <data name="MainPage_Button_New.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>New Document</value>
+    <comment>Accessibility Name for New Document Button in TabView at top of window</comment>
+  </data>
+  <data name="MainPage_Button_New.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>New Document (Ctrl+N)</value>
+    <comment>Tooltip for New Document button in TabView at top of window</comment>
+  </data>
+  <data name="Toolbox_Button_Docs.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Open Documentation</value>
+    <comment>Accessibility Name for Documentation Icon in Toolbox Panel</comment>
+  </data>
+  <data name="Toolbox_Button_Docs.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open Documentation</value>
+    <comment>Tooltip for Documentation Icon in Toolbox Panel</comment>
+  </data>
+  <data name="Toolbox_Button_Favorite.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Mark Favorite</value>
+    <comment>Accessibility Name for Favorite Icon in Toolbox Panel</comment>
+  </data>
+  <data name="Toolbox_Button_Favorite.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Mark Favorite</value>
+    <comment>Tooltip for Favorite icon in Toolbox Panel</comment>
+  </data>
+  <data name="Toolbox_Button_Unfavorite.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Unmark Favorite</value>
+    <comment>Accessibility Name for unmark Favorite Icon in Toolbox Panel</comment>
+  </data>
+  <data name="Toolbox_Button_Unfavorite.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Unmark Favorite</value>
+    <comment>Tooltip for Unmark Favorite Icon in Toolbox Panel</comment>
+  </data>
+  <data name="Toolbox_Header.Text" xml:space="preserve">
+    <value>TOOLBOX</value>
+    <comment>Text at top of Toolbox Panel</comment>
+  </data>
+  <data name="Toolbox_SearchBox.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Toolbox Search</value>
+    <comment>Accessibility Name for Toolbox Searchbox</comment>
+  </data>
 </root>

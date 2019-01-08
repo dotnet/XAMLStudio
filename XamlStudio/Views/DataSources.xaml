@@ -16,7 +16,7 @@
         <Border Margin="0,0,-12,0"
                 Padding="0,12,0,0"
                 Style="{StaticResource VSCodeAppBarHeaderStyle}">
-            <TextBlock Style="{StaticResource VSCodeAppBarHeaderTextStyle}">DATA SOURCE</TextBlock>
+            <TextBlock x:Uid="DataSource_Header" Style="{StaticResource VSCodeAppBarHeaderTextStyle}"/>
         </Border>
 
         <TextBox x:Name="LiveDataSourceUri"
