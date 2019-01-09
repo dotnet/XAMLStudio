@@ -28,15 +28,12 @@
     <Assembly Name="Microsoft.Toolkit.Uwp.UI" Dynamic="Required All" />
     <Assembly Name="Microsoft.Xaml.Interactions" Dynamic="Required All" />
 
-    <Namespace Name="Microsoft.Xaml.Interactions.Core" Serialize="Required All" />
+    <Namespace Name="Microsoft.Xaml.Interactions.Core" Dynamic="Required All" />
     
-    <Namespace Name="Telerik.UI.Xaml.Controls.Input" Serialize="Required All" />
-    <Namespace Name="Telerik.UI.Xaml.Controls.Primitives" Serialize="Required All" />
+    <Namespace Name="Telerik.UI.Xaml.Controls.Input" Dynamic="Required All" />
+    <Namespace Name="Telerik.UI.Xaml.Controls.Primitives" Dynamic="Required All" />
     
-    <Namespace Name="Microsoft.UI.Xaml.Controls" Serialize="Required All" />
-    <Namespace Name="Windows.UI.Xaml.Controls" Serialize="Required All" />
+    <Namespace Name="Microsoft.UI.Xaml.Controls" Dynamic="Required All" />
+    <Namespace Name="Windows.UI.Xaml.Controls" Dynamic="Required All" />
   </Application>
-  <Library Name="Microsoft.Toolkit.Uwp.UI.Controls">
-    <Assembly Name="Microsoft.Toolkit.Uwp.UI.Controls" Dynamic="Required All" />
-  </Library>
 </Directives>

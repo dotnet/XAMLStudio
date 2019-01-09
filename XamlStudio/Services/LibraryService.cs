@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -38,7 +39,15 @@ namespace XamlStudio.Services
             {
                 if (!_isInitialized)
                 {
-                    await AppAssemblyInfo.Instance.InitializeAsync();
+                    // TODO: Clean-up these initialize calls to make sure this list is centralized... (MainPage, XamlRenderService)
+                    await AppAssemblyInfo.Instance.InitializeAsync(new Assembly[] {
+                        typeof(Microsoft.UI.Xaml.Controls.NavigationView).Assembly,
+                        typeof(Microsoft.Toolkit.Uwp.UI.Controls.TabView).Assembly,
+                        typeof(Microsoft.Toolkit.Uwp.UI.Converters.BoolToVisibilityConverter).Assembly,
+                        typeof(Microsoft.Xaml.Interactions.Core.DataTriggerBehavior).Assembly,
+                        typeof(Telerik.UI.Xaml.Controls.Input.RadAutoCompleteBox).Assembly,
+                        typeof(Telerik.UI.Xaml.Controls.Primitives.RadExpanderControl).Assembly
+                    });
 
                     var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Strings/libs.json"));
 
@@ -57,6 +66,7 @@ namespace XamlStudio.Services
         {
             var items = new List<Type>();
 
+            // TODO: Don't realy need this now anymore, but helps to optimize listing... thoughts?  May need specific doc link hints for Telerik
             if (LibrariesByNamespace.TryGetValue(ns, out LibraryInfo lib) && lib.TypeHints != null && lib.TypeHints.Count > 0)
             {
                 foreach (var tname in lib.TypeHints)

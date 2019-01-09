@@ -82,6 +82,7 @@ namespace XamlStudio.Views
             // Offload from main thread to parallelize assembly loading.
             Task t = new Task(async () =>
             {
+                // TODO: Clean-up these initialize calls to make sure this list is centralized...
                 await AppAssemblyInfo.Instance.InitializeAsync(new Assembly[] {
                     typeof(Microsoft.UI.Xaml.Controls.NavigationView).Assembly,
                     typeof(Microsoft.Toolkit.Uwp.UI.Controls.TabView).Assembly,
