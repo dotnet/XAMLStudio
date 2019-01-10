@@ -7,20 +7,29 @@
       xmlns:local="using:XamlStudio.Views"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:storage="using:Windows.Storage"
+      xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
       mc:Ignorable="d">
+
+    <Page.Resources>
+        <animations:AnimationCollection x:Key="ImplicitOffset">
+            <animations:OffsetAnimation Duration="0:0:0.3"></animations:OffsetAnimation>
+        </animations:AnimationCollection>
+    </Page.Resources>
 
     <Grid Padding="24" Background="{ThemeResource Brush-Blue-Dark-2}">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" MinWidth="236" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition />
+            <!--<ColumnDefinition />-->
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.ColumnSpan="2"
+        <StackPanel x:Name="LogoStack"
+                    Grid.ColumnSpan="2"
                     Margin="-12,-16,0,8"
                     Orientation="Horizontal">
             <Image Width="300"
@@ -30,7 +39,8 @@
                     <PlaneProjection LocalOffsetX="-0" />
                 </Image.Projection>
             </Image>
-            <StackPanel Margin="-30,0,0,0"
+            <StackPanel x:Name="LogoText"
+                        Margin="-30,0,0,0"
                         Padding="16"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
@@ -86,20 +96,71 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </StackPanel>
-        <StackPanel Grid.Row="1"
-                    Grid.RowSpan="2"
+        <StackPanel x:Name="FeatureList"
+                    Grid.Row="1"
+                    Grid.RowSpan="3"
                     Grid.Column="1"
-                    Margin="40">
+                    Margin="40"
+                    animations:Implicit.Animations="{StaticResource ImplicitOffset}">
             <TextBlock FontSize="22"
                        FontWeight="Bold"
                        Foreground="{ThemeResource Brush-Grey-Light-0}"
-                       Text="Known Issues" />
-            <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}">
-                - Data Source Panel needs Open Local, Open Remote, and Save buttons.
+                       Text="New Features" />
+            <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}" TextWrapping="WrapWholeWords">
+                - Live and Interactable Preview
             </TextBlock>
-            <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}">
-                - Figure out what to put here when there's no issues...
+            <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}" TextWrapping="WrapWholeWords">
+                - Live Binding Debugging
+            </TextBlock>
+            <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}" TextWrapping="WrapWholeWords">
+                - Data Context Editor
+            </TextBlock>
+            <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}" TextWrapping="WrapWholeWords">
+				- Auto-Save and Restore Documents
+            </TextBlock>
+            <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}" TextWrapping="WrapWholeWords">
+				- IntelliSense
+            </TextBlock>
+            <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}" TextWrapping="WrapWholeWords">
+				- Documentation Toolbox
+            </TextBlock>
+            <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}" TextWrapping="WrapWholeWords">
+				- Alignment Guides
+            </TextBlock>
+            <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}" TextWrapping="WrapWholeWords">
+				- Namespace Helpers
             </TextBlock>
         </StackPanel>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="WindowStates">
+                <VisualState x:Name="NarrowState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="FeatureList.(Grid.Row)" Value="3" />
+                        <Setter Target="FeatureList.(Grid.Column)" Value="0" />
+                        <Setter Target="FeatureList.(Grid.RowSpan)" Value="1" />
+                        <Setter Target="LogoStack.Orientation" Value="Vertical" />
+                        <Setter Target="LogoText.HorizontalAlignment" Value="Center"/>
+                        <Setter Target="LogoText.Margin" Value="0,-30,0,0" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="WideState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="640" /> <!-- TODO: Need Parent Size not Window -->
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="FeatureList.(Grid.Row)" Value="1" />
+                        <Setter Target="FeatureList.(Grid.Column)" Value="1" />
+                        <Setter Target="FeatureList.(Grid.RowSpan)" Value="3" />
+                        <Setter Target="LogoStack.Orientation" Value="Horizontal" />
+                        <Setter Target="LogoText.HorizontalAlignment" Value="Left" />
+                        <Setter Target="LogoText.Margin" Value="-30,0,0,0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>
