@@ -19,7 +19,7 @@ namespace XamlStudio.Models
         Settings
     }
 
-    public sealed class XamlDocument: SimpleObservable
+    public sealed class XamlDocument: FileBackedDocument
     {
         private readonly string _id = Guid.NewGuid().ToString();
 
@@ -40,36 +40,6 @@ namespace XamlStudio.Models
         }
 
         /// <summary>
-        /// Text Contents of this Xaml Document.
-        /// </summary>
-        private string _content;
-        public string Content
-        {
-            get { return _content; }
-            set { Set(ref _content, value); }
-        }
-
-        /// <summary>
-        /// File Title to Display in UI Tab.
-        /// </summary>
-        private string _title;
-        public string Title
-        {
-            get { return (_dirty ? "*": "") + _title; }
-            set { Set(ref _title, value.Trim('*')); }
-        }
-
-        private bool _dirty;
-        public bool HasChanged
-        {
-            get { return _dirty; }
-            set {
-                Set(ref _dirty, value);
-                OnPropertyChanged(nameof(Title)); // Update Title based on dirty flag
-            }
-        }
-
-        /// <summary>
         /// Is this file actively visible/engaged in the UI.
         /// </summary>
         private bool _active;
@@ -79,121 +49,39 @@ namespace XamlStudio.Models
             set { Set(ref _active, value); }
         }
 
-        public string StorageToken { get; set; }
-
-        /// <summary>
-        /// OS File backing this document.  Needed for Defer Updates, don't use.
-        /// </summary>
-        [JsonIgnore]
-        internal StorageFile BackingFile { get; set; }
+        private DataContext _dataContext = new DataContext();
+        public DataContext DataContext
+        {
+            get { return _dataContext; }
+            set { Set(ref _dataContext, value); }
+        }
 
         [JsonIgnore]
         public string DisplayName { get { return BackingFile.DisplayName; } }
 
-        public bool CanSave { get { return BackingFile != null; } }
-
         internal XamlDocument()
+        {
+            Initialize();
+        }
+
+        public XamlDocument(string title) : base(title)
+        {
+            Initialize();
+        }
+
+        public XamlDocument(StorageFile file) : base(file)
+        {
+            Initialize();
+        }
+
+        private void Initialize()
         {
             Id = _id; // for first set unless deserialized
         }
 
-        public XamlDocument(string title) : this()
+        public override string ToString()
         {
-            this.Title = title;
-        }
-
-        private XamlDocument(StorageFile file) : this()
-        {
-            this.BackingFile = file;
-
-            // Should this be here vs. in a separate ViewModel stuff?
-            if (string.IsNullOrWhiteSpace(StorageToken))
-            {
-                StorageToken = Guid.NewGuid().ToString();
-            }
-
-            StorageApplicationPermissions.FutureAccessList.AddOrReplace(StorageToken, BackingFile);
-        }
-
-        internal async Task RestoreFileAsync()
-        {
-            if (!string.IsNullOrWhiteSpace(StorageToken))
-            {
-                BackingFile = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(StorageToken);
-            }
-        }
-
-        /// <summary>
-        /// Save a file back to its backing location.
-        /// </summary>
-        /// <returns></returns>
-        public IAsyncOperation<bool> SaveAsync()
-        {
-            return SaveAsyncInternal().AsAsyncOperation();
-        }
-
-        private async Task<bool> SaveAsyncInternal()
-        { 
-            if (!CanSave)
-            {
-                throw new InvalidOperationException("Must Load or SaveAs before Save can be called.");
-            }
-
-            try
-            {
-                await FileIO.WriteTextAsync(this.BackingFile, this.Content);
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-
-            // We made it here without an exception, assume write success, update flag.
-            HasChanged = false;
-            return true;
-        }
-
-        /// <summary>
-        /// Save the file in a new location (or for the first time).
-        /// 
-        /// The document will now point to this new location (the old location will not be preserved).
-        /// </summary>
-        /// <param name="newfile">New File Storage Location.</param>
-        /// <returns></returns>
-        public IAsyncOperation<bool> SaveAsAsync(StorageFile newfile)
-        {
-            return SaveAsAsyncInternal(newfile).AsAsyncOperation();
-        }
-
-        private async Task<bool> SaveAsAsyncInternal(StorageFile newfile)
-        {
-            // Call save if this is the same file.
-            if (BackingFile?.Equals(newfile) == true)
-            {
-                return await SaveAsyncInternal();
-            }
-
-            var original = this.BackingFile;
-            this.BackingFile = newfile;
-
-            if (await SaveAsyncInternal())
-            {
-                // Update Title after save.
-                this.Title = newfile.DisplayName;
-
-                // Save new token to access list.
-                StorageToken = Guid.NewGuid().ToString();
-                StorageApplicationPermissions.FutureAccessList.AddOrReplace(StorageToken, BackingFile);
-
-                return true;
-            }
-            else
-            {
-                // Restore original backing file.
-                this.BackingFile = original;
-
-                return false;
-            }
+            return Title;
         }
 
         /// <summary>

@@ -77,41 +77,41 @@
         <Border Margin="0,0,-12,0"
                 Padding="0,12,0,0"
                 Style="{StaticResource VSCodeAppBarHeaderStyle}">
-            <TextBlock x:Uid="Debug_Header" Style="{StaticResource VSCodeAppBarHeaderTextStyle}"/>
-        </Border>
-
-        <Grid Grid.Row="1"
-              Margin="24,12,-12,24"
-              Padding="0,12,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <ComboBox x:Name="BindingViewMode"
-                      Margin="0,0,12,0"
-                      HorizontalAlignment="Stretch"
-                      SelectedIndex="0">
-                <x:String>Bindings</x:String>
-                <x:String>History</x:String>
-            </ComboBox>
-            <ToggleSwitch x:Name="PowerBindingToggle"
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Uid="Debug_Header" Style="{StaticResource VSCodeAppBarHeaderTextStyle}"/>
+                <ToggleSwitch x:Name="PowerBindingToggle"
                           x:Uid="Settings_PowerBindingToggle"
                           Grid.Column="1"
                           Height="32"
-                          Margin="0,-8,0,0"
+                          Width="92"
                           IsOn="{x:Bind services:SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value, Mode=OneWay}"
                           Tag="IsPowerBindingDebuggingEnabled">
-                <i:Interaction.Behaviors>
-                    <ic:EventTriggerBehavior EventName="Toggled">
-                        <ic:InvokeCommandAction Command="{x:Bind MainViewModel.SettingsViewModel.SwitchToggleCommand}" />
-                        <ic:ChangePropertyAction PropertyName="HasCompiled"
+                    <i:Interaction.Behaviors>
+                        <ic:EventTriggerBehavior EventName="Toggled">
+                            <ic:InvokeCommandAction Command="{x:Bind MainViewModel.SettingsViewModel.SwitchToggleCommand}" />
+                            <ic:ChangePropertyAction PropertyName="HasCompiled"
                                                  TargetObject="{x:Bind MainViewModel.ActiveDocumentViewModel}"
                                                  Value="false" />
-                        <ic:InvokeCommandAction Command="{x:Bind MainViewModel.ActiveDocumentViewModel.UpdateXamlCommand}" />
-                    </ic:EventTriggerBehavior>
-                </i:Interaction.Behaviors>
-            </ToggleSwitch>
-        </Grid>
+                            <ic:InvokeCommandAction Command="{x:Bind MainViewModel.ActiveDocumentViewModel.UpdateXamlCommand}" />
+                        </ic:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                </ToggleSwitch>
+            </Grid>
+        </Border>
+
+        <ComboBox x:Name="BindingViewMode"
+                    Grid.Row="1"
+                    Margin="24,4,0,12"
+                    HorizontalAlignment="Stretch"
+                    SelectedIndex="0">
+            <x:String>Bindings</x:String>
+            <x:String>History</x:String>
+        </ComboBox>
+        
         <future:SwitchPresenter Grid.Row="2"
                                 Visibility="{x:Bind services:SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value, Mode=OneWay}"
                                 Value="{x:Bind BindingViewMode.SelectedValue, Mode=OneWay}">
@@ -148,6 +148,7 @@
             </future:Case>
         </future:SwitchPresenter>
         <TextBlock Grid.Row="2"
+                   Margin="12"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    TextWrapping="WrapWholeWords"

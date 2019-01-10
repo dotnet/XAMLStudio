@@ -176,6 +176,9 @@ namespace XamlStudio.ViewModels
         {
             StorageFile file = null;
 
+            // Ensure if we can restore the file if it wasn't available on load
+            await document.RestoreFileAsync();
+
             // Save As
             if (!document.CanSave)
             {

@@ -169,6 +169,8 @@
     <Compile Include="Helpers\AsyncRelayCommand.cs" />
     <Compile Include="Helpers\RelayCommand.cs" />
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
+    <Compile Include="Models\DataContext.cs" />
+    <Compile Include="Models\FileBackedDocument.cs" />
     <Compile Include="Models\LibraryInfo.cs" />
     <Compile Include="Models\UnhandledException.cs" />
     <Compile Include="Models\WorkspaceWindow.cs" />

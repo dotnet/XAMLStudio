@@ -49,6 +49,13 @@ namespace XamlStudio.Services
             set { Set(value); }
         }
 
+        [DefaultValue(false)]
+        public bool? IsLiveDataContextRefreshedOnRender
+        {
+            get { return Get<bool?>(); }
+            set { Set(value); }
+        }
+
         [DefaultValue(true)]
         public bool? IsAlignmentGridEnabled
         {

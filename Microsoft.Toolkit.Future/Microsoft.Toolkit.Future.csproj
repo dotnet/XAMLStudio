@@ -109,6 +109,7 @@
     <Compile Include="Controls\ContentSizer\ContentSizer.cs" />
     <Compile Include="Controls\ContentSizer\ContentSizer.Events.cs" />
     <Compile Include="Controls\ContentSizer\ContentSizer.Properties.cs" />
+    <Compile Include="Controls\ManualToggleButton.cs" />
     <Compile Include="Controls\SwitchPresenter\Case.cs" />
     <Compile Include="Controls\SwitchPresenter\CaseCollection.cs" />
     <Compile Include="Controls\SwitchPresenter\SwitchPresenter.cs" />

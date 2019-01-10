@@ -60,6 +60,9 @@ namespace XamlStudio.ViewModels
                 // Reopen/make connection to backing OS file.
                 await doc.RestoreFileAsync();
 
+                // Restore Data Context File (if one).
+                await doc.DataContext.RestoreFileAsync();
+
                 OpenFiles.Add(doc);
 
                 if (doc.DocumentType == DocumentType.Welcome)

@@ -127,6 +127,21 @@
                     </StackPanel>
 
                     <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
+                        <ToggleSwitch x:Name="UpdateLiveDataContextToggle"
+                                      x:Uid="SettingsPanel_UpdateLiveDataContextToggle"
+                                      Margin="0,4,0,0"
+                                      HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
+                                      IsOn="{x:Bind ViewModel.Settings.IsLiveDataContextRefreshedOnRender.Value, Mode=OneWay}"
+                                      Tag="IsLiveDataContextRefreshedOnRender">
+                            <i:Interaction.Behaviors>
+                                <ic:EventTriggerBehavior EventName="Toggled">
+                                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
+                                </ic:EventTriggerBehavior>
+                            </i:Interaction.Behaviors>
+                        </ToggleSwitch>
+                    </StackPanel>
+
+                    <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock x:Uid="SettingsPanel_KnownNamespaces"
                                        Margin="0,8,0,12"

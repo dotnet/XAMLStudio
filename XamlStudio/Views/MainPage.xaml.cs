@@ -37,9 +37,9 @@ namespace XamlStudio.Views
 
         public MainPage()
         {
-            InitializeComponent();
-
             ViewModel = new MainViewModel();
+
+            InitializeComponent();
 
             Loaded += MainPage_Loaded;
 

@@ -5,28 +5,120 @@
       xmlns:local="using:XamlStudio.Views"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:monaco="using:Monaco"
+      xmlns:fex="using:Microsoft.Toolkit.Uwp.UI.Extensions.Future"
+      xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
+      xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      xmlns:future="using:Microsoft.Toolkit.Uwp.UI.Controls.Future"
       mc:Ignorable="d">
 
+    <Page.Resources>
+        <converters:StringVisibilityConverter x:Key="StringVisibilityConverter"/>
+    </Page.Resources>
+    
     <Grid Background="{ThemeResource Brush-Blue-Dark-1}">
         <Grid.RowDefinitions>
             <RowDefinition Height="54" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+        <!-- Header -->
         <Border Margin="0,0,-12,0"
                 Padding="0,12,0,0"
                 Style="{StaticResource VSCodeAppBarHeaderStyle}">
-            <TextBlock x:Uid="DataSource_Header" Style="{StaticResource VSCodeAppBarHeaderTextStyle}"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Uid="DataSource_Header" Style="{StaticResource VSCodeAppBarHeaderTextStyle}"/>
+                <Button Grid.Column="1"
+                        x:Uid="DataSource_Button_Clear"
+                        Click="Clear_DataSource"
+                        Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
+                    <SymbolIcon fex:SymbolIconExtensions.FontSize="14" Symbol="Clear" />
+                </Button>
+                <future:ManualToggleButton Grid.Column="2"
+                        x:Uid="DataSource_Button_Open"
+                        Background="{ThemeResource Brush-Blue-Dark-1}"
+                        Click="Open_DataSource"
+                        FontSize="12"
+                        Padding="12"
+                        IsChecked="{x:Bind ActiveDataContext.CanSave, Mode=OneWay}">
+                    <SymbolIcon fex:SymbolIconExtensions.FontSize="14" Symbol="OpenFile" />
+                </future:ManualToggleButton>
+                <Button Grid.Column="3"
+                        x:Uid="DataSource_Button_Save"
+                        Click="Save_DataSource"
+                        Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
+                    <SymbolIcon fex:SymbolIconExtensions.FontSize="14" Symbol="Save" />
+                </Button>
+                <!-- TODO: Make style? -->
+                <ToggleButton x:Name="RemoteDataSourceButton"
+                              Grid.Column="4"
+                              x:Uid="DataSource_Button_Remote"
+                              Unchecked="RemoteDataSourceButton_Unchecked"
+                              Background="{ThemeResource Brush-Blue-Dark-1}"
+                              FontSize="12"
+                              Margin="0,0,12,0"
+                              Padding="12">
+                    <SymbolIcon fex:SymbolIconExtensions.FontSize="14" Symbol="Remote" />
+                </ToggleButton>
+            </Grid>
         </Border>
 
-        <TextBox x:Name="LiveDataSourceUri"
-                 Grid.Row="1"
-                 Margin="24,12,0,24"
-                 Header="REST Url:"
-                 LostFocus="LiveDataSourceUri_LostFocus" />
+        <!-- Panel Content -->
+        <Grid Grid.Row="1"
+              Margin="24,12,0,18"
+              Visibility="{x:Bind RemoteDataSourceButton.IsChecked, Mode=OneWay}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="LiveDataSourceUri"
+                     PlaceholderText="Json REST Url"
+                     LostFocus="LiveDataSourceUri_LostFocus"
+                     Text="{x:Bind ActiveDataContext.Uri, Mode=TwoWay}"/>
+            <Button Grid.Column="1"
+                    x:Uid="DataSource_Button_Refresh"
+                    Margin="0,0,0,0"
+                    Command="{x:Bind MainViewModel.ActiveDocumentViewModel.RefreshLiveDataContextCommand, Mode=OneWay}"
+                    Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
+                <SymbolIcon fex:SymbolIconExtensions.FontSize="14" Symbol="Refresh" />
+            </Button>
+        </Grid>
+
         <monaco:CodeEditor x:Name="DataContextJson"
                            Grid.Row="2"
                            CodeLanguage="json"
-                           RequestedTheme="{x:Bind MainViewModel.SettingsViewModel.Settings.EditorTheme, Mode=OneWay}" />
+                           KeyDown="CodeEditor_KeyDown"
+                           RequestedTheme="{x:Bind MainViewModel.SettingsViewModel.Settings.EditorTheme, Mode=OneWay}"
+                           Text="{x:Bind ActiveDataContext.Content, Mode=TwoWay}" />
+
+        <!--  Error Overlay  -->
+        <Grid Grid.Row="2"
+              Background="#66000000"
+              Visibility="{x:Bind MainViewModel.ActiveDocumentViewModel.LiveDataContextRefreshError, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}, FallbackValue=Collapsed}">
+            <controls:DropShadowPanel Margin="16"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      BlurRadius="8.0"
+                                      OffsetX="8"
+                                      OffsetY="8"
+                                      ShadowOpacity="0.6"
+                                      Color="Black">
+                <StackPanel Padding="24" Background="{ThemeResource Brush-Red-Light-2}">
+                    <TextBlock x:Uid="DataSource_ErrorsHeader"
+                               Margin="0,0,0,8"
+                               FontWeight="SemiBold"
+                               Foreground="White"/>
+                    <TextBlock Text="{x:Bind MainViewModel.ActiveDocumentViewModel.LiveDataContextRefreshError, Mode=OneWay}"
+                               Foreground="White"
+                               TextWrapping="WrapWholeWords"/>
+                </StackPanel>
+            </controls:DropShadowPanel>
+        </Grid>
     </Grid>
 </Page>

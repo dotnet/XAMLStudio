@@ -2,16 +2,19 @@
 using Monaco;
 using Monaco.Editor;
 using Monaco.Helpers;
+using Newtonsoft.Json;
 using Nito.AsyncEx;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System.Threading;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
+using Windows.Web.Http;
 using XamlStudio.Services;
 using XamlStudio.Toolkit.Controls;
 using XamlStudio.Toolkit.Helpers;
@@ -57,6 +60,15 @@ namespace XamlStudio.ViewModels
 
         private async Task<string> InternalRenderXamlAsync(string content, uint lineoffset, bool keepContentSameLength, bool overrideBinding = false)
         {
+            if (SettingsService.Instance.IsLiveDataContextRefreshedOnRender == true)
+            {
+                // Update from our live Data Source if we've enabled it.
+                await RefreshLiveDataContext(null);
+            }
+
+            // Update Data Context with active content (mostly for reloading from resume)
+            ParseDataContext(null);
+
             var start = DateTime.UtcNow.Ticks;
             var render_analytics = new Dictionary<string, string>();
 
@@ -81,12 +93,25 @@ namespace XamlStudio.ViewModels
                 using (await _renderMutex.LockAsync())
                 {
                     // Save out workbench in case of error.  Should this just be done in unhandled exception case?
-                await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync(Document.Id);
+                    await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync(Document.Id);
 
                     // Log XAML before rendering in case issue, we can retrieve later for bugs
-                    var file = await ApplicationData.Current.LocalFolder.CreateFileAsync("lastcompiled.xaml", CreationCollisionOption.ReplaceExisting);
-                    await FileIO.WriteTextAsync(file, content);
-                    Debug.WriteLine("Render File Out: " + file.Path);
+                    try
+                    {
+                        var file = await ApplicationData.Current.LocalFolder.CreateFileAsync("lastcompiled.xaml", CreationCollisionOption.ReplaceExisting);
+                        await FileIO.WriteTextAsync(file, content);
+                        Debug.WriteLine("Render File Out: " + file.Path);
+                    }
+                    catch (Exception e)
+                    {
+                        Debugger.Break();
+
+                        // This fails during debug occassionally, track to see if problem in release...
+                        Analytics.TrackEvent("Render_Backup_Fail", new Dictionary<string, string>()
+                        {
+                            { "Message", e.Message }
+                        });
+                    }
                 }
             }
 
@@ -220,6 +245,101 @@ namespace XamlStudio.ViewModels
                 // Register for changes
                 binding.BindingUpdated -= BindingUpdated;
                 binding.BindingUpdated += BindingUpdated;
+            }
+        }
+
+        private async Task RefreshLiveDataContext(RoutedEventArgs args)
+        {
+            if (Document.DataContext.IsRemote)
+            {
+                try
+                {
+                    LiveDataContextRefreshError = null;
+
+                    var uri = new Uri(Document.DataContext.Uri);
+
+                    var http = new HttpClient();
+
+                    var response = await http.GetAsync(uri);
+                    response.EnsureSuccessStatusCode();
+
+                    var body = await response.Content.ReadAsStringAsync();
+
+                    // Update DataContext
+                    ////MainViewModel.ActiveDocumentViewModel.DataContext = JsonConvert.DeserializeObject<ExpandoObject>(body);
+
+                    Document.DataContext.Content = body;
+
+                    Analytics.TrackEvent("DataSources_LoadRemote", new Dictionary<string, string>()
+                    {
+                        { "Success", "True" }
+                    });
+                }
+                catch (Exception e2)
+                {
+                    var msg = e2.Message;
+                    msg = msg.Replace("The text associated with this error code could not be found.", "").Trim();
+                    LiveDataContextRefreshError = msg;
+
+                    Analytics.TrackEvent("DataSources_LoadRemote", new Dictionary<string, string>()
+                    {
+                        { "Success", "False" }
+                    });
+                }
+            }
+        }
+
+        private void ParseDataContext(RoutedEventArgs args)
+        {
+            // TODO: Consolidate with eventual XamlRender parsing method.
+            // TODO: Consolidate with Document and it's auto-compile timer logic, go back to KeyDown?
+            // TODO: Is there a better way to consolidate this logic?  Maybe array and loop?
+            object result = null;
+            try
+            {
+                result = JsonConvert.DeserializeObject<ExpandoObject>(Document.DataContext.Content);
+            }
+            catch (Exception)
+            {
+            }
+
+            if (result == null)
+            {
+                try
+                {
+                    result = JsonConvert.DeserializeObject<List<ExpandoObject>>(Document.DataContext.Content);
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+            if (result == null)
+            {
+                try
+                {
+                    result = JsonConvert.DeserializeObject<List<object>>(Document.DataContext.Content);
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+            if (result == null)
+            {
+                try
+                {
+                    result = JsonConvert.DeserializeObject<object>(Document.DataContext.Content);
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+            if (result != null)
+            {
+                // Update DataContext if we have something.
+                DataContext = result;
             }
         }
 

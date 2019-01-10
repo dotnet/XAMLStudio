@@ -386,7 +386,7 @@ Special Thanks To: Justin Liu, Lainie Huston, Mike Pell, the 'Partners, Analytic
     <value>Auto-Compile is turned off, Press F5 or Ctrl+Enter to Display</value>
     <comment>Text displayed on document load if auto-compile is turned off.</comment>
   </data>
-  <data name="Document_ErrorsHeader" xml:space="preserve">
+  <data name="Document_ErrorsHeader.Text" xml:space="preserve">
     <value>Compilation Errors</value>
     <comment>Text displayed at top of message that appears when there are compilation errors.</comment>
   </data>
@@ -442,6 +442,38 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>Favorites</value>
     <comment>Group Header text for where Favorites are</comment>
   </data>
+  <data name="DataSource_Button_Clear.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Clear Data Context</value>
+    <comment>Accessibility Name for new data context button in data sources panel.</comment>
+  </data>
+  <data name="DataSource_Button_Clear.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Clear Data Context</value>
+    <comment>Tooltip for new data context button in data sources panel.</comment>
+  </data>
+  <data name="DataSource_Button_Open.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Open Data Context</value>
+    <comment>Accessibility Name for open data context in data sources panel.</comment>
+  </data>
+  <data name="DataSource_Button_Open.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open Data Context</value>
+    <comment>Tooltip for open data context button in data sources panel.</comment>
+  </data>
+  <data name="DataSource_Button_Remote.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Remote Data Context</value>
+    <comment>Accessibility Name for remote data context in data sources panel</comment>
+  </data>
+  <data name="DataSource_Button_Remote.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Remote Data Context</value>
+    <comment>Tooltip for remote data context button in data sources panel.</comment>
+  </data>
+  <data name="DataSource_Button_Save.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Save Data Context</value>
+    <comment>Accessibility Name for save data context in data sources panel.</comment>
+  </data>
+  <data name="DataSource_Button_Save.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Save Data Context</value>
+    <comment>Tooltip for save data context button in data sources panel.</comment>
+  </data>
   <data name="DataSource_Header.Text" xml:space="preserve">
     <value>DATA SOURCE</value>
     <comment>Text at top of Data Source Panel</comment>
@@ -451,7 +483,7 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <comment>Text at top of Debug Panel</comment>
   </data>
   <data name="Explorer_Button_New.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>New Document</value>
+    <value>Create New Document</value>
     <comment>Accessibility Name for New Document Button on Explorer Panel</comment>
   </data>
   <data name="Explorer_Button_New.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
@@ -525,5 +557,33 @@ Please help us by reporting this issue in Feedback Hub.</value>
   <data name="Toolbox_SearchBox.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Toolbox Search</value>
     <comment>Accessibility Name for Toolbox Searchbox</comment>
+  </data>
+  <data name="DataSource_Button_Refresh.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Refresh Data</value>
+    <comment>Accessibility Name for refresh data from server button in Data Sources Panel.</comment>
+  </data>
+  <data name="DataSource_Button_Refresh.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Refresh Data from Server</value>
+    <comment>Tooltip for refresh data from server button in Data Sources Panel.</comment>
+  </data>
+  <data name="SettingsPanel_UpdateLiveDataContextToggle.Header" xml:space="preserve">
+    <value>Update Data Context from Remote Url on Render</value>
+    <comment>Update the data context from a remote url (if specified) whenever the XAML is re-rendered.</comment>
+  </data>
+  <data name="SettingsPanel_UpdateLiveDataContextToggle.OffContent" xml:space="preserve">
+    <value>Manual</value>
+    <comment>Turn update data context option off for Settings Panel</comment>
+  </data>
+  <data name="SettingsPanel_UpdateLiveDataContextToggle.OnContent" xml:space="preserve">
+    <value>Automatic</value>
+    <comment>Turn update data context option on for Settings Panel</comment>
+  </data>
+  <data name="SettingsPanel_UpdateLiveDataContextToggle.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>When set to automatic, if a remote data context url is specified, then new data will be fetched for the data context whenever the XAML is updated.</value>
+    <comment>Tooltip description for updating live data context on render in Settings Panel.</comment>
+  </data>
+  <data name="DataSource_ErrorsHeader.Text" xml:space="preserve">
+    <value>Remote Source Error</value>
+    <comment>Text displayed at top of errors that occur trying to load a remote data source in the Data Source panel.</comment>
   </data>
 </root>

@@ -16,8 +16,8 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="54" />
-            <RowDefinition Height="{Binding ElementName=OpenEditorsExpander, Path=IsExpanded, Converter={StaticResource BoolToGridLength}}" />
-            <RowDefinition Height="Auto" />
+            <!--<RowDefinition Height="{Binding ElementName=OpenEditorsExpander, Path=IsExpanded, Converter={StaticResource BoolToGridLength}}" />-->
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Border Margin="0,0,-12,0"
                 Padding="0,12,0,0"

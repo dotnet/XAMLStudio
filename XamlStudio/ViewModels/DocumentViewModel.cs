@@ -91,32 +91,22 @@ namespace XamlStudio.ViewModels
             BackgroundColor = new SolidColorBrush("#FFFFF689".ToColor())
         };
 
-        private ICommand _updateXaml;
-        public ICommand UpdateXamlCommand
+        public ICommand UpdateXamlCommand { get; private set; }
+        
+        public ICommand KeyDownCommand { get; private set; }
+
+        public IAsyncCommand RefreshLiveDataContextCommand { get; private set; }
+
+        public ICommand ParseDataContextCommand { get; private set; }
+
+        /// <summary>
+        /// Text for error message when refreshing from a live data source.
+        /// </summary>
+        private string _liveDataContextRefreshError;
+        public string LiveDataContextRefreshError
         {
-            get
-            {
-                if (_updateXaml == null)
-                {
-                    _updateXaml = new RelayCommand<RoutedEventArgs>(UpdateXaml);
-                }
-
-                return _updateXaml;
-            }
-        }
-
-        private ICommand _keyDownCommand;
-        public ICommand KeyDownCommand
-        {
-            get
-            {
-                if (_keyDownCommand == null)
-                {
-                    _keyDownCommand = new RelayCommand<WebKeyEventArgs>(KeyDown);
-                }
-
-                return _keyDownCommand;
-            }
+            get { return _liveDataContextRefreshError; }
+            set { Set(ref _liveDataContextRefreshError, value); }
         }
 
         public SettingsService Settings { get; } = SettingsService.Instance;
@@ -141,7 +131,7 @@ namespace XamlStudio.ViewModels
         public static void DataContextPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             var vm = obj as DocumentViewModel;
-            if (vm.XamlRoot.Children.FirstOrDefault() is FrameworkElement fwe)
+            if (vm.XamlRoot != null && vm.XamlRoot.Children.FirstOrDefault() is FrameworkElement fwe)
             {
                 fwe.DataContext = args.NewValue;
             }
@@ -151,9 +141,14 @@ namespace XamlStudio.ViewModels
         {
             // Placeholder
             Result = new Toolkit.Models.XamlRenderResultContext(string.Empty);
-            
+
             ////xamlRenderer.ImageRoot = SettingsService.Instance.SampleFolder;
             ////xamlRenderer.DataRoot = SettingsService.Instance.SampleFolder;
+
+            UpdateXamlCommand = new RelayCommand<RoutedEventArgs>(UpdateXaml);
+            KeyDownCommand = new RelayCommand<WebKeyEventArgs>(KeyDown);
+            RefreshLiveDataContextCommand = new AsyncRelayCommand<RoutedEventArgs>(RefreshLiveDataContext);
+            ParseDataContextCommand = new RelayCommand<RoutedEventArgs>(ParseDataContext);
         }
     }
 }
