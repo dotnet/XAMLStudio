@@ -311,12 +311,13 @@
   </data>
   <data name="SettingsPanel_AlignmentGrid.Header" xml:space="preserve">
     <value>Alignment Grid</value>
+    <comment>Header for the Alignment Grid options section in the Settings Panel</comment>
   </data>
   <data name="SettingsPanel_AlignmentGridHorizontalStep.Text" xml:space="preserve">
     <value>Horizontal Step</value>
     <comment>Set the AlignmentGrid Horizontal Step</comment>
   </data>
-  <data name="SettingsPanel_AlignmentGridLineColor.Text" xml:space="preserve">
+  <data name="SettingsPanel_AlignmentGridLineColor.Header" xml:space="preserve">
     <value>Line Color</value>
     <comment>Set the AlignmentGrid brush color</comment>
   </data>
@@ -585,5 +586,104 @@ Please help us by reporting this issue in Feedback Hub.</value>
   <data name="DataSource_ErrorsHeader.Text" xml:space="preserve">
     <value>Remote Source Error</value>
     <comment>Text displayed at top of errors that occur trying to load a remote data source in the Data Source panel.</comment>
+  </data>
+  <data name="SettingsPanel_About.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>About XAML Studio</value>
+    <comment>Accessibility Name for about section expander in settings panel.</comment>
+  </data>
+  <data name="SettingsPanel_About_OpenFeedbackHub.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Use Feedback Hub to report any issues you encounter while using XAML Studio.</value>
+    <comment>Tooltip for Open Feedback Hub in about section of Settings Panel.</comment>
+  </data>
+  <data name="SettingsPanel_About_OpenLogFolderButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>The log location contains files which may be helpful when reporting issues in the case of an unexpected exception.</value>
+    <comment>Tooltip for Open Log Location in about section of Settings Panel.</comment>
+  </data>
+  <data name="SettingsPanel_About_OpenUserVoice.Content" xml:space="preserve">
+    <value>Open UserVoice</value>
+    <comment>Button label to open UserVoice in the Settings Panel about section.</comment>
+  </data>
+  <data name="SettingsPanel_About_OpenUserVoice.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Use UserVoice to vote on and submit new feature requests for XAML Studio.</value>
+    <comment>Tooltip for Open UserVoice button in about section of Settings Panel.</comment>
+  </data>
+  <data name="SettingsPanel_About_UserVoice_Uri" xml:space="preserve">
+    <value>https://aka.ms/XAMLStudio_Feedback</value>
+    <comment>Uri used to navigate to UserVoice feedback site.</comment>
+  </data>
+  <data name="SettingsPanel_AlignmentGrid.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Alignment Grid Settings</value>
+    <comment>Accessibility Name for Alignment Grid expander section in Settings Panel</comment>
+  </data>
+  <data name="SettingsPanel_AlignmentGridHorizontalStepSlider.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Horizontal Step</value>
+    <comment>Accessibility Name for the Alignment Grid's Horizontal Step slider value in the Settings Panel.</comment>
+  </data>
+  <data name="SettingsPanel_AlignmentGridLineColor.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Line Color</value>
+    <comment>Accessibility Name for the Alignment Grid's Line Color selection dropdown in the Settings Panel.</comment>
+  </data>
+  <data name="SettingsPanel_AlignmentGridOpacitySlider.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Opacity</value>
+    <comment>Accessibility Name for the Alignment Grid's Opacity slider value in the Settings Panel.</comment>
+  </data>
+  <data name="SettingsPanel_AlignmentGridVerticalStepSlider.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Vertical Step</value>
+    <comment>Accessibility Name for the Alignment Grid's Vertical Step slider value in the Settings Panel.</comment>
+  </data>
+  <data name="SettingsPanel_AutoCompileDelaySlider.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Auto-Compile Delay</value>
+    <comment>Accessibility Name for the Auto-Compile Delay Slider in the Settings Panel.</comment>
+  </data>
+  <data name="SettingsPanel_EditorTheme_Dark.Content" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="SettingsPanel_EditorTheme_Dark.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Dark Editor Theme</value>
+  </data>
+  <data name="SettingsPanel_EditorTheme_Default.Content" xml:space="preserve">
+    <value>Windows default</value>
+  </data>
+  <data name="SettingsPanel_EditorTheme_Default.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Windows default Editor Theme</value>
+  </data>
+  <data name="SettingsPanel_EditorTheme_Light.Content" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="SettingsPanel_EditorTheme_Light.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Light Editor Theme</value>
+  </data>
+  <data name="SettingsPanel_KnownNamespaces_Button_Add.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Add Known Namespace</value>
+    <comment>Accessibility Name for add button to known namespace in Settings Panel.</comment>
+  </data>
+  <data name="SettingsPanel_KnownNamespaces_Button_Add.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Add New Known Namespace</value>
+    <comment>Tooltip for the button to add a new namespace to the Known Namespace table in the Settings Panel</comment>
+  </data>
+  <data name="SettingsPanel_KnownNamespaces_Button_Remove.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Remove Namespace</value>
+    <comment>Accessibility Name for the Known Namespace remove row button in the Settings Panel.</comment>
+  </data>
+  <data name="SettingsPanel_KnownNamespaces_Button_Remove.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Remove Namespace</value>
+    <comment>Tooltip for the button to remove the Known Namespace row in the Settings Panel.</comment>
+  </data>
+  <data name="SettingsPanel_Personalization.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Personalization Settings</value>
+    <comment>Accessibility Name for Personalization expander section of Settings Panel.</comment>
+  </data>
+  <data name="SettingsPanel_Theme_Dark.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Dark App Theme</value>
+  </data>
+  <data name="SettingsPanel_Theme_Default.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Windows default App Theme</value>
+  </data>
+  <data name="SettingsPanel_Theme_Light.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Light App Theme</value>
+  </data>
+  <data name="SettingsPanel_XAML.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>XAML Settings</value>
+    <comment>Accessibility Name for XAML expander section in Settings Panel</comment>
   </data>
 </root>

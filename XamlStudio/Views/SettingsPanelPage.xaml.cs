@@ -8,6 +8,7 @@ using Windows.System;
 using Windows.System.Threading;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using XamlStudio.Helpers;
 using XamlStudio.Services.Logging;
 using XamlStudio.Toolkit.Models;
 using XamlStudio.ViewModels;
@@ -108,6 +109,11 @@ namespace XamlStudio.Views
         private async void ButtonOpenLogFolder_Click(object sender, RoutedEventArgs e)
         {
             await Launcher.LaunchFolderAsync(await FileLogger.Instance.GetAppLogFolderAsync());
+
+            Analytics.TrackEvent("Open_LogFolder", new Dictionary<string, string>()
+            {
+                { "Location", "About" },
+            });
         }
 
         private async void DataGrid_RowEditEnded(object sender, Microsoft.Toolkit.Uwp.UI.Controls.DataGridRowEditEndedEventArgs e)
@@ -186,6 +192,16 @@ namespace XamlStudio.Views
             }
 
             Analytics.TrackEvent("Open_FeedbackHub", new Dictionary<string, string>()
+            {
+                { "Location", "About" }
+            });
+        }
+
+        private async void ButtonOpenUserVoice_Click(object sender, RoutedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri("SettingsPanel_About_UserVoice_Uri".GetLocalized()));
+
+            Analytics.TrackEvent("Open_UserVoice", new Dictionary<string, string>()
             {
                 { "Location", "About" }
             });

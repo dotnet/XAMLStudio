@@ -146,7 +146,7 @@
                             <TextBlock x:Uid="SettingsPanel_KnownNamespaces"
                                        Margin="0,8,0,12"
                                        Style="{StaticResource BodyTextStyle}" />
-                            <Button Click="AddNamespaceButton_Click" Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
+                            <Button x:Uid="SettingsPanel_KnownNamespaces_Button_Add" Click="AddNamespaceButton_Click" Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
                                 <SymbolIcon fex:SymbolIconExtensions.FontSize="14" Symbol="Add" />
                             </Button>
                         </StackPanel>
@@ -172,7 +172,8 @@
                                 <controls:DataGridTemplateColumn>
                                     <controls:DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Button Click="RemoveNamespaceButton_Click"
+                                            <Button x:Uid="SettingsPanel_KnownNamespaces_Button_Remove"
+                                                    Click="RemoveNamespaceButton_Click"
                                                     CommandParameter="{Binding}"
                                                     Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
                                                 <SymbolIcon fex:SymbolIconExtensions.FontSize="12" Symbol="Delete" />
@@ -296,10 +297,10 @@
                             </Grid>
 
                             <!--  AlignmentGrid - Color  -->
-                            <TextBlock x:Uid="SettingsPanel_AlignmentGridLineColor"
-                                       Margin="0,12,0,4"
-                                       Style="{StaticResource BodyTextStyle}" />
-                            <ComboBox HorizontalAlignment="Stretch"
+                            <ComboBox x:Uid="SettingsPanel_AlignmentGridLineColor"
+                                      Margin="0,12,0,4"
+                                      HorizontalAlignment="Stretch"
+                                      HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
                                       ItemsSource="{x:Bind ViewModel.Colors, Mode=OneWay}"
                                       SelectedItem="{x:Bind ViewModel.Settings.AlignmentGridColor, Mode=TwoWay, Converter={StaticResource HexToColorConverter}}">
                                 <ComboBox.ItemTemplate>
@@ -369,7 +370,7 @@
                         <TextBlock x:Uid="SettingsPanel_EditorTheme" Style="{StaticResource BodyTextStyle}" />
 
                         <StackPanel Margin="{StaticResource EightTopMargin}">
-                            <RadioButton x:Uid="SettingsPanel_Theme_Light"
+                            <RadioButton x:Uid="SettingsPanel_EditorTheme_Light"
                                          Command="{x:Bind ViewModel.SwitchEditorThemeCommand, Mode=OneWay}"
                                          GroupName="EditorTheme"
                                          IsChecked="{x:Bind ViewModel.Settings.EditorTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}">
@@ -377,7 +378,7 @@
                                     <xaml:ElementTheme>Light</xaml:ElementTheme>
                                 </RadioButton.CommandParameter>
                             </RadioButton>
-                            <RadioButton x:Uid="SettingsPanel_Theme_Dark"
+                            <RadioButton x:Uid="SettingsPanel_EditorTheme_Dark"
                                          Command="{x:Bind ViewModel.SwitchEditorThemeCommand, Mode=OneWay}"
                                          GroupName="EditorTheme"
                                          IsChecked="{x:Bind ViewModel.Settings.EditorTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}">
@@ -385,7 +386,7 @@
                                     <xaml:ElementTheme>Dark</xaml:ElementTheme>
                                 </RadioButton.CommandParameter>
                             </RadioButton>
-                            <RadioButton x:Uid="SettingsPanel_Theme_Default"
+                            <RadioButton x:Uid="SettingsPanel_EditorTheme_Default"
                                          Command="{x:Bind ViewModel.SwitchEditorThemeCommand, Mode=OneWay}"
                                          GroupName="EditorTheme"
                                          IsChecked="{x:Bind ViewModel.Settings.EditorTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default, Mode=OneWay}">
@@ -428,6 +429,10 @@
                                 Margin="0,0,12,0"
                                 Click="ButtonOpenFeedbackHub_Click"
                                 Visibility="{x:Bind FeedbackVisibility}" />
+
+                        <Button x:Uid="SettingsPanel_About_OpenUserVoice"
+                                Margin="0,0,12,0"
+                                Click="ButtonOpenUserVoice_Click" />
 
                         <Button x:Uid="SettingsPanel_About_OpenLogFolderButton" Click="ButtonOpenLogFolder_Click" />
                     </StackPanel>
