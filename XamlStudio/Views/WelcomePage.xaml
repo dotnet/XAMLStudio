@@ -44,7 +44,7 @@
                         Padding="16"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
-                        Opacity="0.4">
+                        Opacity="0.65">
                 <TextBlock FontSize="16"
                            FontWeight="SemiBold"
                            Foreground="{ThemeResource Brush-Grey-Light-0}">
@@ -65,12 +65,12 @@
             <StackPanel Margin="12,12,0,0">
                 <HyperlinkButton Command="{x:Bind MainViewModel.NewDocumentCommand, Mode=OneWay}"
                                  FontWeight="SemiBold"
-                                 Foreground="{ThemeResource Brush-Red-Light-1}">
+                                 Foreground="{ThemeResource Brush-Red-Light-2}">
                     New file
                 </HyperlinkButton>
                 <HyperlinkButton Command="{x:Bind MainViewModel.OpenDocumentCommand, Mode=OneWay}"
                                  FontWeight="SemiBold"
-                                 Foreground="{ThemeResource Brush-Red-Light-1}">
+                                 Foreground="{ThemeResource Brush-Red-Light-2}">
                     Open file...
                 </HyperlinkButton>
             </StackPanel>
@@ -90,7 +90,7 @@
                                          CommandParameter="{x:Bind}"
                                          Content="{x:Bind DisplayName}"
                                          FontWeight="SemiBold"
-                                         Foreground="{ThemeResource Brush-Red-Light-1}"
+                                         Foreground="{ThemeResource Brush-Red-Light-2}"
                                          ToolTipService.ToolTip="{x:Bind Path}" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
