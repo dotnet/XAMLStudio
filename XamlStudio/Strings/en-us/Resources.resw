@@ -704,4 +704,8 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>XAML Settings</value>
     <comment>Accessibility Name for XAML expander section in Settings Panel</comment>
   </data>
+  <data name="Toolbox_SearchBox.PlaceholderText" xml:space="preserve">
+    <value>Control Search</value>
+    <comment>Placeholder text for searchbox in Toolbox Panel</comment>
+  </data>
 </root>

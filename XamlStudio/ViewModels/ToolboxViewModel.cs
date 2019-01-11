@@ -74,7 +74,7 @@ namespace XamlStudio.ViewModels
             _groupedSource = LibraryService.Libraries
                 .SelectMany(lib => LibraryService.GetTypesForNamespace(lib.Namespace))
                 .OrderBy(api => api.Name)
-                .GroupBy(api => api.Namespace)
+                .ToGroup(api => api.Namespace)
                 .OrderBy(group => group.Key);
 
             LibraryView.Source =
@@ -89,7 +89,7 @@ namespace XamlStudio.ViewModels
             LibraryView.Source = _groupedSource
                 .SelectMany(group => group)
                 .Where(t => t.Name.Contains(_filter, StringComparison.OrdinalIgnoreCase) || t.Namespace.Contains(_filter, StringComparison.OrdinalIgnoreCase) || t.BaseType.Name.Contains(_filter, StringComparison.OrdinalIgnoreCase))
-                .GroupBy(api => api.Namespace)
+                .ToGroup(api => api.Namespace)
                 .Prepend(
                     Favorites
                     .Where(t => t.Name.Contains(_filter, StringComparison.OrdinalIgnoreCase) || t.Namespace.Contains(_filter, StringComparison.OrdinalIgnoreCase) || t.BaseType.Name.Contains(_filter, StringComparison.OrdinalIgnoreCase))

@@ -47,6 +47,7 @@
 
         <!--  Main VSCode Style Navbar on Left  -->
         <ListBox x:Name="NavMenu"
+                 AutomationProperties.LandmarkType="Navigation"
                  Grid.RowSpan="2"
                  exf:ListBoxExtensions.AllowDeselection="True"
                  ItemContainerStyle="{StaticResource Style-ListBoxItem-CompactMenu}"

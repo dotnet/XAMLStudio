@@ -72,6 +72,7 @@
 
         <AutoSuggestBox Grid.Row="1"
                         x:Uid="Toolbox_SearchBox"
+                        AutomationProperties.LandmarkType="Search"
                         Margin="12,0,0,0"
                         QueryIcon="Find"
                         Style="{StaticResource AutoSuggestBoxNoPopupStyle}"
@@ -85,7 +86,7 @@
                   ItemContainerStyle="{StaticResource ListViewItemContainerWideStyle}"
                   ItemsSource="{x:Bind ViewModel.LibraryView.View, Mode=OneWay}">
             <ListView.GroupStyle>
-                <GroupStyle>
+                <GroupStyle HidesIfEmpty="True">
                     <GroupStyle.HeaderTemplate>
                         <DataTemplate>
                             <TextBlock FontFamily="Segoe UI"
