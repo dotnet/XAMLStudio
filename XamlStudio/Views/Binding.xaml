@@ -84,7 +84,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock x:Uid="Debug_Header" Style="{StaticResource VSCodeAppBarHeaderTextStyle}"/>
                 <ToggleSwitch x:Name="PowerBindingToggle"
-                          x:Uid="Settings_PowerBindingToggle"
+                          x:Uid="Debug_PowerBindingToggle"
                           Grid.Column="1"
                           Height="32"
                           Width="92"
@@ -103,11 +103,12 @@
             </Grid>
         </Border>
 
-        <ComboBox x:Name="BindingViewMode"
-                    Grid.Row="1"
-                    Margin="24,4,0,12"
-                    HorizontalAlignment="Stretch"
-                    SelectedIndex="0">
+        <ComboBox x:Uid="Debug_ViewMode"
+                  x:Name="BindingViewMode"
+                  Grid.Row="1"
+                  Margin="24,4,0,12"
+                  HorizontalAlignment="Stretch"
+                  SelectedIndex="0">
             <x:String>Bindings</x:String>
             <x:String>History</x:String>
         </ComboBox>
@@ -119,7 +120,8 @@
                 <ItemsControl ItemsSource="{x:Bind MainViewModel.ActiveDocumentViewModel.Result.Bindings, Mode=OneWay}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="models:XamlBindingInfo">
-                            <controls:Expander HorizontalContentAlignment="Stretch"
+                            <controls:Expander AutomationProperties.Name="{x:Bind}"
+                                               HorizontalContentAlignment="Stretch"
                                                FontFamily="Segoe UI"
                                                HeaderStyle="{StaticResource VSCodeExpanderStyle}">
                                 <controls:Expander.Header>

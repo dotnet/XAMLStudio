@@ -587,6 +587,24 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>Remote Source Error</value>
     <comment>Text displayed at top of errors that occur trying to load a remote data source in the Data Source panel.</comment>
   </data>
+  <data name="Debug_PowerBindingToggle.OffContent" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="Debug_PowerBindingToggle.OnContent" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="Debug_PowerBindingToggle.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Binding Debugging</value>
+    <comment>Accessibility Name for Binding Debugging Toggle on Binding Debugger Panel</comment>
+  </data>
+  <data name="Debug_ViewMode.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Debug View Mode</value>
+    <comment>Accessibility Name for Binding Viewmode dropdown in debug panel.</comment>
+  </data>
+  <data name="Debug_ViewMode.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Change how binding value history is displayed</value>
+    <comment>Tooltip for Binding Viewmode dropdown in debug panel.</comment>
+  </data>
   <data name="SettingsPanel_About.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>About XAML Studio</value>
     <comment>Accessibility Name for about section expander in settings panel.</comment>
