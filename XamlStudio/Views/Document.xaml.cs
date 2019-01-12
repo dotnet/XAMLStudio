@@ -176,53 +176,9 @@ namespace XamlStudio.Views
             // Workaround to https://github.com/hawkerm/monaco-editor-uwp/issues/6
             // as SelectedText doesn't support modifications it can't be binded to from the CodeEditor itself.
             // That or the PropertyChanged isn't firing for somereason on SelectedText change.
-            if (args.KeyCode == 116)
+            if (args.KeyCode == 116) // F5
             {
                 ViewModel.SelectedText = CodeEditor.SelectedText;
-            }
-
-            // TODO: Figure out way to translate and pass to our main key-shortcut router.
-            if (args.CtrlKey)
-            {
-                // Need to duplicate this here from MainViewModel as Control eats CoreWindow event.
-                switch (args.KeyCode)
-                {
-                    case 78: // N
-                        MainViewModel.NewDocumentCommand.Execute(null);
-                        args.Handled = true;
-                        break;
-                    case 79: // O
-                        MainViewModel.OpenDocumentCommand.Execute(null);
-                        args.Handled = true;
-                        break;
-                    case 83: // S
-                        if (args.ShiftKey)
-                        {
-                            MainViewModel.SaveDocumentAsCommand.Execute(LoadedDocument);
-                        }
-                        else
-                        {
-                            MainViewModel.SaveDocumentCommand.Execute(LoadedDocument);
-                        }
-                        args.Handled = true;
-                        break;
-                    case 87: // W
-                    case 115: // F4
-                        MainViewModel.CloseActiveDocumentCommand.Execute(null);
-                        args.Handled = true;
-                        break;
-                    case 9: // TAB
-                        if (args.ShiftKey)
-                        {
-                            MainViewModel.PreviousDocumentCommand.Execute(null);
-                        }
-                        else
-                        {
-                            MainViewModel.NextDocumentCommand.Execute(null);
-                        }
-                        args.Handled = true;
-                        break;
-                }
             }
 
             // Now pass onto VM now that we have SelectedText set.
