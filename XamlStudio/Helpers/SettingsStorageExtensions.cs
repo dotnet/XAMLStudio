@@ -26,10 +26,26 @@ namespace XamlStudio.Helpers
         {
             using (await _saveMutex.LockAsync())
             {
-                var file = await folder.CreateFileAsync(GetFileName(name), CreationCollisionOption.ReplaceExisting);
-                var fileContent = await Json.StringifyAsync(content);
+                int saveAttempts = 3;
 
-                await FileIO.WriteTextAsync(file, fileContent);
+                while (saveAttempts > 0)
+                {
+                    try
+                    {
+                        // This ReplaceExisting flag seems to fail occassionally, guard by trying again.
+                        var file = await folder.CreateFileAsync(GetFileName(name), CreationCollisionOption.ReplaceExisting);
+                        var fileContent = await Json.StringifyAsync(content);
+
+                        await FileIO.WriteTextAsync(file, fileContent);
+
+                        break;
+                    }
+                    catch (Exception)
+                    {
+                        await Task.Delay(50);
+                    }
+                    saveAttempts--;
+                }
             }
         }
 
