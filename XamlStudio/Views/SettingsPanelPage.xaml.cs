@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using Windows.Foundation.Metadata;
 using Windows.System;
 using Windows.System.Threading;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using XamlStudio.Helpers;
+using XamlStudio.Models;
 using XamlStudio.Services.Logging;
 using XamlStudio.Toolkit.Models;
 using XamlStudio.ViewModels;
@@ -205,6 +207,15 @@ namespace XamlStudio.Views
             {
                 { "Location", "About" }
             });
+        }
+
+        private async void HyperlinkButtonLicense_Click(object sender, RoutedEventArgs e)
+        {
+            var item = (sender as FrameworkElement).DataContext as ThirdPartyInfo;
+
+            var md = new MessageDialog(string.Join("\n", item.LicenseText), string.Format("SettingsPanel_About_License_Dialog_Header".GetLocalized(), item.Name, item.License));
+
+            await md.ShowAsync();
         }
     }
 }

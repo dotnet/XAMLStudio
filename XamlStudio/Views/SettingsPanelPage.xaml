@@ -11,6 +11,7 @@
       xmlns:sys="using:System"
       xmlns:xaml="using:Windows.UI.Xaml"
       xmlns:xstc="using:XamlStudio.Toolkit.Converters"
+      xmlns:model="using:XamlStudio.Models"
       Style="{StaticResource PageStyle}"
       mc:Ignorable="d">
     <Page.Resources>
@@ -441,6 +442,35 @@
                                Margin="0,12,0,12"
                                Style="{StaticResource BodyTextStyle}" />
                 </StackPanel>
+            </controls:Expander>
+
+            <controls:Expander x:Uid="SettingsPanel_ThirdParty"
+                               HorizontalContentAlignment="Stretch"
+                               VerticalContentAlignment="Top"
+                               Background="Transparent"
+                               HeaderStyle="{StaticResource SimpleExpanderStyle}"
+                               IsExpanded="True">
+                <ItemsControl ItemsSource="{x:Bind ViewModel.ThirdPartyLibs, Mode=OneWay}"
+                              Margin="20,0,0,20">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="model:ThirdPartyInfo">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="260"/>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="100"/>
+                                </Grid.ColumnDefinitions>
+                                <HyperlinkButton Content="{Binding Name}" NavigateUri="{Binding Url}"/>
+                                <TextBlock Text="{Binding Version}" Grid.Column="1" Margin="0,6,0,0"/>
+                                <HyperlinkButton Content="{Binding License}" NavigateUri="{Binding LicenseUrl}" Grid.Column="2"
+                                                 AutomationProperties.Name="{Binding LicenseAutomationName}"/>
+                                <HyperlinkButton Content="Read License" Click="HyperlinkButtonLicense_Click" Grid.Column="3"
+                                                 AutomationProperties.Name="{Binding LicenseTextAutomationName}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </controls:Expander>
         </StackPanel>
     </ScrollViewer>

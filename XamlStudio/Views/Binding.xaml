@@ -14,7 +14,6 @@
       xmlns:model="using:XamlStudio.Models"
       xmlns:models="using:XamlStudio.Toolkit.Models"
       xmlns:services="using:XamlStudio.Services"
-      xmlns:xc="using:WinRTXamlToolkit.Controls"
       mc:Ignorable="d"
       IsEnabled="{x:Bind model:DocumentType.Document.Equals(MainViewModel.ActiveFile.DocumentType), Mode=OneWay}">
 

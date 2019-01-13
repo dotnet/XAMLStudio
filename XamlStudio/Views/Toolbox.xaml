@@ -16,7 +16,6 @@
       xmlns:models="using:XamlStudio.Toolkit.Models"
       xmlns:services="using:XamlStudio.Services"
       xmlns:system="using:System"
-      xmlns:xc="using:WinRTXamlToolkit.Controls"
       x:Name="ToolboxPage"
       mc:Ignorable="d">
 

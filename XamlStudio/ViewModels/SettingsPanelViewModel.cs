@@ -1,4 +1,5 @@
 ﻿using Microsoft.AppCenter.Analytics;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,11 +9,13 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 
 using Windows.ApplicationModel;
+using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using XamlStudio.Helpers;
+using XamlStudio.Models;
 using XamlStudio.Services;
 
 namespace XamlStudio.ViewModels
@@ -94,6 +97,8 @@ namespace XamlStudio.ViewModels
         public ICommand SwitchToggleCommand { get; private set; }
         public ICommand DelayChangedCommand { get; private set; }
 
+        public ObservableCollection<ThirdPartyInfo> ThirdPartyLibs { get; set; } = new ObservableCollection<ThirdPartyInfo>();
+
         public SettingsPanelViewModel()
         {
             SwitchToggleCommand = new RelayCommand<RoutedEventArgs>(SwitchToggle);
@@ -102,6 +107,8 @@ namespace XamlStudio.ViewModels
             VersionDescription = GetVersionDescription();
 
             Colors = new ObservableCollection<Color>(typeof(Colors).GetRuntimeProperties().Select((color) => (Color)color.GetValue(null)));
+
+            LoadThirdPartyInfo();
         }
 
         private string GetVersionDescription()
@@ -111,6 +118,15 @@ namespace XamlStudio.ViewModels
             var version = packageId.Version;
 
             return $"v{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+        }
+
+        private async void LoadThirdPartyInfo()
+        {
+            var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Strings/thirdparty.json"));
+
+            var text = await FileIO.ReadTextAsync(file);
+
+            JsonConvert.DeserializeObject<ThirdPartyInfo[]>(text).ToList().ForEach(item => ThirdPartyLibs.Add(item));
         }
 
         private void SwitchToggle(RoutedEventArgs args)
