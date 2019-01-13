@@ -303,6 +303,13 @@ namespace XamlStudio.Views
                 });
             }
 
+            if (!IsEnabled)
+            {
+                // Prevent typing when page is disabled (until Monaco supports IsEnabled).
+                args.Handled = true;
+                return;
+            }
+
             // Ignore as a change to the document if we handle it as a shortcut above or it's a special char.
             if (!args.Handled && Array.IndexOf(NonCharacterCodes, args.KeyCode) == -1)
             {

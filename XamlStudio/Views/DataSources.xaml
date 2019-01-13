@@ -9,7 +9,9 @@
       xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
       xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:future="using:Microsoft.Toolkit.Uwp.UI.Controls.Future"
-      mc:Ignorable="d">
+      xmlns:model="using:XamlStudio.Models"
+      mc:Ignorable="d"
+      IsEnabled="{x:Bind model:DocumentType.Document.Equals(MainViewModel.ActiveFile.DocumentType), Mode=OneWay}">
 
     <Page.Resources>
         <converters:StringVisibilityConverter x:Key="StringVisibilityConverter"/>

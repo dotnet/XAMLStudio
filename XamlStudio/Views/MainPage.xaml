@@ -60,10 +60,12 @@
             <!--<ListBoxItem x:Uid="MainPage_NavMenu_ImageSources" Tag="IMAGES">
                 <controls:AppFontIcon IconName="Photo2" />
             </ListBoxItem>-->
-            <ListBoxItem x:Uid="MainPage_NavMenu_DataSources" Tag="DATASOURCES">
+            <ListBoxItem x:Uid="MainPage_NavMenu_DataSources" Tag="DATASOURCES"
+                         IsEnabled="{x:Bind models:DocumentType.Document.Equals(ViewModel.ActiveFile.DocumentType), Mode=OneWay}">
                 <controls:AppFontIcon IconName="Wheel" />
             </ListBoxItem>
-            <ListBoxItem x:Uid="MainPage_NavMenu_Debug" Tag="DEBUG">
+            <ListBoxItem x:Uid="MainPage_NavMenu_Debug" Tag="DEBUG"
+                         IsEnabled="{x:Bind models:DocumentType.Document.Equals(ViewModel.ActiveFile.DocumentType), Mode=OneWay}">
                 <controls:AppFontIcon IconName="Bug" />
             </ListBoxItem>
             <ListBoxItem x:Uid="MainPage_NavMenu_Toolbox" Tag="TOOLBOX">
