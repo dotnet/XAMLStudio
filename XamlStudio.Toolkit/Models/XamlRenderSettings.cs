@@ -52,7 +52,7 @@ namespace XamlStudio.Toolkit.Models
         /// Gets or sets the setting which determines if <see cref="Windows.UI.Xaml.Markup.XamlReader.LoadWithInitialTemplateValidation(string)"/> or <see cref="Windows.UI.Xaml.Markup.XamlReader.Load(string)"/> method should be used to render content.
         /// Defaults to use InitialTemplateValidation.
         /// </summary>
-        public bool IsInitialTemplateValidated { get; set; } = true;
+        public bool IsInitialTemplateValidated { get; set; } = false;
 
         /// <summary>
         /// Set the explicit DataContext used on the root UIElement.

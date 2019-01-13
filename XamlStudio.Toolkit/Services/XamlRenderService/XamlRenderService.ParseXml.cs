@@ -44,7 +44,7 @@ namespace XamlStudio.Toolkit.Services
             }
         }
 
-        private void GetBindings(XamlRenderResultContext context)
+        private void GetBindings(XamlRenderResultContext context, bool isBinding)
         {
             if (context.Document != null)
             {
@@ -52,7 +52,7 @@ namespace XamlStudio.Toolkit.Services
                 {
                     foreach (var attr in node.Attributes())
                     {
-                        if (attr.Value.StartsWith("{Binding"))
+                        if (isBinding && attr.Value.StartsWith("{Binding"))
                         {
                             var bt = BindingParser.Parse(attr.Value);
 
@@ -70,6 +70,11 @@ namespace XamlStudio.Toolkit.Services
                             XamlBindingWrapperManager.Instance.AddNewBinding(Id, bindingInfo);
 
                             attr.Value = InjectBindingConverter(attr.Value, bt, bindingInfo);
+                        }
+                        else if (attr.Name == "{http://schemas.microsoft.com/winfx/2006/xaml}Class")
+                        {
+                            // Remove x:Class element from xml tree.
+                            attr.Remove();
                         }
                     }
                 });
