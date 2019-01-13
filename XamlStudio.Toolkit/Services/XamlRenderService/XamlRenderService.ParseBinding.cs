@@ -90,7 +90,7 @@ namespace XamlStudio.Toolkit.Services
         }
 
         // Given all binding info, return a new binding string with our shim injected.
-        private string InjectBindingConverter(string original, BindingValue binding, XamlBindingInfo info)
+        internal static string InjectBindingConverter(string original, BindingValue binding, XamlBindingInfo info)
         {
             const string converterShim = "{StaticResource XamlBindingWrapper}";
             var foundConverter = !string.IsNullOrWhiteSpace(binding.Converter);
@@ -103,8 +103,13 @@ namespace XamlStudio.Toolkit.Services
             }
             else
             {
+                char separator = ',';
                 // If no converter on binding, add ours
-                original = original.Substring(0, original.Length - 1) + ",Converter=" + converterShim + "}";
+                if (string.IsNullOrWhiteSpace(binding.Path))
+                {
+                    separator = ' ';
+                }
+                original = original.Substring(0, original.Length - 1) + separator + "Converter=" + converterShim + "}";
             }
 
             if (foundConverterParameter)

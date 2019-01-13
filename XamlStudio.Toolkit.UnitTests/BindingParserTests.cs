@@ -85,6 +85,30 @@ namespace XamlStudio.Toolkit.UnitTests
             PrintBinding(xaml, binding);
         }
 
+        [TestMethod]
+        public void BindingTest_NoPath()
+        {
+            string xaml = @"{Binding}";
+            var expected = new BindingValue();
+            var binding = BindingParser.Parse(xaml);
+            TestBinding(expected, binding);
+            PrintBinding(xaml, binding);
+        }
+
+        [TestMethod]
+        public void BindingTest_RelativeSource()
+        {
+            string xaml = @"{Binding DataContext, RelativeSource={RelativeSource Self}}";
+            var expected = new BindingValue()
+            {
+                RelativeSource = "{RelativeSource Self}",
+                Path = "DataContext"
+            };
+            var binding = BindingParser.Parse(xaml);
+            TestBinding(expected, binding);
+            PrintBinding(xaml, binding);
+        }
+
         private static void TestBinding(BindingValue expected, BindingValue actual)
         {
             foreach (var prop in expected.GetType().GetProperties())
