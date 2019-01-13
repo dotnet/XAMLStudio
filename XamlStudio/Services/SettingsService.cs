@@ -144,7 +144,7 @@ namespace XamlStudio.Services
                         files.Add(item as StorageFile);
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     // GetItemAsync threw exception?  Skip...
                 }

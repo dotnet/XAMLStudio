@@ -27,10 +27,6 @@ namespace XamlStudio
     public sealed partial class App : Application
     {
         private Lazy<ActivationService> _activationService;
-        private ExtendedExecutionSession extendedExecutionSession;
-
-        private bool _badError = false;
-
         private ActivationService ActivationService
         {
             get { return _activationService.Value; }
@@ -110,17 +106,6 @@ namespace XamlStudio
             finally
             {
                 deferral.Complete();
-            }
-        }
-
-        /// <summary>
-        /// Initializes the <see cref="ExtendedExecutionSession"/> instance.
-        /// </summary>
-        private void ClearExtendedExecution()
-        {
-            if(extendedExecutionSession != null)
-            {
-                extendedExecutionSession.Revoked -= App_ExtendedExecutionRevoked;
             }
         }
 
