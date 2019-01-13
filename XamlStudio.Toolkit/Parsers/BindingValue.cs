@@ -47,6 +47,7 @@ namespace XamlStudio.Toolkit.Parsers
         /// </summary>
         public string ConverterLanguage { get; set; }
 
+        // TODO: Should this be 'ConverterKey' and keep the original string intact?
         /// <summary>
         ///     Gets or sets the converter object that is called by the binding engine to modify
         ///     the data as it is passed between the source and target, or vice versa.

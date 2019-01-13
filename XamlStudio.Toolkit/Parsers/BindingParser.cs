@@ -5,7 +5,7 @@ namespace XamlStudio.Toolkit.Parsers
 {
     public static class BindingParser
     {
-        private const string BindingReg = @"(Binding|x:Bind)\s+(?<Path>(Path=|)[^,=]*?),";
+        private const string BindingReg = @"(Binding|x:Bind)\s+(?<Path>(Path=|)[^,=]*?)(,|})";
         private const string regProp = @"(?<Property>BindBack|Converter|ConverterLanguage|ConverterParameter|ElementName|FallbackValue|Mode|Path|RelativeSource|Source|TargetNullValue|UpdateSourceTrigger)";
         private const string regValueCurly = @"(?<Value>{(?>{(?<DEPTH>)|}(?<-DEPTH>)|[^{}]+)*}(?(DEPTH)(?!)))"; //"(?<Value>.*?(?({)({(?>{(?<DEPTH>)|}(?<-DEPTH>)|.?)*(?(DEPTH)(?!))}(?=[,}]))|(.*?(?=[,}]))))";
         private const string regValueQuote = @"(?<Value>'.*?')"; //"(?<Value>.*?(?({)({(?>{(?<DEPTH>)|}(?<-DEPTH>)|.?)*(?(DEPTH)(?!))}(?=[,}]))|(.*?(?=[,}]))))";
@@ -31,6 +31,11 @@ namespace XamlStudio.Toolkit.Parsers
             if (pathMatch.Success)
             {
                 text.Path = pathMatch.Groups["Path"]?.Value;
+            }
+            // Special case '.' Bindings not in Path=
+            else if (binding.StartsWith("{Binding ."))
+            {
+                text.Path = ".";
             }
 
             // Find all other properties (name on BindingValue has to match the property name in binding)

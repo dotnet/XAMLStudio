@@ -11,7 +11,22 @@ namespace XamlStudio.Toolkit.UnitTests
     public class BindingParserTests
     {
         [TestMethod]
-        public void BindingTest_Converter1()
+        public void BindingTest_Converter()
+        {
+            string xaml = @"{Binding IsOn, ElementName=AutoCompileToggle, Converter={StaticResource BooleanToVisibilityConverter}}";
+            var expected = new BindingValue()
+            {
+                ElementName = "AutoCompileToggle",
+                Path = "IsOn",
+                Converter = "BooleanToVisibilityConverter",
+            };
+            var binding = BindingParser.Parse(xaml);
+            TestBinding(expected, binding);
+            PrintBinding(xaml, binding);
+        }
+
+        [TestMethod]
+        public void BindingTest_ConverterParameterString1()
         {
             string xaml = @"{Binding IsOn, ElementName=AutoCompileToggle, Converter={StaticResource StringFormatConverter}, ConverterParameter='Is Loading: {0}'}";
             var expected = new BindingValue()
@@ -27,7 +42,7 @@ namespace XamlStudio.Toolkit.UnitTests
         }
 
         [TestMethod]
-        public void BindingTest_Converter2()
+        public void BindingTest_ConverterParameterString2()
         {
             string xaml = @"{Binding RangeMin, ElementName=RangeSelector, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.##}'}";
             var expected = new BindingValue()
@@ -43,7 +58,7 @@ namespace XamlStudio.Toolkit.UnitTests
         }
 
         [TestMethod]
-        public void BindingTest_ConverterParamVar()
+        public void BindingTest_ConverterParameterValue()
         {
             string xaml = @"{Binding Path=MyBoolValue, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=True}";
             var expected = new BindingValue()
@@ -74,7 +89,7 @@ namespace XamlStudio.Toolkit.UnitTests
         [TestMethod]
         public void BindingTest_Path2()
         {
-            string xaml = @"{x:Bind local:myprop, ElementName=AutoCompileToggle}";
+            string xaml = @"{Binding local:myprop, ElementName=AutoCompileToggle}";
             var expected = new BindingValue()
             {
                 ElementName = "AutoCompileToggle",
@@ -86,10 +101,76 @@ namespace XamlStudio.Toolkit.UnitTests
         }
 
         [TestMethod]
+        public void BindingTest_Path3()
+        {
+            string xaml = @"{Binding Placeholder}";
+            var expected = new BindingValue()
+            {
+                Path = "Placeholder"
+            };
+            var binding = BindingParser.Parse(xaml);
+            TestBinding(expected, binding);
+            PrintBinding(xaml, binding);
+        }
+
+        [TestMethod]
+        public void BindingTest_Path4()
+        {
+            string xaml = @"{Binding Path=Placeholder}";
+            var expected = new BindingValue()
+            {
+                Path = "Placeholder"
+            };
+            var binding = BindingParser.Parse(xaml);
+            TestBinding(expected, binding);
+            PrintBinding(xaml, binding);
+        }
+
+        [TestMethod]
         public void BindingTest_NoPath()
         {
             string xaml = @"{Binding}";
             var expected = new BindingValue();
+            var binding = BindingParser.Parse(xaml);
+            TestBinding(expected, binding);
+            PrintBinding(xaml, binding);
+        }
+
+        [TestMethod]
+        public void BindingTest_DotPath()
+        {
+            string xaml = @"{Binding .}";
+            var expected = new BindingValue()
+            {
+                Path = "."
+            };
+            var binding = BindingParser.Parse(xaml);
+            TestBinding(expected, binding);
+            PrintBinding(xaml, binding);
+        }
+
+        [TestMethod]
+        public void BindingTest_DotPath2()
+        {
+            string xaml = @"{Binding Path=.}";
+            var expected = new BindingValue()
+            {
+                Path = "."
+            };
+            var binding = BindingParser.Parse(xaml);
+            TestBinding(expected, binding);
+            PrintBinding(xaml, binding);
+        }
+
+        [TestMethod]
+        public void BindingTest_DotPath_Converter()
+        {
+            string xaml = @"{Binding ., Converter={StaticResource BooleanToVisibilityConverter}}";
+            var expected = new BindingValue()
+            {
+                Path = ".",
+                Converter = "BooleanToVisibilityConverter",
+            };
             var binding = BindingParser.Parse(xaml);
             TestBinding(expected, binding);
             PrintBinding(xaml, binding);

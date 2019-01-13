@@ -26,6 +26,49 @@ namespace XamlStudio.Toolkit.UnitTests
         }
 
         [TestMethod]
+        public void BindingInjectTest_DotPath()
+        {
+            var binding = "{Binding .}";
+            var info = new XamlBindingInfo(1, 1, binding);
+            var expected = new BindingValue()
+            {
+                Path = "."
+            };
+            var output = XamlRenderService.InjectBindingConverter(binding, expected, info);
+
+            Assert.AreEqual("{Binding .,Converter={StaticResource XamlBindingWrapper},ConverterParameter=" + info.Id + "}", output);
+        }
+
+        [TestMethod]
+        public void BindingInjectTest_DotPath2()
+        {
+            var binding = "{Binding Path=.}";
+            var info = new XamlBindingInfo(1, 1, binding);
+            var expected = new BindingValue()
+            {
+                Path = "."
+            };
+            var output = XamlRenderService.InjectBindingConverter(binding, expected, info);
+
+            Assert.AreEqual("{Binding Path=.,Converter={StaticResource XamlBindingWrapper},ConverterParameter=" + info.Id + "}", output);
+        }
+
+        [TestMethod]
+        public void BindingInjectTest_Converter()
+        {
+            var binding = "{Binding IsOn, Converter={StaticResource BooleanToVisibilityConverter}}";
+            var info = new XamlBindingInfo(1, 1, binding);
+            var expected = new BindingValue()
+            {
+                Path = "IsOn",
+                Converter = "BooleanToVisibilityConverter"
+            };
+            var output = XamlRenderService.InjectBindingConverter(binding, expected, info);
+
+            Assert.AreEqual("{Binding IsOn, Converter={StaticResource XamlBindingWrapper},ConverterParameter=" + info.Id + "}", output);
+        }
+
+        [TestMethod]
         public void BindingInjectTest_RelativeSource()
         {
             var binding = "{Binding DataContext, RelativeSource={RelativeSource Self}}";
