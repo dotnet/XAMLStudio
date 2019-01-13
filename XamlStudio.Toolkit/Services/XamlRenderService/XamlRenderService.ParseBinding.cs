@@ -114,7 +114,7 @@ namespace XamlStudio.Toolkit.Services
 
             if (foundConverterParameter)
             {
-                original = original.Replace(binding.ConverterParameter, string.Empty + info.Id);
+                original = original.Replace(binding.ConverterParameterRaw, string.Empty + info.Id);
             }
             else
             {

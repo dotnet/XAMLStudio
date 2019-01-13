@@ -69,6 +69,42 @@ namespace XamlStudio.Toolkit.UnitTests
         }
 
         [TestMethod]
+        public void BindingInjectTest_ConverterParameterValue()
+        {
+            var binding = @"{Binding RangeMin, ElementName=RangeSelector, Converter={StaticResource StringFormatConverter}, ConverterParameter='{0:0.##}'}";
+            var info = new XamlBindingInfo(1, 1, binding);
+            var expected = new BindingValue()
+            {
+                Path = "RangeMin",
+                ElementName = "RangeSelector",
+                Converter = "StringFormatConverter",
+                ConverterParameter = "{0:0.##}",
+                ConverterParameterRaw = "'{0:0.##}'"
+            };
+            var output = XamlRenderService.InjectBindingConverter(binding, expected, info);
+
+            Assert.AreEqual("{Binding RangeMin, ElementName=RangeSelector, Converter={StaticResource XamlBindingWrapper}, ConverterParameter=" + info.Id + "}", output);
+        }
+
+        [TestMethod]
+        public void BindingInjectTest_ConverterParameterValue2()
+        {
+            var binding = @"{Binding RangeMin, ElementName=RangeSelector, Converter={StaticResource StringFormatConverter}, ConverterParameter=\{0:0.##\}}";
+            var info = new XamlBindingInfo(1, 1, binding);
+            var expected = new BindingValue()
+            {
+                Path = "RangeMin",
+                ElementName="RangeSelector",
+                Converter = "StringFormatConverter",
+                ConverterParameter = "{0:0.##}",
+                ConverterParameterRaw = "\\{0:0.##\\}"
+            };
+            var output = XamlRenderService.InjectBindingConverter(binding, expected, info);
+
+            Assert.AreEqual("{Binding RangeMin, ElementName=RangeSelector, Converter={StaticResource XamlBindingWrapper}, ConverterParameter=" + info.Id + "}", output);
+        }
+
+        [TestMethod]
         public void BindingInjectTest_RelativeSource()
         {
             var binding = "{Binding DataContext, RelativeSource={RelativeSource Self}}";

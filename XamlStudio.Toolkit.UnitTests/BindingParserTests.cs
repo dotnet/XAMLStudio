@@ -34,7 +34,8 @@ namespace XamlStudio.Toolkit.UnitTests
                 ElementName = "AutoCompileToggle",
                 Path = "IsOn",
                 Converter = "StringFormatConverter",
-                ConverterParameter = "'Is Loading: {0}'"
+                ConverterParameter = "Is Loading: {0}",
+                ConverterParameterRaw = "'Is Loading: {0}'"
             };
             var binding = BindingParser.Parse(xaml);
             TestBinding(expected, binding);
@@ -50,7 +51,8 @@ namespace XamlStudio.Toolkit.UnitTests
                 Path = "RangeMin",
                 ElementName = "RangeSelector",
                 Converter = "StringFormatConverter",
-                ConverterParameter = "'{}{0:0.##}'"
+                ConverterParameter = "{0:0.##}",
+                ConverterParameterRaw = "'{}{0:0.##}'"
             };
             var binding = BindingParser.Parse(xaml);
             TestBinding(expected, binding);
@@ -65,7 +67,25 @@ namespace XamlStudio.Toolkit.UnitTests
             {
                 Path = "MyBoolValue",
                 Converter = "BoolToVisibilityConverter",
-                ConverterParameter = "True"
+                ConverterParameter = "True",
+                ConverterParameterRaw = "True"
+            };
+            var binding = BindingParser.Parse(xaml);
+            TestBinding(expected, binding);
+            PrintBinding(xaml, binding);
+        }
+
+        [TestMethod]
+        public void BindingTest_ConverterParameterValue2()
+        {
+            string xaml = @"{Binding RangeMin, ElementName=RangeSelector, Converter={StaticResource StringFormatConverter}, ConverterParameter=\{0:0.##\}}";
+            var expected = new BindingValue()
+            {
+                Path = "RangeMin",
+                ElementName = "RangeSelector",
+                Converter = "StringFormatConverter",
+                ConverterParameter = "{0:0.##}",
+                ConverterParameterRaw = "\\{0:0.##\\}"
             };
             var binding = BindingParser.Parse(xaml);
             TestBinding(expected, binding);
