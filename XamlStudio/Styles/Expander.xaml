@@ -69,7 +69,7 @@
                                   Margin="0,0,8,0"
                                   FontFamily="Segoe MDL2 Assets"
                                   FontSize="8"
-                                  Foreground="{ThemeResource Brush-Blue-Light-1}"
+                                  Foreground="{TemplateBinding Foreground}"
                                   Glyph="&#xEDD6;" />
 
                         <ContentPresenter x:Name="ContentPresenter"
@@ -85,7 +85,7 @@
                                           Content="{TemplateBinding Content}"
                                           ContentTemplate="{TemplateBinding ContentTemplate}"
                                           ContentTransitions="{TemplateBinding ContentTransitions}"
-                                          Foreground="{ThemeResource Brush-Blue-Light-1}"
+                                          Foreground="{TemplateBinding Foreground}"
                                           RenderTransformOrigin="0.5,0.5" />
                     </Grid>
                 </ControlTemplate>

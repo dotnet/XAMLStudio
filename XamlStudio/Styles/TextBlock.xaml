@@ -17,4 +17,8 @@
         <Setter Property="TextWrapping" Value="Wrap" />
     </Style>
 
+    <Style TargetType="HyperlinkButton">
+        <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
+    </Style>
+
 </ResourceDictionary>
