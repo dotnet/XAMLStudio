@@ -720,6 +720,18 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>Third-Party Notices</value>
     <comment>Accessibility name for expander in SettingsPanel for Third-Party Notices</comment>
   </data>
+  <data name="Debug_Binding_Disabled_Message.Text" xml:space="preserve">
+    <value>Turn on Binding Debugging to see information here.</value>
+    <comment>Text which appears in Debug panel when Binding Debugging is turned off.</comment>
+  </data>
+  <data name="Debug_Button_ClearHistoryFilter.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Remove History Filter</value>
+    <comment>Accessibility Name for remove history filter button in binding debugging panel.</comment>
+  </data>
+  <data name="Debug_Button_ClearHistoryFilter.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Remove History Filter</value>
+    <comment>Tooltip for removing history filter button in binding debugging panel.</comment>
+  </data>
   <data name="License_Name_Format" xml:space="preserve">
     <value>{0} License for {1}</value>
     <comment>Accessibility Name for License Link in Settings Panel Third-Party Notices</comment>

@@ -71,22 +71,22 @@ namespace XamlStudio.ViewModels
 
         public ObservableVector<IModelDeltaDecoration> LineDecorations { get; } = new ObservableVector<IModelDeltaDecoration>();
 
-        private CssLineStyle _errorStyle = new CssLineStyle()
+        private static CssLineStyle _errorStyle = new CssLineStyle()
         {
             BackgroundColor = new SolidColorBrush("#FFFEB9CE".ToColor())
         };
 
-        private CssLineStyle _bindingStyleUnbound = new CssLineStyle()
+        private static CssLineStyle _bindingStyleUnbound = new CssLineStyle()
         {
             BackgroundColor = new SolidColorBrush("#FFB4EBEF".ToColor())
         };
 
-        private CssLineStyle _bindingStyleSuccess = new CssLineStyle()
+        private static CssLineStyle _bindingStyleSuccess = new CssLineStyle()
         {
             BackgroundColor = new SolidColorBrush("#FFB9FEC1".ToColor())
         };
 
-        private CssLineStyle _bindingStyleError = new CssLineStyle()
+        private static CssLineStyle _bindingStyleError = new CssLineStyle()
         {
             BackgroundColor = new SolidColorBrush("#FFFFF689".ToColor())
         };

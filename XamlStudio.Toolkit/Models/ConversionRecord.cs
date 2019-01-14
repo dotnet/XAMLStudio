@@ -17,6 +17,8 @@ namespace XamlStudio.Toolkit.Models
 
         public object Result { get; private set; }
 
+        public object ResultOrValue { get { return Result ?? Value; } }
+
         public bool HasResult { get; private set; }
 
         public bool IsSuccessful { get; private set; }
@@ -60,6 +62,13 @@ namespace XamlStudio.Toolkit.Models
             Parent = parent;
             Value = value;
             ExceptionObject = error;
+        }
+
+        public override string ToString()
+        {
+            var start = string.IsNullOrWhiteSpace(Parent.ElementName) ? Parent.ElementTypeName : Parent.ElementName + "[" + Parent.ElementTypeName + "]";
+
+            return start + "." + Parent.PropertyName + " = " + ResultOrValue;
         }
     }
 }

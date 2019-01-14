@@ -144,7 +144,7 @@ namespace XamlStudio.ViewModels
                         new IModelDecorationOptions()
                         {
                             IsWholeLine = error.IsWholeLine,
-                            ClassName = this._errorStyle,
+                            ClassName = _errorStyle,
                             HoverMessage = new string[]
                             {
                                 error.Message
@@ -208,7 +208,7 @@ namespace XamlStudio.ViewModels
                             new IModelDecorationOptions()
                             {
                                 IsWholeLine = false,
-                                ClassName = this._bindingStyleUnbound,
+                                ClassName = _bindingStyleUnbound,
                                 HoverMessage = new string[]
                                     {
                                         "Binding not Triggered Yet."
@@ -220,7 +220,7 @@ namespace XamlStudio.ViewModels
                             new IModelDecorationOptions()
                             {
                                 IsWholeLine = false,
-                                ClassName = this._bindingStyleSuccess,
+                                ClassName = _bindingStyleSuccess,
                                 HoverMessage = new string[]
                                     {
                                         "Last Binding Value: " + binding.LastConvertedResultOrValue?.ToString(),
@@ -233,7 +233,7 @@ namespace XamlStudio.ViewModels
                             new IModelDecorationOptions()
                             {
                                 IsWholeLine = false,
-                                ClassName = this._bindingStyleError,
+                                ClassName = _bindingStyleError,
                                 HoverMessage = new string[]
                                     {
                                         binding.LastExceptionMessage

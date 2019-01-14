@@ -29,6 +29,16 @@ namespace XamlStudio.Views
 
         public SettingsPanelViewModel SettingsViewModel { get; set; }
 
+        public XamlBindingInfo HistoryFilter
+        {
+            get { return (XamlBindingInfo)GetValue(HistoryFilterProperty); }
+            set { SetValue(HistoryFilterProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for HistoryFilter.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty HistoryFilterProperty =
+            DependencyProperty.Register(nameof(HistoryFilter), typeof(XamlBindingInfo), typeof(Binding), new PropertyMetadata(null));
+
         public Binding()
         {
             this.InitializeComponent();
@@ -36,12 +46,30 @@ namespace XamlStudio.Views
 
         private void ListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var line = (e.ClickedItem as ConversionRecord)?.Parent.Line;
+            XamlBindingInfo xbi = null;
 
-            if (line != null && line.HasValue)
+            if (e.ClickedItem is ConversionRecord cr)
             {
-                MainViewModel.ActiveDocumentViewModel.NavigateToLineCommand.Execute(line.Value);
+                xbi = cr.Parent;
             }
+            else if (e.ClickedItem is XamlBindingInfo bi)
+            {
+                xbi = bi;
+
+                HistoryFilter = xbi;
+
+                BindingViewMode.SelectedValue = "History";
+            }
+
+            if (xbi != null)
+            {
+                MainViewModel.ActiveDocumentViewModel.NavigateToLineCommand.Execute(xbi.Line);
+            }
+        }
+
+        private void Button_ClearHistoryFilter_Click(object sender, RoutedEventArgs e)
+        {
+            HistoryFilter = null;
         }
     }
 }
