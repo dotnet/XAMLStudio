@@ -21,7 +21,7 @@
 
     <Page.Resources>
         <futureConverters:CollectionContainsConverter x:Key="CollectionContainsVisibilityConverter" Collection="{Binding ViewModel.Favorites, ElementName=ToolboxPage}" />
-        <!-- TrueValue="Visible" FalseValue="Collapsed"/-->
+        <!--  TrueValue="Visible" FalseValue="Collapsed"/  -->
 
         <Style x:Key="ListViewItemContainerWideStyle" TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -66,13 +66,13 @@
         <Border Margin="0,0,-12,0"
                 Padding="0,12,0,0"
                 Style="{StaticResource VSCodeAppBarHeaderStyle}">
-            <TextBlock x:Uid="Toolbox_Header" Style="{StaticResource VSCodeAppBarHeaderTextStyle}"/>
+            <TextBlock x:Uid="Toolbox_Header" Style="{StaticResource VSCodeAppBarHeaderTextStyle}" />
         </Border>
 
-        <AutoSuggestBox Grid.Row="1"
-                        x:Uid="Toolbox_SearchBox"
-                        AutomationProperties.LandmarkType="Search"
+        <AutoSuggestBox x:Uid="Toolbox_SearchBox"
+                        Grid.Row="1"
                         Margin="12,0,0,0"
+                        AutomationProperties.LandmarkType="Search"
                         QueryIcon="Find"
                         Style="{StaticResource AutoSuggestBoxNoPopupStyle}"
                         Text="{x:Bind ViewModel.Filter, Mode=TwoWay}" />
@@ -99,39 +99,41 @@
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="system:Type">
                     <Grid Margin="16,0,0,0"
-                          AutomationProperties.Name="{Binding Name}"
                           ex:FrameworkElementExtensions.AncestorType="ListViewItem"
+                          AutomationProperties.Name="{Binding Name}"
                           DataContext="{Binding (ex:FrameworkElementExtensions.Ancestor).Content, RelativeSource={RelativeSource Self}}">
                         <StackPanel>
                             <TextBlock FontSize="14" Text="{Binding Name}" />
                             <TextBlock FontSize="8" Text="{Binding BaseType}" />
                         </StackPanel>
-                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Margin="0,0,4,0">
-                            <!-- TODO: Encapsulate this in a togglebutton or something with a different style? -->
-                            <HyperlinkButton
-                                x:Uid="Toolbox_Button_Favorite"
-                                Click="Favorite_Click" Margin="0,0,4,0"
-                                Visibility="{Binding Converter={StaticResource CollectionContainsVisibilityConverter}, ConverterParameter=True}">
-                                <!-- Unchecked - Mark Favorite -->
-                                <FontIcon FontFamily="Segoe MDL2 Assets"
-                                            FontSize="16"
-                                            Glyph="&#xEB51;"/>
-                            </HyperlinkButton>
-                            <HyperlinkButton
-                                x:Uid="Toolbox_Button_Unfavorite"
-                                Click="Favorite_Click" Margin="0,0,4,0"
-                                Visibility="{Binding Converter={StaticResource CollectionContainsVisibilityConverter}}">
-                                <!-- Checked - Unmark Favorite -->
+                        <StackPanel Margin="0,0,4,0"
+                                    HorizontalAlignment="Right"
+                                    Orientation="Horizontal">
+                            <!--  TODO: Encapsulate this in a togglebutton or something with a different style?  -->
+                            <HyperlinkButton x:Uid="Toolbox_Button_Favorite"
+                                             Margin="0,0,4,0"
+                                             Click="Favorite_Click"
+                                             Foreground="{ThemeResource Brush-Red-Light-2}"
+                                             Visibility="{Binding Converter={StaticResource CollectionContainsVisibilityConverter}, ConverterParameter=True}">
+                                <!--  Unchecked - Mark Favorite  -->
                                 <FontIcon FontFamily="Segoe MDL2 Assets"
                                           FontSize="16"
-                                          Glyph="&#xEB52;"/>
+                                          Glyph="&#xEB51;" />
                             </HyperlinkButton>
-                            <HyperlinkButton
-                                x:Uid="Toolbox_Button_Docs"
-                                Click="HyperlinkButton_Click">
+                            <HyperlinkButton x:Uid="Toolbox_Button_Unfavorite"
+                                             Margin="0,0,4,0"
+                                             Click="Favorite_Click"
+                                             Foreground="{ThemeResource Brush-Red-Light-2}"
+                                             Visibility="{Binding Converter={StaticResource CollectionContainsVisibilityConverter}}">
+                                <!--  Checked - Unmark Favorite  -->
                                 <FontIcon FontFamily="Segoe MDL2 Assets"
-                                                  FontSize="16"
-                                                  Glyph="&#xE9CE;" />
+                                          FontSize="16"
+                                          Glyph="&#xEB52;" />
+                            </HyperlinkButton>
+                            <HyperlinkButton x:Uid="Toolbox_Button_Docs" Click="HyperlinkButton_Click">
+                                <FontIcon FontFamily="Segoe MDL2 Assets"
+                                          FontSize="16"
+                                          Glyph="&#xE9CE;" />
                             </HyperlinkButton>
                         </StackPanel>
                     </Grid>
