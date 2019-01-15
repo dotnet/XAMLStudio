@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using XamlStudio.Helpers;
@@ -101,6 +102,7 @@ namespace XamlStudio.Views
 
             ViewModel.NavigateToLineCommand = new RelayCommand<uint>(NavigateToLine);
             ViewModel.InsertTextCommand = new RelayCommand<string>(InsertText);
+            ViewModel.UpdateXamlCommand = new AsyncRelayCommand<RoutedEventArgs>(UpdateXaml);
 
             // RenderAsync XAML if enabled by default
             if (SettingsService.Instance.IsAutoCompileEnabled == true)
@@ -169,6 +171,32 @@ namespace XamlStudio.Views
                 ViewModel.UpdateXamlCommand.Execute(null);
             });
             #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        }
+
+        private async Task UpdateXaml(RoutedEventArgs args)
+        {
+            // Check if nothing to do
+            if (ViewModel.Document.Content == null || ViewModel.Document.Content.Length == 0 || ViewModel.HasCompiled)
+            {
+                return;
+            }
+
+            var keepcontent = !SettingsService.Instance.IsContentUpdatedWithSuggested.Value;
+
+            var newcontent = await ViewModel.InternalRenderXamlAsync(ViewModel.Document.Content, 0, keepcontent);
+
+            if (!keepcontent)
+            {
+                var pos = await CodeEditor.GetPositionAsync();
+
+                // Update our document with suggested changes.
+                ViewModel.Document.Content = newcontent;
+
+                // Restore cursor to where it was.
+                await CodeEditor.SetPositionAsync(pos);
+            }
+
+            ViewModel.HasCompiled = true;
         }
 
         private void CodeEditor_KeyDown(Monaco.CodeEditor sender, Monaco.Helpers.WebKeyEventArgs args)

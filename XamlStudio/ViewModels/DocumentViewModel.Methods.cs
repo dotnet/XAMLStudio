@@ -26,30 +26,6 @@ namespace XamlStudio.ViewModels
     {
         private readonly AsyncLock _renderMutex = new AsyncLock();
 
-        // TODO: Need to align these two methods for rendering.
-        private async void UpdateXaml(RoutedEventArgs args)
-        {
-            // Check if nothing to do
-            if (Document.Content == null || Document.Content.Length == 0 || HasCompiled)
-            {
-                return;
-            }
-
-            var keepcontent = !SettingsService.Instance.IsContentUpdatedWithSuggested.Value;
-
-            var newcontent = await InternalRenderXamlAsync(Document.Content, 0, keepcontent);
-
-            if (!keepcontent)
-            {
-                // Update our document with suggested changes.
-                Document.Content = newcontent;
-
-                // BUGBUG: TODO: Need to restore cursor location!
-            }
-
-            HasCompiled = true;
-        }
-
         private async void SelectiveRenderXaml(string content)
         {
             HasCompiled = false;
@@ -58,7 +34,7 @@ namespace XamlStudio.ViewModels
             await InternalRenderXamlAsync(content, 0, true);
         }
 
-        private async Task<string> InternalRenderXamlAsync(string content, uint lineoffset, bool keepContentSameLength, bool overrideBinding = false)
+        internal async Task<string> InternalRenderXamlAsync(string content, uint lineoffset, bool keepContentSameLength, bool overrideBinding = false)
         {
             if (SettingsService.Instance.IsLiveDataContextRefreshedOnRender == true)
             {
@@ -144,7 +120,8 @@ namespace XamlStudio.ViewModels
                         new IModelDecorationOptions()
                         {
                             IsWholeLine = error.IsWholeLine,
-                            ClassName = _errorStyle,
+                            ClassName = _errorLineStyle, // For Whole Line only
+                            InlineClassName = _errorStyle,
                             HoverMessage = new string[]
                             {
                                 error.Message
@@ -208,7 +185,7 @@ namespace XamlStudio.ViewModels
                             new IModelDecorationOptions()
                             {
                                 IsWholeLine = false,
-                                ClassName = _bindingStyleUnbound,
+                                InlineClassName = _bindingStyleUnbound,
                                 HoverMessage = new string[]
                                     {
                                         "Binding not Triggered Yet."
@@ -220,7 +197,7 @@ namespace XamlStudio.ViewModels
                             new IModelDecorationOptions()
                             {
                                 IsWholeLine = false,
-                                ClassName = _bindingStyleSuccess,
+                                InlineClassName = _bindingStyleSuccess,
                                 HoverMessage = new string[]
                                     {
                                         "Last Binding Value: " + binding.LastConvertedResultOrValue?.ToString(),
@@ -233,7 +210,7 @@ namespace XamlStudio.ViewModels
                             new IModelDecorationOptions()
                             {
                                 IsWholeLine = false,
-                                ClassName = _bindingStyleError,
+                                InlineClassName = _bindingStyleError,
                                 HoverMessage = new string[]
                                     {
                                         binding.LastExceptionMessage
@@ -369,7 +346,7 @@ namespace XamlStudio.ViewModels
                 ////}
                 ////else
                 ////{
-                    UpdateXaml(null);
+                    UpdateXamlCommand?.Execute(null);
                 ////}
 
                 // Eat key stroke
@@ -476,7 +453,7 @@ namespace XamlStudio.ViewModels
                     {
                         await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () =>
                         {
-                            UpdateXaml(null);
+                            UpdateXamlCommand?.Execute(null);
                         });
                     }, TimeSpan.FromSeconds(SettingsService.Instance.AutoCompileDelay.Value));
                 }

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Windows.Input;
 using Windows.System.Threading;
 using Windows.UI;
+using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -71,27 +72,38 @@ namespace XamlStudio.ViewModels
 
         public ObservableVector<IModelDeltaDecoration> LineDecorations { get; } = new ObservableVector<IModelDeltaDecoration>();
 
-        private static CssLineStyle _errorStyle = new CssLineStyle()
+        private static CssLineStyle _errorLineStyle = new CssLineStyle()
         {
-            BackgroundColor = new SolidColorBrush("#FFFEB9CE".ToColor())
+            BackgroundColor = new SolidColorBrush("#FFCA416A".ToColor())
         };
 
-        private static CssLineStyle _bindingStyleUnbound = new CssLineStyle()
+        private static CssInlineStyle _errorStyle = new CssInlineStyle()
         {
-            BackgroundColor = new SolidColorBrush("#FFB4EBEF".ToColor())
+            BackgroundColor = new SolidColorBrush("#FFCA416A".ToColor()),
+            ForegroundColor = new SolidColorBrush("#FFFFFFFF".ToColor()),
+            FontWeight = FontWeights.SemiBold
         };
 
-        private static CssLineStyle _bindingStyleSuccess = new CssLineStyle()
+        private static CssInlineStyle _bindingStyleUnbound = new CssInlineStyle()
         {
-            BackgroundColor = new SolidColorBrush("#FFB9FEC1".ToColor())
+            BackgroundColor = new SolidColorBrush("#FFB4EBEF".ToColor()),
+            ForegroundColor = new SolidColorBrush("#FF333333".ToColor())
         };
 
-        private static CssLineStyle _bindingStyleError = new CssLineStyle()
+        private static CssInlineStyle _bindingStyleSuccess = new CssInlineStyle()
         {
-            BackgroundColor = new SolidColorBrush("#FFFFF689".ToColor())
+            BackgroundColor = new SolidColorBrush("#FFB9FEC1".ToColor()),
+            ForegroundColor = new SolidColorBrush("#FF333333".ToColor())
         };
 
-        public ICommand UpdateXamlCommand { get; private set; }
+        private static CssInlineStyle _bindingStyleError = new CssInlineStyle()
+        {
+            BackgroundColor = new SolidColorBrush("#FFFFF689".ToColor()),
+            ForegroundColor = new SolidColorBrush("#FF663333".ToColor()),
+            FontWeight = FontWeights.SemiBold
+        };
+
+        public IAsyncCommand UpdateXamlCommand { get; internal set; }
         
         public ICommand KeyDownCommand { get; private set; }
 
@@ -145,7 +157,7 @@ namespace XamlStudio.ViewModels
             ////xamlRenderer.ImageRoot = SettingsService.Instance.SampleFolder;
             ////xamlRenderer.DataRoot = SettingsService.Instance.SampleFolder;
 
-            UpdateXamlCommand = new RelayCommand<RoutedEventArgs>(UpdateXaml);
+            //UpdateXamlCommand = new RelayCommand<RoutedEventArgs>(UpdateXaml);
             KeyDownCommand = new RelayCommand<WebKeyEventArgs>(KeyDown);
             RefreshLiveDataContextCommand = new AsyncRelayCommand<RoutedEventArgs>(RefreshLiveDataContext);
             ParseDataContextCommand = new RelayCommand<RoutedEventArgs>(ParseDataContext);
