@@ -152,6 +152,7 @@
                                 Value="{x:Bind BindingViewMode.SelectedValue, Mode=OneWay}">
             <future:Case Value="Bindings">
                 <ListView HorizontalContentAlignment="Stretch"
+                          SelectionMode="None"
                           IsItemClickEnabled="True"
                           ItemClick="ListView_ItemClick"
                           ItemContainerStyle="{StaticResource ListViewItemContainerWideStyle}"
@@ -162,11 +163,12 @@
                 <future:SwitchPresenter Value="{x:Bind HistoryFilter, Mode=OneWay}" TargetType="models:XamlBindingInfo">
                     <future:Case Value="{x:Null}">
                         <ListView HorizontalContentAlignment="Stretch"
-                          IsItemClickEnabled="True"
-                          ItemClick="ListView_ItemClick"
-                          ItemContainerStyle="{StaticResource ListViewItemContainerWideStyle}"
-                          ItemTemplate="{StaticResource ConversionRecordWithParentTemplate}"
-                          ItemsSource="{x:Bind MainViewModel.ActiveDocumentViewModel.BindingHistory, Mode=OneWay}" />
+                                  SelectionMode="None"
+                                  IsItemClickEnabled="True"
+                                  ItemClick="ListView_ItemClick"
+                                  ItemContainerStyle="{StaticResource ListViewItemContainerWideStyle}"
+                                  ItemTemplate="{StaticResource ConversionRecordWithParentTemplate}"
+                                  ItemsSource="{x:Bind MainViewModel.ActiveDocumentViewModel.BindingHistory, Mode=OneWay}" />
                     </future:Case>
                     <future:Case IsDefault="True">
                         <Grid>
@@ -189,6 +191,7 @@
                             </Button>
                             <ListView Grid.Row="1"
                                       Grid.ColumnSpan="2"
+                                      SelectionMode="None"
                                       HorizontalContentAlignment="Stretch"
                                       IsItemClickEnabled="True"
                                       ItemClick="ListView_ItemClick"

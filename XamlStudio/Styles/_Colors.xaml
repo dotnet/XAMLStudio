@@ -11,7 +11,7 @@
     <Color x:Key="Color-Blue-Dark-3">#FF364F6B</Color>
 
     <Color x:Key="Color-Blue-Light-0">#FF287B80</Color>
-    <Color x:Key="Color-Blue-Light-1">#FF36A4AB</Color>
+    <Color x:Key="Color-Blue-Light-1">#FF34A2A9</Color>
     <Color x:Key="Color-Blue-Light-2">#FF43CDD6</Color>
     <Color x:Key="Color-Blue-Light-3">#FF69D7DE</Color>
     <Color x:Key="Color-Blue-Light-4">#FFACE1E4</Color>
@@ -31,7 +31,9 @@
     <SolidColorBrush x:Key="SystemControlForegroundAccentBrush" Color="{StaticResource Color-Red-Light-1}" />
     <SolidColorBrush x:Key="SystemControlHighlightAccentBrush" Color="{StaticResource Color-Red-Light-1}" />
     <SolidColorBrush x:Key="SystemControlHighlightAltListAccentHighBrush" Color="{StaticResource Color-Red-Light-2}" />
-
+    <SolidColorBrush x:Key="SystemControlHighlightListAccentLowBrush" Color="{StaticResource Color-Red-Light-1}" />
+    <SolidColorBrush x:Key="SystemControlHighlightListAccentMediumBrush" Color="{StaticResource Color-Red-Light-2}" />
+    
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">
             <SolidColorBrush x:Key="Brush-Grey-Light-0" Color="{StaticResource Color-Blue-Dark-0}" />
