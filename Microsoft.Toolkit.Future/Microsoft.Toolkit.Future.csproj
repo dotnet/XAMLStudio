@@ -121,6 +121,7 @@
     <Compile Include="Extensions\Bind.cs" />
     <Compile Include="Extensions\ContentPresenter\ContentPresenterExtensions.cs" />
     <Compile Include="Extensions\ListBox\ListBoxExtensions.cs" />
+    <Compile Include="Extensions\Mouse.cs" />
     <Compile Include="Extensions\NavigationView\NavigationViewExtensions.cs" />
     <Compile Include="Extensions\Pivot\GetPivotCloseButtonCommandConverter.cs" />
     <Compile Include="Extensions\Pivot\GetPivotGlyphConverter.cs" />
