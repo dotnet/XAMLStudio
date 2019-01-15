@@ -740,4 +740,8 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>Read {0} License for {1}</value>
     <comment>Accessibility Name for Read License Text link in Settings Panel Third-Party notices</comment>
   </data>
+  <data name="Document_ErrorsHeader.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Compilation Errors</value>
+    <comment>Accessibility Name for error popup that appears on documents when XAML can't be compiled.</comment>
+  </data>
 </root>
