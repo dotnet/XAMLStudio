@@ -128,7 +128,7 @@ namespace XamlStudio.ViewModels
             // Create a new Document if we're removing the last one (it will be selected)
             if (OpenFiles.Count == 1)
             {
-                NewDocument(null);
+                OpenFiles.Add(XamlDocument.WelcomeDocument());
             }
 
             // Remove what we had as active (otherwise, the active would be null and we'd hit an error)

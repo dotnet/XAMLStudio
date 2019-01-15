@@ -149,6 +149,7 @@
                          ItemsSource="{x:Bind ViewModel.OpenFiles}"
                          SelectedItem="{x:Bind ViewModel.ActiveFile, Mode=TwoWay}"
                          SelectedTabWidth="200"
+                         SelectionChanged="DocumentTabs_SelectionChanged"
                          TabClosing="DocumentTabs_TabClosing"
                          TabWidthBehavior="Equal">
             <toolkit:TabView.Resources>

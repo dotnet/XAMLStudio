@@ -316,5 +316,14 @@ namespace XamlStudio.Views
                 }
             }
         }
+
+        private void DocumentTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Fix selection issue.
+            if (DocumentTabs.SelectedItem == null && ViewModel.OpenFiles.Count >= 1)
+            {
+                ViewModel.ActiveFile = ViewModel.OpenFiles.First();
+            }
+        }
     }
 }
