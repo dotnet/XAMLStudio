@@ -99,7 +99,7 @@
   {
     "name": "Json.NET",
     "url": "https://www.newtonsoft.com/json",
-    "version": "12.0.1",
+    "version": "10.0.3",
     "license": "MIT",
     "license_url": "https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md",
     "license_text": [
@@ -117,7 +117,7 @@
   {
     "name": "Monaco Editor UWP",
     "url": "https://github.com/hawkerm/Monaco-Editor-uwp",
-    "version": "0.7.0-alpha",
+    "version": "0.8.1-alpha",
     "license": "MIT",
     "license_url": "https://github.com/hawkerm/monaco-editor-uwp/blob/master/LICENSE",
     "license_text": [
