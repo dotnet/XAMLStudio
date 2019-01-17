@@ -35,12 +35,35 @@ namespace XamlStudio.Toolkit.Models
             StartLine = startline;
             EndLine = startline;
 
-            var match = Regex.Match(lineContent?.Substring((int)startcol - 1), @"\W");
+            var actualcol = startcol;
+
+            // Bounds checks
+            if (actualcol > lineContent?.Length)
+            {
+                actualcol = (uint)(string.IsNullOrWhiteSpace(lineContent) ? 0 : lineContent.Length);
+            }
+
+            if (actualcol <= 1)
+            {
+                actualcol = 1;
+            }
+
+            var match = Regex.Match(lineContent?.Substring((int)actualcol - 1), @"\W");
 
             if (match.Success)
             {
                 StartColumn = startcol;
                 EndColumn = (uint)match.Index + startcol;
+
+                if (EndColumn == StartColumn)
+                {
+                    EndColumn++;
+                }
+
+                if (EndColumn >= lineContent.Length)
+                {
+                    StartColumn--;
+                }
             }
             else
             {

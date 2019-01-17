@@ -1,23 +1,32 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.ExtendedExecution;
+using Windows.Storage;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
-
+using XamlStudio.Helpers;
+using XamlStudio.Models;
 using XamlStudio.Services;
 using XamlStudio.Toolkit.Helpers;
+using XamlStudio.Views;
+using Windows.UI.Core;
 
 namespace XamlStudio
 {
     public sealed partial class App : Application
     {
         private Lazy<ActivationService> _activationService;
-        private ExtendedExecutionSession extendedExecutionSession;
-
         private ActivationService ActivationService
         {
             get { return _activationService.Value; }
@@ -36,6 +45,12 @@ namespace XamlStudio
 
             // Deferred execution until used. Check https://msdn.microsoft.com/library/dd642331(v=vs.110).aspx for further info on Lazy<T> class.
             _activationService = new Lazy<ActivationService>(CreateActivationService);
+
+            var culture = CultureInfoHelper.GetCurrentCulture();
+            var region = new RegionInfo(culture.LCID);
+            AppCenter.SetCountryCode(region.TwoLetterISORegionName);
+            AppCenter.Start("", typeof(Analytics));
+            AppCenter.Start("", typeof(Crashes));
         }
 
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
@@ -80,21 +95,6 @@ namespace XamlStudio
 
             try
             {
-                ClearExtendedExecution();
-                extendedExecutionSession = new ExtendedExecutionSession
-                {
-                    Reason = ExtendedExecutionReason.SavingData,
-                    Description = "Saving data on app suspending"
-                };
-                extendedExecutionSession.Revoked += App_ExtendedExecutionRevoked;
-                ExtendedExecutionResult result = await extendedExecutionSession.RequestExtensionAsync();
-
-                AppLoggerService.LogInfo($"[AppSuspending] Extended execution result: {result}");
-                if(result == ExtendedExecutionResult.Denied)
-                {
-                    ClearExtendedExecution();
-                }
-
                 Task loggerTask = AppLoggerService.OnSuspending();
 
                 await Task.WhenAll(loggerTask);
@@ -105,19 +105,7 @@ namespace XamlStudio
             }
             finally
             {
-                ClearExtendedExecution();
                 deferral.Complete();
-            }
-        }
-
-        /// <summary>
-        /// Initializes the <see cref="ExtendedExecutionSession"/> instance.
-        /// </summary>
-        private void ClearExtendedExecution()
-        {
-            if(extendedExecutionSession != null)
-            {
-                extendedExecutionSession.Revoked -= App_ExtendedExecutionRevoked;
             }
         }
 
@@ -143,10 +131,25 @@ namespace XamlStudio
         /// </summary>
         private void App_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
+            // TODO: Check if these are coming from a Render call and just ignore then.# (this is usually the case, but doesn't save us)
+            e.Handled = true;
+
             try
             {
                 AppLoggerService.LogCrash(e.Exception, sender);
                 AppLoggerService.FlushMessages();
+
+                // Save Exception for easier location
+                Task.Run(async () => {
+                    var file = await ApplicationData.Current.LocalFolder.CreateFileAsync("lastexception.json", CreationCollisionOption.ReplaceExisting);
+                    await FileIO.WriteTextAsync(file, JsonConvert.SerializeObject(new UnhandledException(e.Message, e.Exception)));
+                }).Wait();  
+				              
+                Analytics.TrackEvent("UnhandledException", new Dictionary<string, string> {
+                    { "Message", e.Message },
+                    { "Exception", e.Exception.ToString() },
+                    { "StackTrace", e.Exception.StackTrace },
+                });
             }
             catch(Exception)
             {
@@ -158,10 +161,11 @@ namespace XamlStudio
             }
 
 #if DEBUG
-            // TODO: Check if these are coming from a Render call and just ignore then.#
             Debugger.Break();
 #endif
-            e.Handled = true;
+
+            // Restart app for stability, except on RS5 19329065/19654150
+            var t = CoreApplication.RequestRestartAsync(string.Empty);
         }
     }
 }

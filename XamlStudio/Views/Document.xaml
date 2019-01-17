@@ -11,6 +11,7 @@
              xmlns:models="using:XamlStudio.Toolkit.Models"
              xmlns:monaco="using:Monaco"
              xmlns:xstc="using:XamlStudio.Toolkit.Converters"
+             xmlns:fex="using:Microsoft.Toolkit.Uwp.UI.Extensions.Future"
              d:DesignHeight="300"
              d:DesignWidth="400"
              mc:Ignorable="d">
@@ -34,9 +35,9 @@
               Background="{ThemeResource Brush-Blue-Dark-2}" />
 
         <developerTools:AlignmentGrid Grid.Row="0"
-                                      HorizontalStep="{x:Bind ViewModel.Settings.AlignmentGridHorizontalStep, Mode=OneWay}"
+                                      HorizontalStep="{x:Bind ViewModel.Settings.AlignmentGridHorizontalStep, Mode=OneWay, FallbackValue=8}"
                                       Opacity="{x:Bind ViewModel.Settings.AlignmentGridOpacity, Mode=OneWay}"
-                                      VerticalStep="{x:Bind ViewModel.Settings.AlignmentGridVerticalStep, Mode=OneWay}"
+                                      VerticalStep="{x:Bind ViewModel.Settings.AlignmentGridVerticalStep, Mode=OneWay, FallbackValue=8}"
                                       Visibility="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled, Mode=OneWay}">
             <developerTools:AlignmentGrid.LineBrush>
                 <SolidColorBrush Color="{x:Bind ViewModel.Settings.AlignmentGridColor, Mode=OneWay, Converter={StaticResource HexToColorConverter}}" />
@@ -45,7 +46,9 @@
 
         <!--  Error Overlay  -->
         <Grid Grid.Row="0"
+              x:Name="ErrorOverlay"
               Background="#66000000"
+              fex:FrameworkElementExtensions.UpdateLiveRegionChangedOnVisible="True"
               Visibility="{x:Bind ViewModel.Result.Errors, Mode=OneWay, Converter={StaticResource CollectionVisibilityConverter}, FallbackValue=Collapsed}">
             <controls:DropShadowPanel Margin="16"
                                       HorizontalAlignment="Center"
@@ -56,15 +59,17 @@
                                       ShadowOpacity="0.6"
                                       Color="Black">
                 <StackPanel Padding="24" Background="{ThemeResource Brush-Red-Light-2}">
-                    <TextBlock Margin="0,0,0,8"
+                    <TextBlock x:Uid="Document_ErrorsHeader"
+                               AutomationProperties.LiveSetting="Assertive"
+                               Margin="0,0,0,8"
                                FontWeight="SemiBold"
-                               Foreground="White">
-                        Compilation Errors
-                    </TextBlock>
+                               Foreground="White"/>
                     <ItemsControl ItemsSource="{x:Bind ViewModel.Result.Errors, Mode=OneWay}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="models:XamlExceptionRange">
-                                <TextBlock Foreground="White" Text="{x:Bind Message}" />
+                                <TextBlock Foreground="White" Text="{x:Bind Message}"
+                                           fex:FrameworkElementExtensions.UpdateLiveRegionChangedOnLoad="True"
+                                           AutomationProperties.LiveSetting="Assertive"/>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
@@ -94,6 +99,7 @@
                            CodeLanguage="xml"
                            KeyDown="CodeEditor_KeyDown"
                            Loading="CodeEditor_Loading"
+                           OpenLinkRequested="CodeEditor_OpenLinkRequested"
                            RequestedTheme="{x:Bind ViewModel.Settings.EditorTheme, Mode=OneWay}"
                            Text="{x:Bind ViewModel.Document.Content, Mode=TwoWay}">
             <i:Interaction.Behaviors>

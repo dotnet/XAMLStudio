@@ -145,13 +145,12 @@
     <value>Light</value>
     <comment>Light theme text for SettingsPanel</comment>
   </data>
-  <data name="SettingsPanel_About.Text" xml:space="preserve">
+  <data name="SettingsPanel_About.Header" xml:space="preserve">
     <value>About</value>
     <comment>About this application title for SettingsPanel</comment>
   </data>
-  <data name="SettingsPanel_AboutDescription.Text" xml:space="preserve">
-    <value>XAML Studio is a developer tool for rapidly prototyping UWP based XAML applications.  A Microsoft Garage project.
-By: Michael A. Hawker</value>
+  <data name="SettingsPanel_About_Description.Text" xml:space="preserve">
+    <value>XAML Studio, a Microsoft Garage project, is a developer tool for rapidly prototyping UWP based XAML applications.</value>
     <comment>About this application description for SettingsPanel</comment>
   </data>
   <data name="SettingsPanel_PrivacyTermsLink.Content" xml:space="preserve">
@@ -159,10 +158,10 @@ By: Michael A. Hawker</value>
     <comment>Privacy Statement link content for SettingsPanel</comment>
   </data>
   <data name="SettingsPanel_PrivacyTermsLink.NavigateUri" xml:space="preserve">
-    <value>https://YourPrivacyUrlGoesHere/</value>
+    <value>https://go.microsoft.com/fwlink/?LinkId=521839</value>
     <comment>Here is your Privacy Statement url for SettingsPanel</comment>
   </data>
-  <data name="SettingsPanel_Personalization.Text" xml:space="preserve">
+  <data name="SettingsPanel_Personalization.Header" xml:space="preserve">
     <value>Personalization</value>
     <comment>Personalization text for SettingsPanel</comment>
   </data>
@@ -183,19 +182,19 @@ By: Michael A. Hawker</value>
     <comment>View disposed</comment>
   </data>
   <data name="FeedbackHub_Link.Content" xml:space="preserve">
-    <value>Feedback</value>
-    <comment>Displayed as the link to launching the Feedback Hub.</comment>
+    <value>Provide Feedback</value>
+    <comment>Label of button in settings to open the Feedback Hub.</comment>
   </data>
   <data name="MainPage_NavMenu_DataSources.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Modify Page DataContext</value>
+    <value>Modify Page DataContext (Ctrl+Shift+C)</value>
     <comment>DataSources ActivityBar Tooltip</comment>
   </data>
   <data name="MainPage_NavMenu_Debug.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Debug Bindings</value>
+    <value>Debug Bindings (Ctrl+Shift+B)</value>
     <comment>Debug ActivityBar Tooltip</comment>
   </data>
   <data name="MainPage_NavMenu_Explorer.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>View Open Files</value>
+    <value>View Open Files (Ctrl+Shift+E)</value>
     <comment>Explorer ActivityBar Tooltip</comment>
   </data>
   <data name="MainPage_NavMenu_ImageSources.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
@@ -207,7 +206,7 @@ By: Michael A. Hawker</value>
     <comment>Search ActivityBar Tooltip</comment>
   </data>
   <data name="MainPage_NavMenu_Toolbox.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Control Toolbox</value>
+    <value>Control Toolbox (Ctrl+Shift+T)</value>
     <comment>Toolbox ActivityBar Tooltip</comment>
   </data>
   <data name="SettingsPanel_AutoCompileToggle.Header" xml:space="preserve">
@@ -238,7 +237,7 @@ By: Michael A. Hawker</value>
     <value>On</value>
     <comment>Turn Power Binding on option for SettingsPanel</comment>
   </data>
-  <data name="SettingsPanel_XAML.Text" xml:space="preserve">
+  <data name="SettingsPanel_XAML.Header" xml:space="preserve">
     <value>XAML Compilation</value>
     <comment>XAML Compilation text for SettingsPanel</comment>
   </data>
@@ -310,14 +309,15 @@ By: Michael A. Hawker</value>
     <value>On</value>
     <comment>Alignment Grid on option</comment>
   </data>
-  <data name="SettingsPanel_AlignmentGrid.Text" xml:space="preserve">
+  <data name="SettingsPanel_AlignmentGrid.Header" xml:space="preserve">
     <value>Alignment Grid</value>
+    <comment>Header for the Alignment Grid options section in the Settings Panel</comment>
   </data>
   <data name="SettingsPanel_AlignmentGridHorizontalStep.Text" xml:space="preserve">
     <value>Horizontal Step</value>
     <comment>Set the AlignmentGrid Horizontal Step</comment>
   </data>
-  <data name="SettingsPanel_AlignmentGridLineColor.Text" xml:space="preserve">
+  <data name="SettingsPanel_AlignmentGridLineColor.Header" xml:space="preserve">
     <value>Line Color</value>
     <comment>Set the AlignmentGrid brush color</comment>
   </data>
@@ -336,5 +336,412 @@ By: Michael A. Hawker</value>
   <data name="SettingsPanel_KnownNamespaces.Text" xml:space="preserve">
     <value>Known Namespaces</value>
     <comment>Known Namespaces Title on Settings Page</comment>
+  </data>
+  <data name="Application_SaveError" xml:space="preserve">
+    <value>An issue was encountered saving file '{0}' and it could not be saved.</value>
+    <comment>Error message when encountering an issue with saving.</comment>
+  </data>
+  <data name="NewDocumentTemplate" xml:space="preserve">
+    <value>&lt;Page
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"&gt;
+
+    &lt;Grid Padding="40"&gt;
+        &lt;TextBlock&gt;
+            &lt;Run FontSize="24" Foreground="#FFFC5185"&gt;Get Started with XAML Studio&lt;/Run&gt;&lt;LineBreak/&gt;
+            &lt;Run&gt; Modify this text below to see a live preview.&lt;/Run&gt;
+        &lt;/TextBlock&gt;
+    &lt;/Grid&gt;
+&lt;/Page&gt;</value>
+    <comment>Default XAML for a new Document</comment>
+  </data>
+  <data name="SettingsPanel_About_OpenLogFolderButton.Content" xml:space="preserve">
+    <value>Open Log Location</value>
+    <comment>Button Text for opening the log location.</comment>
+  </data>
+  <data name="SettingsPanel_About_Copyright.Text" xml:space="preserve">
+    <value>Copyright 2019 Microsoft</value>
+    <comment>Copyright Statement in About Box</comment>
+  </data>
+  <data name="SettingsPanel_About_Credits.Text" xml:space="preserve">
+    <value>Developed By: Michael A. Hawker
+Special Thanks To: Justin Liu, Lainie Huston, Mike Pell, the 'Partners, Analytics, and essential eXperiences' Team, and the Microsoft Garage.</value>
+    <comment>By lines for credits on the About screen</comment>
+  </data>
+  <data name="SettingsPanel_AnalyticsToggle.Header" xml:space="preserve">
+    <value>Send Anonymous Usage Data to Improve XAML Studio</value>
+    <comment>Toggle for Analytics</comment>
+  </data>
+  <data name="SettingsPanel_AnalyticsToggle.OffContent" xml:space="preserve">
+    <value>No</value>
+    <comment>Don't Send usage data option in Settings Panel</comment>
+  </data>
+  <data name="SettingsPanel_AnalyticsToggle.OnContent" xml:space="preserve">
+    <value>Yes</value>
+    <comment>Send usage data option in Settings Panel</comment>
+  </data>
+  <data name="Document_Compile" xml:space="preserve">
+    <value>Auto-Compile is turned off, Press F5 or Ctrl+Enter to Display</value>
+    <comment>Text displayed on document load if auto-compile is turned off.</comment>
+  </data>
+  <data name="Document_ErrorsHeader.Text" xml:space="preserve">
+    <value>Compilation Errors</value>
+    <comment>Text displayed at top of message that appears when there are compilation errors.</comment>
+  </data>
+  <data name="MainPage_UnhandledException_Continue" xml:space="preserve">
+    <value>Continue</value>
+    <comment>Label of button to continue to Xaml Studio App from dialog.</comment>
+  </data>
+  <data name="MainPage_UnhandledException_Message" xml:space="preserve">
+    <value>An unexpected error has occured while rendering this document.  Auto-compile has been disabled.
+
+Error: "{0}"
+
+Please help us by reporting this issue in Feedback Hub.</value>
+    <comment>Message displayed when the app starts and was terminated due to a big issue.</comment>
+  </data>
+  <data name="MainPage_UnhandledException_OpenFeedbackHub" xml:space="preserve">
+    <value>Open Feedback Hub</value>
+    <comment>Label of button to open feedback hub to report issue in dialog.</comment>
+  </data>
+  <data name="MainPage_UnhandledException_Title" xml:space="preserve">
+    <value>Unexpected Error</value>
+    <comment>Title of message dialog displayed when the app starts and was closed due to an issue.</comment>
+  </data>
+  <data name="SettingsPanel_About_OpenFeedbackHub.Content" xml:space="preserve">
+    <value>Open Feedback Hub</value>
+    <comment>Button label for opening feedback hub from about in settings page.</comment>
+  </data>
+  <data name="MainPage_NavMenu_DataSources.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Data Source</value>
+    <comment>Accessibility Name for Data Source Activity</comment>
+  </data>
+  <data name="MainPage_NavMenu_Debug.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Debug</value>
+    <comment>Accessibility Name for Binding Debugger Activity</comment>
+  </data>
+  <data name="MainPage_NavMenu_Explorer.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Explorer</value>
+    <comment>Accessibility Name for Explorer Activity</comment>
+  </data>
+  <data name="MainPage_NavMenu_Settings.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Settings</value>
+    <comment>Accessibility Name for Settings</comment>
+  </data>
+  <data name="MainPage_NavMenu_Settings.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Settings (Ctrl+I)</value>
+    <comment>Tooltip for Open Settings Page Button</comment>
+  </data>
+  <data name="MainPage_NavMenu_Toolbox.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Toolbox</value>
+    <comment>Accessibility Name for Toolbox Activity</comment>
+  </data>
+  <data name="Toolbox_Favorites_Header" xml:space="preserve">
+    <value>Favorites</value>
+    <comment>Group Header text for where Favorites are</comment>
+  </data>
+  <data name="DataSource_Button_Clear.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Clear Data Context</value>
+    <comment>Accessibility Name for new data context button in data sources panel.</comment>
+  </data>
+  <data name="DataSource_Button_Clear.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Clear Data Context</value>
+    <comment>Tooltip for new data context button in data sources panel.</comment>
+  </data>
+  <data name="DataSource_Button_Open.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Open Data Context</value>
+    <comment>Accessibility Name for open data context in data sources panel.</comment>
+  </data>
+  <data name="DataSource_Button_Open.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open Data Context</value>
+    <comment>Tooltip for open data context button in data sources panel.</comment>
+  </data>
+  <data name="DataSource_Button_Remote.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Remote Data Context</value>
+    <comment>Accessibility Name for remote data context in data sources panel</comment>
+  </data>
+  <data name="DataSource_Button_Remote.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Remote Data Context</value>
+    <comment>Tooltip for remote data context button in data sources panel.</comment>
+  </data>
+  <data name="DataSource_Button_Save.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Save Data Context</value>
+    <comment>Accessibility Name for save data context in data sources panel.</comment>
+  </data>
+  <data name="DataSource_Button_Save.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Save Data Context</value>
+    <comment>Tooltip for save data context button in data sources panel.</comment>
+  </data>
+  <data name="DataSource_Header.Text" xml:space="preserve">
+    <value>DATA SOURCE</value>
+    <comment>Text at top of Data Source Panel</comment>
+  </data>
+  <data name="Debug_Header.Text" xml:space="preserve">
+    <value>DEBUG</value>
+    <comment>Text at top of Debug Panel</comment>
+  </data>
+  <data name="Explorer_Button_New.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Create New Document</value>
+    <comment>Accessibility Name for New Document Button on Explorer Panel</comment>
+  </data>
+  <data name="Explorer_Button_New.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>New Document (Ctrl+N)</value>
+    <comment>Tooltip for New Document Button on Explorer Panel</comment>
+  </data>
+  <data name="Explorer_Button_Open.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Open Document</value>
+    <comment>Accessibility Name for Open Document Button on Explorer Panel</comment>
+  </data>
+  <data name="Explorer_Button_Open.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open Document (Ctrl+O)</value>
+    <comment>Tooltip for Open Document Button on Explorer Panel</comment>
+  </data>
+  <data name="Explorer_Button_Save.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Save Document</value>
+    <comment>Accessibility Name for Save Document Button on document items in Explorer Panel</comment>
+  </data>
+  <data name="Explorer_Button_Save.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Save Document (Ctrl+S)</value>
+    <comment>Tooltip for Save Document Button on document item in Explorer Panel</comment>
+  </data>
+  <data name="Explorer_Button_SaveAs.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Save Document As</value>
+    <comment>Accessibility Name for Save Document As on document items in Explorer Panel</comment>
+  </data>
+  <data name="Explorer_Button_SaveAs.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Save Document As (Ctrl+Shift+S)</value>
+    <comment>Tooltip for Save Document As Button on document items in Explorer Panel</comment>
+  </data>
+  <data name="Explorer_Header.Text" xml:space="preserve">
+    <value>EXPLORER</value>
+    <comment>Text at top of Explorer Panel</comment>
+  </data>
+  <data name="MainPage_Button_New.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>New Document</value>
+    <comment>Accessibility Name for New Document Button in TabView at top of window</comment>
+  </data>
+  <data name="MainPage_Button_New.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>New Document (Ctrl+N)</value>
+    <comment>Tooltip for New Document button in TabView at top of window</comment>
+  </data>
+  <data name="Toolbox_Button_Docs.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Open Documentation</value>
+    <comment>Accessibility Name for Documentation Icon in Toolbox Panel</comment>
+  </data>
+  <data name="Toolbox_Button_Docs.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open Documentation</value>
+    <comment>Tooltip for Documentation Icon in Toolbox Panel</comment>
+  </data>
+  <data name="Toolbox_Button_Favorite.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Mark Favorite</value>
+    <comment>Accessibility Name for Favorite Icon in Toolbox Panel</comment>
+  </data>
+  <data name="Toolbox_Button_Favorite.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Mark Favorite</value>
+    <comment>Tooltip for Favorite icon in Toolbox Panel</comment>
+  </data>
+  <data name="Toolbox_Button_Unfavorite.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Unmark Favorite</value>
+    <comment>Accessibility Name for unmark Favorite Icon in Toolbox Panel</comment>
+  </data>
+  <data name="Toolbox_Button_Unfavorite.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Unmark Favorite</value>
+    <comment>Tooltip for Unmark Favorite Icon in Toolbox Panel</comment>
+  </data>
+  <data name="Toolbox_Header.Text" xml:space="preserve">
+    <value>TOOLBOX</value>
+    <comment>Text at top of Toolbox Panel</comment>
+  </data>
+  <data name="Toolbox_SearchBox.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Toolbox Search</value>
+    <comment>Accessibility Name for Toolbox Searchbox</comment>
+  </data>
+  <data name="DataSource_Button_Refresh.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Refresh Data</value>
+    <comment>Accessibility Name for refresh data from server button in Data Sources Panel.</comment>
+  </data>
+  <data name="DataSource_Button_Refresh.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Refresh Data from Server</value>
+    <comment>Tooltip for refresh data from server button in Data Sources Panel.</comment>
+  </data>
+  <data name="SettingsPanel_UpdateLiveDataContextToggle.Header" xml:space="preserve">
+    <value>Update Data Context from Remote Url on Render</value>
+    <comment>Update the data context from a remote url (if specified) whenever the XAML is re-rendered.</comment>
+  </data>
+  <data name="SettingsPanel_UpdateLiveDataContextToggle.OffContent" xml:space="preserve">
+    <value>Manual</value>
+    <comment>Turn update data context option off for Settings Panel</comment>
+  </data>
+  <data name="SettingsPanel_UpdateLiveDataContextToggle.OnContent" xml:space="preserve">
+    <value>Automatic</value>
+    <comment>Turn update data context option on for Settings Panel</comment>
+  </data>
+  <data name="SettingsPanel_UpdateLiveDataContextToggle.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>When set to automatic, if a remote data context url is specified, then new data will be fetched for the data context whenever the XAML is updated.</value>
+    <comment>Tooltip description for updating live data context on render in Settings Panel.</comment>
+  </data>
+  <data name="DataSource_ErrorsHeader.Text" xml:space="preserve">
+    <value>Remote Source Error</value>
+    <comment>Text displayed at top of errors that occur trying to load a remote data source in the Data Source panel.</comment>
+  </data>
+  <data name="Debug_PowerBindingToggle.OffContent" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="Debug_PowerBindingToggle.OnContent" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="Debug_PowerBindingToggle.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Binding Debugging</value>
+    <comment>Accessibility Name for Binding Debugging Toggle on Binding Debugger Panel</comment>
+  </data>
+  <data name="Debug_ViewMode.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Debug View Mode</value>
+    <comment>Accessibility Name for Binding Viewmode dropdown in debug panel.</comment>
+  </data>
+  <data name="Debug_ViewMode.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Change how binding value history is displayed</value>
+    <comment>Tooltip for Binding Viewmode dropdown in debug panel.</comment>
+  </data>
+  <data name="SettingsPanel_About.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>About XAML Studio</value>
+    <comment>Accessibility Name for about section expander in settings panel.</comment>
+  </data>
+  <data name="SettingsPanel_About_OpenFeedbackHub.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Use Feedback Hub to report any issues you encounter while using XAML Studio.</value>
+    <comment>Tooltip for Open Feedback Hub in about section of Settings Panel.</comment>
+  </data>
+  <data name="SettingsPanel_About_OpenLogFolderButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>The log location contains files which may be helpful when reporting issues in the case of an unexpected exception.</value>
+    <comment>Tooltip for Open Log Location in about section of Settings Panel.</comment>
+  </data>
+  <data name="SettingsPanel_About_OpenUserVoice.Content" xml:space="preserve">
+    <value>Open UserVoice</value>
+    <comment>Button label to open UserVoice in the Settings Panel about section.</comment>
+  </data>
+  <data name="SettingsPanel_About_OpenUserVoice.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Use UserVoice to vote on and submit new feature requests for XAML Studio.</value>
+    <comment>Tooltip for Open UserVoice button in about section of Settings Panel.</comment>
+  </data>
+  <data name="SettingsPanel_About_UserVoice_Uri" xml:space="preserve">
+    <value>https://aka.ms/XAMLStudio_Feedback</value>
+    <comment>Uri used to navigate to UserVoice feedback site.</comment>
+  </data>
+  <data name="SettingsPanel_AlignmentGrid.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Alignment Grid Settings</value>
+    <comment>Accessibility Name for Alignment Grid expander section in Settings Panel</comment>
+  </data>
+  <data name="SettingsPanel_AlignmentGridHorizontalStepSlider.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Horizontal Step</value>
+    <comment>Accessibility Name for the Alignment Grid's Horizontal Step slider value in the Settings Panel.</comment>
+  </data>
+  <data name="SettingsPanel_AlignmentGridLineColor.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Line Color</value>
+    <comment>Accessibility Name for the Alignment Grid's Line Color selection dropdown in the Settings Panel.</comment>
+  </data>
+  <data name="SettingsPanel_AlignmentGridOpacitySlider.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Opacity</value>
+    <comment>Accessibility Name for the Alignment Grid's Opacity slider value in the Settings Panel.</comment>
+  </data>
+  <data name="SettingsPanel_AlignmentGridVerticalStepSlider.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Vertical Step</value>
+    <comment>Accessibility Name for the Alignment Grid's Vertical Step slider value in the Settings Panel.</comment>
+  </data>
+  <data name="SettingsPanel_AutoCompileDelaySlider.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Auto-Compile Delay</value>
+    <comment>Accessibility Name for the Auto-Compile Delay Slider in the Settings Panel.</comment>
+  </data>
+  <data name="SettingsPanel_EditorTheme_Dark.Content" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="SettingsPanel_EditorTheme_Dark.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Dark Editor Theme</value>
+  </data>
+  <data name="SettingsPanel_EditorTheme_Default.Content" xml:space="preserve">
+    <value>Windows default</value>
+  </data>
+  <data name="SettingsPanel_EditorTheme_Default.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Windows default Editor Theme</value>
+  </data>
+  <data name="SettingsPanel_EditorTheme_Light.Content" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="SettingsPanel_EditorTheme_Light.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Light Editor Theme</value>
+  </data>
+  <data name="SettingsPanel_KnownNamespaces_Button_Add.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Add Known Namespace</value>
+    <comment>Accessibility Name for add button to known namespace in Settings Panel.</comment>
+  </data>
+  <data name="SettingsPanel_KnownNamespaces_Button_Add.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Add New Known Namespace</value>
+    <comment>Tooltip for the button to add a new namespace to the Known Namespace table in the Settings Panel</comment>
+  </data>
+  <data name="SettingsPanel_KnownNamespaces_Button_Remove.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Remove Namespace</value>
+    <comment>Accessibility Name for the Known Namespace remove row button in the Settings Panel.</comment>
+  </data>
+  <data name="SettingsPanel_KnownNamespaces_Button_Remove.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Remove Namespace</value>
+    <comment>Tooltip for the button to remove the Known Namespace row in the Settings Panel.</comment>
+  </data>
+  <data name="SettingsPanel_Personalization.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Personalization Settings</value>
+    <comment>Accessibility Name for Personalization expander section of Settings Panel.</comment>
+  </data>
+  <data name="SettingsPanel_Theme_Dark.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Dark App Theme</value>
+  </data>
+  <data name="SettingsPanel_Theme_Default.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Windows default App Theme</value>
+  </data>
+  <data name="SettingsPanel_Theme_Light.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Light App Theme</value>
+  </data>
+  <data name="SettingsPanel_XAML.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>XAML Settings</value>
+    <comment>Accessibility Name for XAML expander section in Settings Panel</comment>
+  </data>
+  <data name="Toolbox_SearchBox.PlaceholderText" xml:space="preserve">
+    <value>Control Search</value>
+    <comment>Placeholder text for searchbox in Toolbox Panel</comment>
+  </data>
+  <data name="SettingsPanel_About_License_Dialog_Header" xml:space="preserve">
+    <value>{0} {1} License</value>
+    <comment>Header for pop-up in Settings Panel when reading license text. First parameter is name of library, 2nd is name of license</comment>
+  </data>
+  <data name="SettingsPanel_ThirdParty.Header" xml:space="preserve">
+    <value>Third-Party Notices</value>
+    <comment>Header for expander in Settings Panel for Third-Party Notice section</comment>
+  </data>
+  <data name="SettingsPanel_ThirdParty.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Third-Party Notices</value>
+    <comment>Accessibility name for expander in SettingsPanel for Third-Party Notices</comment>
+  </data>
+  <data name="Debug_Binding_Disabled_Message.Text" xml:space="preserve">
+    <value>Turn on Binding Debugging to see information here.</value>
+    <comment>Text which appears in Debug panel when Binding Debugging is turned off.</comment>
+  </data>
+  <data name="Debug_Button_ClearHistoryFilter.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Remove History Filter</value>
+    <comment>Accessibility Name for remove history filter button in binding debugging panel.</comment>
+  </data>
+  <data name="Debug_Button_ClearHistoryFilter.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Remove History Filter</value>
+    <comment>Tooltip for removing history filter button in binding debugging panel.</comment>
+  </data>
+  <data name="License_Name_Format" xml:space="preserve">
+    <value>{0} License for {1}</value>
+    <comment>Accessibility Name for License Link in Settings Panel Third-Party Notices</comment>
+  </data>
+  <data name="License_Text_Format" xml:space="preserve">
+    <value>Read {0} License for {1}</value>
+    <comment>Accessibility Name for Read License Text link in Settings Panel Third-Party notices</comment>
+  </data>
+  <data name="Document_ErrorsHeader.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Compilation Errors</value>
+    <comment>Accessibility Name for error popup that appears on documents when XAML can't be compiled.</comment>
   </data>
 </root>

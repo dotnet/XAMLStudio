@@ -5,9 +5,11 @@ using Monaco.Editor;
 using Monaco.Helpers;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using Windows.System.Threading;
 using Windows.UI;
+using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -70,52 +72,53 @@ namespace XamlStudio.ViewModels
 
         public ObservableVector<IModelDeltaDecoration> LineDecorations { get; } = new ObservableVector<IModelDeltaDecoration>();
 
-        private CssLineStyle _errorStyle = new CssLineStyle()
+        private static CssLineStyle _errorLineStyle = new CssLineStyle()
         {
-            BackgroundColor = new SolidColorBrush("#FFFEB9CE".ToColor())
+            BackgroundColor = new SolidColorBrush("#FFCA416A".ToColor())
         };
 
-        private CssLineStyle _bindingStyleUnbound = new CssLineStyle()
+        private static CssInlineStyle _errorStyle = new CssInlineStyle()
         {
-            BackgroundColor = new SolidColorBrush("#FFB4EBEF".ToColor())
+            BackgroundColor = new SolidColorBrush("#FFCA416A".ToColor()),
+            ForegroundColor = new SolidColorBrush("#FFFFFFFF".ToColor()),
+            FontWeight = FontWeights.SemiBold
         };
 
-        private CssLineStyle _bindingStyleSuccess = new CssLineStyle()
+        private static CssInlineStyle _bindingStyleUnbound = new CssInlineStyle()
         {
-            BackgroundColor = new SolidColorBrush("#FFB9FEC1".ToColor())
+            BackgroundColor = new SolidColorBrush("#FFB4EBEF".ToColor()),
+            ForegroundColor = new SolidColorBrush("#FF333333".ToColor())
         };
 
-        private CssLineStyle _bindingStyleError = new CssLineStyle()
+        private static CssInlineStyle _bindingStyleSuccess = new CssInlineStyle()
         {
-            BackgroundColor = new SolidColorBrush("#FFFFF689".ToColor())
+            BackgroundColor = new SolidColorBrush("#FFB9FEC1".ToColor()),
+            ForegroundColor = new SolidColorBrush("#FF333333".ToColor())
         };
 
-        private ICommand _updateXaml;
-        public ICommand UpdateXamlCommand
+        private static CssInlineStyle _bindingStyleError = new CssInlineStyle()
         {
-            get
-            {
-                if (_updateXaml == null)
-                {
-                    _updateXaml = new RelayCommand<RoutedEventArgs>(UpdateXaml);
-                }
+            BackgroundColor = new SolidColorBrush("#FFFFF689".ToColor()),
+            ForegroundColor = new SolidColorBrush("#FF663333".ToColor()),
+            FontWeight = FontWeights.SemiBold
+        };
 
-                return _updateXaml;
-            }
-        }
+        public IAsyncCommand UpdateXamlCommand { get; internal set; }
+        
+        public ICommand KeyDownCommand { get; private set; }
 
-        private ICommand _keyDownCommand;
-        public ICommand KeyDownCommand
+        public IAsyncCommand RefreshLiveDataContextCommand { get; private set; }
+
+        public ICommand ParseDataContextCommand { get; private set; }
+
+        /// <summary>
+        /// Text for error message when refreshing from a live data source.
+        /// </summary>
+        private string _liveDataContextRefreshError;
+        public string LiveDataContextRefreshError
         {
-            get
-            {
-                if (_keyDownCommand == null)
-                {
-                    _keyDownCommand = new RelayCommand<WebKeyEventArgs>(KeyDown);
-                }
-
-                return _keyDownCommand;
-            }
+            get { return _liveDataContextRefreshError; }
+            set { Set(ref _liveDataContextRefreshError, value); }
         }
 
         public SettingsService Settings { get; } = SettingsService.Instance;
@@ -126,14 +129,38 @@ namespace XamlStudio.ViewModels
 
         public XamlRenderService XamlRenderer { get; } = new XamlRenderService();
 
-        public object DataContext { get; set; }
+        public MainViewModel MainViewModel { get; internal set; }
+
+        public object DataContext
+        {
+            get { return (object)GetValue(DataContextProperty); }
+            set { SetValue(DataContextProperty, value); }
+        }
+
+        public static readonly DependencyProperty DataContextProperty =
+            DependencyProperty.Register(nameof(DataContext), typeof(object), typeof(DocumentViewModel), new PropertyMetadata(null, DataContextPropertyChanged));
+
+        public static void DataContextPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        {
+            var vm = obj as DocumentViewModel;
+            if (vm.XamlRoot != null && vm.XamlRoot.Children.FirstOrDefault() is FrameworkElement fwe)
+            {
+                fwe.DataContext = args.NewValue;
+            }
+        }
 
         public DocumentViewModel()
         {
-            ////this.Document = document;
+            // Placeholder
+            Result = new Toolkit.Models.XamlRenderResultContext(string.Empty);
 
             ////xamlRenderer.ImageRoot = SettingsService.Instance.SampleFolder;
             ////xamlRenderer.DataRoot = SettingsService.Instance.SampleFolder;
+
+            //UpdateXamlCommand = new RelayCommand<RoutedEventArgs>(UpdateXaml);
+            KeyDownCommand = new RelayCommand<WebKeyEventArgs>(KeyDown);
+            RefreshLiveDataContextCommand = new AsyncRelayCommand<RoutedEventArgs>(RefreshLiveDataContext);
+            ParseDataContextCommand = new RelayCommand<RoutedEventArgs>(ParseDataContext);
         }
     }
 }

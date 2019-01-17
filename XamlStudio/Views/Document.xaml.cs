@@ -1,9 +1,12 @@
-﻿using Monaco;
+﻿using Microsoft.AppCenter.Analytics;
+using Monaco;
 using Monaco.Languages;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using XamlStudio.Helpers;
@@ -19,6 +22,8 @@ namespace XamlStudio.Views
     public sealed partial class Document : UserControl
     {
         private string[] _decorations = Array.Empty<string>();
+
+        private Type _lastHoverType;
 
         private object _initializeLock = new object();
 
@@ -97,9 +102,22 @@ namespace XamlStudio.Views
 
             ViewModel.NavigateToLineCommand = new RelayCommand<uint>(NavigateToLine);
             ViewModel.InsertTextCommand = new RelayCommand<string>(InsertText);
+            ViewModel.UpdateXamlCommand = new AsyncRelayCommand<RoutedEventArgs>(UpdateXaml);
 
-            // RenderAsync XAML
-            ViewModel.UpdateXamlCommand.Execute(null);
+            // RenderAsync XAML if enabled by default
+            if (SettingsService.Instance.IsAutoCompileEnabled == true)
+            {
+                ViewModel.UpdateXamlCommand.Execute(null);
+            }
+            else
+            {
+                XamlRoot.Children.Add(new TextBlock()
+                {
+                    Text = "Document_Compile".GetLocalized(),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center
+                });
+            }
         }
 
         private async void CodeEditor_Loading(object sender, RoutedEventArgs e)
@@ -123,6 +141,7 @@ namespace XamlStudio.Views
                         XamlRenderService.GetTypeFromName(word.Word) is Type type &&
                         libserv.LibrariesByNamespace.TryGetValue(type.Namespace, out LibraryInfo info))
                     {
+                        _lastHoverType = type;
                         return new Hover(new string[]
                         {
                             "**" + word.Word + "** - [" + type.FullName + "](" +
@@ -154,62 +173,53 @@ namespace XamlStudio.Views
             #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
+        private async Task UpdateXaml(RoutedEventArgs args)
+        {
+            // Check if nothing to do
+            if (ViewModel.Document.Content == null || ViewModel.Document.Content.Length == 0 || ViewModel.HasCompiled)
+            {
+                return;
+            }
+
+            var keepcontent = !SettingsService.Instance.IsContentUpdatedWithSuggested.Value;
+
+            var newcontent = await ViewModel.InternalRenderXamlAsync(ViewModel.Document.Content, 0, keepcontent);
+
+            if (!keepcontent)
+            {
+                var pos = await CodeEditor.GetPositionAsync();
+
+                // Update our document with suggested changes.
+                ViewModel.Document.Content = newcontent;
+
+                // Restore cursor to where it was.
+                await CodeEditor.SetPositionAsync(pos);
+            }
+
+            ViewModel.HasCompiled = true;
+        }
+
         private void CodeEditor_KeyDown(Monaco.CodeEditor sender, Monaco.Helpers.WebKeyEventArgs args)
         {
             // Workaround to https://github.com/hawkerm/monaco-editor-uwp/issues/6
             // as SelectedText doesn't support modifications it can't be binded to from the CodeEditor itself.
             // That or the PropertyChanged isn't firing for somereason on SelectedText change.
-            if (args.KeyCode == 116)
+            if (args.KeyCode == 116) // F5
             {
                 ViewModel.SelectedText = CodeEditor.SelectedText;
             }
 
-            // TODO: Figure out way to translate and pass to our main key-shortcut router.
-            if (args.CtrlKey)
-            {
-                // Need to duplicate this here from MainViewModel as Control eats CoreWindow event.
-                switch (args.KeyCode)
-                {
-                    case 78: // N
-                        MainViewModel.NewDocumentCommand.Execute(null);
-                        args.Handled = true;
-                        break;
-                    case 79: // O
-                        MainViewModel.OpenDocumentCommand.Execute(null);
-                        args.Handled = true;
-                        break;
-                    case 83: // S
-                        if (args.ShiftKey)
-                        {
-                            MainViewModel.SaveDocumentAsCommand.Execute(LoadedDocument);
-                        }
-                        else
-                        {
-                            MainViewModel.SaveDocumentCommand.Execute(LoadedDocument);
-                        }
-                        args.Handled = true;
-                        break;
-                    case 87: // W
-                    case 115: // F4
-                        MainViewModel.CloseActiveDocumentCommand.Execute(null);
-                        args.Handled = true;
-                        break;
-                    case 9: // TAB
-                        if (args.ShiftKey)
-                        {
-                            MainViewModel.PreviousDocumentCommand.Execute(null);
-                        }
-                        else
-                        {
-                            MainViewModel.NextDocumentCommand.Execute(null);
-                        }
-                        args.Handled = true;
-                        break;
-                }
-            }
-
             // Now pass onto VM now that we have SelectedText set.
             ViewModel.KeyDownCommand.Execute(args);
+        }
+
+        private void CodeEditor_OpenLinkRequested(WebView sender, WebViewNewWindowRequestedEventArgs args)
+        {
+            Analytics.TrackEvent("Open_Docs", new Dictionary<string, string> {
+                { "Location", "CodeEditor" },
+                { "Type", _lastHoverType?.FullName ?? "Unknown" },
+                { "Uri", args.Uri.ToString() },
+            });
         }
     }
 }

@@ -1,8 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
 using XamlStudio.Helpers;
 
 namespace XamlStudio.Models
@@ -15,8 +19,16 @@ namespace XamlStudio.Models
         Settings
     }
 
-    public sealed class XamlDocument: Observable
+    public sealed class XamlDocument: FileBackedDocument
     {
+        private readonly string _id = Guid.NewGuid().ToString();
+
+        /// <summary>
+        /// Unique identifier for referencing across sessions.
+        /// </summary>
+        [JsonProperty]
+        public string Id { get; private set; }
+
         /// <summary>
         /// Dummy for switching to Welcome Screen.
         /// </summary>
@@ -28,83 +40,48 @@ namespace XamlStudio.Models
         }
 
         /// <summary>
-        /// Text Contents of this Xaml Document.
+        /// Is this file actively visible/engaged in the UI.
         /// </summary>
-        private string _content;
-        public string Content
+        private bool _active;
+        public bool IsActive
         {
-            get { return _content; }
-            set { Set(ref _content, value); }
+            get { return _active; }
+            set { Set(ref _active, value); }
         }
 
-        /// <summary>
-        /// File Title to Display in UI Tab.
-        /// </summary>
-        private string _title;
-        public string Title
+        private DataContext _dataContext = new DataContext();
+        public DataContext DataContext
         {
-            get { return _title + (_dirty ? "*": ""); }
-            set { Set(ref _title, value); }
+            get { return _dataContext; }
+            set { Set(ref _dataContext, value); }
         }
 
-        private bool _dirty;
-        public bool HasChanged
+        [JsonIgnore]
+        public string DisplayName { get { return BackingFile.DisplayName; } }
+
+        internal XamlDocument()
         {
-            get { return _dirty; }
-            set {
-                Set(ref _dirty, value);
-                OnPropertyChanged("Title"); // Update Title based on dirty flag
-            }
+            Initialize();
         }
 
-        /// <summary>
-        /// OS File backing this document.
-        /// </summary>
-        public StorageFile BackingFile { get; internal set; }
-
-        public bool CanSave { get { return this.BackingFile != null; } }
-
-        public XamlDocument(string title)
+        public XamlDocument(string title) : base(title)
         {
-            this.Title = title;
+            Initialize();
         }
 
-        private XamlDocument(StorageFile file)
+        public XamlDocument(StorageFile file) : base(file)
         {
-            this.BackingFile = file;
+            Initialize();
         }
 
-        /// <summary>
-        /// Save a file back to its backing location.
-        /// </summary>
-        /// <returns></returns>
-        public IAsyncAction SaveAsync()
+        private void Initialize()
         {
-            if (!CanSave)
-            {
-                throw new InvalidOperationException("Must Load or SaveAs before Save can be called.");
-            }
-
-            // TODO: Check result of Write!
-            HasChanged = false;
-            return FileIO.WriteTextAsync(this.BackingFile, this.Content);
+            Id = _id; // for first set unless deserialized
         }
-        
-        /// <summary>
-        /// Save the file in a new location (or for the first time).
-        /// 
-        /// The document will now point to this new location (the old location will not be preserved).
-        /// </summary>
-        /// <param name="newfile">New File Storage Location.</param>
-        /// <returns></returns>
-        public IAsyncAction SaveAsAsync(StorageFile newfile)
+
+        public override string ToString()
         {
-            this.BackingFile = newfile;
-
-            // Update Title after save.
-            this.Title = newfile.DisplayName;
-
-            return SaveAsync();
+            return Title;
         }
 
         /// <summary>

@@ -21,7 +21,7 @@ namespace XamlStudio.Toolkit.Services
             int? i = null;
             lock(lockable)
             {
-                i = ++_count;
+                i = _count++;
             }
 
             return (int)i;

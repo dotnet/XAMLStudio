@@ -28,12 +28,12 @@ namespace XamlStudio.Services
             set { Set(value); }
         }
 
-        [DefaultValue(false)]
-        public bool? IsCompileSelectionEnabled
-        {
-            get { return Get<bool?>(); }
-            set { Set(value); }
-        }
+        ////[DefaultValue(false)]
+        ////public bool? IsCompileSelectionEnabled
+        ////{
+        ////    get { return Get<bool?>(); }
+        ////    set { Set(value); }
+        ////}
 
         [DefaultValue(false)]
         public bool? IsPowerBindingDebuggingEnabled
@@ -44,6 +44,13 @@ namespace XamlStudio.Services
 
         [DefaultValue(true)]
         public bool? IsContentUpdatedWithSuggested
+        {
+            get { return Get<bool?>(); }
+            set { Set(value); }
+        }
+
+        [DefaultValue(false)]
+        public bool? IsLiveDataContextRefreshedOnRender
         {
             get { return Get<bool?>(); }
             set { Set(value); }
@@ -98,33 +105,39 @@ namespace XamlStudio.Services
             set { Set(value); }
         }
 
-        public string DefaultWorkspaceFolderToken
+        public List<string> FavoriteTypes
         {
-            get { return Get<string>(); }
+            get { return Get<List<string>>(); }
             set { Set(value); }
         }
 
-        public StorageFolder DefaultWorkspaceFolder
-        {
-            get
-            {
-                var foldertoken = DefaultWorkspaceFolderToken;
-                if (String.IsNullOrEmpty(foldertoken))
-                {
-                    return null;
-                }
+        ////public string DefaultWorkspaceFolderToken
+        ////{
+        ////    get { return Get<string>(); }
+        ////    set { Set(value); }
+        ////}
 
-                return Task.Run(async () => {
-                    try
-                    {
-                        return await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(foldertoken);
-                    }
-                    catch (Exception)
-                    {
-                        return null;
-                    }
-                }).Result;
-            }
-        }
+        ////public StorageFolder DefaultWorkspaceFolder
+        ////{
+        ////    get
+        ////    {
+        ////        var foldertoken = DefaultWorkspaceFolderToken;
+        ////        if (String.IsNullOrEmpty(foldertoken))
+        ////        {
+        ////            return null;
+        ////        }
+
+        ////        return Task.Run(async () => {
+        ////            try
+        ////            {
+        ////                return await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(foldertoken);
+        ////            }
+        ////            catch (Exception)
+        ////            {
+        ////                return null;
+        ////            }
+        ////        }).Result;
+        ////    }
+        ////}
     }
 }

@@ -81,6 +81,11 @@ namespace XamlStudio.Toolkit.Models
         public IEnumerable<XamlBindingInfo> Bindings { get; internal set; }
 
         /// <summary>
+        /// Gets the list of known Namespaces found on the document.
+        /// </summary>
+        public XmlnsNamespace[] DetectedNamespaces { get; internal set; }
+
+        /// <summary>
         /// Create a new XamlRenderResultContext for the given initial content.
         /// </summary>
         /// <param name="initialContent">Initial string passed to render.</param>

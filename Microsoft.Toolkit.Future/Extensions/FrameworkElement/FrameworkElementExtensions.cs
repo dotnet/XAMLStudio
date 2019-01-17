@@ -1,45 +1,68 @@
-﻿using Microsoft.Toolkit.Uwp.UI.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Automation;
+using Windows.UI.Xaml.Automation.Peers;
+using Windows.UI.Xaml.Controls;
 
 namespace Microsoft.Toolkit.Uwp.UI.Extensions.Future
 {
     public static class FrameworkElementExtensions
     {
-        public static object GetAncestor(DependencyObject obj)
+        public static bool GetUpdateLiveRegionChangedOnVisible(FrameworkElement obj)
         {
-            return (object)obj.GetValue(AncestorProperty);
+            return (bool)obj.GetValue(UpdateLiveRegionChangedOnVisibleProperty);
         }
 
-        public static void SetAncestor(DependencyObject obj, object value)
+        public static void SetUpdateLiveRegionChangedOnVisible(FrameworkElement obj, bool value)
         {
-            obj.SetValue(AncestorProperty, value);
+            obj.SetValue(UpdateLiveRegionChangedOnVisibleProperty, value);
         }
 
-        public static readonly DependencyProperty AncestorProperty =
-            DependencyProperty.RegisterAttached("Ancestor", typeof(object), typeof(FrameworkElementExtensions), new PropertyMetadata(null));
+        // Using a DependencyProperty as the backing store for UpdateLiveRegionChangedOnVisible.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty UpdateLiveRegionChangedOnVisibleProperty =
+            DependencyProperty.RegisterAttached("UpdateLiveRegionChangedOnVisible", typeof(bool), typeof(FrameworkElementExtensions), new PropertyMetadata(false, UpdateLiveRegionChangedOnVisible_Changed));
 
-
-        public static Type GetAncestorType(DependencyObject obj)
+        public static bool GetUpdateLiveRegionChangedOnLoad(DependencyObject obj)
         {
-            return (Type)obj.GetValue(AncestorTypeProperty);
+            return (bool)obj.GetValue(UpdateLiveRegionChangedOnLoadProperty);
         }
 
-        public static void SetAncestorType(DependencyObject obj, Type value)
+        public static void SetUpdateLiveRegionChangedOnLoad(DependencyObject obj, bool value)
         {
-            obj.SetValue(AncestorTypeProperty, value);
+            obj.SetValue(UpdateLiveRegionChangedOnLoadProperty, value);
         }
 
-        public static readonly DependencyProperty AncestorTypeProperty =
-            DependencyProperty.RegisterAttached("AncestorType", typeof(Type), typeof(FrameworkElementExtensions), new PropertyMetadata(null, AncestorType_PropertyChanged));
+        // Using a DependencyProperty as the backing store for UpdateLiveRegionChangedOnLoad.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty UpdateLiveRegionChangedOnLoadProperty =
+            DependencyProperty.RegisterAttached("UpdateLiveRegionChangedOnLoad", typeof(bool), typeof(FrameworkElementExtensions), new PropertyMetadata(false, UpdateLiveRegionChangedOnLoad_Changed));
 
-        private static void AncestorType_PropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        public static bool GetUpdateLiveRegionChildren(DependencyObject obj)
+        {
+            return (bool)obj.GetValue(UpdateLiveRegionChildrenProperty);
+        }
+
+        public static void SetUpdateLiveRegionChildren(DependencyObject obj, bool value)
+        {
+            obj.SetValue(UpdateLiveRegionChildrenProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for UpdateLiveRegionChildren.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty UpdateLiveRegionChildrenProperty =
+            DependencyProperty.RegisterAttached("UpdateLiveRegionChildren", typeof(bool), typeof(FrameworkElementExtensions), new PropertyMetadata(true));
+
+        private static void UpdateLiveRegionChangedOnVisible_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is UIElement element)
+            {
+                element.RegisterPropertyChangedCallback(UIElement.VisibilityProperty, Visibility_Changed);
+            }
+        }
+
+        private static void UpdateLiveRegionChangedOnLoad_Changed(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             if (obj is FrameworkElement fe)
             {
@@ -47,10 +70,13 @@ namespace Microsoft.Toolkit.Uwp.UI.Extensions.Future
 
                 if (args.NewValue != null)
                 {
-                    fe.Loaded += FrameworkElement_Loaded;
                     if (fe.Parent != null)
                     {
                         FrameworkElement_Loaded(fe, null);
+                    }
+                    else
+                    {
+                        fe.Loaded += FrameworkElement_Loaded;
                     }
                 }
             }
@@ -60,13 +86,32 @@ namespace Microsoft.Toolkit.Uwp.UI.Extensions.Future
         {
             if (sender is FrameworkElement fe)
             {
-                var at = GetAncestorType(fe);
+                // Force Update
+                Visibility_Changed(fe, null);
+            }
+        }
 
-                MethodInfo method = typeof(VisualTree).GetMethod("FindAscendant")
-                                    .MakeGenericMethod(new Type[] { at });
-                var ancestor = method.Invoke(fe, new object[] { fe });
+        private static void Visibility_Changed(DependencyObject sender, DependencyProperty dp)
+        {
+            if (sender is UIElement element && element.Visibility == Visibility.Visible)
+            {
+                if (AutomationProperties.GetLiveSetting(element) != AutomationLiveSetting.Off)
+                {
+                    FrameworkElementAutomationPeer.FromElement(element)?.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
+                }
 
-                SetAncestor(fe, ancestor);
+                // Also look for children underneath (as we would expect to read all visible items)
+                // These still need independent AutomationProperties.LiveSetting set to be read.
+                if (GetUpdateLiveRegionChildren(element))
+                {
+                    foreach (var child in element.FindDescendants<FrameworkElement>())
+                    {
+                        if (AutomationProperties.GetLiveSetting(child) != AutomationLiveSetting.Off)
+                        {
+                            FrameworkElementAutomationPeer.FromElement(child)?.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
+                        }
+                    }
+                }
             }
         }
     }

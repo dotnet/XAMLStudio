@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:genTemplate="http://schemas.microsoft.com/appx/developer/windowsTemplateStudio" IgnorableNamespaces="uap mp genTemplate">
-  <Identity Name="Microsoft.XamlStudio" Publisher="CN=Partner App Experience" Version="0.8.0.0" />
+  <Identity Name="Microsoft.XAMLStudio" Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" Version="1.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="CC5D9C64-06FA-4304-9C2A-093E9EEFA70D" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>XamlStudio</DisplayName>
-    <PublisherDisplayName>Partner App Experience</PublisherDisplayName>
+    <DisplayName>XAML Studio</DisplayName>
+    <PublisherDisplayName>Microsoft Corporation</PublisherDisplayName>
     <Logo>Assets\XamlStudio.StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
@@ -25,11 +25,6 @@
         <uap:SplashScreen Image="Assets\XamlStudio.SplashScreen.png" />
       </uap:VisualElements>
       <Extensions>
-        <uap3:Extension Category="windows.appUriHandler">
-          <uap3:AppUriHandler>
-            <uap3:Host Name="myapp.website.com" />
-          </uap3:AppUriHandler>
-        </uap3:Extension>
         <uap:Extension Category="windows.protocol">
           <uap:Protocol Name="xamlstudio">
             <uap:Logo>Assets\XamlStudio.Icon.png</uap:Logo>

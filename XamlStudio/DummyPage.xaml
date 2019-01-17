@@ -16,7 +16,16 @@
     <Page.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:StringFormatConverter x:Key="StringFormatConverter" />
+        <ic:CallMethodAction x:Key="CallMethodAction" />
+        <ic:ChangePropertyAction x:Key="ChangePropertyAction" />
+        <ic:DataTriggerBehavior x:Key="DataTriggerBehavior" />
+        <ic:EventTriggerBehavior x:Key="EventTriggerBehavior" />
+        <ic:GoToStateAction x:Key="GoToStateAction" />
+        <ic:IncrementalUpdateBehavior x:Key="IncrementalUpdateBehavior" />
+        <ic:InvokeCommandAction x:Key="InvokeCommandAction" />
+        <ic:NavigateToPageAction x:Key="NavigateToPageAction" />
         <im:ControlStoryboardAction x:Key="ControlStoryboardAction" />
+        <im:PlaySoundAction x:Key="PlaySoundAction" />
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" />

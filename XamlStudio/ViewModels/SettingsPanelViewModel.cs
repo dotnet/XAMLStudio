@@ -1,44 +1,27 @@
-﻿using System;
+﻿using Microsoft.AppCenter.Analytics;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 using Windows.ApplicationModel;
+using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using XamlStudio.Helpers;
+using XamlStudio.Models;
 using XamlStudio.Services;
 
 namespace XamlStudio.ViewModels
 {
     public class SettingsPanelViewModel : Observable
     {
-        public Visibility FeedbackLinkVisibility => Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.IsSupported() ? Visibility.Visible : Visibility.Collapsed;
-
-        private ICommand _launchFeedbackHubCommand;
-
-        public ICommand LaunchFeedbackHubCommand
-        {
-            get
-            {
-                if (_launchFeedbackHubCommand == null)
-                {
-                    _launchFeedbackHubCommand = new RelayCommand(
-                        async () =>
-                        {
-                            // This launcher is part of the Store Services SDK https://docs.microsoft.com/en-us/windows/uwp/monetize/microsoft-store-services-sdk
-                            var launcher = Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.GetDefault();
-                            await launcher.LaunchAsync();
-                        });
-                }
-
-                return _launchFeedbackHubCommand;
-            }
-        }
-
         // TODO WTS: Add other settings as necessary. For help see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/pages/settings.md
         private ElementTheme _elementTheme = ThemeSelectorService.Theme;
 
@@ -71,6 +54,11 @@ namespace XamlStudio.ViewModels
                         {
                             ElementTheme = param;
                             await ThemeSelectorService.SetThemeAsync(param);
+
+                            Analytics.TrackEvent("Settings_ChangeTheme", new Dictionary<string, string> {
+                                { "Type", "App" },
+                                { "Theme", "" + param },
+                            });
                         });
                 }
 
@@ -90,6 +78,11 @@ namespace XamlStudio.ViewModels
                         (param) =>
                         {
                             Settings.EditorTheme = param;
+
+                            Analytics.TrackEvent("Settings_ChangeTheme", new Dictionary<string, string> {
+                                { "Type", "Editor" },
+                                { "Theme", "" + param },
+                            });
                         });
                 }
 
@@ -104,6 +97,8 @@ namespace XamlStudio.ViewModels
         public ICommand SwitchToggleCommand { get; private set; }
         public ICommand DelayChangedCommand { get; private set; }
 
+        public ObservableCollection<ThirdPartyInfo> ThirdPartyLibs { get; set; } = new ObservableCollection<ThirdPartyInfo>();
+
         public SettingsPanelViewModel()
         {
             SwitchToggleCommand = new RelayCommand<RoutedEventArgs>(SwitchToggle);
@@ -112,6 +107,8 @@ namespace XamlStudio.ViewModels
             VersionDescription = GetVersionDescription();
 
             Colors = new ObservableCollection<Color>(typeof(Colors).GetRuntimeProperties().Select((color) => (Color)color.GetValue(null)));
+
+            LoadThirdPartyInfo();
         }
 
         private string GetVersionDescription()
@@ -123,16 +120,36 @@ namespace XamlStudio.ViewModels
             return $"v{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
         }
 
+        private async void LoadThirdPartyInfo()
+        {
+            var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Strings/thirdparty.json"));
+
+            var text = await FileIO.ReadTextAsync(file);
+
+            JsonConvert.DeserializeObject<ThirdPartyInfo[]>(text).ToList().ForEach(item => ThirdPartyLibs.Add(item));
+        }
+
         private void SwitchToggle(RoutedEventArgs args)
         {
             var toggle = (args.OriginalSource as ToggleSwitch);
 
             Settings.Set(toggle.IsOn, toggle.Tag as string);
+
+            Analytics.TrackEvent("Settings_Toggle", new Dictionary<string, string>()
+            {
+                { "Setting", toggle.Tag as string },
+                { "Value", toggle.IsOn.ToString() }
+            });
         }
 
         private void DelayChanged(RangeBaseValueChangedEventArgs args)
         {
             Settings.AutoCompileDelay = args.NewValue;
+
+            // TODO: Need to use a ThreadPoolTimer to wait for last change?
+            ////Analytics.TrackEvent("Settings_CompileDelayChanged", new Dictionary<string, string> {
+            ////    { "Value", "" + args.NewValue },
+            ////});
         }
     }
 }

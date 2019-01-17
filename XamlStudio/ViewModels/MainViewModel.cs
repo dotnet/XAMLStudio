@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using XamlStudio.Helpers;
 using XamlStudio.Models;
@@ -32,13 +34,53 @@ namespace XamlStudio.ViewModels
             OpenFiles.CollectionChanged += OpenFiles_CollectionChanged;
             RegisterPropertyChangedCallback(ActiveFileProperty, (s, dp) =>
             {
-                ActiveDocumentViewModel = DocumentViewModels[ActiveFile];
+                if (ActiveFile != null) // TabView can give us null first as it changes to the next one, is this a bug?
+                {
+                    ActiveDocumentViewModel = DocumentViewModels[ActiveFile];
+                }
             });
 
             var welcome = XamlDocument.WelcomeDocument();
 
             OpenFiles.Add(welcome);
             ActiveFile = welcome;
+        }
+
+        public async Task RestoreWorkspaceAsync(XamlDocument[] docs)
+        {
+            if (OpenFiles.Count == 1 && OpenFiles.First().DocumentType != DocumentType.Document)
+            {
+                OpenFiles.Clear();
+            }
+
+            bool welcome = false;
+
+            foreach(var doc in docs)
+            {
+                // Reopen/make connection to backing OS file.
+                await doc.RestoreFileAsync();
+
+                // Restore Data Context File (if one).
+                await doc.DataContext.RestoreFileAsync();
+
+                OpenFiles.Add(doc);
+
+                if (doc.DocumentType == DocumentType.Welcome)
+                {
+                    welcome = true;
+                }
+
+                if (doc.IsActive)
+                {
+                    ActiveFile = doc;
+                }
+            }
+
+            // Add our welcome screen back at the end for convenience.
+            if (!welcome)
+            {
+                OpenFiles.Add(XamlDocument.WelcomeDocument());
+            }
         }
 
         private void OpenFiles_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -50,7 +92,7 @@ namespace XamlStudio.ViewModels
                     if (item is XamlDocument xd)
                     {
                         // Need MainViewModel to own these so we can keep track of them all.
-                        DocumentViewModels[xd] = new DocumentViewModel() { Document = xd };
+                        DocumentViewModels[xd] = new DocumentViewModel() { Document = xd, MainViewModel = this };
                     }
                 }
             }

@@ -53,6 +53,7 @@ namespace XamlStudio.Services
                 }
             }
 
+            // TODO: Need to loop here and then have an extra interface on navigated page for extra parameters?
             var activationHandler = GetActivationHandlers()
                                                 .FirstOrDefault(h => h.CanHandle(activationArgs));
 

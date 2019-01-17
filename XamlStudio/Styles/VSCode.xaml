@@ -2,10 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters">
 
-    <SolidColorBrush x:Key="DarkColor" Color="#252526" />
-    <SolidColorBrush x:Key="TextHeaderColor" Color="#B6BBBB" />
-    <SolidColorBrush x:Key="TextColor" Color="#CCCCCC" />
-
     <converters:BoolToObjectConverter x:Key="BoolToGridLength"
                                       FalseValue="Auto"
                                       TrueValue="*" />

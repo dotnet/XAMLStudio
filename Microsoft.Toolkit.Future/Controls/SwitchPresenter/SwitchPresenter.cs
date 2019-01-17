@@ -144,7 +144,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Future
                     continue;
                 }
 
-                if (xcase.Value != null && CompareValues(Value, xcase.Value))
+                if (CompareValues(Value, xcase.Value))
                 {
                     newcase = xcase;
                     break;

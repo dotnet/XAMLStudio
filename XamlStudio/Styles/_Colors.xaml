@@ -11,14 +11,29 @@
     <Color x:Key="Color-Blue-Dark-3">#FF364F6B</Color>
 
     <Color x:Key="Color-Blue-Light-0">#FF287B80</Color>
-    <Color x:Key="Color-Blue-Light-1">#FF36A4AB</Color>
+    <Color x:Key="Color-Blue-Light-1">#FF34A2A9</Color>
     <Color x:Key="Color-Blue-Light-2">#FF43CDD6</Color>
     <Color x:Key="Color-Blue-Light-3">#FF69D7DE</Color>
+    <Color x:Key="Color-Blue-Light-4">#FFACE1E4</Color>
     <Color x:Key="Color-Blue-Light-5">#FFC3EFF2</Color>
 
     <Color x:Key="Color-Red-Light-1">#FFCA416A</Color>
     <Color x:Key="Color-Red-Light-2">#FFFC5185</Color>
 
+    <Color x:Key="DarkColor-Dark">#252526</Color>
+    <Color x:Key="TextHeaderColor-Dark">#B6BBBB</Color>
+    <Color x:Key="TextColor-Dark">#CCCCCC</Color>
+
+    <Color x:Key="DarkColor-Light">#252526</Color>
+    <Color x:Key="TextHeaderColor-Light">#646666</Color>
+    <Color x:Key="TextColor-Light">#CCCCCC</Color>
+
+    <SolidColorBrush x:Key="SystemControlForegroundAccentBrush" Color="{StaticResource Color-Red-Light-1}" />
+    <SolidColorBrush x:Key="SystemControlHighlightAccentBrush" Color="{StaticResource Color-Red-Light-1}" />
+    <SolidColorBrush x:Key="SystemControlHighlightAltListAccentHighBrush" Color="{StaticResource Color-Red-Light-2}" />
+    <SolidColorBrush x:Key="SystemControlHighlightListAccentLowBrush" Color="{StaticResource Color-Red-Light-1}" />
+    <SolidColorBrush x:Key="SystemControlHighlightListAccentMediumBrush" Color="{StaticResource Color-Red-Light-2}" />
+    
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">
             <SolidColorBrush x:Key="Brush-Grey-Light-0" Color="{StaticResource Color-Blue-Dark-0}" />
@@ -31,13 +46,17 @@
             <SolidColorBrush x:Key="Brush-Blue-Dark-3" Color="{StaticResource Color-Blue-Dark-3}" />
 
             <SolidColorBrush x:Key="Brush-Blue-Light-0" Color="{StaticResource Color-Blue-Light-0}" />
-            <SolidColorBrush x:Key="Brush-Blue-Light-1" Color="{StaticResource Color-Blue-Light-1}" />
+            <SolidColorBrush x:Key="Brush-Blue-Light-1" Color="{StaticResource Color-Blue-Light-4}" />
             <SolidColorBrush x:Key="Brush-Blue-Light-2" Color="{StaticResource Color-Blue-Light-2}" />
             <SolidColorBrush x:Key="Brush-Blue-Light-3" Color="{StaticResource Color-Blue-Light-3}" />
             <SolidColorBrush x:Key="Brush-Blue-Light-5" Color="{StaticResource Color-Blue-Light-5}" />
 
             <SolidColorBrush x:Key="Brush-Red-Light-1" Color="{StaticResource Color-Red-Light-1}" />
             <SolidColorBrush x:Key="Brush-Red-Light-2" Color="{StaticResource Color-Red-Light-2}" />
+
+            <SolidColorBrush x:Key="DarkColor" Color="{StaticResource DarkColor-Light}" />
+            <SolidColorBrush x:Key="TextHeaderColor" Color="{StaticResource TextHeaderColor-Light}" />
+            <SolidColorBrush x:Key="TextColor" Color="{StaticResource TextColor-Light}" />
         </ResourceDictionary>
 
         <ResourceDictionary x:Key="Dark">
@@ -58,6 +77,10 @@
 
             <SolidColorBrush x:Key="Brush-Red-Light-1" Color="{StaticResource Color-Red-Light-1}" />
             <SolidColorBrush x:Key="Brush-Red-Light-2" Color="{StaticResource Color-Red-Light-2}" />
+
+            <SolidColorBrush x:Key="DarkColor" Color="{StaticResource DarkColor-Dark}" />
+            <SolidColorBrush x:Key="TextHeaderColor" Color="{StaticResource TextHeaderColor-Dark}" />
+            <SolidColorBrush x:Key="TextColor" Color="{StaticResource TextColor-Dark}" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>

@@ -63,10 +63,11 @@ namespace XamlStudio.Toolkit.Services
 
             ReadXmlTree(ref result);
 
+            // TODO: Figure out best way to split this into binding part and non-binding parts.
+            GetBindings(result, settings.IsBindingDebuggingEnabled);
+
             if (settings.IsBindingDebuggingEnabled)
             {    
-                GetBindings(result);
-
                 // TODO: Record Line, Start, and Length of Changes to re-adjust error messages back to original positions.
                 // TODO: Do this in XML (add required resources)
                 InterceptBindings(ref result);
@@ -194,7 +195,7 @@ namespace XamlStudio.Toolkit.Services
                 return string.Empty;
             }
 
-            var lines = content.Split("\r\n");
+            var lines = content.Split("\n");
 
             if (lineNumber > lines.Count() + 1)
             {

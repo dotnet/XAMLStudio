@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -23,20 +24,30 @@ namespace XamlStudio.Services
         public Dictionary<string, LibraryInfo> LibrariesByNamespace { get; private set; }
 
         private readonly AsyncLock _initializeMutex = new AsyncLock();
-        private bool isInitialized = false;
+        private bool _isInitialized = false;
 
         public LibraryService()
         {
-            Initialize();
+            #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            InitializeAsync();
+            #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
-        public async void Initialize()
+        public async Task InitializeAsync()
         {
             using (await _initializeMutex.LockAsync())
             {
-                if (!isInitialized)
+                if (!_isInitialized)
                 {
-                    await AppAssemblyInfo.Instance.InitializeAsync();
+                    // TODO: Clean-up these initialize calls to make sure this list is centralized... (MainPage, XamlRenderService)
+                    await AppAssemblyInfo.Instance.InitializeAsync(new Assembly[] {
+                        typeof(Microsoft.UI.Xaml.Controls.NavigationView).Assembly,
+                        typeof(Microsoft.Toolkit.Uwp.UI.Controls.TabView).Assembly,
+                        typeof(Microsoft.Toolkit.Uwp.UI.Converters.BoolToVisibilityConverter).Assembly,
+                        typeof(Microsoft.Xaml.Interactions.Core.DataTriggerBehavior).Assembly,
+                        typeof(Telerik.UI.Xaml.Controls.Input.RadAutoCompleteBox).Assembly,
+                        typeof(Telerik.UI.Xaml.Controls.Primitives.RadExpanderControl).Assembly
+                    });
 
                     var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Strings/libs.json"));
 
@@ -46,7 +57,7 @@ namespace XamlStudio.Services
 
                     LibrariesByNamespace = Libraries.ToDictionary(item => item.Namespace);
 
-                    isInitialized = true;
+                    _isInitialized = true;
                 }
             }
         }
@@ -55,7 +66,19 @@ namespace XamlStudio.Services
         {
             var items = new List<Type>();
 
-            if (AppAssemblyInfo.Instance.TypesByNamespace.TryGetValue(ns, out var types))
+            // TODO: Don't realy need this now anymore, but helps to optimize listing... thoughts?  May need specific doc link hints for Telerik
+            if (LibrariesByNamespace.TryGetValue(ns, out LibraryInfo lib) && lib.TypeHints != null && lib.TypeHints.Count > 0)
+            {
+                foreach (var tname in lib.TypeHints)
+                {
+                    var t = Type.GetType(tname, false, false);
+                    if (t != null)
+                    {
+                        items.Add(t);
+                    }
+                }
+            }
+            else if (AppAssemblyInfo.Instance.TypesByNamespace.TryGetValue(ns, out var types))
             {
                 foreach (var t in types.Where(t => t.IsSubclassOf(typeof(DependencyObject))))
                 {

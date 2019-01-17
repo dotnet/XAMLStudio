@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nito.AsyncEx;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -12,6 +13,8 @@ namespace XamlStudio.Helpers
     // https://docs.microsoft.com/windows/uwp/app-settings/store-and-retrieve-app-data
     public static class SettingsStorageExtensions
     {
+        private static readonly AsyncLock _saveMutex = new AsyncLock();
+
         private const string FileExtension = ".json";
 
         public static bool IsRoamingStorageAvailable(this ApplicationData appData)
@@ -21,23 +24,45 @@ namespace XamlStudio.Helpers
 
         public static async Task SaveAsync<T>(this StorageFolder folder, string name, T content)
         {
-            var file = await folder.CreateFileAsync(GetFileName(name), CreationCollisionOption.ReplaceExisting);
-            var fileContent = await Json.StringifyAsync(content);
+            using (await _saveMutex.LockAsync())
+            {
+                int saveAttempts = 3;
 
-            await FileIO.WriteTextAsync(file, fileContent);
+                while (saveAttempts > 0)
+                {
+                    try
+                    {
+                        // This ReplaceExisting flag seems to fail occassionally, guard by trying again.
+                        var file = await folder.CreateFileAsync(GetFileName(name), CreationCollisionOption.ReplaceExisting);
+                        var fileContent = await Json.StringifyAsync(content);
+
+                        await FileIO.WriteTextAsync(file, fileContent);
+
+                        break;
+                    }
+                    catch (Exception)
+                    {
+                        await Task.Delay(50);
+                    }
+                    saveAttempts--;
+                }
+            }
         }
 
         public static async Task<T> ReadAsync<T>(this StorageFolder folder, string name)
         {
-            if (!File.Exists(Path.Combine(folder.Path, GetFileName(name))))
+            using (await _saveMutex.LockAsync())
             {
-                return default(T);
+                if (!File.Exists(Path.Combine(folder.Path, GetFileName(name))))
+                {
+                    return default(T);
+                }
+
+                var file = await folder.GetFileAsync($"{name}.json");
+                var fileContent = await FileIO.ReadTextAsync(file);
+
+                return await Json.ToObjectAsync<T>(fileContent);
             }
-
-            var file = await folder.GetFileAsync($"{name}.json");
-            var fileContent = await FileIO.ReadTextAsync(file);
-
-            return await Json.ToObjectAsync<T>(fileContent);
         }
 
         public static async Task SaveAsync<T>(this ApplicationDataContainer settings, string key, T value)
@@ -82,9 +107,12 @@ namespace XamlStudio.Helpers
                 throw new ArgumentException("ExceptionSettingsStorageExtensionsFileNameIsNullOrEmpty".GetLocalized(), nameof(fileName));
             }
 
-            var storageFile = await folder.CreateFileAsync(fileName, options);
-            await FileIO.WriteBytesAsync(storageFile, content);
-            return storageFile;
+            using (await _saveMutex.LockAsync())
+            {
+                var storageFile = await folder.CreateFileAsync(fileName, options);
+                await FileIO.WriteBytesAsync(storageFile, content);
+                return storageFile;
+            }
         }
 
         public static async Task<byte[]> ReadFileAsync(this StorageFolder folder, string fileName)
@@ -105,14 +133,17 @@ namespace XamlStudio.Helpers
         {
             if (file != null)
             {
-                using (IRandomAccessStream stream = await file.OpenReadAsync())
+                using (await _saveMutex.LockAsync())
                 {
-                    using (var reader = new DataReader(stream.GetInputStreamAt(0)))
+                    using (IRandomAccessStream stream = await file.OpenReadAsync())
                     {
-                        await reader.LoadAsync((uint)stream.Size);
-                        var bytes = new byte[stream.Size];
-                        reader.ReadBytes(bytes);
-                        return bytes;
+                        using (var reader = new DataReader(stream.GetInputStreamAt(0)))
+                        {
+                            await reader.LoadAsync((uint)stream.Size);
+                            var bytes = new byte[stream.Size];
+                            reader.ReadBytes(bytes);
+                            return bytes;
+                        }
                     }
                 }
             }

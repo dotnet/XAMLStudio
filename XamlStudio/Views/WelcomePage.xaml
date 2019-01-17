@@ -1,6 +1,7 @@
 ﻿<Page x:Class="XamlStudio.Views.WelcomePage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:i="using:Microsoft.Xaml.Interactivity"
       xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
@@ -9,18 +10,58 @@
       xmlns:storage="using:Windows.Storage"
       mc:Ignorable="d">
 
+    <Page.Resources>
+        <animations:AnimationCollection x:Key="ImplicitOffset">
+            <animations:OffsetAnimation Duration="0:0:0.3" />
+        </animations:AnimationCollection>
+    </Page.Resources>
+
     <Grid Padding="24" Background="{ThemeResource Brush-Blue-Dark-2}">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" MinWidth="236" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition />
+            <!--<ColumnDefinition />-->
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.ColumnSpan="2"
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="WindowStates">
+                <VisualState x:Name="NarrowState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="FeatureList.(Grid.Row)" Value="3" />
+                        <Setter Target="FeatureList.(Grid.Column)" Value="0" />
+                        <Setter Target="FeatureList.(Grid.RowSpan)" Value="1" />
+                        <Setter Target="LogoStack.Orientation" Value="Vertical" />
+                        <Setter Target="LogoText.HorizontalAlignment" Value="Center" />
+                        <Setter Target="LogoText.Margin" Value="0,-30,0,0" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="WideState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="640" />
+                        <!--  TODO: Need Parent Size not Window  -->
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="FeatureList.(Grid.Row)" Value="1" />
+                        <Setter Target="FeatureList.(Grid.Column)" Value="1" />
+                        <Setter Target="FeatureList.(Grid.RowSpan)" Value="3" />
+                        <Setter Target="LogoStack.Orientation" Value="Horizontal" />
+                        <Setter Target="LogoText.HorizontalAlignment" Value="Left" />
+                        <Setter Target="LogoText.Margin" Value="-30,0,0,0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <StackPanel x:Name="LogoStack"
+                    Grid.ColumnSpan="2"
                     Margin="-12,-16,0,8"
                     Orientation="Horizontal">
             <Image Width="300"
@@ -30,19 +71,20 @@
                     <PlaneProjection LocalOffsetX="-0" />
                 </Image.Projection>
             </Image>
-            <StackPanel Margin="-30,0,0,0"
+            <StackPanel x:Name="LogoText"
+                        Margin="-30,0,0,0"
                         Padding="16"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
-                        Opacity="0.4">
+                        Opacity="0.8">
                 <TextBlock FontSize="16"
                            FontWeight="SemiBold"
-                           Foreground="{ThemeResource Brush-Grey-Light-0}">
+                           Foreground="{ThemeResource Brush-Grey-Light-1}">
                     a Microsoft Garage project
                 </TextBlock>
                 <TextBlock FontSize="16"
                            FontWeight="SemiBold"
-                           Foreground="{ThemeResource Brush-Grey-Light-0}">
+                           Foreground="{ThemeResource Brush-Grey-Light-1}">
                     for Rapid Prototyping
                 </TextBlock>
             </StackPanel>
@@ -50,17 +92,17 @@
         <StackPanel Grid.Row="1" Margin="40">
             <TextBlock FontSize="22"
                        FontWeight="Bold"
-                       Foreground="{ThemeResource Brush-Grey-Light-0}"
+                       Foreground="{ThemeResource Brush-Grey-Light-1}"
                        Text="Get Started" />
             <StackPanel Margin="12,12,0,0">
                 <HyperlinkButton Command="{x:Bind MainViewModel.NewDocumentCommand, Mode=OneWay}"
                                  FontWeight="SemiBold"
-                                 Foreground="{ThemeResource Brush-Red-Light-1}">
+                                 Foreground="{ThemeResource Brush-Red-Light-2}">
                     New file
                 </HyperlinkButton>
                 <HyperlinkButton Command="{x:Bind MainViewModel.OpenDocumentCommand, Mode=OneWay}"
                                  FontWeight="SemiBold"
-                                 Foreground="{ThemeResource Brush-Red-Light-1}">
+                                 Foreground="{ThemeResource Brush-Red-Light-2}">
                     Open file...
                 </HyperlinkButton>
             </StackPanel>
@@ -68,7 +110,7 @@
         <StackPanel Grid.Row="2" Margin="40">
             <TextBlock FontSize="22"
                        FontWeight="Bold"
-                       Foreground="{ThemeResource Brush-Grey-Light-0}"
+                       Foreground="{ThemeResource Brush-Grey-Light-1}"
                        Text="Recent Files" />
             <ItemsControl x:Name="RecentFileList"
                           Margin="12,12,0,0"
@@ -80,29 +122,61 @@
                                          CommandParameter="{x:Bind}"
                                          Content="{x:Bind DisplayName}"
                                          FontWeight="SemiBold"
-                                         Foreground="{ThemeResource Brush-Red-Light-1}"
+                                         Foreground="{ThemeResource Brush-Red-Light-2}"
                                          ToolTipService.ToolTip="{x:Bind Path}" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </StackPanel>
-        <StackPanel Grid.Row="1"
-                    Grid.RowSpan="2"
+        <StackPanel x:Name="FeatureList"
+                    Grid.Row="1"
+                    Grid.RowSpan="3"
                     Grid.Column="1"
-                    Margin="40">
+                    Margin="40"
+                    animations:Implicit.Animations="{StaticResource ImplicitOffset}">
             <TextBlock FontSize="22"
                        FontWeight="Bold"
-                       Foreground="{ThemeResource Brush-Grey-Light-0}"
-                       Text="Known Issues" />
-            <!--<TextBlock Padding="12,8">- Tabs disappear if window too small.</TextBlock> Note: Will reappear if we try and add Edge Pivot Styling, so that needs fixing. #586 -->
-            <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}">
-                - Compile errors don't display in the right place in the editor<LineBreak />
-                &#160;&#160;when binding debugging enabled.</TextBlock>
-            <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}">
-                - Data Source Panel doesn't support static data source.
+                       Foreground="{ThemeResource Brush-Grey-Light-1}"
+                       Text="New Features" />
+            <TextBlock Padding="12,8"
+                       Foreground="{ThemeResource Brush-Grey-Light-1}"
+                       TextWrapping="WrapWholeWords">
+                - Live and Interactable Preview
             </TextBlock>
-            <TextBlock Padding="12,8" Foreground="{ThemeResource Brush-Grey-Light-0}">
-                - No Search or Favorites for Toolbox.
+            <TextBlock Padding="12,8"
+                       Foreground="{ThemeResource Brush-Grey-Light-1}"
+                       TextWrapping="WrapWholeWords">
+                - Live Binding Debugging
+            </TextBlock>
+            <TextBlock Padding="12,8"
+                       Foreground="{ThemeResource Brush-Grey-Light-1}"
+                       TextWrapping="WrapWholeWords">
+                - Data Context Editor
+            </TextBlock>
+            <TextBlock Padding="12,8"
+                       Foreground="{ThemeResource Brush-Grey-Light-1}"
+                       TextWrapping="WrapWholeWords">
+                - Auto-Save and Restore Documents
+            </TextBlock>
+            <TextBlock Padding="12,8"
+                       Foreground="{ThemeResource Brush-Grey-Light-1}"
+                       TextWrapping="WrapWholeWords">
+                - IntelliSense
+            </TextBlock>
+            <TextBlock Padding="12,8"
+                       Foreground="{ThemeResource Brush-Grey-Light-1}"
+                       TextWrapping="WrapWholeWords">
+                - Documentation Toolbox
+            </TextBlock>
+            <TextBlock Padding="12,8"
+                       Foreground="{ThemeResource Brush-Grey-Light-1}"
+                       TextWrapping="WrapWholeWords">
+                - Alignment Guides
+            </TextBlock>
+            <TextBlock Padding="12,8"
+                       Foreground="{ThemeResource Brush-Grey-Light-1}"
+                       TextWrapping="WrapWholeWords">
+                - Namespace Helpers
             </TextBlock>
         </StackPanel>
     </Grid>

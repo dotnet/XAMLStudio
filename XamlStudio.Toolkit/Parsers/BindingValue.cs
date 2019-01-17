@@ -29,13 +29,18 @@ namespace XamlStudio.Toolkit.Parsers
         public string ElementName { get; set; }
 
         /// <summary>
-        ///     Gets or sets a parameter that can be used in the Converter logic.
+        ///     Gets or sets a parameter that can be used in the Converter logic after escaped value parsing.
         ///
         /// Returns:
         ///     A parameter to be passed to the Converter. This can be used in the conversion
         ///     logic. The default is **null**.
         /// </summary>
         public string ConverterParameter { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the original string value for the converter parameter, helpful for replacement.
+        /// </summary>
+        public string ConverterParameterRaw { get; set; }
 
         /// <summary>
         ///     Gets or sets a value that names the language to pass to any converter specified
@@ -47,6 +52,7 @@ namespace XamlStudio.Toolkit.Parsers
         /// </summary>
         public string ConverterLanguage { get; set; }
 
+        // TODO: Should this be 'ConverterKey' and keep the original string intact?
         /// <summary>
         ///     Gets or sets the converter object that is called by the binding engine to modify
         ///     the data as it is passed between the source and target, or vice versa.

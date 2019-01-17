@@ -150,10 +150,14 @@ namespace XamlStudio.Services.Logging
         /// </summary>
         private async Task CloseSessionAndSaveLogFile()
         {
-            StorageFile logfile = await fileSession.CloseAndSaveToFileAsync();
-            await MoveLogFileToLogFolder(logfile);
-            fileSession.Dispose();
-            fileSession = null;
+            // TODO: Lock
+            if (fileSession != null)
+            {
+                StorageFile logfile = await fileSession.CloseAndSaveToFileAsync();
+                await MoveLogFileToLogFolder(logfile);
+                fileSession.Dispose();
+                fileSession = null;
+            }
         }
 
         /// <summary>

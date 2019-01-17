@@ -1,17 +1,26 @@
-﻿using System;
+﻿using Microsoft.AppCenter.Analytics;
+using Microsoft.Services.Store.Engagement;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using Windows.Foundation.Metadata;
 using Windows.Storage;
+using Windows.System;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
+using XamlStudio.Helpers;
 using XamlStudio.Models;
 using XamlStudio.Services;
+using XamlStudio.Toolkit.Helpers;
 using XamlStudio.Toolkit.Services;
 using XamlStudio.ViewModels;
-using Windows.UI.Xaml.Controls.Primitives;
-using System.Reflection;
 
 namespace XamlStudio.Views
 {
@@ -20,16 +29,47 @@ namespace XamlStudio.Views
         public MainViewModel ViewModel { get; }
 
         private IStorageItem[] _filesToLoad;
+        private SuspensionState _restoreState;
+        private DateTime _sessionStart;
+        private long? _activityTime = null;
+
+        private bool _loaded = false;
 
         public MainPage()
         {
-            InitializeComponent();
-
             ViewModel = new MainViewModel();
+
+            InitializeComponent();
 
             Loaded += MainPage_Loaded;
 
-            Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown; ;
+            Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
+
+            Singleton<SuspendAndResumeService>.Instance.OnBackgroundEntering += Instance_OnBackgroundEntering;
+
+            ViewModel.RegisterPropertyChangedCallback(WorkspaceWindow.OpenActivityProperty, OpenActivityChanged);
+        }
+
+        private void Instance_OnBackgroundEntering(object sender, OnBackgroundEnteringEventArgs e)
+        {
+            // Save State of Documents here
+            e.SuspensionState.OpenFiles = ViewModel.OpenFiles.ToArray();
+
+            // Save Open Drawer, null = closed.
+            e.SuspensionState.OpenActivity = (NavMenu.SelectedItems.FirstOrDefault() as ListBoxItem)?.Tag?.ToString();
+
+            if (_loaded && !e.IsOutsideSuspend)
+            {
+                var props = new Dictionary<string, string> {
+                    { "NumberFiles", ViewModel.OpenFiles.Count.ToString() },
+                    { "UnsavedFiles", ViewModel.OpenFiles.Count(file => file.HasChanged).ToString() },
+                    { "WelcomeOpen", ViewModel.OpenFiles.Any(file => file.DocumentType == DocumentType.Welcome).ToString() },
+                    { "SettingsOpen", ViewModel.OpenFiles.Any(file => file.DocumentType == DocumentType.Settings).ToString() },
+                    { "Activity", e.SuspensionState.OpenActivity ?? "Closed" },
+                    { "SessionTimeMin", ((TimeSpan)(DateTime.Now - _sessionStart)).TotalMinutes.ToString() }
+                };
+                Analytics.TrackEvent("Background", props);
+            }
         }
 
         private void CoreWindow_KeyDown(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs args)
@@ -42,8 +82,14 @@ namespace XamlStudio.Views
             // Offload from main thread to parallelize assembly loading.
             Task t = new Task(async () =>
             {
+                // TODO: Clean-up these initialize calls to make sure this list is centralized...
                 await AppAssemblyInfo.Instance.InitializeAsync(new Assembly[] {
-                    typeof(Microsoft.UI.Xaml.Controls.NavigationView).Assembly
+                    typeof(Microsoft.UI.Xaml.Controls.NavigationView).Assembly,
+                    typeof(Microsoft.Toolkit.Uwp.UI.Controls.TabView).Assembly,
+                    typeof(Microsoft.Toolkit.Uwp.UI.Converters.BoolToVisibilityConverter).Assembly,
+                    typeof(Microsoft.Xaml.Interactions.Core.DataTriggerBehavior).Assembly,
+                    typeof(Telerik.UI.Xaml.Controls.Input.RadAutoCompleteBox).Assembly,
+                    typeof(Telerik.UI.Xaml.Controls.Primitives.RadExpanderControl).Assembly
                 });
             });
             t.Start();
@@ -56,12 +102,88 @@ namespace XamlStudio.Views
                 //// TODO: Show Loading Ring?
             }
 
-            await ViewModel.SettingsViewModel.Settings.InitializeAndLoad();
+            await ViewModel.SettingsViewModel.Settings.InitializeAsync();
 
-            ViewModel.RegisterPropertyChangedCallback(WorkspaceWindow.ActiveFileProperty, (sender2, args) =>
+            if (_restoreState != null)
             {
-                DocumentTabsPivot.SelectedItem = ViewModel.ActiveFile;
-            });
+                if (!string.IsNullOrWhiteSpace(_restoreState.OpenActivity))
+                {
+                    NavMenu.SelectedItem = NavMenu.Items.FirstOrDefault(item => (item as ListBoxItem).Tag.ToString() == _restoreState.OpenActivity);
+                }
+                else
+                {
+                    NavMenu.SelectedItem = null;
+                }
+
+                if (_restoreState.OpenFiles != null && _restoreState.OpenFiles.Length > 0)
+                {
+	                if (_restoreState.FromRender)
+	                {
+	                    // We encountered an error while rendering and crashed.
+	                    SettingsService.Instance.IsAutoCompileEnabled = false;
+	                }                
+
+	                await ViewModel.RestoreWorkspaceAsync(_restoreState.OpenFiles);
+
+	                if (!string.IsNullOrWhiteSpace(_restoreState.LastRenderedId))
+	                {
+	                    var document = ViewModel.DocumentViewModels.Values.FirstOrDefault(doc => doc.Document.Id == _restoreState.LastRenderedId);
+	                    if (document != null)
+	                    {
+	                        ViewModel.ActiveFile = document.Document;
+
+	                        // Store/Retrieve error...
+	                        var file = await ApplicationData.Current.LocalFolder.TryGetItemAsync("lastexception.json");
+	                        UnhandledException exception = null;
+	                        if (file != null)
+	                        {
+	                            var text = await FileIO.ReadTextAsync(file as StorageFile);
+	                            exception = JsonConvert.DeserializeObject<UnhandledException>(text);
+
+                                // TODO: Used to work, doesn't now?
+                                document.Result.Errors.Add(new Toolkit.Models.XamlExceptionRange(exception?.Message, exception?.Exception, 1, 1, 1, 1));
+                            }
+
+	                        var messageDialog = new MessageDialog(string.Format("MainPage_UnhandledException_Message".GetLocalized(), exception?.Message), "MainPage_UnhandledException_Title".GetLocalized());
+	                        messageDialog.Commands.Add(new UICommand("MainPage_UnhandledException_Continue".GetLocalized()));
+	                        var openfeedback = new UICommand("MainPage_UnhandledException_OpenFeedbackHub".GetLocalized());
+	                        messageDialog.Commands.Add(openfeedback);
+	                        messageDialog.DefaultCommandIndex = 1;
+	                        messageDialog.CancelCommandIndex = 0;
+
+	                        if (openfeedback.Equals(await messageDialog.ShowAsync()))
+	                        {
+                                // This launcher is part of the Store Services SDK https://docs.microsoft.com/en-us/windows/uwp/monetize/microsoft-store-services-sdk
+                                if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 7))
+                                {
+                                    // 1809 'workaround' for now. BUG 19698552
+                                    await Launcher.LaunchUriAsync(new Uri("windows-feedback:?contextid=143"));
+                                }
+                                else
+                                {
+                                    var launcher = StoreServicesFeedbackLauncher.GetDefault();
+                                    await launcher.LaunchAsync(new Dictionary<string, string>()
+                                    {
+                                        { "error", exception?.Message ?? "Unknown Runtime Error" },
+                                        { "stacktrace", exception?.Exception?.StackTrace?.ToString() ?? "" },
+                                        { "xaml", document.Document.Content }
+                                    });
+                                }
+                                
+                                Analytics.TrackEvent("Open_FeedbackHub", new Dictionary<string, string>()
+                                {
+                                    { "Location", "Restart" },
+                                    { "error", exception?.Message ?? "Unknown Runtime Error" },
+                                    { "stacktrace", exception?.Exception?.StackTrace?.ToString() ?? "" }
+                                });
+                            }
+	                    }
+	                }
+
+	                // Clean-up suspend state reference.
+	                _restoreState = null;
+				}
+            }
 
             if (_filesToLoad != null)
             {
@@ -69,6 +191,9 @@ namespace XamlStudio.Views
                 OpenFileItems(_filesToLoad);
                 _filesToLoad = null;
             }
+
+            _sessionStart = DateTime.Now;
+            _loaded = true;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -76,21 +201,14 @@ namespace XamlStudio.Views
             // Code to handle case when activating during launch.
             base.OnNavigatedTo(e);
 
+            // TODO: Handle both restoring workspace and opening files?
             if (e.Parameter is IStorageItem[] files)
             {
                 _filesToLoad = files;
             }
-        }
-
-        private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // Workaround for issue with binding to SelectedItem when closing tab.
-            if (e.AddedItems.Count > 0)
+            else if (e.Parameter is SuspensionState state)
             {
-                if (e.AddedItems[0] is XamlDocument doc && doc != ViewModel.ActiveFile)
-                {
-                    ViewModel.ActiveFile = doc;
-                }
+                _restoreState = state;
             }
         }
 
@@ -105,17 +223,106 @@ namespace XamlStudio.Views
             }
         }
 
-        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        private void DocumentTabs_TabClosing(object sender, Microsoft.Toolkit.Uwp.UI.Controls.TabClosingEventArgs e)
         {
-            XamlDocument settings = ViewModel.OpenFiles.FirstOrDefault(f => f.DocumentType == DocumentType.Settings);
-            if (settings != null)
+            ViewModel.CloseActiveDocumentCommand.Execute(e.Item);
+
+            e.Cancel = true; // We'll remove item ourselves from collection when we're done in command, so don't have the TabView do it for us.
+        }
+
+        private void NavMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_loaded)
             {
-                ViewModel.ActiveFile = settings;
+                var dict = new Dictionary<string, string>();
+
+                if (_activityTime != null)
+                {
+                    dict.Add("TimeOpenSec", Math.Round((DateTime.UtcNow.Ticks - _activityTime.Value) / 10000000d, 2).ToString());
+                }
+
+                if (NavMenu.SelectedItems.Count == 0)
+                {
+                    dict.Add("Name", "Closed");
+                    _activityTime = null;
+                }
+                else
+                {
+                    dict.Add("Name", (e.AddedItems.FirstOrDefault() as ListBoxItem)?.Tag.ToString());
+                    _activityTime = DateTime.UtcNow.Ticks;
+                }
+                dict.Add("Previous", (e.RemovedItems.FirstOrDefault() as ListBoxItem)?.Tag.ToString());
+                Analytics.TrackEvent("Activity", dict);
             }
             else
             {
-                ViewModel.OpenFiles.Add(XamlDocument.SettingsDocument());
-                ViewModel.ActiveFile = ViewModel.OpenFiles.Last();
+                if (e.AddedItems.Count > 0)
+                {
+                    _activityTime = DateTime.UtcNow.Ticks;
+                }
+                else
+                {
+                    _activityTime = null;
+                }
+            }
+
+            // Sync ViewModel
+            if (ViewModel != null)
+            {
+                if (_activityTime == null)
+                {
+                    ViewModel.OpenActivity = null;
+                }
+                else
+                {
+                    ViewModel.OpenActivity = (NavMenu.SelectedItem as ListBoxItem).Tag.ToString();
+                }
+            }
+        }
+
+        private void OpenActivityChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            if (string.IsNullOrWhiteSpace(ViewModel.OpenActivity))
+            {
+                // Deselect
+                NavMenu.SelectedIndex = -1;
+                return;
+            }
+
+            // Sync from ViewModel to UI
+            foreach (var item in NavMenu.Items)
+            {
+                if (item is ListBoxItem lbi && lbi.Tag.ToString() == ViewModel.OpenActivity)
+                {
+                    NavMenu.SelectedItem = item;
+
+                    // Set Focus to Menu
+                    var T = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                    {
+                        var content = ToolboxPresenter.FindDescendant<ContentPresenter>().Content as Control;
+                        if (content != null)
+                        {
+                            content.Focus(FocusState.Keyboard);
+
+                            // This seems to work better? need to test with proper TabIndex in toolbox pages...
+                            var focusable = FocusManager.FindNextFocusableElement(FocusNavigationDirection.Next);
+                            if (focusable is Control control)
+                            {
+                                control.Focus(FocusState.Keyboard);
+                            }
+                        }
+                    });
+                    break;
+                }
+            }
+        }
+
+        private void DocumentTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Fix selection issue.
+            if (DocumentTabs.SelectedItem == null && ViewModel.OpenFiles.Count >= 1)
+            {
+                ViewModel.ActiveFile = ViewModel.OpenFiles.First();
             }
         }
     }

@@ -45,6 +45,7 @@ namespace XamlStudio.Toolkit.Services
 
             if (file != null)
             {
+                // TODO: Separate the inner part of this logic from the file reading part so it can be used by json text.
                 var content = await FileIO.ReadTextAsync(file);
 
                 // TODO: Do I just add errors in deserializing to the Errors bucket as well?

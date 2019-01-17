@@ -44,7 +44,7 @@ namespace XamlStudio.Toolkit.Services
             }
         }
 
-        private void GetBindings(XamlRenderResultContext context)
+        private void GetBindings(XamlRenderResultContext context, bool isBinding)
         {
             if (context.Document != null)
             {
@@ -52,22 +52,29 @@ namespace XamlStudio.Toolkit.Services
                 {
                     foreach (var attr in node.Attributes())
                     {
-                        if (attr.Value.StartsWith("{Binding"))
+                        if (isBinding && attr.Value.StartsWith("{Binding"))
                         {
+                            var bt = BindingParser.Parse(attr.Value);
+
                             // Found Binding
                             var bindingInfo = new XamlBindingInfo((uint)((IXmlLineInfo)attr).LineNumber, (uint)(((IXmlLineInfo)attr).LinePosition + attr.Name.LocalName.Length + 2), attr.Value)
                             {
                                 PropertyAttribute = attr,
                                 PropertyName = attr.Name.LocalName,
                                 ElementTypeName = attr.Parent.Name.LocalName,
-                                ElementName = attr.Parent.Attributes().GetNamedItem("{http://schemas.microsoft.com/winfx/2006/xaml}Name")?.Value
+                                ElementName = attr.Parent.Attributes().GetNamedItem("{http://schemas.microsoft.com/winfx/2006/xaml}Name")?.Value,
+                                ConverterKey = bt.Converter,
+                                ConverterParameter = bt.ConverterParameter
                             };
 
                             XamlBindingWrapperManager.Instance.AddNewBinding(Id, bindingInfo);
 
-                            var bt = BindingParser.Parse(attr.Value);
-
                             attr.Value = InjectBindingConverter(attr.Value, bt, bindingInfo);
+                        }
+                        else if (attr.Name == "{http://schemas.microsoft.com/winfx/2006/xaml}Class")
+                        {
+                            // Remove x:Class element from xml tree.
+                            attr.Remove();
                         }
                     }
                 });

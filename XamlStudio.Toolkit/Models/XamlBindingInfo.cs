@@ -55,13 +55,17 @@ namespace XamlStudio.Toolkit.Models
 
         public XamlRenderService Service { get; internal set; }
 
-        public DateTime FirstSetTime { get { return this.BindingHistory.First().TimeStamp; } }
+        public DateTime FirstSetTime { get { return BindingHistory.Count == 0 ? DateTime.MinValue : BindingHistory.First().TimeStamp; } }
 
-        public bool HasBinded { get { return this.BindingHistory.Count > 0; } }
+        public DateTime LastConvertedTime { get { return BindingHistory.Count == 0 ? DateTime.MinValue : BindingHistory.Last().TimeStamp; } }
 
-        public object LastConvertedValue { get { return this.BindingHistory.LastOrDefault()?.Value; } }
+        public bool HasBinded { get { return BindingHistory.Count > 0; } }
 
-        public object LastConvertedResult { get { return this.BindingHistory.LastOrDefault()?.Result; } }
+        public bool HasConverter { get { return Converter != null; } }
+
+        public object LastConvertedValue { get { return BindingHistory.LastOrDefault()?.Value; } }
+
+        public object LastConvertedResult { get { return BindingHistory.LastOrDefault()?.Result; } }
 
         public object LastConvertedResultOrValue
         {
@@ -72,7 +76,9 @@ namespace XamlStudio.Toolkit.Models
                     return null;
                 }
 
-                return (bool)this.BindingHistory.LastOrDefault()?.HasResult ? this.BindingHistory.LastOrDefault()?.Result : this.BindingHistory.LastOrDefault()?.Value;
+                return (bool)BindingHistory.LastOrDefault()?.HasResult ? 
+                    BindingHistory.LastOrDefault()?.Result : 
+                    BindingHistory.LastOrDefault()?.Value;
             }
         }
 
@@ -81,7 +87,7 @@ namespace XamlStudio.Toolkit.Models
             get { return LastConvertedResultOrValue?.ToString() ?? string.Empty; }
         }
 
-        public string LastExceptionMessage { get { return this.BindingHistory.LastOrDefault()?.ExceptionObject.Message;  } }
+        public string LastExceptionMessage { get { return BindingHistory.LastOrDefault()?.ExceptionObject.Message;  } }
 
         public XamlBindingState LastKnownBindingState
         {
@@ -90,7 +96,7 @@ namespace XamlStudio.Toolkit.Models
                 if (HasBinded)
                 {
                     // If we have bound, then grab the last entry and see if it was a success or not.
-                    return this.BindingHistory.Last().IsSuccessful ? XamlBindingState.Successful : XamlBindingState.ConversionError;
+                    return BindingHistory.Last().IsSuccessful ? XamlBindingState.Successful : XamlBindingState.ConversionError;
                 }
                 else
                 {
@@ -100,7 +106,7 @@ namespace XamlStudio.Toolkit.Models
             }
         }
 
-        public long BindingCount { get { return this.BindingHistory.Count; } }
+        public long BindingCount { get { return BindingHistory.Count; } }
         #endregion
 
         public XamlBindingInfo(uint line, uint column, string binding)
@@ -123,7 +129,9 @@ namespace XamlStudio.Toolkit.Models
             OnPropertyChanged(nameof(LastConvertedValue));
             OnPropertyChanged(nameof(LastConvertedResultOrValue));
             OnPropertyChanged(nameof(LastConvertedResultOrValueString));
+            OnPropertyChanged(nameof(LastConvertedTime));
             OnPropertyChanged(nameof(LastKnownBindingState));
+            OnPropertyChanged(nameof(BindingCount));
 
             return value;
         }
@@ -142,7 +150,9 @@ namespace XamlStudio.Toolkit.Models
             OnPropertyChanged(nameof(LastConvertedResult));
             OnPropertyChanged(nameof(LastConvertedResultOrValue));
             OnPropertyChanged(nameof(LastConvertedResultOrValueString));
+            OnPropertyChanged(nameof(LastConvertedTime));
             OnPropertyChanged(nameof(LastKnownBindingState));
+            OnPropertyChanged(nameof(BindingCount));
 
             return result;
         }
@@ -158,7 +168,9 @@ namespace XamlStudio.Toolkit.Models
             OnPropertyChanged(nameof(HasBinded));
             OnPropertyChanged(nameof(FirstSetTime));
             OnPropertyChanged(nameof(LastExceptionMessage));
+            OnPropertyChanged(nameof(LastConvertedTime));
             OnPropertyChanged(nameof(LastKnownBindingState));
+            OnPropertyChanged(nameof(BindingCount));
 
             // Pass null in so binding can use default null fallback if it exists on binding fail?
             return null;

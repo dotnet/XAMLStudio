@@ -61,7 +61,7 @@
 
     <Style x:Key="Style-ListBoxItem-CompactMenu" TargetType="ListBoxItem">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{ThemeResource Brush-Grey-Light-0}" />
+        <Setter Property="Foreground" Value="{ThemeResource Brush-Grey-Light-2}" />
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Width" Value="56" />
@@ -114,7 +114,7 @@
                                         <DoubleAnimation d:IsOptimized="True"
                                                          Storyboard.TargetName="PART_HoverVisual"
                                                          Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                         To="0.2"
+                                                         To="0.8"
                                                          Duration="0" />
                                     </Storyboard>
                                 </VisualState>
@@ -133,12 +133,12 @@
                                         <DoubleAnimation d:IsOptimized="True"
                                                          Storyboard.TargetName="PART_HoverVisual"
                                                          Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                         To="0.5"
+                                                         To="1"
                                                          Duration="0" />
                                         <DoubleAnimation d:IsOptimized="True"
                                                          Storyboard.TargetName="ContentPresenter"
                                                          Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                         To="0.8"
+                                                         To="1"
                                                          Duration="0" />
                                     </Storyboard>
                                 </VisualState>
@@ -235,7 +235,7 @@
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                           AutomationProperties.AccessibilityView="Raw"
                                           Content="{TemplateBinding Content}"
-                                          Opacity="0.6"
+                                          Opacity="0.8"
                                           RenderTransformOrigin="0.5,0.5">
                             <ContentPresenter.RenderTransform>
                                 <CompositeTransform />
@@ -426,7 +426,7 @@
                                 <VisualState x:Name="PointerOver">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PressedBackground" Storyboard.TargetProperty="Fill">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource Brush-Blue-Light-3}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource Brush-Blue-Dark-2}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}" />
@@ -466,7 +466,7 @@
                                 <VisualState x:Name="SelectedPointerOver">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PressedBackground" Storyboard.TargetProperty="Fill">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource Brush-Blue-Light-3}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource Brush-Blue-Light-2}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}" />

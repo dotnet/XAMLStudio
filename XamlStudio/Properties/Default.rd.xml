@@ -23,9 +23,17 @@
     -->
     <Assembly Name="*Application*" Dynamic="Required All" />
     
-    
     <!-- Add your application specific runtime directives here. -->
+    <Assembly Name="Microsoft.Toolkit.Uwp.UI.Controls" Dynamic="Required All" />
+    <Assembly Name="Microsoft.Toolkit.Uwp.UI" Dynamic="Required All" />
+    <Assembly Name="Microsoft.Xaml.Interactions" Dynamic="Required All" />
 
-
+    <Namespace Name="Microsoft.Xaml.Interactions.Core" Dynamic="Required All" />
+    
+    <Namespace Name="Telerik.UI.Xaml.Controls.Input" Dynamic="Required All" />
+    <Namespace Name="Telerik.UI.Xaml.Controls.Primitives" Dynamic="Required All" />
+    
+    <Namespace Name="Microsoft.UI.Xaml.Controls" Dynamic="Required All" />
+    <Namespace Name="Windows.UI.Xaml.Controls" Dynamic="Required All" />
   </Application>
 </Directives>

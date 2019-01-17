@@ -17,7 +17,7 @@ namespace XamlStudio.Toolkit.Services
     
     public partial class XamlRenderService
     {
-        private const string RegexPattern_FirstTagAfterComment = @"^.*?(?!(<\?|<!))<[^<]*?>";
+        private const string RegexPattern_FirstTagAfterComment = @"(?!(<\?|<!))*<[^<!\?]*?>";
         private const string RegexPattern_ElementName = "<((?<Prefix>\\w+):)?(?<Type>\\w+)";
 
         private static Regex _initialTagSearcher = new Regex(RegexPattern_FirstTagAfterComment, RegexOptions.Compiled);
@@ -70,6 +70,8 @@ namespace XamlStudio.Toolkit.Services
                     context.IsFrameworkElement = IsFrameworkElement(context.ElementType);
                 }
 
+                // TODO: Get existing list of namespaces.
+
                 // Injection site.
                 var endOfTag = match.Index + match.Length - 1;
 
@@ -89,7 +91,7 @@ namespace XamlStudio.Toolkit.Services
                 // Look to see if we're trying to use any namespaces we know about
                 foreach (var ns in settings.KnownNamespaces)
                 {
-                    var usage = ns.Name + ":";
+                    var usage = "<" + ns.Name + ":";
                     var included = XmlnsPrefix + ':' + ns.Name;
 
                     if (content.Contains(usage) && !value.Contains(included))
@@ -128,6 +130,8 @@ namespace XamlStudio.Toolkit.Services
                     // Inject xmlns base-path into tag on same line.
                     content = content.Substring(0, endOfTag) + sb.ToString() + content.Substring(endOfTag);
                 }
+
+                context.DetectedNamespaces = namespaces.ToArray();
             }
 
             // Update our content holders.

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nito.AsyncEx;
+using System;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -13,6 +14,8 @@ namespace XamlStudio.Services
 {
     internal class SuspendAndResumeService : ActivationHandler<LaunchActivatedEventArgs>
     {
+        private readonly AsyncLock _suspendMutex = new AsyncLock();
+
         //// TODO WTS: For more information regarding the application lifecycle and how to handle suspend and resume, please see:
         //// Documentation: https://docs.microsoft.com/windows/uwp/launch-resume/app-lifecycle
 
@@ -21,19 +24,24 @@ namespace XamlStudio.Services
         // TODO WTS: This event is fired just before the app enters in background. Subscribe to this event if you want to save your current state.
         public event EventHandler<OnBackgroundEnteringEventArgs> OnBackgroundEntering;
 
-        public async Task SaveStateAsync()
+        public async Task SaveStateAsync(string renderId = null)
         {
-            var suspensionState = new SuspensionState()
+            using (await _suspendMutex.LockAsync())
             {
-                SuspensionDate = DateTime.Now
-            };
+                var suspensionState = new SuspensionState()
+                {
+                    FromRender = renderId != null,
+                    LastRenderedId = renderId,
+                    SuspensionDate = DateTime.Now
+                };
 
-            var target = OnBackgroundEntering?.Target.GetType();
-            var onBackgroundEnteringArgs = new OnBackgroundEnteringEventArgs(suspensionState, target);
+                var target = OnBackgroundEntering?.Target.GetType();
+                var onBackgroundEnteringArgs = new OnBackgroundEnteringEventArgs(suspensionState, target, suspensionState.FromRender);
 
-            OnBackgroundEntering?.Invoke(this, onBackgroundEnteringArgs);
+                OnBackgroundEntering?.Invoke(this, onBackgroundEnteringArgs);
 
-            await ApplicationData.Current.LocalFolder.SaveAsync(StateFilename, onBackgroundEnteringArgs);
+                await ApplicationData.Current.LocalFolder.SaveAsync(StateFilename, onBackgroundEnteringArgs);
+            }
         }
 
         protected override async Task HandleInternalAsync(LaunchActivatedEventArgs args)
@@ -43,15 +51,18 @@ namespace XamlStudio.Services
 
         protected override bool CanHandleInternal(LaunchActivatedEventArgs args)
         {
-            return args.PreviousExecutionState == ApplicationExecutionState.Terminated;
+            return true;
         }
 
         private async Task RestoreStateAsync()
         {
-            var saveState = await ApplicationData.Current.LocalFolder.ReadAsync<OnBackgroundEnteringEventArgs>(StateFilename);
-            if (saveState?.Target != null && typeof(Page).IsAssignableFrom(saveState.Target))
+            using (await _suspendMutex.LockAsync())
             {
-                NavigationService.Navigate(saveState.Target, saveState.SuspensionState);
+                var saveState = await ApplicationData.Current.LocalFolder.ReadAsync<OnBackgroundEnteringEventArgs>(StateFilename);
+                if (saveState?.Target != null && typeof(Page).IsAssignableFrom(saveState.Target))
+                {
+                    NavigationService.Navigate(saveState.Target, saveState.SuspensionState);
+                }
             }
         }
     }

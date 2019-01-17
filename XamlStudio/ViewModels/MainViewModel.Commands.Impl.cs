@@ -1,4 +1,5 @@
-﻿using Nito.AsyncEx;
+﻿using Microsoft.AppCenter.Analytics;
+using Nito.AsyncEx;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
+using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -25,25 +27,13 @@ namespace XamlStudio.ViewModels
         {
             OpenFiles.Add(new Models.XamlDocument("Untitled-" + _untitledCount++)
             {
-                // TODO: Make this template somewhere editable
-                Content =
-@"<Page
-    xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
-    xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""
-    xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
-    xmlns:mc=""http://schemas.openxmlformats.org/markup-compatibility/2006""
-    mc:Ignorable=""d"">
-
-    <Grid Padding=""40"">
-        <TextBlock>
-            <Run FontSize=""24"" Foreground=""#FFFC5185"">Get Started with XAML Studio</Run><LineBreak/>
-            <Run> Modify this text below to see a live preview.</Run>
-        </TextBlock>
-    </Grid>
-</Page>"
+                // TODO: Make this template somewhere user-editable?
+                Content = "NewDocumentTemplate".GetLocalized()
             });
 
             ActiveFile = OpenFiles.Last();
+
+            Analytics.TrackEvent("Document_New");
         }
 
         private async void OpenDocument(RoutedEventArgs args)
@@ -66,6 +56,8 @@ namespace XamlStudio.ViewModels
                 }*/
 
                 OpenFile(file);
+
+                Analytics.TrackEvent("Document_Open");
             }
         }
 
@@ -84,14 +76,14 @@ namespace XamlStudio.ViewModels
             }
         }
 
-        private async void CloseActiveDocument(PivotItem item)
+        private async Task<bool> CloseActiveDocument(XamlDocument document)
         {
             // TODO: Why is item null here?
 
-            if (ActiveFile.HasChanged)
+            if (document.HasChanged)
             {
                 // Create the message dialog and set its content
-                var messageDialog = new MessageDialog(String.Format("Application_CloseConfirm".GetLocalized(), ActiveFile.Title.TrimEnd('*')));
+                var messageDialog = new MessageDialog(String.Format("Application_CloseConfirm".GetLocalized(), document.Title.TrimEnd('*')));
 
                 // Add commands and set their callbacks; both buttons use the same callback function instead of inline event handlers
                 var saveCmd = new UICommand("Application_CloseConfirmSave".GetLocalized());
@@ -113,15 +105,15 @@ namespace XamlStudio.ViewModels
                 if (result == saveCmd)
                 {
                     // Important to wait here for result.
-                    if (!await SaveDocument(ActiveFile))
+                    if (!await SaveDocument(document))
                     {
                         // Cancel closing if they cancel the save (or error).
-                        return;
+                        return false;
                     }
                 }
                 else if (result == cancelCmd)
                 {
-                    return;
+                    return false;
                 }
             }
 
@@ -133,29 +125,18 @@ namespace XamlStudio.ViewModels
                 return;
             }*/
             
-            var current = ActiveFile;
-
             // Create a new Document if we're removing the last one (it will be selected)
             if (OpenFiles.Count == 1)
             {
-                NewDocument(null);
-            }
-            else
-            {
-                // Otherwise, figure out what the new active file is.
-                var index = OpenFiles.IndexOf(current);
-                if (index == 0)
-                {
-                    ActiveFile = OpenFiles[++index];
-                }
-                else
-                {
-                    ActiveFile = OpenFiles[--index];
-                }
+                OpenFiles.Add(XamlDocument.WelcomeDocument());
             }
 
             // Remove what we had as active (otherwise, the active would be null and we'd hit an error)
-            OpenFiles.RemoveAt(OpenFiles.IndexOf(current));            
+            OpenFiles.RemoveAt(OpenFiles.IndexOf(document));
+
+            Analytics.TrackEvent("Document_Close");
+
+            return true;
         }
 
         // Ctrl+Shift+S
@@ -166,7 +147,7 @@ namespace XamlStudio.ViewModels
 
             if (document.CanSave)
             {
-                name = document.BackingFile.DisplayName + " Copy";
+                name = document.DisplayName + " Copy";
             }
 
             var file = await SaveFileDialog(name);
@@ -195,6 +176,9 @@ namespace XamlStudio.ViewModels
         {
             StorageFile file = null;
 
+            // Ensure if we can restore the file if it wasn't available on load
+            await document.RestoreFileAsync();
+
             // Save As
             if (!document.CanSave)
             {
@@ -220,22 +204,36 @@ namespace XamlStudio.ViewModels
             CachedFileManager.DeferUpdates(file);
 
             // Update/Save Document
-            await document.SaveAsAsync(file);
+            var result = await document.SaveAsAsync(file);
 
             // Let Windows know that we're finished changing the file so the other app can update the remote version of the file.
             // Completing updates may require Windows to ask for user input.
             FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
             if (status == FileUpdateStatus.Complete)
             {
-                SettingsService.Instance.RememberFile(file);
-                //OutputTextBlock.Text = "File " + file.Name + " was saved.";
-                return true;
+                if (result)
+                {
+                    SettingsService.Instance.RememberFile(file);
+
+                    Analytics.TrackEvent("Document_Save", new Dictionary<string, string>()
+                    {
+                        { "Success", "True" }
+                    });
+
+                    return true;
+                }
             }
-            else
+
+            // Show error about saving
+            var messageDialog = new MessageDialog(String.Format("Application_SaveError".GetLocalized(), document.Title.TrimEnd('*')));
+            await messageDialog.ShowAsync();
+
+            Analytics.TrackEvent("Document_Save", new Dictionary<string, string>()
             {
-                //OutputTextBlock.Text = "File " + file.Name + " couldn't be saved.";
-                return false; // Should have another status/msg here?
-            }
+                { "Success", "False" }
+            });
+
+            return false;
         }
 
         // Ctrl+Shift+Tab
@@ -245,6 +243,8 @@ namespace XamlStudio.ViewModels
             index = index == 0 ? OpenFiles.Count - 1 : index - 1;
 
             ActiveFile = OpenFiles[index];
+
+            Analytics.TrackEvent("Document_Previous");
         }
 
         // Ctrl+Tab
@@ -254,51 +254,139 @@ namespace XamlStudio.ViewModels
             index = index == OpenFiles.Count - 1 ? 0 : index + 1;
 
             ActiveFile = OpenFiles[index];
+
+            Analytics.TrackEvent("Document_Next");
+        }
+
+        // Ctrl+I
+        private void OpenSettingsPage(RoutedEventArgs args)
+        {
+            XamlDocument settings = OpenFiles.FirstOrDefault(f => f.DocumentType == DocumentType.Settings);
+            if (settings != null)
+            {
+                ActiveFile = settings;
+            }
+            else
+            {
+                OpenFiles.Add(XamlDocument.SettingsDocument());
+                ActiveFile = OpenFiles.Last();
+            }
+
+            Analytics.TrackEvent("Open_Settings");
+        }
+
+        // Ctrl+Shift+?
+        private void OpenActivityPanel(string activity)
+        {
+            if (activity == OpenActivity)
+            {
+                // Close if the same as already open?
+                OpenActivity = null;
+            }
+            else
+            {
+                OpenActivity = activity;
+            }
         }
 
         private void KeyDown(KeyEventArgs args)
         {
-            var ctrl = (Window.Current.CoreWindow.GetKeyState(Windows.System.VirtualKey.Control) & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
-            var shift = (Window.Current.CoreWindow.GetKeyState(Windows.System.VirtualKey.Shift) & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+            var ctrl = (Window.Current.CoreWindow.GetKeyState(VirtualKey.Control) & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+            var shift = (Window.Current.CoreWindow.GetKeyState(VirtualKey.Shift) & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+            var active = false;
+            // Need to duplicate in DocumentViewModel for the Editor too, TODO: Figure out centralization or create editor commands?
             if (ctrl)
             {
-                switch (args.VirtualKey)
+                if (shift)
                 {
-                    // New
-                    case Windows.System.VirtualKey.N:
-                        NewDocumentCommand.Execute(null);
-                        break;
-                    // Open
-                    case Windows.System.VirtualKey.O:
-                        OpenDocumentCommand.Execute(null);
-                        break;
-                    // Save
-                    case Windows.System.VirtualKey.S:
-                        if (shift)
-                        {
-                            SaveDocumentAsCommand.Execute(null);
-                        }
-                        else
-                        {
-                            SaveDocumentCommand.Execute(null);
-                        }
-                        break;
-                    // Close
-                    case Windows.System.VirtualKey.W:
-                    case Windows.System.VirtualKey.F4:
-                        CloseActiveDocumentCommand.Execute(null);
-                        break;
-                    // Prev/Next Document
-                    case Windows.System.VirtualKey.Tab:                        
-                        if (shift)
-                        {
-                            PreviousDocumentCommand.Execute(null);
-                        }
-                        else
-                        {
-                            NextDocumentCommand.Execute(null);
-                        }
-                        break;
+                    // Quick Shortcuts for Things
+                    switch (args.VirtualKey)
+                    {
+                        // Open Explorer
+                        case VirtualKey.E:
+                            active = true;
+                            OpenActivityCommand.Execute("EXPLORER");
+                            break;
+                        // Open Data Context
+                        case VirtualKey.C:
+                            active = true;
+                            OpenActivityCommand.Execute("DATASOURCES");
+                            break;
+                        // Open Binding Debugger
+                        case VirtualKey.B:
+                            active = true;
+                            OpenActivityCommand.Execute("DEBUG");
+                            break;
+                        // Open Toolbox
+                        case VirtualKey.T:
+                            active = true;
+                            OpenActivityCommand.Execute("TOOLBOX");
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (args.VirtualKey)
+                    {
+                        // Open Settings
+                        case VirtualKey.I:
+                            active = true;
+                            OpenSettingsCommand.Execute(null);
+                            break;
+                        // New
+                        case VirtualKey.N:
+                            active = true;
+                            NewDocumentCommand.Execute(null);
+                            break;
+                        // Open
+                        case VirtualKey.O:
+                            active = true;
+                            OpenDocumentCommand.Execute(null);
+                            break;
+                        // Save
+                        case VirtualKey.S:
+                            if (shift)
+                            {
+                                SaveDocumentAsCommand.Execute(ActiveFile);
+                            }
+                            else
+                            {   
+                                SaveDocumentCommand.Execute(ActiveFile);
+                            }
+                            active = true;
+                            break;
+                        // Close
+                        case VirtualKey.W:
+                        case VirtualKey.F4:
+                            active = true;
+                            CloseActiveDocumentCommand.Execute(ActiveFile);
+                            break;
+                        // Prev/Next Document
+                        case VirtualKey.Tab:
+                            if (shift)
+                            {
+                                active = true;
+                                PreviousDocumentCommand.Execute(null);
+                            }
+                            else
+                            {
+                                active = true;
+                                NextDocumentCommand.Execute(null);
+                            }
+                            break;
+                    }
+                }
+
+                if (active)
+                {
+                    Analytics.TrackEvent("Key_Shortcut", new Dictionary<string, string>()
+                    {
+                        { "Location", "MainView" },
+                        { "Action", active.ToString() },
+                        { "Ctrl", ctrl.ToString() },
+                        { "Shift", shift.ToString() },
+                        { "Code", args.VirtualKey.ToString() }
+                    });
                 }
             }
         }

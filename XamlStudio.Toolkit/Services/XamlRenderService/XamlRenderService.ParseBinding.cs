@@ -10,7 +10,7 @@ namespace XamlStudio.Toolkit.Services
 
     public partial class XamlRenderService
     {
-        private const string BindingSearcherPattern = "([\"']){\\s*(?<Type>(?:Binding)|(?:x:Bind)).*?}\\1"; // \1 matches initial single or double quote used in first capturing group.
+        private const string BindingSearcherPattern = "([\"']){\\s*(?<Type>(?:Binding)).*?}\\1"; //"([\"']){\\s*(?<Type>(?:Binding)|(?:x:Bind)).*?}\\1"; // \1 matches initial single or double quote used in first capturing group.
         private const string BindingPropertiesPattern = "((?<Property>(?:BindBack)|(?:Converter)|(?:ConverterLanguage)|(?:ConverterParameter)|(?:ElementName)|(?:FallbackValue)|(?:Mode)|(?:Path)|(?:RelativeSource)|(?:Source)|(?:TargetNullValue)|(?:UpdateSourceTrigger))\\s*=\\s*(?<Value>.*?(?({)({(?>{(?<DEPTH>)|}(?<-DEPTH>)|.?)*(?(DEPTH)(?!))}(?=[,}]))|(.*?(?=[,}])))))+";
         private static Regex BindingSearcher = new Regex(BindingSearcherPattern, RegexOptions.Compiled | RegexOptions.Singleline);
         private static Regex BindingPropertyExtractor = new Regex(BindingPropertiesPattern, RegexOptions.Compiled | RegexOptions.Singleline);
@@ -36,25 +36,31 @@ namespace XamlStudio.Toolkit.Services
 
                 // TODO: Need to force inject these to RenderedContent in PreProcessXmlns step.
 
-                // Need 'x' namespace for resource key in our converter wrapper...
-                if (!context.RenderedContent.Contains("xmlns:x"))
-                {
-                    // Find the end of the first tag
-                    var oti = context.RenderedContent.IndexOf(">");
-                    if (oti != -1)
-                    {
-                        context.RenderedContent = context.RenderedContent.Substring(0, oti) + @" xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""" + context.RenderedContent.Substring(oti);
-                    }
-                }
+                // Find the end of the first tag
+                var match = GetInitialElement(context.RenderedContent);
 
-                // Inject our extension namespace (if needed), so we have access to our Binding Wrapper.
-                if (!context.RenderedContent.Contains("xmlns:xstc="))
+                if (match?.Success == true)
                 {
-                    // Find the end of the first tag
-                    var oti = context.RenderedContent.IndexOf(">");
-                    if (oti != -1)
+                    // Need 'x' namespace for resource key in our converter wrapper...
+                    if (!context.RenderedContent.Contains("xmlns:x"))
                     {
-                        context.RenderedContent = context.RenderedContent.Substring(0, oti) + @" xmlns:xstc=""using:XamlStudio.Toolkit.Converters""" + context.RenderedContent.Substring(oti);
+                        // Find the end of the first tag
+                        var oti = context.RenderedContent.IndexOf(">", match.Index + 1);
+                        if (oti != -1)
+                        {
+                            context.RenderedContent = context.RenderedContent.Substring(0, oti) + @" xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""" + context.RenderedContent.Substring(oti);
+                        }
+                    }
+
+                    // Inject our extension namespace (if needed), so we have access to our Binding Wrapper.
+                    if (!context.RenderedContent.Contains("xmlns:xstc="))
+                    {
+                        // Find the end of the first tag
+                        var oti = context.RenderedContent.IndexOf(">", match.Index + 1);
+                        if (oti != -1)
+                        {
+                            context.RenderedContent = context.RenderedContent.Substring(0, oti) + @" xmlns:xstc=""using:XamlStudio.Toolkit.Converters""" + context.RenderedContent.Substring(oti);
+                        }
                     }
                 }
 
@@ -65,22 +71,26 @@ namespace XamlStudio.Toolkit.Services
                 {
                     context.RenderedContent = context.RenderedContent.Replace(resourceSearch, resourceSearch + converter);
                 }
-                else
+                else if (match?.Success == true)
                 {
                     // TODO: should use preparser stuff here for end of tag.  
-                    // BUGBUG: Also need to account for a closed tag...
+                    // BUGBUG: Also need to account for a single closed tag...
                     // If we don't have an existing resource section, add one right after our initial type tag.
-                    var oti = context.RenderedContent.IndexOf(">");
+                    var oti = context.RenderedContent.IndexOf(">", match.Index);
                     if (oti != -1)
                     {
                         context.RenderedContent = context.RenderedContent.Substring(0, oti + 1) + resourceSearch + converter + "</" + typename + ".Resources>" + context.RenderedContent.Substring(oti + 1);
                     }
                 }
+                else
+                {
+                    // TODO: If we don't know the first tag??? Don't think this should happen?
+                }
             }
         }
 
         // Given all binding info, return a new binding string with our shim injected.
-        private string InjectBindingConverter(string original, BindingValue binding, XamlBindingInfo info)
+        internal static string InjectBindingConverter(string original, BindingValue binding, XamlBindingInfo info)
         {
             const string converterShim = "{StaticResource XamlBindingWrapper}";
             var foundConverter = !string.IsNullOrWhiteSpace(binding.Converter);
@@ -93,13 +103,18 @@ namespace XamlStudio.Toolkit.Services
             }
             else
             {
+                char separator = ',';
                 // If no converter on binding, add ours
-                original = original.Substring(0, original.Length - 1) + ",Converter=" + converterShim + "}";
+                if (string.IsNullOrWhiteSpace(binding.Path))
+                {
+                    separator = ' ';
+                }
+                original = original.Substring(0, original.Length - 1) + separator + "Converter=" + converterShim + "}";
             }
 
             if (foundConverterParameter)
             {
-                original = original.Replace(binding.ConverterParameter, string.Empty + info.Id);
+                original = original.Replace(binding.ConverterParameterRaw, string.Empty + info.Id);
             }
             else
             {

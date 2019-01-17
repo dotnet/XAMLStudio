@@ -1,42 +1,30 @@
-﻿using Monaco;
+﻿using Microsoft.AppCenter.Analytics;
+using Monaco;
 using Monaco.Editor;
 using Monaco.Helpers;
+using Newtonsoft.Json;
+using Nito.AsyncEx;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Dynamic;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System.Threading;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
-using XamlStudio.Helpers;
+using Windows.Web.Http;
 using XamlStudio.Services;
 using XamlStudio.Toolkit.Controls;
+using XamlStudio.Toolkit.Helpers;
 using XamlStudio.Toolkit.Models;
 
 namespace XamlStudio.ViewModels
 {
     public partial class DocumentViewModel
     {
-        // TODO: Need to align these two methods for rendering.
-        private async void UpdateXaml(RoutedEventArgs args)
-        {
-            // Check if nothing to do
-            if (Document.Content == null || Document.Content.Length == 0 || HasCompiled)
-            {
-                return;
-            }
-
-            var keepcontent = !SettingsService.Instance.IsContentUpdatedWithSuggested.Value;
-
-            var newcontent = await InternalRenderXamlAsync(Document.Content, 0, keepcontent);
-
-            if (!keepcontent)
-            {
-                // Update our document with suggested changes.
-                Document.Content = newcontent;
-            }
-
-            HasCompiled = true;
-        }
+        private readonly AsyncLock _renderMutex = new AsyncLock();
 
         private async void SelectiveRenderXaml(string content)
         {
@@ -46,44 +34,110 @@ namespace XamlStudio.ViewModels
             await InternalRenderXamlAsync(content, 0, true);
         }
 
-        private async Task<string> InternalRenderXamlAsync(string content, uint lineoffset, bool keepContentSameLength)
+        internal async Task<string> InternalRenderXamlAsync(string content, uint lineoffset, bool keepContentSameLength, bool overrideBinding = false)
         {
+            if (SettingsService.Instance.IsLiveDataContextRefreshedOnRender == true)
+            {
+                // Update from our live Data Source if we've enabled it.
+                await RefreshLiveDataContext(null);
+            }
+
+            // Update Data Context with active content (mostly for reloading from resume)
+            ParseDataContext(null);
+
+            var start = DateTime.UtcNow.Ticks;
+            var render_analytics = new Dictionary<string, string>();
+
             LineDecorations.Clear(); // Clear out old errors
             _bindingHistory.Clear();
 
+            render_analytics.Add("HasBindingDebugging", SettingsService.Instance.IsPowerBindingDebuggingEnabled.ToString());
+            render_analytics.Add("HasBindingOverride", overrideBinding.ToString());
+            render_analytics.Add("ContentLength", content.Length.ToString());
+
             var settings = new XamlRenderSettings(SettingsService.Instance.KnownNamespaces)
             {
-                IsBindingDebuggingEnabled = SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value,
+                IsBindingDebuggingEnabled = overrideBinding ? false : SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value,
                 KeepSuggestedContentSameLength = keepContentSameLength,
                 DataContext = DataContext
             };
 
-            // Log XAML before rendering in case issue, we can retrieve later for bugs
-            var file = await ApplicationData.Current.LocalFolder.CreateFileAsync("lastcompiled.xaml", CreationCollisionOption.ReplaceExisting);
-            await FileIO.WriteTextAsync(file, content);
-            Debug.WriteLine("Render File Out: " + file.Path);
-
-            Result = await XamlRenderer.RenderAsync(content, settings);
-
-            if (Result.Element == null)
+            // If we override the binding, we're calling it from within and already saved.
+            if (!overrideBinding)
             {
+                // Only render one at a time to not stomp on files.
+                using (await _renderMutex.LockAsync())
+                {
+                    // Save out workbench in case of error.  Should this just be done in unhandled exception case?
+                    await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync(Document.Id);
+
+                    // Log XAML before rendering in case issue, we can retrieve later for bugs
+                    try
+                    {
+                        var file = await ApplicationData.Current.LocalFolder.CreateFileAsync("lastcompiled.xaml", CreationCollisionOption.ReplaceExisting);
+                        await FileIO.WriteTextAsync(file, content);
+                        Debug.WriteLine("Render File Out: " + file.Path);
+                    }
+                    catch (Exception e)
+                    {
+                        Debugger.Break();
+
+                        // This fails during debug occassionally, track to see if problem in release...
+                        Analytics.TrackEvent("Render_Backup_Fail", new Dictionary<string, string>()
+                        {
+                            { "Message", e.Message }
+                        });
+                    }
+                }
+            }
+
+            // Store in temp to prevent double-display of errors due to issue below needing double-render...
+            var testResult = await XamlRenderer.RenderAsync(content, settings);
+
+            if (testResult.Document != null)
+            {
+                render_analytics.Add("NumDocumentNodes", testResult.Document.Descendants().Count().ToString());
+            }
+            render_analytics.Add("ElementType", "" + testResult?.ElementType);
+            render_analytics.Add("KnownNamespaces", "" + testResult?.DetectedNamespaces?.Length);
+            render_analytics.Add("NumErrors", "" + testResult?.Errors?.Count);
+            render_analytics.Add("HasContentSuggestions", (testResult.Content.Length != testResult.SuggestedContent.Length).ToString());
+
+            if (testResult.Element == null)
+            {
+                // TODO: Need to investigate why we get strange XamlBindingWrapperConverter ctor error with other errors...
+                if (settings.IsBindingDebuggingEnabled)
+                {
+                    // For now, if we encounter an issue while parsing with our power binding, turn it off temporarily to try again.
+                    return await InternalRenderXamlAsync(content, lineoffset, keepContentSameLength, true);
+                }
+
                 // Highlight Errors
-                foreach (var error in Result.Errors)
+                var summary = new List<string>();
+                foreach (var error in testResult.Errors)
                 {
                     LineDecorations.Add(new IModelDeltaDecoration(new Range(lineoffset + error.StartLine, error.StartColumn, lineoffset + error.EndLine, error.EndColumn),
                         new IModelDecorationOptions()
                         {
                             IsWholeLine = error.IsWholeLine,
-                            ClassName = this._errorStyle,
+                            ClassName = _errorLineStyle, // For Whole Line only
+                            InlineClassName = _errorStyle,
                             HoverMessage = new string[]
                             {
                                 error.Message
                             }.ToMarkdownString()
                         }));
+                    summary.Add(error.Message);
                 }
+
+                render_analytics.Add("ErrorMessages", string.Join(" | ", summary));
+
+                Result = testResult;
             }
             else
             {
+                Result = testResult;
+
                 CreateBindingDecorations();
             }
 
@@ -102,6 +156,9 @@ namespace XamlStudio.ViewModels
             }
 
             Compiled?.Invoke(this, new EventArgs());
+
+            render_analytics.Add("TotalRenderTimeSec", Math.Round((DateTime.UtcNow.Ticks - start) / 10000000d, 2).ToString());
+            Analytics.TrackEvent("Render_XAML", render_analytics);
 
             return Result.SuggestedContent;
         }
@@ -128,7 +185,7 @@ namespace XamlStudio.ViewModels
                             new IModelDecorationOptions()
                             {
                                 IsWholeLine = false,
-                                ClassName = this._bindingStyleUnbound,
+                                InlineClassName = _bindingStyleUnbound,
                                 HoverMessage = new string[]
                                     {
                                         "Binding not Triggered Yet."
@@ -140,7 +197,7 @@ namespace XamlStudio.ViewModels
                             new IModelDecorationOptions()
                             {
                                 IsWholeLine = false,
-                                ClassName = this._bindingStyleSuccess,
+                                InlineClassName = _bindingStyleSuccess,
                                 HoverMessage = new string[]
                                     {
                                         "Last Binding Value: " + binding.LastConvertedResultOrValue?.ToString(),
@@ -153,7 +210,7 @@ namespace XamlStudio.ViewModels
                             new IModelDecorationOptions()
                             {
                                 IsWholeLine = false,
-                                ClassName = this._bindingStyleError,
+                                InlineClassName = _bindingStyleError,
                                 HoverMessage = new string[]
                                     {
                                         binding.LastExceptionMessage
@@ -165,6 +222,101 @@ namespace XamlStudio.ViewModels
                 // Register for changes
                 binding.BindingUpdated -= BindingUpdated;
                 binding.BindingUpdated += BindingUpdated;
+            }
+        }
+
+        private async Task RefreshLiveDataContext(RoutedEventArgs args)
+        {
+            if (Document.DataContext.IsRemote)
+            {
+                try
+                {
+                    LiveDataContextRefreshError = null;
+
+                    var uri = new Uri(Document.DataContext.Uri);
+
+                    var http = new HttpClient();
+
+                    var response = await http.GetAsync(uri);
+                    response.EnsureSuccessStatusCode();
+
+                    var body = await response.Content.ReadAsStringAsync();
+
+                    // Update DataContext
+                    ////MainViewModel.ActiveDocumentViewModel.DataContext = JsonConvert.DeserializeObject<ExpandoObject>(body);
+
+                    Document.DataContext.Content = body;
+
+                    Analytics.TrackEvent("DataSources_LoadRemote", new Dictionary<string, string>()
+                    {
+                        { "Success", "True" }
+                    });
+                }
+                catch (Exception e2)
+                {
+                    var msg = e2.Message;
+                    msg = msg.Replace("The text associated with this error code could not be found.", "").Trim();
+                    LiveDataContextRefreshError = msg;
+
+                    Analytics.TrackEvent("DataSources_LoadRemote", new Dictionary<string, string>()
+                    {
+                        { "Success", "False" }
+                    });
+                }
+            }
+        }
+
+        private void ParseDataContext(RoutedEventArgs args)
+        {
+            // TODO: Consolidate with eventual XamlRender parsing method.
+            // TODO: Consolidate with Document and it's auto-compile timer logic, go back to KeyDown?
+            // TODO: Is there a better way to consolidate this logic?  Maybe array and loop?
+            object result = null;
+            try
+            {
+                result = JsonConvert.DeserializeObject<ExpandoObject>(Document.DataContext.Content);
+            }
+            catch (Exception)
+            {
+            }
+
+            if (result == null)
+            {
+                try
+                {
+                    result = JsonConvert.DeserializeObject<List<ExpandoObject>>(Document.DataContext.Content);
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+            if (result == null)
+            {
+                try
+                {
+                    result = JsonConvert.DeserializeObject<List<object>>(Document.DataContext.Content);
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+            if (result == null)
+            {
+                try
+                {
+                    result = JsonConvert.DeserializeObject<object>(Document.DataContext.Content);
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+            if (result != null)
+            {
+                // Update DataContext if we have something.
+                DataContext = result;
             }
         }
 
@@ -181,58 +333,108 @@ namespace XamlStudio.ViewModels
 
         private void KeyDown(WebKeyEventArgs args)
         {
-            // Handle Shortcuts.
+            // Handle Shortcuts. https://keycode.info/
             // Ctrl+Enter or F5 Update // TODO: Do we need this in the app handler too? (Thinking no)
             if ((args.KeyCode == 13 && args.CtrlKey) ||
                  args.KeyCode == 116)
             {
-                if (args.KeyCode == 116 &&
-                    SettingsService.Instance.IsCompileSelectionEnabled.Value == true &&
-                    !string.IsNullOrWhiteSpace(SelectedText))
-                {
-                    SelectiveRenderXaml(SelectedText);
-                }
-                else
-                {
-                    UpdateXaml(null);
-                }
+                ////if (args.KeyCode == 116 &&
+                ////    SettingsService.Instance.IsCompileSelectionEnabled.Value == true &&
+                ////    !string.IsNullOrWhiteSpace(SelectedText))
+                ////{
+                ////    SelectiveRenderXaml(SelectedText);
+                ////}
+                ////else
+                ////{
+                    UpdateXamlCommand?.Execute(null);
+                ////}
 
                 // Eat key stroke
                 args.Handled = true;
-            } else if (args.CtrlKey)
+            }
+            else if (args.CtrlKey)
             {
-                // Need to duplicate this here from ShellViewModel as Control eats CoreWindow event.
-                /*switch (args.KeyCode)
+                if (args.ShiftKey)
                 {
+                    switch (args.KeyCode)
+                    {
+                        // E - Open Explorer
+                        case 69:
+                            args.Handled = true;
+                            MainViewModel.OpenActivityCommand.Execute("EXPLORER");
+                            break;
+                        // C - Open Data Context
+                        case 67:
+                            args.Handled = true;
+                            MainViewModel.OpenActivityCommand.Execute("DATASOURCES");
+                            break;
+                        // B - Open Binding Debugger
+                        case 66:
+                            args.Handled = true;
+                            MainViewModel.OpenActivityCommand.Execute("DEBUG");
+                            break;
+                        // T - Open Toolbox
+                        case 84:
+                            args.Handled = true;
+                            MainViewModel.OpenActivityCommand.Execute("TOOLBOX");
+                            break;
+                    }
+                }
+                // Need to duplicate this here from ShellViewModel as Control eats CoreWindow event.
+                switch (args.KeyCode)
+                {
+                    case 73: // I
+                        MainViewModel.OpenSettingsCommand.Execute(null);
+                        args.Handled = true;
+                        break;
                     case 78: // N
-                        (Application.Current as App).ViewModel.NewDocumentCommand.Execute(null);
+                        MainViewModel.NewDocumentCommand.Execute(null);
                         args.Handled = true;
                         break;
                     case 79: // O
-                        (Application.Current as App).ViewModel.OpenDocumentCommand.Execute(null);
+                        MainViewModel.OpenDocumentCommand.Execute(null);
                         args.Handled = true;
                         break;
                     case 83: // S
-                        (Application.Current as App).ViewModel.SaveDocumentCommand.Execute(null);
+                        if (args.ShiftKey)
+                        {
+                            MainViewModel.SaveDocumentAsCommand.Execute(MainViewModel.ActiveFile);
+                        }
+                        else
+                        {
+                            MainViewModel.SaveDocumentCommand.Execute(MainViewModel.ActiveFile);
+                        }
                         args.Handled = true;
                         break;
                     case 87: // W
                     case 115: // F4
-                        (Application.Current as App).ViewModel.CloseDocumentCommand.Execute(null);
+                        MainViewModel.CloseActiveDocumentCommand.Execute(MainViewModel.ActiveFile);
                         args.Handled = true;
                         break;
                     case 9: // TAB
                         if (args.ShiftKey)
                         {
-                            (Application.Current as App).ViewModel.PreviousDocumentCommand.Execute(null);
+                            MainViewModel.PreviousDocumentCommand.Execute(null);
                         }
                         else
                         {
-                            (Application.Current as App).ViewModel.NextDocumentCommand.Execute(null);
+                            MainViewModel.NextDocumentCommand.Execute(null);
                         }
                         args.Handled = true;
                         break;
-                }*/
+                }
+            }
+
+            if (args.Handled)
+            {
+                Analytics.TrackEvent("Key_Shortcut", new Dictionary<string, string>()
+                {
+                    { "Location", "Document" },
+                    { "Action", args.Handled.ToString() },
+                    { "Ctrl", args.CtrlKey.ToString() },
+                    { "Shift", args.ShiftKey.ToString() },
+                    { "Code", args.KeyCode.ToString() }
+                });
             }
 
             // Ignore as a change to the document if we handle it as a shortcut above or it's a special char.
@@ -251,7 +453,7 @@ namespace XamlStudio.ViewModels
                     {
                         await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () =>
                         {
-                            UpdateXaml(null);
+                            UpdateXamlCommand?.Execute(null);
                         });
                     }, TimeSpan.FromSeconds(SettingsService.Instance.AutoCompileDelay.Value));
                 }

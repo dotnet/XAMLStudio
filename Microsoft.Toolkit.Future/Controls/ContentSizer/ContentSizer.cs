@@ -20,11 +20,15 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Future
         private const string GripperBarHorizontal = "\xE76F";
         private const string GripperDisplayFont = "Segoe MDL2 Assets";
 
+        private const double GripperKeyboardChange = 8.0d;
+
         public ContentSizer()
         {
             this.DefaultStyleKey = typeof(ContentSizer);
 
             CreateGripperDisplay();
+
+            KeyUp += ContentSizer_KeyUp;
         }
 
         protected override void OnApplyTemplate()
