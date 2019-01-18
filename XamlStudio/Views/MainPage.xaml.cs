@@ -86,6 +86,7 @@ namespace XamlStudio.Views
                 await AppAssemblyInfo.Instance.InitializeAsync(new Assembly[] {
                     typeof(Microsoft.UI.Xaml.Controls.NavigationView).Assembly,
                     typeof(Microsoft.Toolkit.Uwp.UI.Controls.TabView).Assembly,
+                    typeof(Microsoft.Toolkit.Uwp.UI.Controls.DataGrid).Assembly,
                     typeof(Microsoft.Toolkit.Uwp.UI.Converters.BoolToVisibilityConverter).Assembly,
                     typeof(Microsoft.Xaml.Interactions.Core.DataTriggerBehavior).Assembly,
                     typeof(Telerik.UI.Xaml.Controls.Input.RadAutoCompleteBox).Assembly,

@@ -117,7 +117,14 @@ namespace XamlStudio.ViewModels
             var packageId = package.Id;
             var version = packageId.Version;
 
-            return $"v{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+            if (version.Revision != 0)
+            {
+                return $"v{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+            }
+            else
+            {
+                return $"v{version.Major}.{version.Minor}.{version.Build}";
+            }
         }
 
         private async void LoadThirdPartyInfo()
