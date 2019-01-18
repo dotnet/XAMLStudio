@@ -46,9 +46,14 @@ namespace XamlStudio
             // Deferred execution until used. Check https://msdn.microsoft.com/library/dd642331(v=vs.110).aspx for further info on Lazy<T> class.
             _activationService = new Lazy<ActivationService>(CreateActivationService);
 
-            var culture = CultureInfoHelper.GetCurrentCulture();
-            var region = new RegionInfo(culture.LCID);
-            AppCenter.SetCountryCode(region.TwoLetterISORegionName);
+            try
+            {
+                AppCenter.SetCountryCode(new Windows.Globalization.GeographicRegion().CodeTwoLetter);
+            }
+            catch (Exception)
+            {
+                // Ignore and don't bother setting code on failure.
+            }
             AppCenter.Start("", typeof(Analytics));
             AppCenter.Start("", typeof(Crashes));
         }

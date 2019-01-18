@@ -158,7 +158,6 @@
     <Compile Include="DummyPage.xaml.cs">
       <DependentUpon>DummyPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\CultureInfoHelper.cs" />
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
     <Compile Include="Helpers\Json.cs" />
     <Compile Include="Helpers\SimpleObservable.cs" />
