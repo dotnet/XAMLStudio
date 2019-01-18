@@ -8,6 +8,7 @@
       xmlns:im="using:Microsoft.Xaml.Interactions.Media"
       xmlns:local="using:XamlStudio"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
       mc:Ignorable="d">
 
     <!--  Dummy Page for Metadata Generation  -->
@@ -28,5 +29,7 @@
         <im:PlaySoundAction x:Key="PlaySoundAction" />
     </Page.Resources>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <controls:AdaptiveGridView/>
+    </Grid>
 </Page>
