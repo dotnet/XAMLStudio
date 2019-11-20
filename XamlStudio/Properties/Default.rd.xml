@@ -35,7 +35,8 @@
     <Namespace Name="Microsoft.Toolkit.Uwp.UI.Controls" Dynamic="Required All" />
 
     <Namespace Name="Microsoft.Xaml.Interactions.Core" Dynamic="Required All" />
-    
+
+    <Namespace Name="Telerik.UI.Xaml.Controls.Chart" Dynamic="Required All" />
     <Namespace Name="Telerik.UI.Xaml.Controls.Input" Dynamic="Required All" />
     <Namespace Name="Telerik.UI.Xaml.Controls.Primitives" Dynamic="Required All" />
     
