@@ -46,6 +46,7 @@ namespace XamlStudio.Services
                         typeof(Microsoft.Toolkit.Uwp.UI.Controls.DataGrid).Assembly,
                         typeof(Microsoft.Toolkit.Uwp.UI.Converters.BoolToVisibilityConverter).Assembly,
                         typeof(Microsoft.Xaml.Interactions.Core.DataTriggerBehavior).Assembly,
+                        typeof(Telerik.UI.Xaml.Controls.Chart.RadCartesianChart).Assembly,
                         typeof(Telerik.UI.Xaml.Controls.Input.RadAutoCompleteBox).Assembly,
                         typeof(Telerik.UI.Xaml.Controls.Primitives.RadExpanderControl).Assembly
                     });

@@ -20,6 +20,11 @@
     "docroot": "https://github.com/Microsoft/XamlBehaviors/wiki/<type>"
   },
   {
+    "name": "Progress Telerik UI Chart Controls",
+    "namespace": "Telerik.UI.Xaml.Controls.Chart",
+    "docroot": "https://docs.telerik.com/devtools/universal-windows-platform/search?q=<type>"
+  },
+  {
     "name": "Progress Telerik UI Input Controls",
     "namespace": "Telerik.UI.Xaml.Controls.Input",
     "docroot": "https://docs.telerik.com/devtools/universal-windows-platform/controls/<type>",
