@@ -2,7 +2,7 @@
   {
     "name": "Windows Community Toolkit",
     "url": "https://github.com/windows-toolkit/WindowsCommunityToolkit/",
-    "version": "5.0.0",
+    "version": "6.0.0",
     "license": "MIT",
     "license_url": "https://github.com/windows-toolkit/WindowsCommunityToolkit/blob/master/license.md",
     "license_text": [
@@ -23,7 +23,7 @@
   {
     "name": "Windows UI Library",
     "url": "https://github.com/Microsoft/microsoft-ui-xaml",
-    "version": "2.0.181018003.1",
+    "version": "2.3.191129002",
     "license": "MIT",
     "license_url": "https://github.com/Microsoft/microsoft-ui-xaml/blob/master/LICENSE",
     "license_text": [
@@ -53,7 +53,7 @@
   {
     "name": "XAML Behaviors",
     "url": "https://github.com/Microsoft/XamlBehaviors",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "license": "MIT",
     "license_url": "https://github.com/Microsoft/XamlBehaviors/blob/master/LICENSE",
     "license_text": [
@@ -83,7 +83,7 @@
   {
     "name": "Progress Telerik UI for UWP",
     "url": "https://github.com/telerik/UI-For-UWP",
-    "version": "1.0.1.2",
+    "version": "1.0.1.7",
     "license": "Apache 2.0",
     "license_url": "https://github.com/telerik/UI-For-UWP/blob/master/LICENSE.md",
     "license_text": [
