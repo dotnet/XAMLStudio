@@ -24,6 +24,10 @@
     "path": "using:Microsoft.Toolkit.Uwp.UI.Converters"
   },
   {
+    "name": "Core",
+    "path": "using:Microsoft.Xaml.Interactions.Core"
+  },
+  {
     "name": "i",
     "path": "using:Microsoft.Xaml.Interactivity"
   },
@@ -34,6 +38,22 @@
   {
     "name": "im",
     "path": "using:Microsoft.Xaml.Interactions.Media"
+  },
+  {
+    "name": "Interactions",
+    "path": "using:Microsoft.Xaml.Interactions.Core"
+  },
+  {
+    "name": "Interactivity",
+    "path": "using:Microsoft.Xaml.Interactivity"
+  },
+  {
+    "name": "Media",
+    "path": "using:Microsoft.Xaml.Interactions.Media"
+  },
+  {
+    "name": "muxc",
+    "path": "using:Microsoft.UI.Xaml.Controls"
   },
   {
     "name": "winui",
