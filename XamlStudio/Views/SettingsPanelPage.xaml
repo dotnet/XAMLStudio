@@ -17,7 +17,8 @@
     <Page.Resources>
         <xstc:HexToColorConverter x:Key="HexToColorConverter" />
         <xstc:ColorToNameConverter x:Key="ColorToNameConverter" />
-        <helper:EnumToBooleanConverter x:Key="EnumToBooleanConverter" EnumType="ElementTheme" />
+        <helper:EnumToBooleanConverter x:Key="ElementThemeToBooleanConverter" EnumType="ElementTheme" />
+        <helper:EnumToBooleanConverter x:Key="PaneOrientationToBooleanConverter" EnumType="model:PaneOrientation" />
         <DataTemplate x:Key="ToggleHeaderTemplate">
             <TextBlock Style="{StaticResource BodyTextStyle}" Text="{Binding}" />
             <!--  TODO: ToolTipService.ToolTip="{Binding Path=(ToolTipService.ToolTip), RelativeSource={RelativeSource TemplatedParent}}"  -->
@@ -330,74 +331,159 @@
                                Background="Transparent"
                                HeaderStyle="{StaticResource SimpleExpanderStyle}"
                                IsExpanded="True">
-                <Grid Margin="8,0,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
+                <StackPanel Margin="8,0,0,0">
+                    <!-- App/Editor Themes -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
 
+                        <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
+                            <TextBlock x:Uid="SettingsPanel_Theme" Style="{StaticResource BodyTextStyle}" />
+
+                            <StackPanel Margin="{StaticResource EightTopMargin}">
+                                <RadioButton x:Uid="SettingsPanel_Theme_Light"
+                                             Command="{x:Bind ViewModel.SwitchThemeCommand, Mode=OneWay}"
+                                             GroupName="AppTheme"
+                                             IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource ElementThemeToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}">
+                                    <RadioButton.CommandParameter>
+                                        <xaml:ElementTheme>Light</xaml:ElementTheme>
+                                    </RadioButton.CommandParameter>
+                                </RadioButton>
+                                <RadioButton x:Uid="SettingsPanel_Theme_Dark"
+                                             Command="{x:Bind ViewModel.SwitchThemeCommand, Mode=OneWay}"
+                                             GroupName="AppTheme"
+                                             IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource ElementThemeToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}">
+                                    <RadioButton.CommandParameter>
+                                        <xaml:ElementTheme>Dark</xaml:ElementTheme>
+                                    </RadioButton.CommandParameter>
+                                </RadioButton>
+                                <RadioButton x:Uid="SettingsPanel_Theme_Default"
+                                             Command="{x:Bind ViewModel.SwitchThemeCommand, Mode=OneWay}"
+                                             GroupName="AppTheme"
+                                             IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource ElementThemeToBooleanConverter}, ConverterParameter=Default, Mode=OneWay}">
+                                    <RadioButton.CommandParameter>
+                                        <xaml:ElementTheme>Default</xaml:ElementTheme>
+                                    </RadioButton.CommandParameter>
+                                </RadioButton>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Margin="{StaticResource SettingsSubheaderMargin}">
+                            <TextBlock x:Uid="SettingsPanel_EditorTheme" Style="{StaticResource BodyTextStyle}" />
+
+                            <StackPanel Margin="{StaticResource EightTopMargin}">
+                                <RadioButton x:Uid="SettingsPanel_EditorTheme_Light"
+                                             Command="{x:Bind ViewModel.SwitchEditorThemeCommand, Mode=OneWay}"
+                                             GroupName="EditorTheme"
+                                             IsChecked="{x:Bind ViewModel.Settings.EditorTheme, Converter={StaticResource ElementThemeToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}">
+                                    <RadioButton.CommandParameter>
+                                        <xaml:ElementTheme>Light</xaml:ElementTheme>
+                                    </RadioButton.CommandParameter>
+                                </RadioButton>
+                                <RadioButton x:Uid="SettingsPanel_EditorTheme_Dark"
+                                             Command="{x:Bind ViewModel.SwitchEditorThemeCommand, Mode=OneWay}"
+                                             GroupName="EditorTheme"
+                                             IsChecked="{x:Bind ViewModel.Settings.EditorTheme, Converter={StaticResource ElementThemeToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}">
+                                    <RadioButton.CommandParameter>
+                                        <xaml:ElementTheme>Dark</xaml:ElementTheme>
+                                    </RadioButton.CommandParameter>
+                                </RadioButton>
+                                <RadioButton x:Uid="SettingsPanel_EditorTheme_Default"
+                                             Command="{x:Bind ViewModel.SwitchEditorThemeCommand, Mode=OneWay}"
+                                             GroupName="EditorTheme"
+                                             IsChecked="{x:Bind ViewModel.Settings.EditorTheme, Converter={StaticResource ElementThemeToBooleanConverter}, ConverterParameter=Default, Mode=OneWay}">
+                                    <RadioButton.CommandParameter>
+                                        <xaml:ElementTheme>Default</xaml:ElementTheme>
+                                    </RadioButton.CommandParameter>
+                                </RadioButton>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Docked Preview Panel -->
                     <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
-                        <TextBlock x:Uid="SettingsPanel_Theme" Style="{StaticResource BodyTextStyle}" />
 
-                        <StackPanel Margin="{StaticResource EightTopMargin}">
-                            <RadioButton x:Uid="SettingsPanel_Theme_Light"
-                                         Command="{x:Bind ViewModel.SwitchThemeCommand, Mode=OneWay}"
-                                         GroupName="AppTheme"
-                                         IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}">
-                                <RadioButton.CommandParameter>
-                                    <xaml:ElementTheme>Light</xaml:ElementTheme>
-                                </RadioButton.CommandParameter>
-                            </RadioButton>
-                            <RadioButton x:Uid="SettingsPanel_Theme_Dark"
-                                         Command="{x:Bind ViewModel.SwitchThemeCommand, Mode=OneWay}"
-                                         GroupName="AppTheme"
-                                         IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}">
-                                <RadioButton.CommandParameter>
-                                    <xaml:ElementTheme>Dark</xaml:ElementTheme>
-                                </RadioButton.CommandParameter>
-                            </RadioButton>
-                            <RadioButton x:Uid="SettingsPanel_Theme_Default"
-                                         Command="{x:Bind ViewModel.SwitchThemeCommand, Mode=OneWay}"
-                                         GroupName="AppTheme"
-                                         IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default, Mode=OneWay}">
-                                <RadioButton.CommandParameter>
-                                    <xaml:ElementTheme>Default</xaml:ElementTheme>
-                                </RadioButton.CommandParameter>
-                            </RadioButton>
+                        <!--  Hidden when above disabled  -->
+                        <StackPanel Visibility="{x:Bind ViewModel.Settings.IsPreviewDocked.Value, Mode=OneWay}">
+                            <!--  Pane Orientation  -->
+                            <TextBlock x:Uid="SettingsPanel_PaneOrientation"
+                                       Margin="0,12,0,0"
+                                       Style="{StaticResource BodyTextStyle}" />
+
+                            <StackPanel Margin="{StaticResource SettingsSubheaderMargin}"
+                                        Padding="0,12,0,0"
+                                        Orientation="Horizontal">
+                                <RadioButton x:Uid="SettingsPanel_PaneOrientation_Top"
+                                             Command="{x:Bind ViewModel.SwitchPaneOrientationCommand, Mode=OneWay}"
+                                             GroupName="PaneOrientation"
+                                             IsChecked="{x:Bind ViewModel.Settings.DefaultPreviewPanePosition, Converter={StaticResource PaneOrientationToBooleanConverter}, ConverterParameter=HorizontalPreviewTop, Mode=OneWay}">
+                                    <StackPanel Margin="4,-12,0,0">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets"
+                                                  FontSize="32"
+                                                  Glyph="&#xE745;"
+                                                  Margin="4,0,0,0">
+                                            <FontIcon.RenderTransform>
+                                                <RotateTransform Angle="180" CenterX="16" CenterY="16"/>
+                                            </FontIcon.RenderTransform>
+                                        </FontIcon>
+                                        <TextBlock x:Uid="SettingsPanel_PaneOrientation_TopDescription"
+                                                   Margin="0,4,0,0"/>
+                                    </StackPanel>
+                                    <RadioButton.CommandParameter>
+                                        <model:PaneOrientation>HorizontalPreviewTop</model:PaneOrientation>
+                                    </RadioButton.CommandParameter>
+                                </RadioButton>
+                                <RadioButton x:Uid="SettingsPanel_PaneOrientation_Right"
+                                             Command="{x:Bind ViewModel.SwitchPaneOrientationCommand, Mode=OneWay}"
+                                             GroupName="PaneOrientation"
+                                             IsChecked="{x:Bind ViewModel.Settings.DefaultPreviewPanePosition, Converter={StaticResource PaneOrientationToBooleanConverter}, ConverterParameter=VerticalPreviewRight, Mode=OneWay}">
+                                    <StackPanel Margin="4,-12,0,0">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets"
+                                                  FontSize="32"
+                                                  Glyph="&#xEA61;"/>
+                                        <TextBlock x:Uid="SettingsPanel_PaneOrientation_RightDescription"
+                                                   Margin="0,4,0,0"/>
+                                    </StackPanel>
+                                    <RadioButton.CommandParameter>
+                                        <model:PaneOrientation>VerticalPreviewRight</model:PaneOrientation>
+                                    </RadioButton.CommandParameter>
+                                </RadioButton>
+                                <RadioButton x:Uid="SettingsPanel_PaneOrientation_Bottom"
+                                             Command="{x:Bind ViewModel.SwitchPaneOrientationCommand, Mode=OneWay}"
+                                             GroupName="PaneOrientation"
+                                             IsChecked="{x:Bind ViewModel.Settings.DefaultPreviewPanePosition, Converter={StaticResource PaneOrientationToBooleanConverter}, ConverterParameter=HorizontalPreviewBottom, Mode=OneWay}">
+                                    <StackPanel Margin="4,-12,0,0">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets"
+                                                  FontSize="32"
+                                                  Glyph="&#xE745;"/>
+                                        <TextBlock x:Uid="SettingsPanel_PaneOrientation_BottomDescription"
+                                                   Margin="0,4,0,0"/>
+                                    </StackPanel>
+                                    <RadioButton.CommandParameter>
+                                        <model:PaneOrientation>HorizontalPreviewBottom</model:PaneOrientation>
+                                    </RadioButton.CommandParameter>
+                                </RadioButton>
+                                <RadioButton x:Uid="SettingsPanel_PaneOrientation_Left"
+                                             Command="{x:Bind ViewModel.SwitchPaneOrientationCommand, Mode=OneWay}"
+                                             GroupName="PaneOrientation"
+                                             IsChecked="{x:Bind ViewModel.Settings.DefaultPreviewPanePosition, Converter={StaticResource PaneOrientationToBooleanConverter}, ConverterParameter=VerticalPreviewLeft, Mode=OneWay}">
+                                    <StackPanel Margin="4,-12,0,0">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets"
+                                                  FontSize="32"
+                                                  Glyph="&#xE746;"/>
+                                        <TextBlock x:Uid="SettingsPanel_PaneOrientation_LeftDescription"
+                                                   Margin="0,4,0,0"/>
+                                    </StackPanel>
+                                    <RadioButton.CommandParameter>
+                                        <model:PaneOrientation>VerticalPreviewLeft</model:PaneOrientation>
+                                    </RadioButton.CommandParameter>
+                                </RadioButton>
+                            </StackPanel>
                         </StackPanel>
                     </StackPanel>
-
-                    <StackPanel Grid.Column="1" Margin="{StaticResource SettingsSubheaderMargin}">
-                        <TextBlock x:Uid="SettingsPanel_EditorTheme" Style="{StaticResource BodyTextStyle}" />
-
-                        <StackPanel Margin="{StaticResource EightTopMargin}">
-                            <RadioButton x:Uid="SettingsPanel_EditorTheme_Light"
-                                         Command="{x:Bind ViewModel.SwitchEditorThemeCommand, Mode=OneWay}"
-                                         GroupName="EditorTheme"
-                                         IsChecked="{x:Bind ViewModel.Settings.EditorTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}">
-                                <RadioButton.CommandParameter>
-                                    <xaml:ElementTheme>Light</xaml:ElementTheme>
-                                </RadioButton.CommandParameter>
-                            </RadioButton>
-                            <RadioButton x:Uid="SettingsPanel_EditorTheme_Dark"
-                                         Command="{x:Bind ViewModel.SwitchEditorThemeCommand, Mode=OneWay}"
-                                         GroupName="EditorTheme"
-                                         IsChecked="{x:Bind ViewModel.Settings.EditorTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}">
-                                <RadioButton.CommandParameter>
-                                    <xaml:ElementTheme>Dark</xaml:ElementTheme>
-                                </RadioButton.CommandParameter>
-                            </RadioButton>
-                            <RadioButton x:Uid="SettingsPanel_EditorTheme_Default"
-                                         Command="{x:Bind ViewModel.SwitchEditorThemeCommand, Mode=OneWay}"
-                                         GroupName="EditorTheme"
-                                         IsChecked="{x:Bind ViewModel.Settings.EditorTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default, Mode=OneWay}">
-                                <RadioButton.CommandParameter>
-                                    <xaml:ElementTheme>Default</xaml:ElementTheme>
-                                </RadioButton.CommandParameter>
-                            </RadioButton>
-                        </StackPanel>
-                    </StackPanel>
-                </Grid>
+                </StackPanel>
             </controls:Expander>
 
             <controls:Expander x:Uid="SettingsPanel_About"

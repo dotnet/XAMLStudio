@@ -64,7 +64,7 @@ namespace XamlStudio.Views
         }
 
         public static readonly DependencyProperty LoadedDocumentProperty =
-            DependencyProperty.Register("LoadedDocument", typeof(XamlDocument), typeof(Document), new PropertyMetadata(null, (sender, args) =>
+            DependencyProperty.Register(nameof(LoadedDocument), typeof(XamlDocument), typeof(Document), new PropertyMetadata(null, (sender, args) =>
             {
                 var document = (sender as Document);
                 lock (document._initializeLock)
@@ -103,6 +103,12 @@ namespace XamlStudio.Views
             ViewModel.NavigateToLineCommand = new RelayCommand<uint>(NavigateToLine);
             ViewModel.InsertTextCommand = new RelayCommand<string>(InsertText);
             ViewModel.UpdateXamlCommand = new AsyncRelayCommand<RoutedEventArgs>(UpdateXaml);
+
+            SetPaneOrientation();
+
+            LoadedDocument.State.PropertyChanged += DocumentState_PropertyChanged;
+
+            SettingsService.Instance.PropertyChanged += DocumentState_PropertyChanged;
 
             // RenderAsync XAML if enabled by default
             if (SettingsService.Instance.IsAutoCompileEnabled == true)
@@ -220,6 +226,42 @@ namespace XamlStudio.Views
                 { "Type", _lastHoverType?.FullName ?? "Unknown" },
                 { "Uri", args.Uri.ToString() },
             });
+        }
+
+        private void DocumentState_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(DocumentState.PreviewOrientation) ||
+                e.PropertyName == nameof(SettingsService.DefaultPreviewPanePosition))
+            {
+                SetPaneOrientation();
+            }
+        }
+
+        private void SetPaneOrientation()
+        {
+            var orientation = LoadedDocument.State.PreviewOrientation;
+
+            // If we're set to default, go grab that value to start from
+            if (orientation == null)
+            {
+                orientation = SettingsService.Instance.DefaultPreviewPanePosition;
+            }
+
+            switch (orientation.Value)
+            {
+                case PaneOrientation.HorizontalPreviewTop:
+                    VisualStateManager.GoToState(this, "HorizontalPreviewTop", false);
+                    break;
+                case PaneOrientation.VerticalPreviewRight:
+                    VisualStateManager.GoToState(this, "VerticalPreviewRight", false);
+                    break;
+                case PaneOrientation.HorizontalPreviewBottom:
+                    VisualStateManager.GoToState(this, "HorizontalPreviewBottom", false);
+                    break;
+                case PaneOrientation.VerticalPreviewLeft:
+                    VisualStateManager.GoToState(this, "VerticalPreviewLeft", false);
+                    break;
+            }
         }
     }
 }

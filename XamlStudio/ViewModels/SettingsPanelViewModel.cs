@@ -90,6 +90,30 @@ namespace XamlStudio.ViewModels
             }
         }
 
+        private ICommand _switchPaneOrientationCommand;
+
+        public ICommand SwitchPaneOrientationCommand
+        {
+            get
+            {
+                if (_switchPaneOrientationCommand == null)
+                {
+                    _switchPaneOrientationCommand = new RelayCommand<PaneOrientation>(
+                        (param) =>
+                        {
+                            Settings.DefaultPreviewPanePosition = param;
+
+                            Analytics.TrackEvent("Settings_ChangePaneOrientation", new Dictionary<string, string> {
+                                { "Type", "Personalization" },
+                                { "Orientation", "" + param },
+                            });
+                        });
+                }
+
+                return _switchPaneOrientationCommand;
+            }
+        }
+
         public ObservableCollection<Color> Colors { get; set; }
 
         public SettingsService Settings { get; } = SettingsService.Instance;

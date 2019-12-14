@@ -7,6 +7,7 @@ using Windows.Storage.AccessCache;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
+using XamlStudio.Models;
 using XamlStudio.Toolkit.Models;
 
 namespace XamlStudio.Services
@@ -95,6 +96,20 @@ namespace XamlStudio.Services
         public ElementTheme EditorTheme
         {
             get { return Get<ElementTheme>(); }
+            set { Set(value); }
+        }
+
+        [DefaultValue(true)]
+        public bool? IsPreviewDocked
+        {
+            get { return Get<bool>(); }
+            set { Set(value); }
+        }
+
+        [DefaultValue(PaneOrientation.HorizontalPreviewTop)]
+        public PaneOrientation DefaultPreviewPanePosition
+        {
+            get { return Get<PaneOrientation>(); }
             set { Set(value); }
         }
 
