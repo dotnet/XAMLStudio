@@ -12,6 +12,7 @@
              xmlns:monaco="using:Monaco"
              xmlns:xstc="using:XamlStudio.Toolkit.Converters"
              xmlns:fex="using:Microsoft.Toolkit.Uwp.UI.Extensions.Future"
+             xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
              d:DesignHeight="300"
              d:DesignWidth="400"
              mc:Ignorable="d">
@@ -123,6 +124,31 @@
                 <SymbolIcon fex:SymbolIconExtensions.FontSize="16" Symbol="Rotate" />
             </Button>
         </StackPanel>
+        
+        <StackPanel x:Name="SplitterCommandBarRight"
+                    Grid.Row="1"
+                    Grid.ColumnSpan="3"
+                    Background="Transparent"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Margin="120,2,0,2">
+            <muxc:SplitButton x:Name="ShareButton"
+                              x:Uid="Document_SplitButton_Share"
+                              Style="{StaticResource VSCodeAppBarHeaderSplitButtonStyle}"
+                              Click="ShareButton_Click"
+                              Padding="1">
+                <SymbolIcon fex:SymbolIconExtensions.FontSize="16" Symbol="Share" />
+                <muxc:SplitButton.Flyout>
+                    <MenuFlyout Placement="Bottom">
+                        <MenuFlyoutItem x:Uid="Document_Share_Window"
+                                        Click="ShareMenuEntireWindow_Click"/>
+                        <MenuFlyoutItem x:Uid="Document_Share_Preview"
+                                        Click="ShareMenuPreviewOnly_Click"/>
+                    </MenuFlyout>
+                </muxc:SplitButton.Flyout>
+            </muxc:SplitButton>
+        </StackPanel>
 
         <monaco:CodeEditor x:Name="CodeEditor"
                            Grid.Row="2"
@@ -191,6 +217,13 @@
                         <Setter Target="SplitterCommandBarLeft.Orientation" Value="Vertical"/>
                         <Setter Target="SplitterCommandBarLeft.Margin" Value="0,0,0,100"/>
 
+                        <Setter Target="SplitterCommandBarRight.(Grid.Row)" Value="0"/>
+                        <Setter Target="SplitterCommandBarRight.(Grid.Column)" Value="1"/>
+                        <Setter Target="SplitterCommandBarRight.(Grid.RowSpan)" Value="3"/>
+                        <Setter Target="SplitterCommandBarRight.(Grid.ColumnSpan)" Value="1"/>
+                        <Setter Target="SplitterCommandBarRight.Orientation" Value="Vertical"/>
+                        <Setter Target="SplitterCommandBarRight.Margin" Value="0,110,0,0"/>
+
                         <!-- Bottom Pane -> Left Pane -->
                         <Setter Target="CodeEditor.(Grid.Row)" Value="0"/>
                         <Setter Target="CodeEditor.(Grid.RowSpan)" Value="3"/>
@@ -236,6 +269,13 @@
                         <Setter Target="SplitterCommandBarLeft.(Grid.ColumnSpan)" Value="1"/>
                         <Setter Target="SplitterCommandBarLeft.Orientation" Value="Vertical"/>
                         <Setter Target="SplitterCommandBarLeft.Margin" Value="0,0,0,100"/>
+
+                        <Setter Target="SplitterCommandBarRight.(Grid.Row)" Value="0"/>
+                        <Setter Target="SplitterCommandBarRight.(Grid.Column)" Value="1"/>
+                        <Setter Target="SplitterCommandBarRight.(Grid.RowSpan)" Value="3"/>
+                        <Setter Target="SplitterCommandBarRight.(Grid.ColumnSpan)" Value="1"/>
+                        <Setter Target="SplitterCommandBarRight.Orientation" Value="Vertical"/>
+                        <Setter Target="SplitterCommandBarRight.Margin" Value="0,110,0,0"/>
 
                         <!-- Bottom Pane -> Right Pane -->
                         <Setter Target="CodeEditor.(Grid.Row)" Value="0"/>

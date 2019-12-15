@@ -1,4 +1,5 @@
 ﻿using Microsoft.AppCenter.Analytics;
+using Microsoft.Graphics.Canvas;
 using Monaco;
 using Monaco.Languages;
 using System;
@@ -7,8 +8,14 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Graphics.DirectX;
+using Windows.Graphics.Display;
+using Windows.Graphics.Imaging;
+using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Imaging;
 using XamlStudio.Helpers;
 using XamlStudio.Models;
 using XamlStudio.Services;
@@ -83,6 +90,10 @@ namespace XamlStudio.Views
         public Document()
         {
             this.InitializeComponent();
+
+            DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
+
+            dataTransferManager.DataRequested += DataTransferManager_DataRequested;
         }
 
         private void InitializeViewModel(DocumentViewModel model)
@@ -251,17 +262,94 @@ namespace XamlStudio.Views
             {
                 case PaneOrientation.HorizontalPreviewTop:
                     VisualStateManager.GoToState(this, "HorizontalPreviewTop", false);
+                    VisualStateManager.GoToState(ShareButton, "Horizontal", false);
                     break;
                 case PaneOrientation.VerticalPreviewRight:
                     VisualStateManager.GoToState(this, "VerticalPreviewRight", false);
+                    VisualStateManager.GoToState(ShareButton, "Vertical", false);
                     break;
                 case PaneOrientation.HorizontalPreviewBottom:
                     VisualStateManager.GoToState(this, "HorizontalPreviewBottom", false);
+                    VisualStateManager.GoToState(ShareButton, "Horizontal", false);
                     break;
                 case PaneOrientation.VerticalPreviewLeft:
                     VisualStateManager.GoToState(this, "VerticalPreviewLeft", false);
+                    VisualStateManager.GoToState(ShareButton, "Vertical", false);
                     break;
             }
         }
+
+        #region Share Button Code
+        private readonly Lazy<CanvasDevice> _device = new Lazy<CanvasDevice>(InitCanvas);
+
+        private static CanvasDevice InitCanvas()
+        {
+            return CanvasDevice.GetSharedDevice();
+        }
+
+        private CanvasBitmap _screenshotImage;
+
+        private async void ShareButton_Click(Microsoft.UI.Xaml.Controls.SplitButton sender, Microsoft.UI.Xaml.Controls.SplitButtonClickEventArgs args)
+        {
+            _screenshotImage = await GetAppScreenshot();
+
+            DataTransferManager.ShowShareUI();
+        }
+
+        private void ShareMenuEntireWindow_Click(object sender, RoutedEventArgs e)
+        {
+            ShareButton_Click(null, null);
+        }
+
+        private async void ShareMenuPreviewOnly_Click(object sender, RoutedEventArgs e)
+        {
+            _screenshotImage = await GetPreviewScreenshot();
+
+            DataTransferManager.ShowShareUI();
+        }
+
+        private async void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
+        {
+            // Provide updated bitmap data using delayed rendering
+            if (_screenshotImage != null)
+            {
+                var deferral = args.Request.GetDeferral();
+
+                args.Request.Data.Properties.Title = "XAML Studio - " + LoadedDocument.Title;
+
+                InMemoryRandomAccessStream inMemoryStream = new InMemoryRandomAccessStream();
+
+                await _screenshotImage.SaveAsync(inMemoryStream, CanvasBitmapFileFormat.Png); // TODO: Have Option for quality?
+
+                args.Request.Data.SetBitmap(RandomAccessStreamReference.CreateFromStream(inMemoryStream));
+
+                deferral.Complete();
+            }
+        }
+
+        private async Task<CanvasBitmap> GetAppScreenshot()
+        {
+            var renderTarget = new RenderTargetBitmap();
+            var displayInfo = DisplayInformation.GetForCurrentView();
+            var scale = displayInfo.RawPixelsPerViewPixel;
+            var scaleWidth = (int)Math.Ceiling(Window.Current.Bounds.Width / scale);
+            var scaleHeight = (int)Math.Ceiling(Window.Current.Bounds.Height / scale);
+            await renderTarget.RenderAsync(Window.Current.Content, scaleWidth, scaleHeight);
+            var pixels = await renderTarget.GetPixelsAsync();
+            return CanvasBitmap.CreateFromBytes(_device.Value, pixels, renderTarget.PixelWidth, renderTarget.PixelHeight, DirectXPixelFormat.B8G8R8A8UIntNormalized);
+        }
+
+        private async Task<CanvasBitmap> GetPreviewScreenshot()
+        {
+            var renderTarget = new RenderTargetBitmap();
+            var displayInfo = DisplayInformation.GetForCurrentView();
+            var scale = displayInfo.RawPixelsPerViewPixel;
+            var scaleWidth = (int)Math.Ceiling(XamlRoot.ActualWidth / scale);
+            var scaleHeight = (int)Math.Ceiling(XamlRoot.ActualHeight / scale);
+            await renderTarget.RenderAsync(XamlRoot, scaleWidth, scaleHeight);
+            var pixels = await renderTarget.GetPixelsAsync();
+            return CanvasBitmap.CreateFromBytes(_device.Value, pixels, renderTarget.PixelWidth, renderTarget.PixelHeight, DirectXPixelFormat.B8G8R8A8UIntNormalized);
+        }
+        #endregion
     }
 }
