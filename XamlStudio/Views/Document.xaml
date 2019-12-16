@@ -115,9 +115,8 @@
                     Orientation="Horizontal"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Margin="0,2,110,2">
+                    Margin="0,2,90,2">
             <Button Padding="1"
-                    Margin="0,0,2,0"
                     x:Uid="Document_Button_Rotate"
                     Command="{x:Bind ViewModel.RotatePaneOrientationCommand, Mode=OneWay}"
                     Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
@@ -215,7 +214,7 @@
                         <Setter Target="SplitterCommandBarLeft.(Grid.RowSpan)" Value="3"/>
                         <Setter Target="SplitterCommandBarLeft.(Grid.ColumnSpan)" Value="1"/>
                         <Setter Target="SplitterCommandBarLeft.Orientation" Value="Vertical"/>
-                        <Setter Target="SplitterCommandBarLeft.Margin" Value="0,0,0,100"/>
+                        <Setter Target="SplitterCommandBarLeft.Margin" Value="0,0,0,90"/>
 
                         <Setter Target="SplitterCommandBarRight.(Grid.Row)" Value="0"/>
                         <Setter Target="SplitterCommandBarRight.(Grid.Column)" Value="1"/>
@@ -268,7 +267,7 @@
                         <Setter Target="SplitterCommandBarLeft.(Grid.RowSpan)" Value="3"/>
                         <Setter Target="SplitterCommandBarLeft.(Grid.ColumnSpan)" Value="1"/>
                         <Setter Target="SplitterCommandBarLeft.Orientation" Value="Vertical"/>
-                        <Setter Target="SplitterCommandBarLeft.Margin" Value="0,0,0,100"/>
+                        <Setter Target="SplitterCommandBarLeft.Margin" Value="0,0,0,90"/>
 
                         <Setter Target="SplitterCommandBarRight.(Grid.Row)" Value="0"/>
                         <Setter Target="SplitterCommandBarRight.(Grid.Column)" Value="1"/>
