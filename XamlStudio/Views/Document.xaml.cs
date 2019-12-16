@@ -202,12 +202,12 @@ namespace XamlStudio.Views
 
             var newcontent = await ViewModel.InternalRenderXamlAsync(ViewModel.Document.Content, 0, keepcontent);
 
-            if (!keepcontent)
+            if (!keepcontent && newcontent.HasSuggestion)
             {
                 var pos = await CodeEditor.GetPositionAsync();
 
                 // Update our document with suggested changes.
-                ViewModel.Document.Content = newcontent;
+                ViewModel.Document.Content = newcontent.SuggestedContent;
 
                 // Restore cursor to where it was.
                 await CodeEditor.SetPositionAsync(pos);

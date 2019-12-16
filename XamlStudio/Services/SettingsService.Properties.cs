@@ -22,7 +22,7 @@ namespace XamlStudio.Services
             set { Set(value); }
         }
 
-        [DefaultValue(0.8)]
+        [DefaultValue(1.0)]
         public double? AutoCompileDelay
         {
             get { return Get<double?>(); }
@@ -43,7 +43,7 @@ namespace XamlStudio.Services
             set { Set(value); }
         }
 
-        [DefaultValue(true)]
+        [DefaultValue(false)]
         public bool? IsContentUpdatedWithSuggested
         {
             get { return Get<bool?>(); }

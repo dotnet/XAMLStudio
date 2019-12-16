@@ -103,6 +103,8 @@ namespace XamlStudio.Toolkit.Services
 
                 if (namespaces.Count > 0)
                 {
+                    context.HasSuggestion = true;
+
                     var sb = new StringBuilder();
 
                     var i = 0;

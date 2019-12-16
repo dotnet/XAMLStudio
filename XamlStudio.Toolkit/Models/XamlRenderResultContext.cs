@@ -18,6 +18,11 @@ namespace XamlStudio.Toolkit.Models
         public string Content => _content;
 
         /// <summary>
+        /// Gets a value indicating if the content has a suggestion.
+        /// </summary>
+        public bool HasSuggestion { get; internal set; }
+
+        /// <summary>
         /// Content modified by pre-parser helpers with any missing xmlns elements.
         /// </summary>
         public string SuggestedContent { get; internal set; }

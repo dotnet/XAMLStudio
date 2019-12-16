@@ -35,7 +35,7 @@ namespace XamlStudio.ViewModels
             await InternalRenderXamlAsync(content, 0, true);
         }
 
-        internal async Task<string> InternalRenderXamlAsync(string content, uint lineoffset, bool keepContentSameLength, bool overrideBinding = false)
+        internal async Task<XamlRenderResultContext> InternalRenderXamlAsync(string content, uint lineoffset, bool keepContentSameLength, bool overrideBinding = false)
         {
             if (SettingsService.Instance.IsLiveDataContextRefreshedOnRender == true)
             {
@@ -161,7 +161,7 @@ namespace XamlStudio.ViewModels
             render_analytics.Add("TotalRenderTimeSec", Math.Round((DateTime.UtcNow.Ticks - start) / 10000000d, 2).ToString());
             Analytics.TrackEvent("Render_XAML", render_analytics);
 
-            return Result.SuggestedContent;
+            return Result;
         }
 
         private void BindingUpdated(XamlBindingInfo binding, ConversionRecord record, object newvalue)
