@@ -137,7 +137,28 @@
             <TextBlock FontSize="22"
                        FontWeight="Bold"
                        Foreground="{ThemeResource Brush-Grey-Light-1}"
-                       Text="New Features" />
+                       Text="New in v1.1" />
+            <TextBlock Padding="12,8"
+                       Foreground="{ThemeResource Brush-Grey-Light-1}"
+                       TextWrapping="WrapWholeWords">
+                - Adjustable Preview Pane Location
+            </TextBlock>
+            <TextBlock Padding="12,8"
+                       Foreground="{ThemeResource Brush-Grey-Light-1}"
+                       TextWrapping="WrapWholeWords">
+                - Share Button
+            </TextBlock>
+            <TextBlock Padding="12,8"
+                       Foreground="{ThemeResource Brush-Grey-Light-1}"
+                       TextWrapping="WrapWholeWords">
+                - Updated Libraries &amp; Bug Fixes
+            </TextBlock>
+
+            <TextBlock Padding="0,48,0,0"
+                       FontSize="22"
+                       FontWeight="Bold"
+                       Foreground="{ThemeResource Brush-Grey-Light-1}"
+                       Text="Features" />
             <TextBlock Padding="12,8"
                        Foreground="{ThemeResource Brush-Grey-Light-1}"
                        TextWrapping="WrapWholeWords">
