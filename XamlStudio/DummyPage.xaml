@@ -9,6 +9,7 @@
       xmlns:local="using:XamlStudio"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      xmlns:ex="using:Microsoft.Toolkit.Uwp.UI.Extensions"
       xmlns:telerikChart="using:Telerik.UI.Xaml.Controls.Chart"
       mc:Ignorable="d">
 
@@ -41,5 +42,6 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <controls:AdaptiveGridView/>
+        <ListView ex:ListViewExtensions.AlternateColor="#FFFFFFFF"/>
     </Grid>
 </Page>
