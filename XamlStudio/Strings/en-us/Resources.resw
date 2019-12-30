@@ -744,4 +744,72 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>Compilation Errors</value>
     <comment>Accessibility Name for error popup that appears on documents when XAML can't be compiled.</comment>
   </data>
+  <data name="Document_Button_Rotate.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Rotate Split</value>
+    <comment>Accessibility Name for Rotate Coding Pane Button on document Gripper Bar</comment>
+  </data>
+  <data name="Document_Button_Rotate.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rotate Split</value>
+    <comment>Tooltip for Rotate Coding Pane Button on document Gripper Bar</comment>
+  </data>
+  <data name="Document_SplitButton_Share.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Share</value>
+    <comment>Accessibility Name for Share Button on document Gripper Bar</comment>
+  </data>
+  <data name="Document_SplitButton_Share.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Share</value>
+    <comment>Tooltip for Share Button on document Gripper Bar</comment>
+  </data>
+  <data name="Document_Share_Window.Text" xml:space="preserve">
+    <value>Share Entire Window</value>
+    <comment>Text label for Share Entire Window menu item on document Gripper Bar</comment>
+  </data>
+  <data name="Document_Share_Window.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Share Entire Window</value>
+    <comment>Accessibility Name for Share Entire Window menu item on document Gripper Bar</comment>
+  </data>
+  <data name="Document_Share_Preview.Text" xml:space="preserve">
+    <value>Share Preview Pane Only</value>
+    <comment>Text label for Share Entire Window menu item on document Gripper Bar</comment>
+  </data>
+  <data name="Document_Share_Preview.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Share Preview Pane Only</value>
+    <comment>Accessibility Name for Share Entire Window menu item on document Gripper Bar</comment>
+  </data>  
+  <data name="SettingsPanel_PaneOrientation.Text" xml:space="preserve">
+    <value>Default Preview Pane Orientation</value>
+    <comment>Choose pane orientation text for SettingsPanel</comment>
+  </data>
+  <data name="SettingsPanel_PaneOrientation_TopDescription.Text" xml:space="preserve">
+    <value>Above</value>
+    <comment>Preview Pane Above Editor option</comment>
+  </data>
+  <data name="SettingsPanel_PaneOrientation_Top.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Above</value>
+    <comment>Preview Pane Above Editor option</comment>
+  </data>
+  <data name="SettingsPanel_PaneOrientation_RightDescription.Text" xml:space="preserve">
+    <value>Right</value>
+    <comment>Preview Pane Right Editor option</comment>
+  </data>
+  <data name="SettingsPanel_PaneOrientation_Right.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Right</value>
+    <comment>Preview Pane Right Editor option</comment>
+  </data>
+  <data name="SettingsPanel_PaneOrientation_BottomDescription.Text" xml:space="preserve">
+    <value>Below</value>
+    <comment>Preview Pane Below Editor option</comment>
+  </data>
+  <data name="SettingsPanel_PaneOrientation_Bottom.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Below</value>
+    <comment>Preview Pane Below Editor option</comment>
+  </data>
+  <data name="SettingsPanel_PaneOrientation_LeftDescription.Text" xml:space="preserve">
+    <value>Left</value>
+    <comment>Preview Pane Left Editor option</comment>
+  </data>
+  <data name="SettingsPanel_PaneOrientation_Left.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Left</value>
+    <comment>Preview Pane Left Editor option</comment>
+  </data>
 </root>

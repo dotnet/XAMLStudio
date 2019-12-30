@@ -111,6 +111,8 @@ namespace XamlStudio.ViewModels
 
         public ICommand ParseDataContextCommand { get; private set; }
 
+        public ICommand RotatePaneOrientationCommand { get; private set; }
+
         /// <summary>
         /// Text for error message when refreshing from a live data source.
         /// </summary>
@@ -161,6 +163,7 @@ namespace XamlStudio.ViewModels
             KeyDownCommand = new RelayCommand<WebKeyEventArgs>(KeyDown);
             RefreshLiveDataContextCommand = new AsyncRelayCommand<RoutedEventArgs>(RefreshLiveDataContext);
             ParseDataContextCommand = new RelayCommand<RoutedEventArgs>(ParseDataContext);
+            RotatePaneOrientationCommand = new RelayCommand<RoutedEventArgs>(RotatePaneOrientation);
         }
     }
 }

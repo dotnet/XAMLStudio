@@ -1,4 +1,5 @@
-﻿using Monaco;
+﻿using Microsoft.Language.Xml;
+using Monaco;
 using Monaco.Editor;
 using Monaco.Languages;
 using System;
@@ -9,6 +10,7 @@ using System.Threading;
 using System.Xml.Linq;
 using Windows.Foundation;
 using Windows.UI.Xaml;
+using XamlStudio.Toolkit.Extensions;
 using XamlStudio.Toolkit.Models;
 
 namespace XamlStudio.Toolkit.Services
@@ -21,10 +23,11 @@ namespace XamlStudio.Toolkit.Services
         private const string ElementTrigger = "<";
         private const string NamespaceTrigger = ":";
         private const string AttributeValueTrigger = "\"";
+        private const string CloseElementTrigger = "/";
 
         public List<XmlnsNamespace> KnownNamespaces { get; set; }
 
-        public string[] TriggerCharacters => new string[] { ElementTrigger, NamespaceTrigger, AttributeValueTrigger };
+        public string[] TriggerCharacters => new string[] { ElementTrigger, CloseElementTrigger, NamespaceTrigger, AttributeValueTrigger };
 
         public IAsyncOperation<CompletionList> ProvideCompletionItemsAsync(IModel model, IPosition position, CompletionContext context)
         {
@@ -33,57 +36,62 @@ namespace XamlStudio.Toolkit.Services
                 var items = new List<CompletionItem>();
 
                 // get editor content before the pointer
-                var textUntilPosition = await model.GetValueInRangeAsync(new Range(1, 1, position.LineNumber, position.Column));
+                var text = await model.GetValueAsync();
+
+                var _xmlRoot = Parser.ParseText(text);
+
+                var index = text.GetCharacterIndex((int)position.LineNumber, (int)position.Column);
+
+                if (index == -1)
+                {
+                    return null;
+                }
+
+                var raw_node = _xmlRoot.FindNode(index + 1);
+
+                var parentTagName = raw_node?.ParentElement?.Name;
 
                 // get list of assemblies
                 var namespaces = KnownNamespaces.Concat(XamlAutocompleteService.Instance.GetNamespaces(await model.GetValueAsync()));
 
-                if (context.TriggerCharacter == ElementTrigger)
+                if (context.TriggerCharacter == CloseElementTrigger)
                 {
+                    if (index >= 1 && text[index - 1] == '<')
+                    {
+                        // Only show suggestion if we're starting a close tag.
+                        items.Add(new CompletionItem(parentTagName, CompletionItemKind.Class));
+                    }
+                }
+                else if (context.TriggerCharacter == ElementTrigger)
+                {
+                    // TODO: Add hint of containing element (ResourceDictionary, 
                     XamlAutocompleteService.Instance.AddDefaultSuggestions(items, KnownNamespaces);
                 }
                 else if (context.TriggerCharacter == NamespaceTrigger)
                 {
                     // TODO: Don't show these if in first tag... show suggestions from known namespaces list... (not accessible here, in App :()
-                    var lastOpenedTag = XamlLanguageHelpers.GetLastOpenedTag(textUntilPosition);//areaUntilPositionInfo.ClearedText);
-
-                    if (lastOpenedTag.HasValue)
+                    if (!string.IsNullOrWhiteSpace(parentTagName))
                     {
-                        var prefix = lastOpenedTag.Value.TagName;
-
-                        XamlAutocompleteService.Instance.AddNamespaceSuggestions(items, prefix, KnownNamespaces);
+                        XamlAutocompleteService.Instance.AddNamespaceSuggestions(items, parentTagName.Trim(':'), KnownNamespaces);
                     }
                 }
                 else if (context.TriggerCharacter == AttributeValueTrigger)
                 {
-                    var lastOpenedTag = XamlLanguageHelpers.GetLastOpenedTag(textUntilPosition);
-
-                    if (lastOpenedTag.HasValue)
+                    if (!string.IsNullOrWhiteSpace(parentTagName))
                     {
-                        var attribute = textUntilPosition.Substring(textUntilPosition.LastIndexOf(" ")).Replace(" ", "").Replace("=", "").Replace("\"", "").Trim();
+                        var attribute = raw_node.FirstAncestorOrSelf<XmlAttributeSyntax>();
 
-                        XamlAutocompleteService.Instance.AddValueSuggestions(items, lastOpenedTag.Value.TagName, attribute);
+                        XamlAutocompleteService.Instance.AddValueSuggestions(items, parentTagName, attribute?.Name);
                     }
                 }
                 else
                 {
-                    var lastOpenedTag = XamlLanguageHelpers.GetLastOpenedTag(textUntilPosition);//areaUntilPositionInfo.ClearedText);
-
-                    if (lastOpenedTag.HasValue)
+                    if (!string.IsNullOrWhiteSpace(parentTagName))
                     {
-                        if (lastOpenedTag.Value.IsAttributeSearch)
-                        {
-                            // TODO: Filter out already used properties...
-                            XamlAutocompleteService.Instance.AddPropertySuggestions(items, lastOpenedTag.Value.TagName);
-                        }
-                        else if (lastOpenedTag.Value.TagName.Contains(':'))
-                        {
-                            XamlAutocompleteService.Instance.AddNamespaceSuggestions(items, lastOpenedTag.Value.TagName.Split(':')[0], KnownNamespaces);
-                        }
-                        else
-                        {
-                            XamlAutocompleteService.Instance.AddDefaultSuggestions(items, KnownNamespaces);
-                        }
+                        var attribute = raw_node.FirstAncestorOrSelf<XmlAttributeSyntax>();
+
+                        // TODO: Filter out already used properties...
+                        XamlAutocompleteService.Instance.AddPropertySuggestions(items, parentTagName);
                     }
                 }
 

@@ -33,6 +33,7 @@
     <Assembly Name="Microsoft.Xaml.Interactions" Dynamic="Required All" />
 
     <Namespace Name="Microsoft.Toolkit.Uwp.UI.Controls" Dynamic="Required All" />
+    <Namespace Name="Microsoft.Toolkit.Uwp.UI.Extensions" Dynamic="Required All" />
 
     <Namespace Name="Microsoft.Xaml.Interactions.Core" Dynamic="Required All" />
 

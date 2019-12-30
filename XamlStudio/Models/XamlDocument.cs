@@ -56,6 +56,13 @@ namespace XamlStudio.Models
             set { Set(ref _dataContext, value); }
         }
 
+        private DocumentState _docState = new DocumentState();
+        public DocumentState State
+        {
+            get { return _docState; }
+            set { Set(ref _docState, value); }
+        }
+
         [JsonIgnore]
         public string DisplayName { get { return BackingFile.DisplayName; } }
 

@@ -15,6 +15,7 @@ using Windows.System.Threading;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.Web.Http;
+using XamlStudio.Models;
 using XamlStudio.Services;
 using XamlStudio.Toolkit.Controls;
 using XamlStudio.Toolkit.Helpers;
@@ -34,7 +35,7 @@ namespace XamlStudio.ViewModels
             await InternalRenderXamlAsync(content, 0, true);
         }
 
-        internal async Task<string> InternalRenderXamlAsync(string content, uint lineoffset, bool keepContentSameLength, bool overrideBinding = false)
+        internal async Task<XamlRenderResultContext> InternalRenderXamlAsync(string content, uint lineoffset, bool keepContentSameLength, bool overrideBinding = false)
         {
             if (SettingsService.Instance.IsLiveDataContextRefreshedOnRender == true)
             {
@@ -160,7 +161,7 @@ namespace XamlStudio.ViewModels
             render_analytics.Add("TotalRenderTimeSec", Math.Round((DateTime.UtcNow.Ticks - start) / 10000000d, 2).ToString());
             Analytics.TrackEvent("Render_XAML", render_analytics);
 
-            return Result.SuggestedContent;
+            return Result;
         }
 
         private void BindingUpdated(XamlBindingInfo binding, ConversionRecord record, object newvalue)
@@ -458,6 +459,33 @@ namespace XamlStudio.ViewModels
                     }, TimeSpan.FromSeconds(SettingsService.Instance.AutoCompileDelay.Value));
                 }
             }
+        }
+
+        private void RotatePaneOrientation(RoutedEventArgs args)
+        {
+            var orientation = _document.State.PreviewOrientation;
+
+            // If we're set to default, go grab that value to start from
+            if (orientation == null)
+            {
+                orientation = Settings.DefaultPreviewPanePosition;
+            }
+
+            // Go to next enum value
+            orientation = (PaneOrientation)((((int)orientation.Value) + 1) % 4);
+
+            Analytics.TrackEvent("Document_RotateOrientation", new Dictionary<string, string>()
+                {
+                    { "Value", "" + orientation },
+                });
+
+            // If we're now set to default, set to null so we stay aligned if default changes
+            if (orientation == Settings.DefaultPreviewPanePosition)
+            {
+                orientation = null;
+            }
+
+            _document.State.PreviewOrientation = orientation;
         }
     }
 }

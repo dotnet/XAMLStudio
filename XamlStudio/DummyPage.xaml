@@ -9,6 +9,7 @@
       xmlns:local="using:XamlStudio"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      xmlns:ex="using:Microsoft.Toolkit.Uwp.UI.Extensions"
       xmlns:telerikChart="using:Telerik.UI.Xaml.Controls.Chart"
       mc:Ignorable="d">
 
@@ -16,8 +17,14 @@
     <!--  Waiting on fix for https://github.com/Microsoft/UWPCommunityToolkit/issues/1961  -->
 
     <Page.Resources>
+        <!-- Toolkit -->
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:StringFormatConverter x:Key="StringFormatConverter" />
+        <controls:DataGridCheckBoxColumn x:Key="DataGridCheckBoxColumn" />
+        <controls:DataGridComboBoxColumn x:Key="DataGridComboBoxColumn" />
+        <controls:DataGridTemplateColumn x:Key="DataGridTemplateColumn" />
+
+        <!-- XAML Behaviors -->
         <ic:CallMethodAction x:Key="CallMethodAction" />
         <ic:ChangePropertyAction x:Key="ChangePropertyAction" />
         <ic:DataTriggerBehavior x:Key="DataTriggerBehavior" />
@@ -28,10 +35,13 @@
         <ic:NavigateToPageAction x:Key="NavigateToPageAction" />
         <im:ControlStoryboardAction x:Key="ControlStoryboardAction" />
         <im:PlaySoundAction x:Key="PlaySoundAction" />
+
+        <!-- Telerik -->
         <telerikChart:PropertyNameDataPointBinding x:Key="PropertyNameDataPointBinding" />
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <controls:AdaptiveGridView/>
+        <ListView ex:ListViewExtensions.AlternateColor="#FFFFFFFF"/>
     </Grid>
 </Page>

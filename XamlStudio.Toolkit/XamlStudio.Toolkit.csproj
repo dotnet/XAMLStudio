@@ -115,6 +115,7 @@
     <Compile Include="Converters\HexToColorConverter.cs" />
     <Compile Include="Converters\StringToUriConverter.cs" />
     <Compile Include="Converters\XamlBindingWrapperConverter.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\XmlExtensions.cs" />
     <Compile Include="Helpers\Singleton.cs" />
     <Compile Include="Models\ConversionRecord.cs" />
@@ -128,7 +129,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AppAssemblyInfo.cs" />
     <Compile Include="Services\IdGenerator.cs" />
-    <Compile Include="Services\XamlAutocompleteService\XamlLanguageHelpers.cs" />
     <Compile Include="Services\XamlAutocompleteService\XamlLanguageProvider.cs" />
     <Compile Include="Services\XamlBindingWrapperManager.cs" />
     <Compile Include="Services\XamlAutocompleteService\XamlAutocompleteService.cs" />
@@ -142,6 +142,9 @@
     <EmbeddedResource Include="Properties\XamlStudio.Toolkit.rd.xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="GuiLabs.Language.Xml">
+      <Version>1.2.44</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.9</Version>
     </PackageReference>
