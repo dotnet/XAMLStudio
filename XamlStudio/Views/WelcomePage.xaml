@@ -105,6 +105,11 @@
                                  Foreground="{ThemeResource Brush-Red-Light-2}">
                     Open file...
                 </HyperlinkButton>
+                <HyperlinkButton Command="{x:Bind MainViewModel.OpenSettingsCommand, Mode=OneWay}"
+                                 FontWeight="SemiBold"
+                                 Foreground="{ThemeResource Brush-Red-Light-2}">
+                    Settings
+                </HyperlinkButton>
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Row="2" Margin="40">
