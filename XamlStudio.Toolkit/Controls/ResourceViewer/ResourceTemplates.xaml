@@ -1,9 +1,63 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="using:XamlStudio.Toolkit.Controls">
+                    xmlns:local="using:XamlStudio.Toolkit.Controls"
+                    xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters">
 
     <local:ColorToHexConverter x:Key="ColorToHexConverter" />
 
+    <converters:StringFormatConverter x:Key="StringFormatConverter" />
+
+    <!-- TODO: Share with SolidColorBrushTemplate? -->
+    <DataTemplate x:Key="ColorTemplate">
+        <Grid>
+            <Grid.Resources>
+                <SolidColorBrush x:Key="ColorBrush" Color="{Binding}"/>
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Border Width="64"
+                    Height="64"
+                    Margin="0,8,16,8"
+                    Background="{StaticResource ColorBrush}" />
+            <TextBlock Grid.Column="1" Text="{Binding Converter={StaticResource ColorToHexConverter}}" 
+                       VerticalAlignment="Center"/>
+        </Grid>
+    </DataTemplate>
+    
+    <DataTemplate x:Key="DataTemplateTemplate">
+        <ContentPresenter ContentTemplate="{Binding}"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="FontFamilyTemplate">
+        <TextBlock FontFamily="{Binding}" 
+                   FontSize="20"
+                   TextWrapping="WrapWholeWords"
+                   Text="Quickly the XAML dev jumps on board for amazing UIs, wow!"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="GridLengthTemplate">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1"/>
+                <ColumnDefinition Width="{Binding}" x:Name="Column"/>
+                <ColumnDefinition Width="1"/>
+            </Grid.ColumnDefinitions>
+            <Rectangle Grid.Column="0" Fill="Red" 
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Stretch"/>
+            <!-- TODO: ToString -->
+            <TextBlock Grid.Column="1" 
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Text="{Binding Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0}'}"/>
+            <Rectangle Grid.Column="3" Fill="Red" 
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Stretch"/>
+        </Grid>
+    </DataTemplate>
+    
     <DataTemplate x:Key="SolidColorBrushTemplate">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -12,9 +66,54 @@
             </Grid.ColumnDefinitions>
             <Border Width="64"
                     Height="64"
-                    Margin="8"
+                    Margin="0,8,16,8"
                     Background="{Binding}" />
-            <TextBlock Grid.Column="1" Text="{Binding Color, Converter={StaticResource ColorToHexConverter}}" />
+            <TextBlock Grid.Column="1" Text="{Binding Color, Converter={StaticResource ColorToHexConverter}}" 
+                       VerticalAlignment="Center"/>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="ThicknessTemplate">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Border Background="#E3C381" BorderBrush="White" BorderThickness="1"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    HorizontalAlignment="Left"
+                    Width="160" Height="80">
+                <Border Background="#88B2BD" Margin="{Binding}">
+                    <TextBlock Foreground="Black" 
+                           Text="{Binding Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0}'}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+                </Border>
+            </Border>
+            <TextBlock Grid.Row="1"
+                       Margin="0,0,8,0"
+                       Text="{Binding Left}"
+                       VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="1"
+                       Margin="2"
+                       Text="{Binding Top}"
+                       HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="1" Grid.Column="2"
+                       Margin="8,0,0,0"
+                       Text="{Binding Right}"
+                       VerticalAlignment="Center"/>
+            <TextBlock Grid.Row="2" Grid.Column="1"
+                       Margin="2"
+                       Text="{Binding Bottom}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Bottom"/>
         </Grid>
     </DataTemplate>
 </ResourceDictionary>
