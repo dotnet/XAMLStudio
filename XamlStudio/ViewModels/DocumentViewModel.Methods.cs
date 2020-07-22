@@ -145,7 +145,11 @@ namespace XamlStudio.ViewModels
             var element = Result.Element;
             if (Result.IsResourceDictionary)
             {
-                element = new ResourceViewer() { ResourceDictionary = element as ResourceDictionary };
+                element = new ResourceViewer()
+                {
+                    ResourceDictionary = element as ResourceDictionary,
+                    XmlDocument = Result.Document
+                };
             }
 
             // Only Update if we have a new well-parsed element.

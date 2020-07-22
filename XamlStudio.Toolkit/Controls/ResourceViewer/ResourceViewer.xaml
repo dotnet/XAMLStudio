@@ -57,8 +57,9 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <ScrollViewer>
-                            <ItemsControl ItemTemplate="{StaticResource ResourceKeyTemplate}" ItemsSource="{TemplateBinding ResourceKeys}">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <ItemsControl ItemTemplate="{StaticResource ResourceKeyTemplate}" ItemsSource="{TemplateBinding ResourceKeys}"
+                                          Margin="0,0,16,0">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel />

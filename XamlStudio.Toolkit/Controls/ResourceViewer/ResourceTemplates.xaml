@@ -7,6 +7,10 @@
 
     <converters:StringFormatConverter x:Key="StringFormatConverter" />
 
+    <DataTemplate x:Key="AcrylicBrushTemplate">
+        <Border Background="{Binding}" Width="128" Height="128" HorizontalAlignment="Left"/>
+    </DataTemplate>
+
     <!-- TODO: Share with SolidColorBrushTemplate? -->
     <DataTemplate x:Key="ColorTemplate">
         <Grid>

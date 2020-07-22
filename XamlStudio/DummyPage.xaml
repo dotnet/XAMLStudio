@@ -9,6 +9,7 @@
       xmlns:local="using:XamlStudio"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
       xmlns:ex="using:Microsoft.Toolkit.Uwp.UI.Extensions"
       xmlns:telerikChart="using:Telerik.UI.Xaml.Controls.Chart"
       mc:Ignorable="d">
@@ -23,6 +24,7 @@
         <controls:DataGridCheckBoxColumn x:Key="DataGridCheckBoxColumn" />
         <controls:DataGridComboBoxColumn x:Key="DataGridComboBoxColumn" />
         <controls:DataGridTemplateColumn x:Key="DataGridTemplateColumn" />
+        <media:RadialGradientBrush x:Key="RadialGradientBrush" />
 
         <!-- XAML Behaviors -->
         <ic:CallMethodAction x:Key="CallMethodAction" />
@@ -42,6 +44,8 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <controls:AdaptiveGridView/>
-        <ListView ex:ListViewExtensions.AlternateColor="#FFFFFFFF"/>
+        <ListView ex:ListViewExtensions.AlternateColor="#FFFFFFFF"
+                  ex:FrameworkElementExtensions.AncestorType="Grid"
+                  Tag="{Binding (ex:FrameworkElementExtensions.Ancestor),RelativeSource={RelativeSource Self}}"/>
     </Grid>
 </Page>
