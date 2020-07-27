@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
 [assembly: AssemblyProduct("XamlStudio.Toolkit")]
-[assembly: AssemblyCopyright("Copyright 2019 Microsoft")]
+[assembly: AssemblyCopyright("Copyright 2020 Microsoft")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

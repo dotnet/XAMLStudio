@@ -363,7 +363,7 @@
     <comment>Button Text for opening the log location.</comment>
   </data>
   <data name="SettingsPanel_About_Copyright.Text" xml:space="preserve">
-    <value>Copyright 2019 Microsoft</value>
+    <value>Copyright 2020 Microsoft</value>
     <comment>Copyright Statement in About Box</comment>
   </data>
   <data name="SettingsPanel_About_Credits.Text" xml:space="preserve">

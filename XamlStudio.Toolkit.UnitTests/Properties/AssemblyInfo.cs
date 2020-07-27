@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
 [assembly: AssemblyProduct("XamlStudio.Toolkit.UnitTests")]
-[assembly: AssemblyCopyright("Copyright 2019 Microsoft")]
+[assembly: AssemblyCopyright("Copyright 2020 Microsoft")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: AssemblyMetadata("TargetPlatform","UAP")]
