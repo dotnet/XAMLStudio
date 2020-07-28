@@ -61,6 +61,7 @@ namespace XamlStudio.Services
 
         private ViewLifetimeControl(CoreWindow newWindow)
         {
+            // This seems to be unused, but it would not work well since you can't create a new View from the CoreApplication on WinUI Desktop.
             Dispatcher = newWindow.Dispatcher;
             _window = newWindow;
             Id = ApplicationView.GetApplicationViewIdForWindow(_window);

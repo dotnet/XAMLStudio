@@ -61,6 +61,7 @@ namespace XamlStudio.Services
         {
             ViewLifetimeControl viewControl = null;
 
+            // This seems to be unused, but it would not work well since you can't create a new View from the CoreApplication on WinUI Desktop.
             await CoreApplication.CreateNewView().Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 viewControl = ViewLifetimeControl.CreateForCurrentView();

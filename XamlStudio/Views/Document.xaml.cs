@@ -13,6 +13,7 @@ using Windows.Graphics.DirectX;
 using Windows.Graphics.Display;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
@@ -180,14 +181,12 @@ namespace XamlStudio.Views
         private void InsertText(string text)
         {
             CodeEditor.SelectedText = text;
-
-            #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () =>
+            
+            DispatcherQueue.GetForCurrentThread().TryEnqueue(DispatcherQueuePriority.Low, () =>
             {
                 ViewModel.HasCompiled = false;
                 ViewModel.UpdateXamlCommand.Execute(null);
             });
-            #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
         private async Task UpdateXaml(RoutedEventArgs args)

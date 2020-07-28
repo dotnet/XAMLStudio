@@ -70,12 +70,10 @@ namespace XamlStudio.Views
 
         private void ClearSelection()
         {
-            #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () =>
+            DispatcherQueue.GetForCurrentThread().TryEnqueue(DispatcherQueuePriority.Low, () =>
             {
                 TypeList.SelectedItem = null;
             });
-            #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
         private void Favorite_Click(object sender, RoutedEventArgs e)
