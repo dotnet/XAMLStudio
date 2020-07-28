@@ -10,6 +10,7 @@
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 // ******************************************************************
 
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -143,12 +144,10 @@ namespace Microsoft.Toolkit.Uwp.UI.Extensions.Future
                 {
                     // We need to dispatch this so the underlying selection event from our invoke processes.
                     // Otherwise, we just end up back where we started.  We don't care about waiting for this to finish.
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    sender.Dispatcher.RunIdleAsync((e) =>
+                    DispatcherQueue.GetForCurrentThread().TryEnqueue(DispatcherQueuePriority.Low, () =>
                     {
                         sender.SelectedItem = null;
                     });
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                     content.Visibility = Visibility.Collapsed;
                 }

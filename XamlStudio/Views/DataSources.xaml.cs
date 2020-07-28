@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
+using Windows.System;
 using Windows.System.Threading;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -67,8 +68,7 @@ namespace XamlStudio.Views
 
         private void LiveDataSourceUri_LostFocus(object sender, RoutedEventArgs e)
         {
-            #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            DispatcherQueue.GetForCurrentThread().TryEnqueue(DispatcherQueuePriority.Normal, async () =>
             {
                 // Refresh after UI pass so we can get updated text.
                 await MainViewModel.ActiveDocumentViewModel.RefreshLiveDataContextCommand.ExecuteAsync(null);
@@ -78,7 +78,6 @@ namespace XamlStudio.Views
 
                 Analytics.TrackEvent("DataSources_Url_LostFocus");
             });
-            #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
         private void SetDataContext(DataContext context)
@@ -319,10 +318,11 @@ namespace XamlStudio.Views
                 //if (SettingsService.Instance.IsAutoCompileEnabled.Value)
                 //{
                     this._autocompileTimer?.Cancel(); // Stop Old Timer
-                                                      // Create Compile Timer
-                    this._autocompileTimer = ThreadPoolTimer.CreateTimer(async (e) =>
+                    var dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+                    // Create Compile Timer
+                    this._autocompileTimer = ThreadPoolTimer.CreateTimer((e) =>
                     {
-                        await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () =>
+                        dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
                         {
                             MainViewModel.ActiveDocumentViewModel.ParseDataContextCommand.Execute(null);
                         });

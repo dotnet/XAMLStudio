@@ -296,7 +296,7 @@ namespace XamlStudio.Views
                     NavMenu.SelectedItem = item;
 
                     // Set Focus to Menu
-                    var T = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                    DispatcherQueue.GetForCurrentThread().TryEnqueue(DispatcherQueuePriority.Normal, () =>
                     {
                         var content = ToolboxPresenter.FindDescendant<ContentPresenter>().Content as Control;
                         if (content != null)

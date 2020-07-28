@@ -11,6 +11,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.System;
 using Windows.System.Threading;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -450,9 +451,10 @@ namespace XamlStudio.ViewModels
                 {
                     this._autocompileTimer?.Cancel(); // Stop Old Timer
                                                       // Create Compile Timer
-                    this._autocompileTimer = ThreadPoolTimer.CreateTimer(async (e) =>
+                    var dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+                    this._autocompileTimer = ThreadPoolTimer.CreateTimer((e) =>
                     {
-                        await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () =>
+                        dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
                         {
                             UpdateXamlCommand?.Execute(null);
                         });
