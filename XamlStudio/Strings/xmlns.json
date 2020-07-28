@@ -58,21 +58,5 @@
   {
     "name": "winui",
     "path": "using:Microsoft.UI.Xaml.Controls"
-  },
-  {
-    "name": "telerikInput",
-    "path": "using:Telerik.UI.Xaml.Controls.Input"
-  },
-  {
-    "name": "telerikPrimitives",
-    "path": "using:Telerik.UI.Xaml.Controls.Primitives"
-  },
-  {
-    "name": "telerikChart",
-    "path": "using:Telerik.UI.Xaml.Controls.Chart"
-  },
-  {
-    "name": "telerikGrid",
-    "path": "using:Telerik.UI.Xaml.Controls.Grid"
   }
 ]
