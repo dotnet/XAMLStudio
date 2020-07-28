@@ -133,9 +133,6 @@
     <PackageReference Include="Monaco.Editor">
       <Version>0.8.1-alpha</Version>
     </PackageReference>
-    <PackageReference Include="Telerik.UI.for.UniversalWindowsPlatform">
-      <Version>1.0.1.7</Version>
-    </PackageReference>
     <SDKReference Include="Microsoft.Services.Store.Engagement, Version=10.0">
       <Name>Microsoft Engagement Framework</Name>
     </SDKReference>
