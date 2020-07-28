@@ -2,7 +2,7 @@
   {
     "name": "Windows Community Toolkit",
     "url": "https://github.com/windows-toolkit/WindowsCommunityToolkit/",
-    "version": "6.0.0",
+    "version": "7.0.0-preview1",
     "license": "MIT",
     "license_url": "https://github.com/windows-toolkit/WindowsCommunityToolkit/blob/master/license.md",
     "license_text": [
@@ -23,7 +23,7 @@
   {
     "name": "Windows UI Library",
     "url": "https://github.com/Microsoft/microsoft-ui-xaml",
-    "version": "2.3.191129002",
+    "version": "2.4.2",
     "license": "MIT",
     "license_url": "https://github.com/Microsoft/microsoft-ui-xaml/blob/master/LICENSE",
     "license_text": [
@@ -83,7 +83,7 @@
   {
     "name": "Json.NET",
     "url": "https://www.newtonsoft.com/json",
-    "version": "10.0.3",
+    "version": "12.0.3",
     "license": "MIT",
     "license_url": "https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md",
     "license_text": [
@@ -117,7 +117,7 @@
   {
     "name": "GuiLabs.Language.Xml",
     "url": "https://github.com/KirillOsenkov/XmlParser",
-    "version": "1.2.44",
+    "version": "1.2.46",
     "license": "Apache V2",
     "license_url": "https://github.com/KirillOsenkov/XmlParser/blob/master/LICENSE",
     "license_text": [
@@ -302,7 +302,7 @@
   {
     "name": "Visual Studio App Center SDK for .NET",
     "url": "https://github.com/Microsoft/AppCenter-SDK-DotNet/tree/master",
-    "version": "1.12.0",
+    "version": "3.4.0",
     "license": "MIT",
     "license_url": "https://github.com/Microsoft/AppCenter-SDK-DotNet/blob/master/license.txt",
     "license_text": [
