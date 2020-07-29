@@ -194,7 +194,7 @@
                 <MenuFlyout>
                     <MenuFlyoutItem Text="Reset"/>
                     <MenuFlyoutSeparator/>
-                    <ToggleMenuFlyoutItem Text="Duplicate" Command="{x:Bind ViewModel.NewDocumentCommand}"/>
+                    <ToggleMenuFlyoutItem Text="Duplicate" Command="{x:Bind ViewModel.DuplicateDocumentCommand}"/>
                 </MenuFlyout>
             </muxc:TabView.ContextFlyout>
         </muxc:TabView>

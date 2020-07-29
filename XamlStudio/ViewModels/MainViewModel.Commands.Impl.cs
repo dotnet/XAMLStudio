@@ -36,6 +36,20 @@ namespace XamlStudio.ViewModels
             Analytics.TrackEvent("Document_New");
         }
 
+        private void DuplicateDocument(RoutedEventArgs args)
+        {
+
+            OpenFiles.Add(new Models.XamlDocument("Untitled-" + _untitledCount++)
+            {
+                // TODO: Make this template somewhere user-editable?
+                Content = ActiveFile.Content
+            });;
+
+            ActiveFile = OpenFiles.Last();
+
+
+        }
+
         private async void OpenDocument(RoutedEventArgs args)
         {
             var picker = new FileOpenPicker();
