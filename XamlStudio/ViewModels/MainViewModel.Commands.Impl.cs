@@ -38,15 +38,13 @@ namespace XamlStudio.ViewModels
 
         private void DuplicateDocument(RoutedEventArgs args)
         {
-
             OpenFiles.Add(new Models.XamlDocument("Untitled-" + _untitledCount++)
             {
                 Content = ActiveFile.Content
             });;
 
             ActiveFile = OpenFiles.Last();
-
-
+            Analytics.TrackEvent("Document_New");
         }
 
         private async void OpenDocument(RoutedEventArgs args)
