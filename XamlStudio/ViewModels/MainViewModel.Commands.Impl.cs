@@ -41,7 +41,6 @@ namespace XamlStudio.ViewModels
 
             OpenFiles.Add(new Models.XamlDocument("Untitled-" + _untitledCount++)
             {
-                // TODO: Make this template somewhere user-editable?
                 Content = ActiveFile.Content
             });;
 
