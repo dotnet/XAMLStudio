@@ -85,7 +85,7 @@ namespace XamlStudio.Views
                 // TODO: Clean-up these initialize calls to make sure this list is centralized...
                 await AppAssemblyInfo.Instance.InitializeAsync(new Assembly[] {
                     typeof(Microsoft.UI.Xaml.Controls.NavigationView).Assembly,
-                    typeof(Microsoft.Toolkit.Uwp.UI.Controls.TabView).Assembly,
+                    typeof(Microsoft.Toolkit.Uwp.UI.Controls.BladeView).Assembly,
                     typeof(Microsoft.Toolkit.Uwp.UI.Controls.DataGrid).Assembly,
                     typeof(Microsoft.Toolkit.Uwp.UI.Converters.BoolToVisibilityConverter).Assembly,
                     typeof(Microsoft.Xaml.Interactions.Core.DataTriggerBehavior).Assembly,
@@ -222,11 +222,9 @@ namespace XamlStudio.Views
             }
         }
 
-        private void DocumentTabs_TabClosing(object sender, Microsoft.Toolkit.Uwp.UI.Controls.TabClosingEventArgs e)
+        private void DocumentTabs_TabClosing(Microsoft.UI.Xaml.Controls.TabView sender, Microsoft.UI.Xaml.Controls.TabViewTabCloseRequestedEventArgs args)
         {
-            ViewModel.CloseActiveDocumentCommand.Execute(e.Item);
-
-            e.Cancel = true; // We'll remove item ourselves from collection when we're done in command, so don't have the TabView do it for us.
+            ViewModel.CloseActiveDocumentCommand.Execute(args.Item);
         }
 
         private void NavMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -134,6 +134,8 @@ namespace XamlStudio.ViewModels
             // Remove what we had as active (otherwise, the active would be null and we'd hit an error)
             OpenFiles.RemoveAt(OpenFiles.IndexOf(document));
 
+            ActiveFile = OpenFiles.Last();
+
             Analytics.TrackEvent("Document_Close");
 
             return true;

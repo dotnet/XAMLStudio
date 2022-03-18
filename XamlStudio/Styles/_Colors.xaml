@@ -33,7 +33,7 @@
     <SolidColorBrush x:Key="SystemControlHighlightAltListAccentHighBrush" Color="{StaticResource Color-Red-Light-2}" />
     <SolidColorBrush x:Key="SystemControlHighlightListAccentLowBrush" Color="{StaticResource Color-Red-Light-1}" />
     <SolidColorBrush x:Key="SystemControlHighlightListAccentMediumBrush" Color="{StaticResource Color-Red-Light-2}" />
-    
+
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">
             <SolidColorBrush x:Key="Brush-Grey-Light-0" Color="{StaticResource Color-Blue-Dark-0}" />

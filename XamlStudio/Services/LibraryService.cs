@@ -42,7 +42,7 @@ namespace XamlStudio.Services
                     // TODO: Clean-up these initialize calls to make sure this list is centralized... (MainPage, XamlRenderService)
                     await AppAssemblyInfo.Instance.InitializeAsync(new Assembly[] {
                         typeof(Microsoft.UI.Xaml.Controls.NavigationView).Assembly,
-                        typeof(Microsoft.Toolkit.Uwp.UI.Controls.TabView).Assembly,
+                        typeof(Microsoft.Toolkit.Uwp.UI.Controls.BladeView).Assembly,
                         typeof(Microsoft.Toolkit.Uwp.UI.Controls.DataGrid).Assembly,
                         typeof(Microsoft.Toolkit.Uwp.UI.Converters.BoolToVisibilityConverter).Assembly,
                         typeof(Microsoft.Xaml.Interactions.Core.DataTriggerBehavior).Assembly
