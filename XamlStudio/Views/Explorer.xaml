@@ -14,7 +14,7 @@
 
     <Page.Resources>
         <MenuFlyout x:Key="TabItemFlyout">
-            <MenuFlyoutItem x:Uid="Tab_Menu_Duplicate"
+            <MenuFlyoutItem x:Uid="Explorer_Tab_Menu_Duplicate"
                             Command="{x:Bind MainViewModel.DuplicateDocumentCommand}"
                             Icon="Copy"/>
         </MenuFlyout>

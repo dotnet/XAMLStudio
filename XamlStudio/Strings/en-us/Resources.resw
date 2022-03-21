@@ -527,11 +527,20 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>New Document (Ctrl+N)</value>
     <comment>Tooltip for New Document button in TabView at top of window</comment>
   </data>
-  <data name="Tab_Menu_Duplicate.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+  <!-- TODO: Consolidate Tab_Menu -->
+  <data name="MainPage_Tab_Menu_Duplicate.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Duplicate Document</value>
     <comment>Accessibility Name for Tab Menu to duplicate the document</comment>
   </data>
-  <data name="Tab_Menu_Duplicate.Text" xml:space="preserve">
+  <data name="MainPage_Tab_Menu_Duplicate.Text" xml:space="preserve">
+    <value>Duplicate Tab</value>
+    <comment>Text for Tab Menu to duplicate the document</comment>
+  </data>
+  <data name="Explorer_Tab_Menu_Duplicate.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Duplicate Document</value>
+    <comment>Accessibility Name for Tab Menu to duplicate the document</comment>
+  </data>
+  <data name="Explorer_Tab_Menu_Duplicate.Text" xml:space="preserve">
     <value>Duplicate Tab</value>
     <comment>Text for Tab Menu to duplicate the document</comment>
   </data>

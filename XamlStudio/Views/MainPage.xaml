@@ -35,7 +35,7 @@
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
 
             <MenuFlyout x:Key="TabItemFlyout">
-                <MenuFlyoutItem x:Uid="Tab_Menu_Duplicate"
+                <MenuFlyoutItem x:Uid="MainPage_Tab_Menu_Duplicate"
                                 Command="{x:Bind ViewModel.DuplicateDocumentCommand}"
                                 Icon="Copy"/>
             </MenuFlyout>
