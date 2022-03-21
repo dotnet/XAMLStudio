@@ -104,7 +104,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Extensions.Future
                 // These still need independent AutomationProperties.LiveSetting set to be read.
                 if (GetUpdateLiveRegionChildren(element))
                 {
-                    foreach (var child in element.FindDescendants<FrameworkElement>())
+                    foreach (var child in element.FindDescendants().OfType<FrameworkElement>())
                     {
                         if (AutomationProperties.GetLiveSetting(child) != AutomationLiveSetting.Off)
                         {

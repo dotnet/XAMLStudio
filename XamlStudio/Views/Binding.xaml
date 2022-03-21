@@ -32,28 +32,28 @@
                     <TextBlock Grid.Column="1">x<Run Text="{x:Bind BindingCount, Mode=OneWay}"/></TextBlock>
                 </Grid>
                 <TextBlock Text="{x:Bind LastKnownBindingState, Mode=OneWay}" HorizontalAlignment="Right"/>
-                <future:SwitchPresenter Value="{x:Bind HasConverter}"
+                <controls:SwitchPresenter Value="{x:Bind HasConverter}"
                                                         TargetType="x:Boolean">
-                    <future:Case Value="True">
+                    <controls:Case Value="True">
                         <StackPanel>
                             <TextBlock Text="{x:Bind LastConvertedValue.ToString(), Mode=OneWay}"/>
                             <TextBlock Text="=&gt;" HorizontalAlignment="Center"/>
                             <TextBlock Text="{x:Bind LastConvertedResult.ToString(), Mode=OneWay}" HorizontalAlignment="Right"/>
                         </StackPanel>
-                    </future:Case>
-                    <future:Case Value="False">
+                    </controls:Case>
+                    <controls:Case Value="False">
                         <TextBlock Text="{x:Bind LastConvertedResultOrValue.ToString(), Mode=OneWay}" HorizontalAlignment="Right"/>
-                    </future:Case>
-                </future:SwitchPresenter>
+                    </controls:Case>
+                </controls:SwitchPresenter>
                 <TextBlock Style="{ThemeResource CaptionTextBlockStyle}"
                                            Text="{x:Bind LastConvertedTime.ToString('HH:mm:ss.fffffff', globalization:CultureInfo.CurrentCulture), Mode=OneWay}" />
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="ConversionRecordTemplate" x:DataType="models:ConversionRecord">
             <StackPanel>
-                <future:SwitchPresenter Value="{x:Bind Parent.HasConverter}"
+                <controls:SwitchPresenter Value="{x:Bind Parent.HasConverter}"
                                         TargetType="x:Boolean">
-                    <future:Case Value="True">
+                    <controls:Case Value="True">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -64,11 +64,11 @@
                             <TextBlock Text="=&gt;" Grid.Column="1"/>
                             <TextBlock Text="{x:Bind Result.ToString(), Mode=OneWay}" HorizontalAlignment="Right" Grid.Column="2"/>
                         </Grid>
-                    </future:Case>
-                    <future:Case Value="False">
+                    </controls:Case>
+                    <controls:Case Value="False">
                         <TextBlock Text="{x:Bind ResultOrValue.ToString(), Mode=OneWay}" HorizontalAlignment="Right"/>
-                    </future:Case>
-                </future:SwitchPresenter>
+                    </controls:Case>
+                </controls:SwitchPresenter>
                 <TextBlock Style="{ThemeResource CaptionTextBlockStyle}"
                            Text="{x:Bind TimeStamp.ToString('HH:mm:ss.fffffff', globalization:CultureInfo.CurrentCulture)}" />
             </StackPanel>
@@ -76,9 +76,9 @@
         <DataTemplate x:Key="ConversionRecordWithParentTemplate" x:DataType="models:ConversionRecord">
             <StackPanel HorizontalAlignment="Stretch" Margin="0,0,8,0">
                 <TextBlock Text="{x:Bind Parent.ToString()}" />
-                <future:SwitchPresenter Value="{x:Bind Parent.HasConverter}"
+                <controls:SwitchPresenter Value="{x:Bind Parent.HasConverter}"
                                         TargetType="x:Boolean">
-                    <future:Case Value="True">
+                    <controls:Case Value="True">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -89,11 +89,11 @@
                             <TextBlock Text="=&gt;" Grid.Column="1"/>
                             <TextBlock Text="{x:Bind Result.ToString(), Mode=OneWay}" HorizontalAlignment="Right" Grid.Column="2"/>
                         </Grid>
-                    </future:Case>
-                    <future:Case Value="False">
+                    </controls:Case>
+                    <controls:Case Value="False">
                         <TextBlock Text="{x:Bind ResultOrValue.ToString(), Mode=OneWay}" HorizontalAlignment="Right"/>
-                    </future:Case>
-                </future:SwitchPresenter>
+                    </controls:Case>
+                </controls:SwitchPresenter>
                 <TextBlock Style="{ThemeResource CaptionTextBlockStyle}"
                            Text="{x:Bind TimeStamp.ToString('HH:mm:ss.fffffff', globalization:CultureInfo.CurrentCulture)}" />
             </StackPanel>
@@ -146,11 +146,11 @@
             <x:String>History</x:String>
         </ComboBox>
         
-        <future:SwitchPresenter Grid.Row="2"
+        <controls:SwitchPresenter Grid.Row="2"
                                 Margin="20,0,0,0"
                                 Visibility="{x:Bind services:SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value, Mode=OneWay}"
                                 Value="{x:Bind BindingViewMode.SelectedValue, Mode=OneWay}">
-            <future:Case Value="Bindings">
+            <controls:Case Value="Bindings">
                 <ListView HorizontalContentAlignment="Stretch"
                           SelectionMode="None"
                           IsItemClickEnabled="True"
@@ -158,10 +158,10 @@
                           ItemContainerStyle="{StaticResource ListViewItemContainerWideStyle}"
                           ItemTemplate="{StaticResource XamlBindingInfoTemplate}"
                           ItemsSource="{x:Bind MainViewModel.ActiveDocumentViewModel.Result.Bindings, Mode=OneWay}"/>
-            </future:Case>
-            <future:Case Value="History">
-                <future:SwitchPresenter Value="{x:Bind HistoryFilter, Mode=OneWay}" TargetType="models:XamlBindingInfo">
-                    <future:Case Value="{x:Null}">
+            </controls:Case>
+            <controls:Case Value="History">
+                <controls:SwitchPresenter Value="{x:Bind HistoryFilter, Mode=OneWay}" TargetType="models:XamlBindingInfo">
+                    <controls:Case Value="{x:Null}">
                         <ListView HorizontalContentAlignment="Stretch"
                                   SelectionMode="None"
                                   IsItemClickEnabled="True"
@@ -169,8 +169,8 @@
                                   ItemContainerStyle="{StaticResource ListViewItemContainerWideStyle}"
                                   ItemTemplate="{StaticResource ConversionRecordWithParentTemplate}"
                                   ItemsSource="{x:Bind MainViewModel.ActiveDocumentViewModel.BindingHistory, Mode=OneWay}" />
-                    </future:Case>
-                    <future:Case IsDefault="True">
+                    </controls:Case>
+                    <controls:Case IsDefault="True">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -199,10 +199,10 @@
                                       ItemTemplate="{StaticResource ConversionRecordTemplate}"
                                       ItemsSource="{x:Bind HistoryFilter.BindingHistory, Mode=OneWay}" />
                         </Grid>
-                    </future:Case>
-                </future:SwitchPresenter>
-            </future:Case>
-        </future:SwitchPresenter>
+                    </controls:Case>
+                </controls:SwitchPresenter>
+            </controls:Case>
+        </controls:SwitchPresenter>
         <TextBlock x:Uid="Debug_Binding_Disabled_Message"
                    Grid.Row="2"
                    Margin="12"

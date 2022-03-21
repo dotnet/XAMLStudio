@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:ex="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+      xmlns:ex="using:Microsoft.Toolkit.Uwp.UI"
       xmlns:fex="using:Microsoft.Toolkit.Uwp.UI.Extensions.Future"
       xmlns:future="using:Microsoft.Toolkit.Uwp.UI.Controls.Future"
       xmlns:helper="using:XamlStudio.Helpers"
@@ -95,9 +95,9 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         <!--</controls:Expander>-->
-        <!--<future:SwitchPresenter x:Name="FolderExpander"
+        <!--<controls:SwitchPresenter x:Name="FolderExpander"
                                 Grid.Row="2">
-            <future:Case IsDefault="True">
+            <controls:Case IsDefault="True">
                 <controls:Expander Header="NO FOLDER OPENED" IsExpanded="True"
                                    HeaderStyle="{StaticResource VSCodeExpanderStyle}">
                     <StackPanel Margin="16">
@@ -105,13 +105,13 @@
                         <Button Margin="0,8,0,0">Open Folder</Button>
                     </StackPanel>
                 </controls:Expander>
-            </future:Case>
-            <future:Case Value="True">
+            </controls:Case>
+            <controls:Case Value="True">
                 <controls:Expander Header="{Binding FolderName}" IsExpanded="True"
                                    HeaderStyle="{StaticResource VSCodeExpanderStyle}">
                     <xc:TreeView/>
                 </controls:Expander>
-            </future:Case>
-        </future:SwitchPresenter>-->
+            </controls:Case>
+        </controls:SwitchPresenter>-->
     </Grid>
 </Page>

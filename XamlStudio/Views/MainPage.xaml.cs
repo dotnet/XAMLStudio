@@ -1,6 +1,6 @@
 ﻿using Microsoft.AppCenter.Analytics;
 using Microsoft.Services.Store.Engagement;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
+using Microsoft.Toolkit.Uwp.UI;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -296,7 +296,7 @@ namespace XamlStudio.Views
                     // Set Focus to Menu
                     DispatcherQueue.GetForCurrentThread().TryEnqueue(DispatcherQueuePriority.Normal, () =>
                     {
-                        var content = ToolboxPresenter.FindDescendant<ContentPresenter>().Content as Control;
+                        var content = ToolboxPresenter.FindDescendant<ContentPresenter>()?.Content as Control;
                         if (content != null)
                         {
                             content.Focus(FocusState.Keyboard);

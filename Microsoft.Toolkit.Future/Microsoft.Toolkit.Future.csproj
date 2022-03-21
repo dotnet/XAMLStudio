@@ -110,9 +110,6 @@
     <Compile Include="Controls\ContentSizer\ContentSizer.Events.cs" />
     <Compile Include="Controls\ContentSizer\ContentSizer.Properties.cs" />
     <Compile Include="Controls\ManualToggleButton.cs" />
-    <Compile Include="Controls\SwitchPresenter\Case.cs" />
-    <Compile Include="Controls\SwitchPresenter\CaseCollection.cs" />
-    <Compile Include="Controls\SwitchPresenter\SwitchPresenter.cs" />
     <Compile Include="Converters\CollectionContainsConverter.cs" />
     <Compile Include="Data\Grouping.cs" />
     <Compile Include="Extensions\Bind.Visibility.cs" />
@@ -136,19 +133,14 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.10</Version>
+      <Version>6.2.13</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
-      <Version>7.0.0-preview4</Version>
+      <Version>7.1.2</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Page Include="Controls\ContentSizer\ContentSizer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Page>
-    <Page Include="Controls\SwitchPresenter\SwitchPresenter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

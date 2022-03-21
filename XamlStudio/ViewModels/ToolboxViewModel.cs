@@ -60,10 +60,17 @@ namespace XamlStudio.ViewModels
             {
                 foreach (string typename in SettingsService.Instance.FavoriteTypes)
                 {
-                    var t = Type.GetType(typename, false, false);
-                    if (t != null)
+                    try
                     {
-                        Favorites.Add(t);
+                        var t = Type.GetType(typename, false, false);
+                        if (t != null)
+                        {
+                            Favorites.Add(t);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
                     }
                 }
             }

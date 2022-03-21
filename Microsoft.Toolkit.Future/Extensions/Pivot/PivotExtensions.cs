@@ -47,7 +47,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Extensions.Future
             var pivot = sender as Windows.UI.Xaml.Controls.Pivot;
 
             // Make sure we find the PivotHeaderPanels for just this Pivot (in case we have embedded pivots)
-            var panels = pivot.FindDescendants<PivotHeaderPanel>().Where(panel => panel.FindAscendant<Windows.UI.Xaml.Controls.Pivot>() == pivot);
+            var panels = pivot.FindDescendants().OfType<PivotHeaderPanel>().Where(panel => panel.FindAscendant<Windows.UI.Xaml.Controls.Pivot>() == pivot);
 
             var style = GetPivotHeaderItemStyle(pivot);
 
@@ -101,7 +101,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Extensions.Future
         private static void SetContentVisible(Windows.UI.Xaml.Controls.Pivot pivot, bool value)
         {
             // Make sure we find the PivotHeaderPanels for just this Pivot (in case we have embedded pivots)
-            var presenter = pivot.FindDescendantByName("PivotItemPresenter");
+            var presenter = pivot.FindDescendant("PivotItemPresenter");
 
             if (presenter != null)
             {

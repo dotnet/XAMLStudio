@@ -118,7 +118,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Extensions.Future
             else
             {
                 // Make sure we're visible if we toggle this off.
-                var content = navview.FindDescendantByName(CONTENT_GRID);
+                var content = navview.FindDescendant(CONTENT_GRID);
 
                 if (content != null)
                 {
@@ -129,7 +129,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Extensions.Future
 
         private static void Navview_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
-            var content = sender.FindDescendantByName(CONTENT_GRID);
+            var content = sender.FindDescendant(CONTENT_GRID);
 
             if (content != null)
             {

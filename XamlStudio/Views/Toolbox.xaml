@@ -4,7 +4,7 @@
       xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:ex="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+      xmlns:ex="using:Microsoft.Toolkit.Uwp.UI"
       xmlns:future="using:Microsoft.Toolkit.Uwp.UI.Controls.Future"
       xmlns:futureConverters="using:Microsoft.Toolkit.Future.Converters"
       xmlns:globalization="using:System.Globalization"

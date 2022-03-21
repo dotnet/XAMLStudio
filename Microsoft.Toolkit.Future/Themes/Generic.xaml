@@ -1,7 +1,6 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///Microsoft.Toolkit.Future/Controls/ContentSizer/ContentSizer.xaml" />
-        <ResourceDictionary Source="ms-appx:///Microsoft.Toolkit.Future/Controls/SwitchPresenter/SwitchPresenter.xaml" />
         <ResourceDictionary Source="ms-appx:///Microsoft.Toolkit.Future/Extensions/Pivot/Pivot.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

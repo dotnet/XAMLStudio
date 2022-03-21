@@ -70,10 +70,17 @@ namespace XamlStudio.Services
             {
                 foreach (var tname in lib.TypeHints)
                 {
-                    var t = Type.GetType(tname, false, false);
-                    if (t != null)
+                    try
                     {
-                        items.Add(t);
+                        var t = Type.GetType(tname, false, false);
+                        if (t != null)
+                        {
+                            items.Add(t);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
                     }
                 }
             }
