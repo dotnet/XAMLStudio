@@ -40,11 +40,11 @@ namespace XamlStudio.ViewModels
         {
             OpenFiles.Add(new Models.XamlDocument("Untitled-" + _untitledCount++)
             {
-                Content = ActiveFile.Content
+                Content = "" + ActiveFile.Content
             });;
 
             ActiveFile = OpenFiles.Last();
-            Analytics.TrackEvent("Document_New");
+            Analytics.TrackEvent("Document_Duplicate");
         }
 
         private async void OpenDocument(RoutedEventArgs args)

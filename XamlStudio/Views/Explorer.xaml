@@ -12,6 +12,14 @@
       xmlns:model="using:XamlStudio.Models"
       mc:Ignorable="d">
 
+    <Page.Resources>
+        <MenuFlyout x:Key="TabItemFlyout">
+            <MenuFlyoutItem x:Uid="Tab_Menu_Duplicate"
+                            Command="{x:Bind MainViewModel.DuplicateDocumentCommand}"
+                            Icon="Copy"/>
+        </MenuFlyout>
+    </Page.Resources>
+
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="54" />
@@ -55,7 +63,8 @@
                      DataContext="{x:Bind}"
                      ItemContainerStyle="{StaticResource Style-ListBoxItem-Expolorer}"
                      ItemsSource="{x:Bind MainViewModel.OpenFiles}"
-                     SelectedItem="{x:Bind MainViewModel.ActiveFile, Mode=TwoWay}">
+                     SelectedItem="{x:Bind MainViewModel.ActiveFile, Mode=TwoWay}"
+                     ContextFlyout="{StaticResource TabItemFlyout}">
                 <ListBox.ItemTemplate>
                     <DataTemplate x:DataType="model:XamlDocument">
                         <Grid AutomationProperties.Name="{Binding Title}">

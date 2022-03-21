@@ -322,10 +322,5 @@ namespace XamlStudio.Views
                 ViewModel.ActiveFile = ViewModel.OpenFiles.First();
             }
         }
-
-        private void ToggleMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
-        {
-            // TODO: duplicate
-        }
     }
 }

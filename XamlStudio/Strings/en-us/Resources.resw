@@ -368,7 +368,7 @@
   </data>
   <data name="SettingsPanel_About_Credits.Text" xml:space="preserve">
     <value>Developed By: Michael A. Hawker
-Special Thanks To: Justin Liu, Matthew Whilden, Lainie Huston, Mike Pell, the 'Partners, Analytics, and essential eXperiences' Team, and the Microsoft Garage.</value>
+Special Thanks To: Justin Liu, Matthew Whilden, Lainie Huston, Salman Chishti, Mike Pell, the 'Partners, Analytics, and essential eXperiences' Team, and the Microsoft Garage.</value>
     <comment>By lines for credits on the About screen</comment>
   </data>
   <data name="SettingsPanel_AnalyticsToggle.Header" xml:space="preserve">
@@ -526,6 +526,14 @@ Please help us by reporting this issue in Feedback Hub.</value>
   <data name="MainPage_Button_New.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>New Document (Ctrl+N)</value>
     <comment>Tooltip for New Document button in TabView at top of window</comment>
+  </data>
+  <data name="Tab_Menu_Duplicate.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Duplicate Document</value>
+    <comment>Accessibility Name for Tab Menu to duplicate the document</comment>
+  </data>
+  <data name="Tab_Menu_Duplicate.Text" xml:space="preserve">
+    <value>Duplicate Tab</value>
+    <comment>Text for Tab Menu to duplicate the document</comment>
   </data>
   <data name="Toolbox_Button_Docs.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Open Documentation</value>

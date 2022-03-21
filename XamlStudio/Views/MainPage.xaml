@@ -33,6 +33,12 @@
             </ResourceDictionary.ThemeDictionaries>
 
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+
+            <MenuFlyout x:Key="TabItemFlyout">
+                <MenuFlyoutItem x:Uid="Tab_Menu_Duplicate"
+                                Command="{x:Bind ViewModel.DuplicateDocumentCommand}"
+                                Icon="Copy"/>
+            </MenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -164,7 +170,8 @@
             </muxc:TabView.Resources>
             <muxc:TabView.TabItemTemplate>
                 <DataTemplate x:DataType="models:XamlDocument">
-                    <muxc:TabViewItem Header="{x:Bind Title, Mode=OneWay}">
+                    <muxc:TabViewItem Header="{x:Bind Title, Mode=OneWay}"
+                                      ContextFlyout="{StaticResource TabItemFlyout}">
                         <controls:SwitchPresenter
                             x:Name="Parent"
                         HorizontalAlignment="Stretch"
@@ -190,13 +197,6 @@
                     </muxc:TabViewItem>
                 </DataTemplate>
             </muxc:TabView.TabItemTemplate>
-            <muxc:TabView.ContextFlyout>
-                <MenuFlyout>
-                    <MenuFlyoutItem Text="Reset"/>
-                    <MenuFlyoutSeparator/>
-                    <ToggleMenuFlyoutItem Text="Duplicate" Command="{x:Bind ViewModel.DuplicateDocumentCommand}"/>
-                </MenuFlyout>
-            </muxc:TabView.ContextFlyout>
         </muxc:TabView>
     </Grid>
 </Page>
