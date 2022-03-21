@@ -26,6 +26,7 @@
         <controls:DataGridTemplateColumn x:Key="DataGridTemplateColumn" />
 
         <!--  Toolkit Brushes  -->
+        <brushes:RadialGradientBrush x:Key="RadialGradientBrush" />
         <brushes:TilesBrush x:Key="TilesBrush" />
 
         <!--  XAML Behaviors  -->
@@ -42,7 +43,9 @@
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <controls:AdaptiveGridView ToolTipService.ToolTip="Test"/>
-        <ListView ex:ListViewExtensions.AlternateColor="#FFFFFFFF" />
+        <controls:AdaptiveGridView/>
+        <ListView ex:ListViewExtensions.AlternateColor="#FFFFFFFF"
+                  ex:FrameworkElementExtensions.AncestorType="Grid"
+                  Tag="{Binding (ex:FrameworkElementExtensions.Ancestor),RelativeSource={RelativeSource Self}}"/>
     </Grid>
 </Page>
