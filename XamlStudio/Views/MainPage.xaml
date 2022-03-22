@@ -33,6 +33,8 @@
             </ResourceDictionary.ThemeDictionaries>
 
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <local:DocumentToViewModelConverter x:Key="DocumentToViewModelConverter"
+                                                MainViewModel="{x:Bind ViewModel}"/>
 
             <MenuFlyout x:Key="TabItemFlyout">
                 <MenuFlyoutItem x:Uid="MainPage_Tab_Menu_Duplicate"
@@ -187,8 +189,7 @@
                                 <local:Document
                                 x:Name="Document"
                                 HorizontalAlignment="Stretch"
-                                LoadedDocument="{Binding}"
-                                MainViewModel="{Binding Tag.ViewModel, ElementName=Parent}" />
+                                ViewModel="{Binding Converter={StaticResource DocumentToViewModelConverter}}" />
                             </controls:Case>
                             <controls:Case Value="Settings">
                                 <local:SettingsPanelPage HorizontalAlignment="Stretch" MainViewModel="{Binding Tag.ViewModel, ElementName=Parent}" />

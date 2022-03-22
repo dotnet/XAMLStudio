@@ -96,6 +96,16 @@ namespace XamlStudio.ViewModels
                     }
                 }
             }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (var item in e.OldItems)
+                {
+                    if (item is XamlDocument xd)
+                    {
+                        DocumentViewModels.Remove(xd);
+                    }
+                }
+            }
         }
     }
 }

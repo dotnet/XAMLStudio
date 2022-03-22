@@ -33,29 +33,6 @@ namespace XamlStudio.Views
 
         private Type _lastHoverType;
 
-        private object _initializeLock = new object();
-
-        public MainViewModel MainViewModel
-        {
-            get { return (MainViewModel)GetValue(MainViewModelProperty); }
-            set { SetValue(MainViewModelProperty, value); }
-        }
-
-        public static readonly DependencyProperty MainViewModelProperty =
-            DependencyProperty.Register(nameof(MainViewModel), typeof(MainViewModel), typeof(Document), new PropertyMetadata(null, (sender, args) =>
-            {
-                var document = (sender as Document);
-                lock (document._initializeLock)
-                {
-                    if (document != null && document.MainViewModel != null &&
-                        document.LoadedDocument != null && document.ViewModel == null)
-                    {
-                        // Get ViewModel from MainViewModel creation.
-                        document.InitializeViewModel(document.MainViewModel.DocumentViewModels[document.LoadedDocument]);
-                    }
-                }
-            }));
-
         public DocumentViewModel ViewModel
         {
             get { return (DocumentViewModel)GetValue(ViewModelProperty); }
@@ -63,7 +40,25 @@ namespace XamlStudio.Views
         }
 
         public static readonly DependencyProperty ViewModelProperty =
-            DependencyProperty.Register(nameof(ViewModel), typeof(DocumentViewModel), typeof(Document), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(ViewModel), typeof(DocumentViewModel), typeof(Document), new PropertyMetadata(null, (sender, args) =>
+            {
+                if (sender is Document document)
+                {
+                    var xd = args.NewValue as DocumentViewModel;
+
+                    // Unload our old one if it's not the same as our current
+                    if (args.OldValue is DocumentViewModel oldModel && xd != args.OldValue)
+                    {
+                        document.UnloadViewModel(oldModel);
+                    }
+
+                    // Setup our new one (if it's not the same as our current)
+                    if (args.OldValue == null || xd != args.OldValue)
+                    {
+                        document.InitializeViewModel(xd);
+                    }
+                }
+            }));
 
         public XamlDocument LoadedDocument
         {
@@ -72,21 +67,7 @@ namespace XamlStudio.Views
         }
 
         public static readonly DependencyProperty LoadedDocumentProperty =
-            DependencyProperty.Register(nameof(LoadedDocument), typeof(XamlDocument), typeof(Document), new PropertyMetadata(null, (sender, args) =>
-            {
-                var document = (sender as Document);
-                lock (document._initializeLock)
-                {
-                    if (document != null && document.MainViewModel != null &&
-                        document.ViewModel == null)
-                    {
-                        var xd = args.NewValue as XamlDocument;
-
-                        // Get ViewModel from MainViewModel creation.
-                        document.InitializeViewModel(document.MainViewModel.DocumentViewModels[xd]);
-                    }
-                }
-            }));
+            DependencyProperty.Register(nameof(LoadedDocument), typeof(XamlDocument), typeof(Document), new PropertyMetadata(null));
 
         public Document()
         {
@@ -95,20 +76,38 @@ namespace XamlStudio.Views
             DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
 
             dataTransferManager.DataRequested += DataTransferManager_DataRequested;
+
+            Loaded += Document_Loaded;
+        }
+
+        private void Document_Loaded(object sender, RoutedEventArgs e)
+        {
+            // HACK: TODO: Workaround for Monaco editor not updating it's content?
+            ViewModel.Document.Content = ViewModel.Document.Content + " ";
+            ViewModel.Document.Content = ViewModel.Document.Content.Substring(0, ViewModel.Document.Content.Length - 1);
+        }
+
+        private void UnloadViewModel(DocumentViewModel model)
+        {
+            ViewModel.XamlRoot = null;
+            ViewModel.Compiled -= ViewModel_Compiled;
+
+            ViewModel.NavigateToLineCommand = null;
+            ViewModel.InsertTextCommand = null;
+            ViewModel.UpdateXamlCommand = null;
+
+            ViewModel.Document.State.PropertyChanged -= DocumentState_PropertyChanged;
         }
 
         private void InitializeViewModel(DocumentViewModel model)
         {
-            ViewModel = model;
+            LoadedDocument = model.Document;
 
             // Pass Reference to our Control so we can 'render' to it.
             ViewModel.XamlRoot = XamlRoot;
 
             // Listen for Line Highlighting Changes and Update our Editor
-            ViewModel.Compiled += (sender2, args2) =>
-            {
-                CodeEditor.Decorations = ViewModel.LineDecorations;
-            };
+            ViewModel.Compiled += ViewModel_Compiled;
 
             CodeEditor.Options.Folding = true;
 
@@ -120,6 +119,7 @@ namespace XamlStudio.Views
 
             LoadedDocument.State.PropertyChanged += DocumentState_PropertyChanged;
 
+            SettingsService.Instance.PropertyChanged -= DocumentState_PropertyChanged;
             SettingsService.Instance.PropertyChanged += DocumentState_PropertyChanged;
 
             // RenderAsync XAML if enabled by default
@@ -136,6 +136,11 @@ namespace XamlStudio.Views
                     VerticalAlignment = VerticalAlignment.Center
                 });
             }
+        }
+
+        private void ViewModel_Compiled(object sender, EventArgs e)
+        {
+            CodeEditor.Decorations = ViewModel.LineDecorations;
         }
 
         private async void CodeEditor_Loading(object sender, RoutedEventArgs e)
