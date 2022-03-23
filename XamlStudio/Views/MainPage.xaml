@@ -126,7 +126,7 @@
                 </TextBlock>
             </future:ContentSizer>
 
-            <controls:SwitchPresenter x:Name="ToolboxPresenter" Value="{Binding ElementName=NavMenu, Path=SelectedItem.Tag}">
+            <controls:SwitchPresenter x:Name="ToolboxPresenter" Value="{x:Bind ((ListBoxItem)NavMenu.SelectedItem).Tag, Mode=OneWay}">
                 <controls:Case Value="EXPLORER">
                     <local:Explorer MainViewModel="{x:Bind ViewModel}" />
                 </controls:Case>

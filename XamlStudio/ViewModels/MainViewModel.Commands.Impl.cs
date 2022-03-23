@@ -81,9 +81,34 @@ namespace XamlStudio.ViewModels
                 var doc = await XamlDocument.LoadFromFileAsync(file);
                 OpenFiles.Add(doc);
 
-                SettingsService.Instance.RememberFile(file);
+                SettingsService.Instance.RememberFileOrFolder(file);
 
                 ActiveFile = doc;
+            }
+        }
+
+        private async void OpenFolderPicker(RoutedEventArgs args)
+        {
+            var picker = new FolderPicker();
+            picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+            picker.FileTypeFilter.Add("*");
+
+            var folder = await picker.PickSingleFolderAsync();
+            if (folder != null)
+            {
+                OpenFolder(folder);
+
+                Analytics.TrackEvent("Folder_Open");
+            }
+        }
+
+        private async void OpenFolder(StorageFolder folder)
+        {
+            using (await _openMutex.LockAsync())
+            {
+                SetupWorkspace(folder);
+
+                SettingsService.Instance.RememberFileOrFolder(folder);
             }
         }
 
@@ -226,7 +251,7 @@ namespace XamlStudio.ViewModels
             {
                 if (result)
                 {
-                    SettingsService.Instance.RememberFile(file);
+                    SettingsService.Instance.RememberFileOrFolder(file);
 
                     Analytics.TrackEvent("Document_Save", new Dictionary<string, string>()
                     {

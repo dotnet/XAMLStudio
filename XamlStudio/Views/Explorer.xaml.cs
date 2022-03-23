@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -15,6 +16,7 @@ using Windows.UI.Xaml.Navigation;
 using XamlStudio.Helpers;
 using XamlStudio.Models;
 using XamlStudio.ViewModels;
+using muxc = Microsoft.UI.Xaml.Controls;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -36,6 +38,143 @@ namespace XamlStudio.Views
             });
 
             this.InitializeComponent();
+
+            Loaded += Explorer_Loaded;
+        }
+
+        private void Explorer_Loaded(object sender, RoutedEventArgs e)
+        {
+            MainViewModel.PropertyChanged -= MainViewModel_PropertyChanged;
+
+            if (MainViewModel?.Folder != null)
+            {
+                InitializeTreeView(MainViewModel.Folder);
+            }
+
+            MainViewModel.PropertyChanged += MainViewModel_PropertyChanged;
+
+        }
+
+        private void MainViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(MainViewModel.Folder))
+            {
+                WorkspaceTreeView.RootNodes.Clear();
+                InitializeTreeView(MainViewModel.Folder);
+            }
+        }
+
+        private void InitializeTreeView(StorageFolder folder)
+        {
+            // FYI A TreeView can have more than 1 root node. TODO: Support multiple workspaces? Or would we just separate outside the TreeView anyway?
+            muxc.TreeViewNode mainNode = new muxc.TreeViewNode();
+            mainNode.Content = folder;
+            mainNode.IsExpanded = true;
+            mainNode.HasUnrealizedChildren = true;
+            FillTreeNode(mainNode);
+
+            WorkspaceTreeView.RootNodes.Add(mainNode);
+        }
+
+        // From: https://docs.microsoft.com/en-us/windows/apps/design/controls/tree-view
+        private async void FillTreeNode(muxc.TreeViewNode node)
+        {
+            // Get the contents of the folder represented by the current tree node.
+            // Add each item as a new child node of the node that's being expanded.
+
+            // Only process the node if it's a folder and has unrealized children.
+            StorageFolder folder = null;
+
+            if (node.Content is StorageFolder && node.HasUnrealizedChildren == true)
+            {
+                folder = node.Content as StorageFolder;
+            }
+            else
+            {
+                // The node isn't a folder, or it's already been filled.
+                return;
+            }
+
+            IReadOnlyList<IStorageItem> itemsList = await folder.GetItemsAsync();
+
+            if (itemsList.Count == 0)
+            {
+                // The item is a folder, but it's empty. Leave HasUnrealizedChildren = true so
+                // that the chevron appears, but don't try to process children that aren't there.
+                return;
+            }
+
+            foreach (var item in itemsList)
+            {
+                var newNode = new muxc.TreeViewNode();
+                newNode.Content = item;
+
+                if (item is StorageFolder)
+                {
+                    // If the item is a folder, set HasUnrealizedChildren to true.
+                    // This makes the collapsed chevron show up.
+                    newNode.HasUnrealizedChildren = true;
+                }
+                else
+                {
+                    // Item is StorageFile. No processing needed for this scenario.
+                }
+
+                node.Children.Add(newNode);
+            }
+
+            // Children were just added to this node, so set HasUnrealizedChildren to false.
+            node.HasUnrealizedChildren = false;
+        }
+
+        private void WorkspaceTreeView_Expanding(muxc.TreeView sender, muxc.TreeViewExpandingEventArgs args)
+        {
+            if (args.Node.HasUnrealizedChildren)
+            {
+                FillTreeNode(args.Node);
+            }
+        }
+
+        private void WorkspaceTreeView_Collapsed(muxc.TreeView sender, muxc.TreeViewCollapsedEventArgs args)
+        {
+            args.Node.Children.Clear();
+            args.Node.HasUnrealizedChildren = true;
+        }
+
+        private void WorkspaceTreeView_ItemInvoked(muxc.TreeView sender, muxc.TreeViewItemInvokedEventArgs args)
+        {
+            var node = args.InvokedItem as muxc.TreeViewNode;
+
+            if (node.Content is IStorageItem item)
+            {
+                if (node.Content is StorageFolder)
+                {
+                    node.IsExpanded = !node.IsExpanded;
+                }
+            }
+        }
+    }
+
+    public class ExplorerItemTemplateSelector : DataTemplateSelector
+    {
+        public DataTemplate DefaultFileTemplate { get; set; }
+        public DataTemplate DataFileTemplate { get; set; }
+        public DataTemplate ImageFileTemplate { get; set; }
+        public DataTemplate XamlFileTemplate { get; set; }
+        public DataTemplate FolderTemplate { get; set; }
+
+        protected override DataTemplate SelectTemplateCore(object item)
+        {
+            var node = (muxc.TreeViewNode)item;
+
+            return node.Content switch
+            {
+                StorageFolder folder => FolderTemplate,
+                StorageFile file when file.FileType.ToLower() == ".json" => DataFileTemplate,
+                StorageFile file when new string[] { ".png", ".gif", ".svg", ".jpg", ".jpeg", ".bmp", ".tiff", ".ico" }.Contains(file.FileType.ToLower()) => ImageFileTemplate,
+                StorageFile file when file.FileType.ToLower() == ".xaml" => XamlFileTemplate,
+                _ => DefaultFileTemplate
+            };
         }
     }
 }

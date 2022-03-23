@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using Windows.ApplicationModel.UserDataTasks;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using XamlStudio.Helpers;
@@ -28,20 +29,25 @@ namespace XamlStudio.Models
         public static readonly DependencyProperty OpenActivityProperty =
             DependencyProperty.Register(nameof(OpenActivity), typeof(string), typeof(WorkspaceWindow), new PropertyMetadata("EXPLORER"));
 
-        public bool IsWorkspaceOpen { get; private set; }
+        private bool _isWorkspaceOpen;
+        public bool IsWorkspaceOpen
+        {
+            get { return _isWorkspaceOpen; }
+            set { Set(ref _isWorkspaceOpen, value); }
+        }
 
         // Holds the default folder or workspace folder location
-        public StorageFolder Folder { get; private set; }
+        private StorageFolder _workspaceFolder;
+        public StorageFolder Folder
+        {
+            get { return _workspaceFolder; }
+            set { Set(ref _workspaceFolder, value); }
+        }
 
         public ObservableCollection<XamlDocument> OpenFiles { get; private set; }
 
         // Keep track of files opened from outside our pervue, as we'll need to tokenize these separately.
         public ObservableCollection<StorageFile> NonWorkspaceFiles { get; private set; }
-
-        // Shortcuts
-        public StorageFolder ImagesFolder { get; private set; } // TODO: Create if doesn't exist and item added?
-
-        public StorageFolder DataFolder { get; private set; }
 
         public WorkspaceWindow()
         {
@@ -59,6 +65,12 @@ namespace XamlStudio.Models
             // Get Settings Folder
             // IsWorkspaceOpen = false still.
             throw new NotImplementedException();
+        }
+
+        public void SetupWorkspace(StorageFolder folder)
+        {
+            Folder = folder;
+            IsWorkspaceOpen = folder != null;
         }
 
         private static void ActiveFile_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)

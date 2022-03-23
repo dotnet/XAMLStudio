@@ -121,11 +121,15 @@ namespace XamlStudio.Services
 
         public event EventHandler<StorageFile> RecentFilesChanged;
 
-        public void RememberFile(StorageFile file)
+        public void RememberFileOrFolder(IStorageItem item)
         {
-            StorageApplicationPermissions.MostRecentlyUsedList.Add(file);
+            StorageApplicationPermissions.MostRecentlyUsedList.Add(item);
 
-            RecentFilesChanged?.Invoke(this, file);
+            // TODO: Keep track of Recent Folders on Welcome as well.
+            if (item is StorageFile file)
+            {
+                RecentFilesChanged?.Invoke(this, file);
+            }
         }
 
         public async Task<IEnumerable<StorageFile>> GetRecentFilesAsync(int num)

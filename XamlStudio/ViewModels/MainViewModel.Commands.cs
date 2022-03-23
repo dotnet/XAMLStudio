@@ -29,6 +29,7 @@ namespace XamlStudio.ViewModels
         /// Open a File from a <see cref="StorageFile"/>.
         /// </summary>
         public ICommand OpenFileCommand { get; private set; }
+        public ICommand OpenFolderPickerCommand { get; private set; }
 
         public ICommand KeyDownCommand { get; private set; }
         public ICommand PreviousDocumentCommand { get; private set; }
@@ -41,6 +42,7 @@ namespace XamlStudio.ViewModels
         {
             NewDocumentCommand = new RelayCommand<RoutedEventArgs>(NewDocument);
             DuplicateDocumentCommand = new RelayCommand<RoutedEventArgs>(DuplicateDocument);
+            OpenFolderPickerCommand = new RelayCommand<RoutedEventArgs>(OpenFolderPicker);
             OpenDocumentCommand = new RelayCommand<RoutedEventArgs>(OpenDocument);
             SaveDocumentCommand = new AsyncRelayCommand<XamlDocument>(SaveDocument);
             SaveDocumentAsCommand = new AsyncRelayCommand<XamlDocument>(SaveDocumentAs);

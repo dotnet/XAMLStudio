@@ -8,22 +8,94 @@
       xmlns:future="using:Microsoft.Toolkit.Uwp.UI.Controls.Future"
       xmlns:helper="using:XamlStudio.Helpers"
       xmlns:local="using:XamlStudio.Views"
+      xmlns:storage="using:Windows.Storage"
+      xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:model="using:XamlStudio.Models"
       mc:Ignorable="d">
 
     <Page.Resources>
+        <local:StorageFileThumbnailConverter x:Key="StorageFileThumbnailConverter"/>
+
         <MenuFlyout x:Key="TabItemFlyout">
             <MenuFlyoutItem x:Uid="Explorer_Tab_Menu_Duplicate"
                             Command="{x:Bind MainViewModel.DuplicateDocumentCommand}"
                             Icon="Copy"/>
         </MenuFlyout>
+
+        <DataTemplate x:Key="DefaultFileDataTemplate" x:DataType="muxc:TreeViewNode">
+            <StackPanel Height="44" Orientation="Horizontal">
+                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE160;"
+                          Margin="0,0,4,0"/>
+                <TextBlock Text="{x:Bind ((storage:StorageFile)Content).Name}"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           Style="{ThemeResource BodyTextBlockStyle}"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="DataFileDataTemplate" x:DataType="muxc:TreeViewNode">
+            <StackPanel Height="44" Orientation="Horizontal">
+                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xEE94;"
+                          Margin="0,0,4,0"/>
+                <TextBlock Text="{x:Bind ((storage:StorageFile)Content).Name}"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           Style="{ThemeResource BodyTextBlockStyle}"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ImageFileDataTemplate" x:DataType="muxc:TreeViewNode">
+            <StackPanel Height="44" Orientation="Horizontal">
+                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xEB9F;"
+                          Margin="0,0,4,0"/>
+                <TextBlock Text="{x:Bind ((storage:StorageFile)Content).Name}"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           Style="{ThemeResource BodyTextBlockStyle}"/>
+                <!-- Show Hover Preview of Image -->
+                <ToolTipService.ToolTip>
+                    <Image Source="{Binding Content, Converter={StaticResource StorageFileThumbnailConverter}}" Width="128" Height="128"/>
+                </ToolTipService.ToolTip>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="XamlFileDataTemplate" x:DataType="muxc:TreeViewNode">
+            <StackPanel Height="44" Orientation="Horizontal">
+                <Image Source="/Assets/XamlStudio.Icon.png"
+                       Width="16" Height="16"
+                       Margin="0,0,4,0"/>
+                <TextBlock Text="{x:Bind ((storage:StorageFile)Content).Name}"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           Style="{ThemeResource BodyTextBlockStyle}"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="FolderDataTemplate" x:DataType="muxc:TreeViewNode">
+            <StackPanel Height="44" Orientation="Horizontal">
+                <SymbolIcon Symbol="Folder"
+                            Margin="0,0,4,0"/>
+                <TextBlock Text="{x:Bind ((storage:StorageFolder)Content).DisplayName}"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           Style="{ThemeResource BodyTextBlockStyle}"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <local:ExplorerItemTemplateSelector
+            x:Key="ExplorerItemTemplateSelector"
+            DefaultFileTemplate="{StaticResource DefaultFileDataTemplate}"
+            DataFileTemplate="{StaticResource DataFileDataTemplate}"
+            ImageFileTemplate="{StaticResource ImageFileDataTemplate}"
+            XamlFileTemplate="{StaticResource XamlFileDataTemplate}"
+            FolderTemplate="{StaticResource FolderDataTemplate}"/>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="54" />
-            <!--<RowDefinition Height="{Binding ElementName=OpenEditorsExpander, Path=IsExpanded, Converter={StaticResource BoolToGridLength}}" />-->
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Border Margin="0,0,-12,0"
@@ -51,12 +123,12 @@
                 </Button>
             </Grid>
         </Border>
-        <!--<controls:Expander x:Name="OpenEditorsExpander"
+        <controls:Expander x:Name="OpenEditorsExpander"
                            Grid.Row="1"
                            VerticalContentAlignment="Top"
                            Header="OPEN EDITORS"
                            HeaderStyle="{StaticResource VSCodeExpanderStyle}"
-                           IsExpanded="True">-->
+                           IsExpanded="True">
             <ListBox x:Name="OpenEditorList"
                      Grid.Row="1"
                      Background="{ThemeResource Brush-Blue-Dark-1}"
@@ -103,24 +175,32 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-        <!--</controls:Expander>-->
-        <!--<controls:SwitchPresenter x:Name="FolderExpander"
-                                Grid.Row="2">
+        </controls:Expander>
+        <controls:SwitchPresenter x:Name="FolderExpander"
+                                  Grid.Row="2"
+                                  Value="{x:Bind MainViewModel.IsWorkspaceOpen, Mode=OneWay}"
+                                  TargetType="x:Boolean">
             <controls:Case IsDefault="True">
                 <controls:Expander Header="NO FOLDER OPENED" IsExpanded="True"
                                    HeaderStyle="{StaticResource VSCodeExpanderStyle}">
                     <StackPanel Margin="16">
                         <TextBlock>You have not yet opened a folder.</TextBlock>
-                        <Button Margin="0,8,0,0">Open Folder</Button>
+                        <Button Margin="0,8,0,0"
+                                Command="{x:Bind MainViewModel.OpenFolderPickerCommand}">Open Folder</Button>
                     </StackPanel>
                 </controls:Expander>
             </controls:Case>
             <controls:Case Value="True">
-                <controls:Expander Header="{Binding FolderName}" IsExpanded="True"
-                                   HeaderStyle="{StaticResource VSCodeExpanderStyle}">
-                    <xc:TreeView/>
+                <controls:Expander Header="WORKSPACE FOLDERS" IsExpanded="True"
+                                   HeaderStyle="{StaticResource VSCodeExpanderStyle}"
+                                   HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top">
+                    <muxc:TreeView x:Name="WorkspaceTreeView" SelectionMode="Single"
+                                   ItemTemplateSelector="{StaticResource ExplorerItemTemplateSelector}"
+                                   Expanding="WorkspaceTreeView_Expanding"
+                                   Collapsed="WorkspaceTreeView_Collapsed"
+                                   ItemInvoked="WorkspaceTreeView_ItemInvoked"/>
                 </controls:Expander>
             </controls:Case>
-        </controls:SwitchPresenter>-->
+        </controls:SwitchPresenter>
     </Grid>
 </Page>
