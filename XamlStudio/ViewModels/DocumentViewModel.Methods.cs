@@ -494,5 +494,27 @@ namespace XamlStudio.ViewModels
 
             _document.State.PreviewOrientation = orientation;
         }
+
+        private void TogglePreviewTheme(RoutedEventArgs args)
+        {
+            // If we're set to default, use whatever we're currently displaying
+            ElementTheme? theme = _document.State.PreviewAreaTheme ?? ActualTheme;
+
+            // Go to next value
+            theme = theme == ElementTheme.Light ? ElementTheme.Dark : ElementTheme.Light;
+
+            Analytics.TrackEvent("Document_TogglePreviewAreaTheme", new Dictionary<string, string>()
+                {
+                    { "Value", "" + theme },
+                });
+
+            // If we're now set to default, set to null so we stay aligned if default changes
+            if (theme == ThemeSelectorService.Theme)
+            {
+                theme = null;
+            }
+
+            _document.State.PreviewAreaTheme = theme;
+        }
     }
 }

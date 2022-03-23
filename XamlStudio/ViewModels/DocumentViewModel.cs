@@ -70,6 +70,8 @@ namespace XamlStudio.ViewModels
 
         public Panel XamlRoot { get; set; }
 
+        public ElementTheme ActualTheme { get; set; }
+
         public ObservableVector<IModelDeltaDecoration> LineDecorations { get; } = new ObservableVector<IModelDeltaDecoration>();
 
         private static CssLineStyle _errorLineStyle = new CssLineStyle()
@@ -112,6 +114,8 @@ namespace XamlStudio.ViewModels
         public ICommand ParseDataContextCommand { get; private set; }
 
         public ICommand RotatePaneOrientationCommand { get; private set; }
+
+        public ICommand TogglePreviewThemeCommand { get; private set; }
 
         /// <summary>
         /// Text for error message when refreshing from a live data source.
@@ -164,6 +168,7 @@ namespace XamlStudio.ViewModels
             RefreshLiveDataContextCommand = new AsyncRelayCommand<RoutedEventArgs>(RefreshLiveDataContext);
             ParseDataContextCommand = new RelayCommand<RoutedEventArgs>(ParseDataContext);
             RotatePaneOrientationCommand = new RelayCommand<RoutedEventArgs>(RotatePaneOrientation);
+            TogglePreviewThemeCommand = new RelayCommand<RoutedEventArgs>(TogglePreviewTheme);
         }
     }
 }

@@ -13,6 +13,7 @@
              xmlns:xstc="using:XamlStudio.Toolkit.Converters"
              xmlns:fex="using:Microsoft.Toolkit.Uwp.UI.Extensions.Future"
              xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+             xmlns:xaml="using:Windows.UI.Xaml"
              d:DesignHeight="300"
              d:DesignWidth="400"
              mc:Ignorable="d">
@@ -115,12 +116,40 @@
                     Orientation="Horizontal"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
+                    Spacing="8"
                     Margin="0,2,90,2">
             <Button Padding="1"
-                    x:Uid="Document_Button_Rotate"
-                    Command="{x:Bind ViewModel.RotatePaneOrientationCommand, Mode=OneWay}"
+                    x:Uid="Document_Button_PreviewTheme"
+                    Command="{x:Bind ViewModel.TogglePreviewThemeCommand, Mode=OneWay}"
                     Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
-                <SymbolIcon fex:SymbolIconExtensions.FontSize="16" Symbol="Rotate" />
+                <controls:SwitchPresenter Value="{x:Bind ViewModel.Document.State.PreviewAreaTheme, Mode=OneWay}"
+                                          TargetType="xaml:ElementTheme">
+                    <controls:Case Value="Dark">
+                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                  Glyph="&#xE708;"
+                                  FontSize="16"/>
+                    </controls:Case>
+                    <controls:Case Value="Light">
+                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                  Glyph="&#xE793;"
+                                  FontSize="16"/>
+                    </controls:Case>
+                    <controls:Case IsDefault="True">
+                        <controls:SwitchPresenter Value="{Binding ActualTheme, ElementName=XamlRoot, Mode=OneWay}"
+                                                  TargetType="xaml:ElementTheme">
+                            <controls:Case Value="Dark">
+                                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                  Glyph="&#xE708;"
+                                  FontSize="16"/>
+                            </controls:Case>
+                            <controls:Case Value="Light">
+                                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                  Glyph="&#xE793;"
+                                  FontSize="16"/>
+                            </controls:Case>
+                        </controls:SwitchPresenter>
+                    </controls:Case>
+                </controls:SwitchPresenter>
             </Button>
         </StackPanel>
         
@@ -131,7 +160,14 @@
                     Orientation="Horizontal"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Margin="120,2,0,2">
+                    Spacing="12"
+                    Margin="160,2,0,2">
+            <Button Padding="1"
+                    x:Uid="Document_Button_Rotate"
+                    Command="{x:Bind ViewModel.RotatePaneOrientationCommand, Mode=OneWay}"
+                    Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
+                <SymbolIcon fex:SymbolIconExtensions.FontSize="16" Symbol="Rotate" />
+            </Button>
             <muxc:SplitButton x:Name="ShareButton"
                               x:Uid="Document_SplitButton_Share"
                               Style="{StaticResource VSCodeAppBarHeaderSplitButtonStyle}"
@@ -221,7 +257,7 @@
                         <Setter Target="SplitterCommandBarRight.(Grid.RowSpan)" Value="3"/>
                         <Setter Target="SplitterCommandBarRight.(Grid.ColumnSpan)" Value="1"/>
                         <Setter Target="SplitterCommandBarRight.Orientation" Value="Vertical"/>
-                        <Setter Target="SplitterCommandBarRight.Margin" Value="0,110,0,0"/>
+                        <Setter Target="SplitterCommandBarRight.Margin" Value="0,150,0,0"/>
 
                         <!-- Bottom Pane -> Left Pane -->
                         <Setter Target="CodeEditor.(Grid.Row)" Value="0"/>
@@ -274,7 +310,7 @@
                         <Setter Target="SplitterCommandBarRight.(Grid.RowSpan)" Value="3"/>
                         <Setter Target="SplitterCommandBarRight.(Grid.ColumnSpan)" Value="1"/>
                         <Setter Target="SplitterCommandBarRight.Orientation" Value="Vertical"/>
-                        <Setter Target="SplitterCommandBarRight.Margin" Value="0,110,0,0"/>
+                        <Setter Target="SplitterCommandBarRight.Margin" Value="0,150,0,0"/>
 
                         <!-- Bottom Pane -> Right Pane -->
                         <Setter Target="CodeEditor.(Grid.Row)" Value="0"/>

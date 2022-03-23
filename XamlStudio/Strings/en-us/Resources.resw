@@ -761,12 +761,20 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>Compilation Errors</value>
     <comment>Accessibility Name for error popup that appears on documents when XAML can't be compiled.</comment>
   </data>
+  <data name="Document_Button_PreviewTheme.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Toggle Preview Theme</value>
+    <comment>Accessibility Name for Rotate Coding Pane Button on document Gripper Bar</comment>
+  </data>
+  <data name="Document_Button_PreviewTheme.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Toggles between Light and Dark theming of the preview area.</value>
+    <comment>Tooltip for Rotate Coding Pane Button on document Gripper Bar</comment>
+  </data>
   <data name="Document_Button_Rotate.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Rotate Split</value>
     <comment>Accessibility Name for Rotate Coding Pane Button on document Gripper Bar</comment>
   </data>
   <data name="Document_Button_Rotate.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Rotate Split</value>
+    <value>Change the orientations/positions of the editor and preview areas.</value>
     <comment>Tooltip for Rotate Coding Pane Button on document Gripper Bar</comment>
   </data>
   <data name="Document_SplitButton_Share.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">

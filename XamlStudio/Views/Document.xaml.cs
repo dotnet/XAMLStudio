@@ -105,6 +105,7 @@ namespace XamlStudio.Views
 
             // Pass Reference to our Control so we can 'render' to it.
             ViewModel.XamlRoot = XamlRoot;
+            ViewModel.ActualTheme = ActualTheme;
 
             // Listen for Line Highlighting Changes and Update our Editor
             ViewModel.Compiled += ViewModel_Compiled;
@@ -116,6 +117,7 @@ namespace XamlStudio.Views
             ViewModel.UpdateXamlCommand = new AsyncRelayCommand<RoutedEventArgs>(UpdateXaml);
 
             SetPaneOrientation();
+            SetPreviewAreaTheme();
 
             LoadedDocument.State.PropertyChanged += DocumentState_PropertyChanged;
 
@@ -250,6 +252,10 @@ namespace XamlStudio.Views
             {
                 SetPaneOrientation();
             }
+            else if (e.PropertyName == nameof(DocumentState.PreviewAreaTheme))
+            {
+                SetPreviewAreaTheme();
+            }
         }
 
         private void SetPaneOrientation()
@@ -281,6 +287,13 @@ namespace XamlStudio.Views
                     VisualStateManager.GoToState(ShareButton, "Vertical", false);
                     break;
             }
+        }
+
+        private void SetPreviewAreaTheme()
+        {
+            var theme = LoadedDocument.State.PreviewAreaTheme ?? ThemeSelectorService.Theme;
+
+            XamlRoot.RequestedTheme = theme;
         }
 
         #region Share Button Code
