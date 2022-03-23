@@ -59,23 +59,28 @@ namespace XamlStudio.Toolkit.Services
 
                             // Grab source
                             var si = dd.IndexOf("Source");
-                            if (si != -1)
+                            var gap = 6;
+                            if (si == -1)
                             {
-                                var ei = dd.IndexOf(","); // Next Argument
-                                if (ei == -1)
-                                {
-                                    ei = dd.IndexOf("}"); // Or End of Bind
-                                }
+                                // If Source isn't specified, assume we have a path after the first space.
+                                si = dd.IndexOf(" ");
+                                gap = 1;
+                            }
 
-                                if (ei != -1)
+                            var ei = dd.IndexOf(","); // Next Argument
+                            if (ei == -1)
+                            {
+                                ei = dd.IndexOf("}"); // Or End of Bind
+                            }
+
+                            if (ei != -1)
+                            {
+                                var source = dd.Substring(si + gap, ei - si - gap).Trim('=', ' ');
+                                var data = await LoadDataSource(settings.ResourceRoot, source);
+                                if (data != null && fwe != null)
                                 {
-                                    var source = dd.Substring(si + 6, ei - si - 6).Trim('=', ' ');
-                                    var data = await LoadDataSource(settings.ResourceRoot, source);
-                                    if (data != null && fwe != null)
-                                    {
-                                        fwe.DataContext = data;
-                                        context.DataContext = data;
-                                    }
+                                    fwe.DataContext = data;
+                                    context.DataContext = data;
                                 }
                             }
                         }
