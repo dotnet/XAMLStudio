@@ -113,6 +113,8 @@ namespace XamlStudio.ViewModels
 
                     ActiveFile = doc;
                 }
+
+                Analytics.TrackEvent("Document_Open_From_Workspace");
             }
         }
 

@@ -183,7 +183,8 @@
                                   TargetType="x:Boolean">
                 <controls:Case IsDefault="True">
                     <StackPanel Margin="16">
-                        <TextBlock>You have not yet opened a folder.</TextBlock>
+                        <TextBlock Text="Choose a folder to get started with a workspace and access additional features."
+                                   TextWrapping="WrapWholeWords"/>
                         <Button Margin="0,8,0,0"
                             Command="{x:Bind MainViewModel.OpenFolderPickerCommand}">Open Folder</Button>
                     </StackPanel>

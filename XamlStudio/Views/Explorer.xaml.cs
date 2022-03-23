@@ -159,7 +159,7 @@ namespace XamlStudio.Views
                 case StorageFile file when ExplorerItemTemplateSelector.XamlFileTypes.Contains(file.FileType.ToLower()):
                     // Find top-level node.
                     var parent = node;
-                    while (parent.Parent != null)
+                    while (parent.Parent?.Content != null) // There seems to be an extra TreeViewNode, so look at content as indicator.
                     {
                         parent = parent.Parent;
                     }

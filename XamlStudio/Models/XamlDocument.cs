@@ -58,6 +58,7 @@ namespace XamlStudio.Models
 
         // TODO: Figure out persistence strategy
         private StorageFolder _parentFolder;
+        [JsonIgnore]
         public StorageFolder ParentFolder
         {
             get { return _parentFolder; }

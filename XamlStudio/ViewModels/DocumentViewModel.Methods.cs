@@ -61,7 +61,8 @@ namespace XamlStudio.ViewModels
             {
                 IsBindingDebuggingEnabled = overrideBinding ? false : SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value,
                 KeepSuggestedContentSameLength = keepContentSameLength,
-                DataContext = DataContext
+                DataContext = DataContext, // TODO: Resolve conflict here and between design-data file
+                ResourceRoot = Document.ParentFolder,
             };
 
             // If we override the binding, we're calling it from within and already saved.
