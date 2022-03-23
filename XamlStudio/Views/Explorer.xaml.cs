@@ -29,6 +29,10 @@ namespace XamlStudio.Views
     {
         public MainViewModel MainViewModel { get; set; }
 
+        private static readonly string[] IgnoreFileTypes = new string[] { ".csproj", ".sln", ".user", ".cs", ".appxmanifest" };
+
+        private static readonly string[] IgnoreFolders = new string[] { "bin", "obj" };
+
         public Explorer()
         {
             // Need to add this here as XAML can't load custom Enum
@@ -114,10 +118,21 @@ namespace XamlStudio.Views
                     // If the item is a folder, set HasUnrealizedChildren to true.
                     // This makes the collapsed chevron show up.
                     newNode.HasUnrealizedChildren = true;
+
+                    // Skip unwanted directories
+                    if (IgnoreFolders.Contains(item.Name.ToLower()))
+                    {
+                        continue;
+                    }
                 }
-                else
+                else if (item is StorageFile file)
                 {
                     // Item is StorageFile. No processing needed for this scenario.
+                    // Skip unwanted file types
+                    if (IgnoreFileTypes.Contains(file.FileType.ToLower()))
+                    {
+                        continue;
+                    }
                 }
 
                 node.Children.Add(newNode);
