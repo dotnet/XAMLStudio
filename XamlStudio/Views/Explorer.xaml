@@ -176,31 +176,26 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </controls:Expander>
-        <controls:SwitchPresenter x:Name="FolderExpander"
-                                  Grid.Row="2"
-                                  Value="{x:Bind MainViewModel.IsWorkspaceOpen, Mode=OneWay}"
+        <controls:Expander Grid.Row="2" Header="WORKSPACE FOLDERS" IsExpanded="True"
+                           HeaderStyle="{StaticResource VSCodeExpanderStyle}"
+                           HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top">
+            <controls:SwitchPresenter Value="{x:Bind MainViewModel.IsWorkspaceOpen, Mode=OneWay}"
                                   TargetType="x:Boolean">
-            <controls:Case IsDefault="True">
-                <controls:Expander Header="NO FOLDER OPENED" IsExpanded="True"
-                                   HeaderStyle="{StaticResource VSCodeExpanderStyle}">
+                <controls:Case IsDefault="True">
                     <StackPanel Margin="16">
                         <TextBlock>You have not yet opened a folder.</TextBlock>
                         <Button Margin="0,8,0,0"
-                                Command="{x:Bind MainViewModel.OpenFolderPickerCommand}">Open Folder</Button>
+                            Command="{x:Bind MainViewModel.OpenFolderPickerCommand}">Open Folder</Button>
                     </StackPanel>
-                </controls:Expander>
-            </controls:Case>
-            <controls:Case Value="True">
-                <controls:Expander Header="WORKSPACE FOLDERS" IsExpanded="True"
-                                   HeaderStyle="{StaticResource VSCodeExpanderStyle}"
-                                   HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top">
+                </controls:Case>
+                <controls:Case Value="True">
                     <muxc:TreeView x:Name="WorkspaceTreeView" SelectionMode="Single"
-                                   ItemTemplateSelector="{StaticResource ExplorerItemTemplateSelector}"
-                                   Expanding="WorkspaceTreeView_Expanding"
-                                   Collapsed="WorkspaceTreeView_Collapsed"
-                                   ItemInvoked="WorkspaceTreeView_ItemInvoked"/>
-                </controls:Expander>
-            </controls:Case>
-        </controls:SwitchPresenter>
+                               ItemTemplateSelector="{StaticResource ExplorerItemTemplateSelector}"
+                               Expanding="WorkspaceTreeView_Expanding"
+                               Collapsed="WorkspaceTreeView_Collapsed"
+                               ItemInvoked="WorkspaceTreeView_ItemInvoked"/>
+                </controls:Case>
+            </controls:SwitchPresenter>
+        </controls:Expander>
     </Grid>
 </Page>

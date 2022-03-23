@@ -145,12 +145,27 @@ namespace XamlStudio.Views
         {
             var node = args.InvokedItem as muxc.TreeViewNode;
 
-            if (node.Content is IStorageItem item)
+            switch (node.Content)
             {
-                if (node.Content is StorageFolder)
-                {
+                case StorageFolder folder:
                     node.IsExpanded = !node.IsExpanded;
-                }
+                    break;
+                case StorageFile file when ExplorerItemTemplateSelector.DataFileTypes.Contains(file.FileType.ToLower()):
+                    // TODO: Open the json file in the Data Context Activity.
+                    break;
+                case StorageFile file when ExplorerItemTemplateSelector.ImageFileTypes.Contains(file.FileType.ToLower()):
+                    // TODO: Nothing at the moment.
+                    break;
+                case StorageFile file when ExplorerItemTemplateSelector.XamlFileTypes.Contains(file.FileType.ToLower()):
+                    // Find top-level node.
+                    var parent = node;
+                    while (parent.Parent != null)
+                    {
+                        parent = parent.Parent;
+                    }
+
+                    MainViewModel.OpenFileFromWorkspace(file, parent.Content as StorageFolder);
+                    break;
             }
         }
     }
@@ -163,6 +178,10 @@ namespace XamlStudio.Views
         public DataTemplate XamlFileTemplate { get; set; }
         public DataTemplate FolderTemplate { get; set; }
 
+        public static readonly string[] DataFileTypes = new string[] { ".json" }; // TODO: , ".xml" };
+        public static readonly string[] ImageFileTypes = new string[] { ".png", ".gif", ".svg", ".jpg", ".jpeg", ".bmp", ".tiff", ".ico" };
+        public static readonly string[] XamlFileTypes = new string[] { ".xaml" };
+
         protected override DataTemplate SelectTemplateCore(object item)
         {
             var node = (muxc.TreeViewNode)item;
@@ -170,9 +189,9 @@ namespace XamlStudio.Views
             return node.Content switch
             {
                 StorageFolder folder => FolderTemplate,
-                StorageFile file when file.FileType.ToLower() == ".json" => DataFileTemplate,
-                StorageFile file when new string[] { ".png", ".gif", ".svg", ".jpg", ".jpeg", ".bmp", ".tiff", ".ico" }.Contains(file.FileType.ToLower()) => ImageFileTemplate,
-                StorageFile file when file.FileType.ToLower() == ".xaml" => XamlFileTemplate,
+                StorageFile file when DataFileTypes.Contains(file.FileType.ToLower()) => DataFileTemplate,
+                StorageFile file when ImageFileTypes.Contains(file.FileType.ToLower()) => ImageFileTemplate,
+                StorageFile file when XamlFileTypes.Contains(file.FileType.ToLower()) => XamlFileTemplate,
                 _ => DefaultFileTemplate
             };
         }

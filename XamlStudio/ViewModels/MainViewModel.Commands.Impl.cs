@@ -87,6 +87,35 @@ namespace XamlStudio.ViewModels
             }
         }
 
+        public async void OpenFileFromWorkspace(StorageFile file, StorageFolder workspace)
+        {
+            // check if already open
+            XamlDocument openDoc = OpenFiles.FirstOrDefault(f => f?.BackingFile?.Path == file.Path);
+            if (openDoc != null)
+            {
+                if (openDoc.ParentFolder == null)
+                {
+                    openDoc.ParentFolder = workspace;
+                }
+
+                ActiveFile = openDoc;
+            }
+            else
+            {
+                using (await _openMutex.LockAsync())
+                {
+                    // Application now has read/write access to the picked file
+                    var doc = await XamlDocument.LoadFromFileAsync(file);
+                    doc.ParentFolder = workspace;
+                    OpenFiles.Add(doc);
+
+                    SettingsService.Instance.RememberFileOrFolder(file);
+
+                    ActiveFile = doc;
+                }
+            }
+        }
+
         private async void OpenFolderPicker(RoutedEventArgs args)
         {
             var picker = new FolderPicker();
@@ -106,6 +135,7 @@ namespace XamlStudio.ViewModels
         {
             using (await _openMutex.LockAsync())
             {
+                // TODO: Check not contained within another workspace?
                 SetupWorkspace(folder);
 
                 SettingsService.Instance.RememberFileOrFolder(folder);

@@ -42,13 +42,13 @@ namespace XamlStudio.ViewModels
         {
             NewDocumentCommand = new RelayCommand<RoutedEventArgs>(NewDocument);
             DuplicateDocumentCommand = new RelayCommand<RoutedEventArgs>(DuplicateDocument);
-            OpenFolderPickerCommand = new RelayCommand<RoutedEventArgs>(OpenFolderPicker);
             OpenDocumentCommand = new RelayCommand<RoutedEventArgs>(OpenDocument);
             SaveDocumentCommand = new AsyncRelayCommand<XamlDocument>(SaveDocument);
             SaveDocumentAsCommand = new AsyncRelayCommand<XamlDocument>(SaveDocumentAs);
             CloseActiveDocumentCommand = new AsyncRelayCommand<XamlDocument>(CloseActiveDocument);
 
             OpenFileCommand = new RelayCommand<StorageFile>(OpenFile);
+            OpenFolderPickerCommand = new RelayCommand<RoutedEventArgs>(OpenFolderPicker);
 
             KeyDownCommand = new RelayCommand<KeyEventArgs>(KeyDown);
             PreviousDocumentCommand = new RelayCommand<RoutedEventArgs>(PreviousDocument);

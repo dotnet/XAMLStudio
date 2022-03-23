@@ -56,6 +56,14 @@ namespace XamlStudio.Models
             set { Set(ref _dataContext, value); }
         }
 
+        // TODO: Figure out persistence strategy
+        private StorageFolder _parentFolder;
+        public StorageFolder ParentFolder
+        {
+            get { return _parentFolder; }
+            set { Set(ref _parentFolder, value); }
+        }
+
         private DocumentState _docState = new DocumentState();
         public DocumentState State
         {
