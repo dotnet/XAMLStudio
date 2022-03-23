@@ -542,10 +542,10 @@
                         <DataTemplate x:DataType="model:ThirdPartyInfo">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="260"/>
+                                    <ColumnDefinition Width="280"/>
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="120"/>
                                 </Grid.ColumnDefinitions>
                                 <HyperlinkButton Content="{Binding Name}" NavigateUri="{Binding Url}"/>
                                 <TextBlock Text="{Binding Version}" Grid.Column="1" Margin="0,6,0,0"/>
