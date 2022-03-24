@@ -294,7 +294,7 @@
     <comment>App Package Description</comment>
   </data>
   <data name="AppPackageDisplayName" xml:space="preserve">
-    <value>XAML Studio</value>
+    <value>XAML Studio [Debug]</value>
     <comment>Display Name used by the application</comment>
   </data>
   <data name="SettingsPanel_AlignmentGridToggle.Header" xml:space="preserve">
@@ -808,7 +808,7 @@ Please help us by reporting this issue in Feedback Hub.</value>
   <data name="Document_Share_Preview.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Share Preview Pane Only</value>
     <comment>Accessibility Name for Share Entire Window menu item on document Gripper Bar</comment>
-  </data>  
+  </data>
   <data name="SettingsPanel_PaneOrientation.Text" xml:space="preserve">
     <value>Default Preview Pane Orientation</value>
     <comment>Choose pane orientation text for SettingsPanel</comment>
