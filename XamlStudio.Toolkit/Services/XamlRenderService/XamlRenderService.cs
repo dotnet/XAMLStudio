@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Media.Core;
+using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -139,33 +141,50 @@ namespace XamlStudio.Toolkit.Services
                     VisitUIElements(result.Element as UIElement, async (child) =>
                     {
                         // TODO: Generalize to support toolkit:ImageEx, toolkit:RoundImageEx, Converters?
-                        if (child is Image)
+                        if (child is Image img && img.Source is BitmapImage bmp &&
+                            bmp.UriSource?.AbsoluteUri is string uri)
                         {
-                            var img = child as Image;
-                            var uri = (img.Source as BitmapImage)?.UriSource?.AbsoluteUri;
-                            if (uri != null)
+                            // TODO: Extract into private method
+                            // TODO: Support ms-appdata? protocol //local/, etc...
+                            if (uri.StartsWith("ms-appx:///", StringComparison.OrdinalIgnoreCase) == true)
                             {
-                                if (uri.StartsWith("ms-appx:///", StringComparison.OrdinalIgnoreCase) == true)
+                                uri = uri.Substring(11);
+                            }
+                            else if (uri.StartsWith("ms-resource:///Files/", StringComparison.OrdinalIgnoreCase))
+                            {
+                                uri = uri.Substring(21);
+                            }
+
+                            var imagefile = await GetFileFromPath(settings.ResourceRoot, uri);
+                            var bitmapImage = new BitmapImage();
+                            if (imagefile != null)
+                            {
+                                using (var stream = await (imagefile as StorageFile).OpenAsync(FileAccessMode.Read))
                                 {
-                                    uri = uri.Substring(11);
-                                }
-                                else if (uri.StartsWith("ms-resource:///Files/", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    uri = uri.Substring(21);
+                                    await bitmapImage.SetSourceAsync(stream);
                                 }
 
-                                var imagefile = await GetFileFromPath(settings.ResourceRoot, uri);
-                                var bitmapImage = new BitmapImage();
-                                if (imagefile != null)
-                                {
-                                    using (var stream = await (imagefile as StorageFile).OpenAsync(FileAccessMode.Read))
-                                    {
-                                        await bitmapImage.SetSourceAsync(stream);
-                                    }
+                                // Replace Image Source with our now injected image.
+                                img.Source = bitmapImage;
+                            }
+                        }
+                        else if (child is MediaPlayerElement mpe && mpe.Source is MediaPlaybackItem mpi 
+                                && mpi.Source?.Uri?.AbsoluteUri is string uri2)
+                        {
+                            if (uri2.StartsWith("ms-appx:///", StringComparison.OrdinalIgnoreCase) == true)
+                            {
+                                uri2 = uri2.Substring(11);
+                            }
+                            else if (uri2.StartsWith("ms-resource:///Files/", StringComparison.OrdinalIgnoreCase))
+                            {
+                                uri2 = uri2.Substring(21);
+                            }
 
-                                    // Replace Image Source with our now injected image.
-                                    img.Source = bitmapImage;
-                                }
+                            var mediafile = await GetFileFromPath(settings.ResourceRoot, uri2);
+                            var source = MediaSource.CreateFromStorageFile(mediafile);
+                            if (source != null)
+                            {
+                                mpe.Source = source;
                             }
                         }
                     });
