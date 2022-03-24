@@ -21,6 +21,7 @@
         <!--  Toolkit  -->
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:StringFormatConverter x:Key="StringFormatConverter" />
+        <controls:ConstrainedBox x:Key="ConstrainedBox"/>
         <controls:DataGridCheckBoxColumn x:Key="DataGridCheckBoxColumn" />
         <controls:DataGridComboBoxColumn x:Key="DataGridComboBoxColumn" />
         <controls:DataGridTemplateColumn x:Key="DataGridTemplateColumn" />

@@ -142,16 +142,21 @@
             <TextBlock FontSize="22"
                        FontWeight="Bold"
                        Foreground="{ThemeResource Brush-Grey-Light-1}"
-                       Text="New in v1.1" />
+                       Text="New in v1.2" />
             <TextBlock Padding="12,8"
                        Foreground="{ThemeResource Brush-Grey-Light-1}"
                        TextWrapping="WrapWholeWords">
-                - Adjustable Preview Pane Location
+                - Folder Support: Image Loading, Design Data Loading, and More!
             </TextBlock>
             <TextBlock Padding="12,8"
                        Foreground="{ThemeResource Brush-Grey-Light-1}"
                        TextWrapping="WrapWholeWords">
-                - Share Button
+                - More Quick Access Preview Options like Refresh and Theme Toggle
+            </TextBlock>
+            <TextBlock Padding="12,8"
+                       Foreground="{ThemeResource Brush-Grey-Light-1}"
+                       TextWrapping="WrapWholeWords">
+                - Right-Click Menu to Duplicate the Open Tab
             </TextBlock>
             <TextBlock Padding="12,8"
                        Foreground="{ThemeResource Brush-Grey-Light-1}"
