@@ -353,7 +353,7 @@ namespace XamlStudio.ViewModels
                 ////}
                 ////else
                 ////{
-                    UpdateXamlCommand?.Execute(null);
+                    ForceRefreshCommand?.Execute(null);
                 ////}
 
                 // Eat key stroke
@@ -466,6 +466,13 @@ namespace XamlStudio.ViewModels
                     }, TimeSpan.FromSeconds(SettingsService.Instance.AutoCompileDelay.Value));
                 }
             }
+        }
+
+        private void ForceRefresh(RoutedEventArgs args)
+        {
+            // Force a hard-refresh of our XAML.
+            HasCompiled = false;
+            UpdateXamlCommand?.Execute(null);
         }
 
         private void RotatePaneOrientation(RoutedEventArgs args)

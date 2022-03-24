@@ -106,7 +106,9 @@ namespace XamlStudio.ViewModels
         };
 
         public IAsyncCommand UpdateXamlCommand { get; internal set; }
-        
+
+        public ICommand ForceRefreshCommand { get; private set; }
+
         public ICommand KeyDownCommand { get; private set; }
 
         public IAsyncCommand RefreshLiveDataContextCommand { get; private set; }
@@ -165,6 +167,7 @@ namespace XamlStudio.ViewModels
 
             //UpdateXamlCommand = new RelayCommand<RoutedEventArgs>(UpdateXaml);
             KeyDownCommand = new RelayCommand<WebKeyEventArgs>(KeyDown);
+            ForceRefreshCommand = new RelayCommand<RoutedEventArgs>(ForceRefresh);
             RefreshLiveDataContextCommand = new AsyncRelayCommand<RoutedEventArgs>(RefreshLiveDataContext);
             ParseDataContextCommand = new RelayCommand<RoutedEventArgs>(ParseDataContext);
             RotatePaneOrientationCommand = new RelayCommand<RoutedEventArgs>(RotatePaneOrientation);

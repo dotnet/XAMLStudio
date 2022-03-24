@@ -763,11 +763,19 @@ Please help us by reporting this issue in Feedback Hub.</value>
   </data>
   <data name="Document_Button_PreviewTheme.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Toggle Preview Theme</value>
-    <comment>Accessibility Name for Rotate Coding Pane Button on document Gripper Bar</comment>
+    <comment>Accessibility Name for Toggle Theme Button on document Gripper Bar</comment>
   </data>
   <data name="Document_Button_PreviewTheme.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Toggles between Light and Dark theming of the preview area.</value>
-    <comment>Tooltip for Rotate Coding Pane Button on document Gripper Bar</comment>
+    <comment>Tooltip for Toggle Theme Button on document Gripper Bar</comment>
+  </data>
+  <data name="Document_Button_Refresh.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Refresh Preview</value>
+    <comment>Accessibility Name for Refresh Preview Pane Button on document Gripper Bar</comment>
+  </data>
+  <data name="Document_Button_Refresh.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Re-renders the preview area.</value>
+    <comment>Tooltip for Refresh Preview Pane Button on document Gripper Bar</comment>
   </data>
   <data name="Document_Button_Rotate.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Rotate Split</value>
