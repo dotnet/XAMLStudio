@@ -396,7 +396,7 @@ namespace XamlStudio.Views
         {
             var theme = LoadedDocument.State.PreviewAreaTheme ?? ThemeSelectorService.Theme;
 
-            XamlRoot.RequestedTheme = theme;
+            PreviewArea.RequestedTheme = theme;
         }
 
         #region Share Button Code
