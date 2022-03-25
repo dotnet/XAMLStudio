@@ -37,22 +37,53 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Grid x:Name="XamlRoot"
-              Grid.Row="0"
-              Grid.ColumnSpan="3"
-              Background="{ThemeResource Brush-Blue-Dark-2}" />
+        <controls:SwitchPresenter x:Name="PreviewArea"
+                                  Grid.Row="0"
+                                  Grid.ColumnSpan="3"
+                                  Value="{x:Bind IsSpecificPreviewSize, Mode=OneWay}"
+                                  TargetType="x:Boolean">
+            <controls:Case Value="True">
+                <ScrollViewer 
+                      HorizontalContentAlignment="Stretch"
+                      VerticalContentAlignment="Stretch"
+                      HorizontalScrollMode="Auto"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollMode="Auto"
+                      Background="{ThemeResource Brush-Blue-Dark-2}">
+                    <Grid x:Name="PreviewRootSpecific"
+                  Background="{ThemeResource Brush-Blue-Dark-1}">
+                        <Grid x:Name="XamlRootSpecific"/>
 
-        <developerTools:AlignmentGrid x:Name="AlignmentGrid"
-                                      Grid.Row="0"
-                                      Grid.ColumnSpan="3"
+                        <developerTools:AlignmentGrid 
                                       HorizontalStep="{x:Bind ViewModel.Settings.AlignmentGridHorizontalStep, Mode=OneWay, FallbackValue=8}"
                                       Opacity="{x:Bind ViewModel.Settings.AlignmentGridOpacity, Mode=OneWay}"
                                       VerticalStep="{x:Bind ViewModel.Settings.AlignmentGridVerticalStep, Mode=OneWay, FallbackValue=8}"
                                       Visibility="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled, Mode=OneWay}">
-            <developerTools:AlignmentGrid.LineBrush>
-                <SolidColorBrush Color="{x:Bind ViewModel.Settings.AlignmentGridColor, Mode=OneWay, Converter={StaticResource HexToColorConverter}}" />
-            </developerTools:AlignmentGrid.LineBrush>
-        </developerTools:AlignmentGrid>
+                            <developerTools:AlignmentGrid.LineBrush>
+                                <SolidColorBrush Color="{x:Bind ViewModel.Settings.AlignmentGridColor, Mode=OneWay, Converter={StaticResource HexToColorConverter}}" />
+                            </developerTools:AlignmentGrid.LineBrush>
+                        </developerTools:AlignmentGrid>
+                    </Grid>
+                </ScrollViewer>
+            </controls:Case>
+            <controls:Case IsDefault="True">
+                <Grid x:Name="PreviewRoot"
+                  Background="{ThemeResource Brush-Blue-Dark-1}">
+                    <Grid x:Name="XamlRoot"/>
+
+                    <developerTools:AlignmentGrid 
+                                      HorizontalStep="{x:Bind ViewModel.Settings.AlignmentGridHorizontalStep, Mode=OneWay, FallbackValue=8}"
+                                      Opacity="{x:Bind ViewModel.Settings.AlignmentGridOpacity, Mode=OneWay}"
+                                      VerticalStep="{x:Bind ViewModel.Settings.AlignmentGridVerticalStep, Mode=OneWay, FallbackValue=8}"
+                                      Visibility="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled, Mode=OneWay}">
+                        <developerTools:AlignmentGrid.LineBrush>
+                            <SolidColorBrush Color="{x:Bind ViewModel.Settings.AlignmentGridColor, Mode=OneWay, Converter={StaticResource HexToColorConverter}}" />
+                        </developerTools:AlignmentGrid.LineBrush>
+                    </developerTools:AlignmentGrid>
+                </Grid>
+            </controls:Case>
+        </controls:SwitchPresenter>
+
 
         <!--  Error Overlay  -->
         <Grid Grid.Row="0"
@@ -199,6 +230,7 @@
                            KeyDown="CodeEditor_KeyDown"
                            Loading="CodeEditor_Loading"
                            OpenLinkRequested="CodeEditor_OpenLinkRequested"
+                           Decorations="{x:Bind ViewModel.LineDecorations, Mode=OneWay}"
                            RequestedTheme="{x:Bind ViewModel.Settings.EditorTheme, Mode=OneWay}"
                            Text="{x:Bind ViewModel.Document.Content, Mode=TwoWay}">
             <i:Interaction.Behaviors>
@@ -232,13 +264,9 @@
                 <VisualState x:Name="VerticalPreviewRight">
                     <VisualState.Setters>
                         <!-- Top Pane -> Right Pane -->
-                        <Setter Target="XamlRoot.(Grid.Column)" Value="2"/>
-                        <Setter Target="XamlRoot.(Grid.RowSpan)" Value="3"/>
-                        <Setter Target="XamlRoot.(Grid.ColumnSpan)" Value="1"/>
-                        
-                        <Setter Target="AlignmentGrid.(Grid.Column)" Value="2"/>
-                        <Setter Target="AlignmentGrid.(Grid.RowSpan)" Value="3"/>
-                        <Setter Target="AlignmentGrid.(Grid.ColumnSpan)" Value="1"/>
+                        <Setter Target="PreviewArea.(Grid.Column)" Value="2"/>
+                        <Setter Target="PreviewArea.(Grid.RowSpan)" Value="3"/>
+                        <Setter Target="PreviewArea.(Grid.ColumnSpan)" Value="1"/>
                         
                         <Setter Target="ErrorOverlay.(Grid.Column)" Value="2"/>
                         <Setter Target="ErrorOverlay.(Grid.RowSpan)" Value="3"/>
@@ -275,9 +303,7 @@
                 <VisualState x:Name="HorizontalPreviewBottom">
                     <VisualState.Setters>
                         <!-- Top Pane -> Bottom Pane -->
-                        <Setter Target="XamlRoot.(Grid.Row)" Value="2"/>
-
-                        <Setter Target="AlignmentGrid.(Grid.Row)" Value="2"/>
+                        <Setter Target="PreviewArea.(Grid.Row)" Value="2"/>
 
                         <Setter Target="ErrorOverlay.(Grid.Row)" Value="2"/>
 
@@ -288,11 +314,8 @@
                 <VisualState x:Name="VerticalPreviewLeft">
                     <VisualState.Setters>
                         <!-- Top Pane -> Left Pane -->
-                        <Setter Target="XamlRoot.(Grid.RowSpan)" Value="3"/>
-                        <Setter Target="XamlRoot.(Grid.ColumnSpan)" Value="1"/>
-
-                        <Setter Target="AlignmentGrid.(Grid.RowSpan)" Value="3"/>
-                        <Setter Target="AlignmentGrid.(Grid.ColumnSpan)" Value="1"/>
+                        <Setter Target="PreviewArea.(Grid.RowSpan)" Value="3"/>
+                        <Setter Target="PreviewArea.(Grid.ColumnSpan)" Value="1"/>
 
                         <Setter Target="ErrorOverlay.(Grid.RowSpan)" Value="3"/>
                         <Setter Target="ErrorOverlay.(Grid.ColumnSpan)" Value="1"/>

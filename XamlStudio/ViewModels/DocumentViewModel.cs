@@ -25,7 +25,7 @@ namespace XamlStudio.ViewModels
     {
         private ThreadPoolTimer _autocompileTimer;
 
-        public event EventHandler Compiled;
+        public event EventHandler<XamlRenderResultContext> Compiled;
 
         private XamlDocument _document;
         public XamlDocument Document
@@ -72,7 +72,7 @@ namespace XamlStudio.ViewModels
 
         public ElementTheme ActualTheme { get; set; }
 
-        public ObservableVector<IModelDeltaDecoration> LineDecorations { get; } = new ObservableVector<IModelDeltaDecoration>();
+        public ObservableVector<IModelDeltaDecoration> LineDecorations { get; private set; } = new ObservableVector<IModelDeltaDecoration>();
 
         private static CssLineStyle _errorLineStyle = new CssLineStyle()
         {

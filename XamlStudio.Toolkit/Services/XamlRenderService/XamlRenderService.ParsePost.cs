@@ -36,7 +36,7 @@ namespace XamlStudio.Toolkit.Services
                     {
                         if (int.TryParse(dwidth.Value, out int width))
                         {
-                            fwe.Width = width;
+                            context.RequestedWidth = width;
                         }
                     }
 
@@ -44,7 +44,7 @@ namespace XamlStudio.Toolkit.Services
                     {
                         if (int.TryParse(dheight.Value, out int height))
                         {
-                            fwe.Height = height;
+                            context.RequestedHeight = height;
                         }
                     }
 

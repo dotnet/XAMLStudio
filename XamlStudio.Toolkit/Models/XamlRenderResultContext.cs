@@ -51,6 +51,16 @@ namespace XamlStudio.Toolkit.Models
         public Type ElementActualType => Element?.GetType();
 
         /// <summary>
+        /// Gets the Width requested by the <c>d:DesignWidth</c> attribute, if set.
+        /// </summary>
+        public double? RequestedWidth { get; set; }
+
+        /// <summary>
+        /// Gets the Height requested by the <c>d:DesignHeight</c> attribute, if set.
+        /// </summary>
+        public double? RequestedHeight { get; set; }
+
+        /// <summary>
         /// Gets a value indicating if the Element is derived from <see cref="UIElement"/> and can be displayed.
         /// </summary>
         public bool IsUIElement => Element is UIElement;

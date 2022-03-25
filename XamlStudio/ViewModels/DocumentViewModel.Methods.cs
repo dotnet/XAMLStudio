@@ -1,4 +1,5 @@
-﻿using Microsoft.AppCenter.Analytics;
+﻿using Collections.Generic;
+using Microsoft.AppCenter.Analytics;
 using Monaco;
 using Monaco.Editor;
 using Monaco.Helpers;
@@ -28,14 +29,15 @@ namespace XamlStudio.ViewModels
     {
         private readonly AsyncLock _renderMutex = new AsyncLock();
 
-        private async void SelectiveRenderXaml(string content)
+        // TODO: Need to offset line with location in document?
+        /*private async void SelectiveRenderXaml(string content)
         {
             HasCompiled = false;
 
-            // TODO: Need to offset line with location in document once we update monaco-uwp 0.7...
             await InternalRenderXamlAsync(content, 0, true);
-        }
+        }*/
 
+        // TODO: We should just move this to the Document.xaml.cs file???
         internal async Task<XamlRenderResultContext> InternalRenderXamlAsync(string content, uint lineoffset, bool keepContentSameLength, bool overrideBinding = false)
         {
             if (SettingsService.Instance.IsLiveDataContextRefreshedOnRender == true)
@@ -144,25 +146,7 @@ namespace XamlStudio.ViewModels
                 CreateBindingDecorations();
             }
 
-            var element = Result.Element;
-            if (Result.IsResourceDictionary)
-            {
-                element = new ResourceViewer()
-                {
-                    ResourceDictionary = element as ResourceDictionary,
-                    XmlDocument = Result.Document
-                };
-            }
-
-            // Only Update if we have a new well-parsed element.
-            if (element != null && element is UIElement)
-            {
-                // Add element to main panel
-                XamlRoot.Children.Clear();
-                XamlRoot.Children.Add(element as UIElement);
-            }
-
-            Compiled?.Invoke(this, new EventArgs());
+            Compiled?.Invoke(this, Result);
 
             render_analytics.Add("TotalRenderTimeSec", Math.Round((DateTime.UtcNow.Ticks - start) / 10000000d, 2).ToString());
             Analytics.TrackEvent("Render_XAML", render_analytics);
@@ -174,13 +158,13 @@ namespace XamlStudio.ViewModels
         {
             _bindingHistory.Add(record);
 
-            LineDecorations.Clear();
             this.CreateBindingDecorations();
-            Compiled?.Invoke(this, new EventArgs());
         }
 
         private void CreateBindingDecorations()
         {
+            LineDecorations.Clear();
+
             // Highlight Bindings
             foreach (var binding in Result.Bindings)
             {

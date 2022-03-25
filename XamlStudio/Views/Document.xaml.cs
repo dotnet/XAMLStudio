@@ -16,10 +16,13 @@ using Windows.Storage.Streams;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using XamlStudio.Helpers;
 using XamlStudio.Models;
 using XamlStudio.Services;
+using XamlStudio.Toolkit.Controls;
+using XamlStudio.Toolkit.Models;
 using XamlStudio.Toolkit.Services;
 using XamlStudio.ViewModels;
 
@@ -68,6 +71,16 @@ namespace XamlStudio.Views
 
         public static readonly DependencyProperty LoadedDocumentProperty =
             DependencyProperty.Register(nameof(LoadedDocument), typeof(XamlDocument), typeof(Document), new PropertyMetadata(null));
+
+        public bool IsSpecificPreviewSize
+        {
+            get { return (bool)GetValue(IsSpecificPreviewSizeProperty); }
+            set { SetValue(IsSpecificPreviewSizeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsSpecificPreviewSize.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsSpecificPreviewSizeProperty =
+            DependencyProperty.Register(nameof(IsSpecificPreviewSize), typeof(bool), typeof(Document), new PropertyMetadata(false));
 
         public Document()
         {
@@ -138,11 +151,6 @@ namespace XamlStudio.Views
                     VerticalAlignment = VerticalAlignment.Center
                 });
             }
-        }
-
-        private void ViewModel_Compiled(object sender, EventArgs e)
-        {
-            CodeEditor.Decorations = ViewModel.LineDecorations;
         }
 
         private async void CodeEditor_Loading(object sender, RoutedEventArgs e)
@@ -217,6 +225,101 @@ namespace XamlStudio.Views
 
                 // Restore cursor to where it was.
                 await CodeEditor.SetPositionAsync(pos);
+            }
+        }
+
+        private void ViewModel_Compiled(object sender, XamlRenderResultContext result)
+        {
+            if (result.Element != null)
+            {
+                var cleanPanel = IsSpecificPreviewSize ? XamlRootSpecific : XamlRoot;
+
+                // Clean-up existing XAML content
+                if (cleanPanel.Children.Count > 0)
+                {
+                    foreach (var child in cleanPanel.Children)
+                    {
+                        // TODO: Check if this helps with the MediaPlayer issue?
+                        VisualTreeHelper.DisconnectChildrenRecursive(child);
+                    }
+                    cleanPanel.Children.Clear();
+                }
+
+                var specificSize = false;
+                var fe = result.Element as FrameworkElement;
+
+                // Setup a specific area if requested.
+                if (result.RequestedWidth != null)
+                {
+                    PreviewRootSpecific.Width = result.RequestedWidth.Value;
+                    if (fe != null && fe.ReadLocalValue(WidthProperty) != DependencyProperty.UnsetValue)
+                    {
+                        XamlRootSpecific.HorizontalAlignment = HorizontalAlignment.Center;
+                    }
+                    else
+                    {
+                        XamlRootSpecific.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    }
+                    specificSize = true;
+                }
+                else if (fe != null && fe.ReadLocalValue(WidthProperty) != DependencyProperty.UnsetValue)
+                {
+                    PreviewRootSpecific.Width = fe.Width;
+                    XamlRootSpecific.HorizontalAlignment = HorizontalAlignment.Center;
+                    specificSize = true;
+                }
+                else
+                {
+                    PreviewRootSpecific.ClearValue(WidthProperty);
+                    XamlRootSpecific.HorizontalAlignment = HorizontalAlignment.Stretch;
+                }
+
+                if (result.RequestedHeight != null)
+                {
+                    PreviewRootSpecific.Height = result.RequestedHeight.Value;
+                    if (fe != null && fe.ReadLocalValue(HeightProperty) != DependencyProperty.UnsetValue)
+                    {
+                        XamlRootSpecific.VerticalAlignment = VerticalAlignment.Center;
+                    }
+                    else
+                    {
+                        XamlRootSpecific.VerticalAlignment = VerticalAlignment.Stretch;
+                    }
+                    specificSize = true;
+                }
+                else if (fe != null && fe.ReadLocalValue(HeightProperty) != DependencyProperty.UnsetValue)
+                {
+                    PreviewRootSpecific.Height = fe.Height;
+                    XamlRootSpecific.VerticalAlignment = VerticalAlignment.Center;
+                    specificSize = true;
+                }
+                else
+                {
+                    PreviewRootSpecific.ClearValue(HeightProperty);
+                    XamlRootSpecific.VerticalAlignment = VerticalAlignment.Stretch;
+                }
+
+                // TODO: Have a set of specific device/resolution sizes for testing, HD, etc...
+                IsSpecificPreviewSize = specificSize;
+
+                var targetPanel = IsSpecificPreviewSize ? XamlRootSpecific : XamlRoot;
+
+                var element = result.Element;
+                if (result.IsResourceDictionary)
+                {
+                    element = new ResourceViewer()
+                    {
+                        ResourceDictionary = element as ResourceDictionary,
+                        XmlDocument = result.Document
+                    };
+                }
+
+                // Only Update if we have a new well-parsed element.
+                if (element != null && element is UIElement)
+                {
+                    // Add element to main panel
+                    targetPanel.Children.Add(element as UIElement);
+                }
             }
 
             ViewModel.HasCompiled = true;
