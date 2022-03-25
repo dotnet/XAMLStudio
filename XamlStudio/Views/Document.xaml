@@ -148,13 +148,19 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Spacing="12"
-                    Margin="0,2,130,2">
+                    Margin="0,2,160,2">
             <Button Padding="1"
                     x:Uid="Document_Button_Refresh"
                     Command="{x:Bind ViewModel.ForceRefreshCommand, Mode=OneWay}"
                     Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
                 <SymbolIcon fex:SymbolIconExtensions.FontSize="16" Symbol="Refresh"/>
             </Button>
+            <ToggleButton Padding="1"
+                          x:Uid="Document_Button_AlignmentGrid"
+                          IsChecked="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled, Mode=TwoWay}"
+                          Style="{StaticResource VSCodeAppBarHeaderToggleButtonStyle}">
+                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE80A;" />
+            </ToggleButton>
             <Button Padding="1"
                     x:Uid="Document_Button_PreviewTheme"
                     Command="{x:Bind ViewModel.TogglePreviewThemeCommand, Mode=OneWay}"
@@ -285,7 +291,7 @@
                         <Setter Target="SplitterCommandBarLeft.(Grid.RowSpan)" Value="3"/>
                         <Setter Target="SplitterCommandBarLeft.(Grid.ColumnSpan)" Value="1"/>
                         <Setter Target="SplitterCommandBarLeft.Orientation" Value="Vertical"/>
-                        <Setter Target="SplitterCommandBarLeft.Margin" Value="0,0,0,120"/>
+                        <Setter Target="SplitterCommandBarLeft.Margin" Value="0,0,0,160"/>
 
                         <Setter Target="SplitterCommandBarRight.(Grid.Row)" Value="0"/>
                         <Setter Target="SplitterCommandBarRight.(Grid.Column)" Value="1"/>
@@ -333,7 +339,7 @@
                         <Setter Target="SplitterCommandBarLeft.(Grid.RowSpan)" Value="3"/>
                         <Setter Target="SplitterCommandBarLeft.(Grid.ColumnSpan)" Value="1"/>
                         <Setter Target="SplitterCommandBarLeft.Orientation" Value="Vertical"/>
-                        <Setter Target="SplitterCommandBarLeft.Margin" Value="0,0,0,120"/>
+                        <Setter Target="SplitterCommandBarLeft.Margin" Value="0,0,0,160"/>
 
                         <Setter Target="SplitterCommandBarRight.(Grid.Row)" Value="0"/>
                         <Setter Target="SplitterCommandBarRight.(Grid.Column)" Value="1"/>
