@@ -12,6 +12,7 @@
              xmlns:monaco="using:Monaco"
              xmlns:xstc="using:XamlStudio.Toolkit.Converters"
              xmlns:fex="using:Microsoft.Toolkit.Uwp.UI.Extensions.Future"
+             xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
              xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
              xmlns:xaml="using:Windows.UI.Xaml"
              d:DesignHeight="300"
@@ -51,7 +52,8 @@
                       VerticalScrollMode="Auto"
                       Background="{ThemeResource Brush-Blue-Dark-2}">
                     <Grid x:Name="PreviewRootSpecific"
-                  Background="{ThemeResource Brush-Blue-Dark-1}">
+                          Background="{ThemeResource Brush-Blue-Dark-1}"
+                          ui:UIElementExtensions.ClipToBounds="{x:Bind ViewModel.Settings.IsPreviewClippingEnabled.Value, Mode=OneWay}">
                         <Grid x:Name="XamlRootSpecific"/>
 
                         <developerTools:AlignmentGrid 
@@ -68,7 +70,8 @@
             </controls:Case>
             <controls:Case IsDefault="True">
                 <Grid x:Name="PreviewRoot"
-                  Background="{ThemeResource Brush-Blue-Dark-1}">
+                      Background="{ThemeResource Brush-Blue-Dark-1}"
+                      ui:UIElementExtensions.ClipToBounds="{x:Bind ViewModel.Settings.IsPreviewClippingEnabled.Value, Mode=OneWay}">
                     <Grid x:Name="XamlRoot"/>
 
                     <developerTools:AlignmentGrid 

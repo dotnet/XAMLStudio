@@ -58,6 +58,13 @@ namespace XamlStudio.Services
         }
 
         [DefaultValue(true)]
+        public bool? IsPreviewClippingEnabled
+        {
+            get { return Get<bool?>(); }
+            set { Set(value); }
+        }
+
+        [DefaultValue(true)]
         public bool? IsAlignmentGridEnabled
         {
             get { return Get<bool?>(); }

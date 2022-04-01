@@ -297,6 +297,18 @@
     <value>XAML Studio [Debug]</value>
     <comment>Display Name used by the application</comment>
   </data>
+  <data name="SettingsPanel_PreviewClippingToggle.Header" xml:space="preserve">
+    <value>Clip Content to Preview Area</value>
+    <comment>Preview Area Clipping option header for SettingsPanel</comment>
+  </data>
+  <data name="SettingsPanel_PreviewClippingToggle.OffContent" xml:space="preserve">
+    <value>No Clipping</value>
+    <comment>Preview Area Clip off option</comment>
+  </data>
+  <data name="SettingsPanel_PreviewClippingToggle.OnContent" xml:space="preserve">
+    <value>Clipping On</value>
+    <comment>Preview Area Clip on option</comment>
+  </data>
   <data name="SettingsPanel_AlignmentGridToggle.Header" xml:space="preserve">
     <value>Enabled</value>
     <comment>Alignment Grid options header for SettingsPanel</comment>

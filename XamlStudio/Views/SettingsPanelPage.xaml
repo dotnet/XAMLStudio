@@ -198,6 +198,20 @@
                                IsExpanded="True">
                 <StackPanel Margin="8,0,0,0">
                     <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
+                        <!--  Preview Clipping - IsEnabled  -->
+                        <ToggleSwitch x:Name="PreviewClippingToggle"
+                                      x:Uid="SettingsPanel_PreviewClippingToggle"
+                                      Margin="0,4,0,0"
+                                      HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
+                                      IsOn="{x:Bind ViewModel.Settings.IsPreviewClippingEnabled.Value, Mode=OneWay}"
+                                      Tag="IsPreviewClippingEnabled">
+                            <i:Interaction.Behaviors>
+                                <ic:EventTriggerBehavior EventName="Toggled">
+                                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
+                                </ic:EventTriggerBehavior>
+                            </i:Interaction.Behaviors>
+                        </ToggleSwitch>
+
                         <!--  AlignmentGrid - IsEnabled  -->
                         <ToggleSwitch x:Name="AlignmentGridToggle"
                                       x:Uid="SettingsPanel_AlignmentGridToggle"
