@@ -38,6 +38,8 @@ namespace XamlStudio.Toolkit.Services
                 // get editor content before the pointer
                 var text = await model.GetValueAsync();
 
+                // TODO: Should try and coordinate where we need this model between render, document, and here.
+                // LINK: Document.xaml.cs:UpdateBreadcrumbs
                 var _xmlRoot = Parser.ParseText(text);
 
                 var index = text.GetCharacterIndex((int)position.LineNumber, (int)position.Column);

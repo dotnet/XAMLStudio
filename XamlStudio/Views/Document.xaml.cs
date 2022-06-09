@@ -1,9 +1,11 @@
 ﻿using Microsoft.AppCenter.Analytics;
 using Microsoft.Graphics.Canvas;
+using Microsoft.Language.Xml;
 using Monaco;
 using Monaco.Languages;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
@@ -22,6 +24,7 @@ using XamlStudio.Helpers;
 using XamlStudio.Models;
 using XamlStudio.Services;
 using XamlStudio.Toolkit.Controls;
+using XamlStudio.Toolkit.Extensions;
 using XamlStudio.Toolkit.Models;
 using XamlStudio.Toolkit.Services;
 using XamlStudio.ViewModels;
@@ -82,6 +85,8 @@ namespace XamlStudio.Views
         public static readonly DependencyProperty IsSpecificPreviewSizeProperty =
             DependencyProperty.Register(nameof(IsSpecificPreviewSize), typeof(bool), typeof(Document), new PropertyMetadata(false));
 
+        public ObservableCollection<BreadcrumbInfo> Breadcrumbs = new();
+
         public Document()
         {
             this.InitializeComponent();
@@ -91,6 +96,8 @@ namespace XamlStudio.Views
             dataTransferManager.DataRequested += DataTransferManager_DataRequested;
 
             Loaded += Document_Loaded;
+
+            CodeEditor.RegisterPropertyChangedCallback(CodeEditor.SelectedRangeProperty, CodeEditor_SelectedRangeChanged);
         }
 
         private void Document_Loaded(object sender, RoutedEventArgs e)
@@ -98,6 +105,8 @@ namespace XamlStudio.Views
             // HACK: TODO: Workaround for Monaco editor not updating it's content?
             ViewModel.Document.Content = ViewModel.Document.Content + " ";
             ViewModel.Document.Content = ViewModel.Document.Content.Substring(0, ViewModel.Document.Content.Length - 1);
+
+            _ = UpdateBreadcrumbs();
         }
 
         private void UnloadViewModel(DocumentViewModel model)
@@ -471,5 +480,65 @@ namespace XamlStudio.Views
             return CanvasBitmap.CreateFromBytes(_device.Value, pixels, renderTarget.PixelWidth, renderTarget.PixelHeight, DirectXPixelFormat.B8G8R8A8UIntNormalized);
         }
         #endregion
+
+        #region BreadcrumbBar Events
+        private async void BreadcrumbBar_ItemClicked(Microsoft.UI.Xaml.Controls.BreadcrumbBar sender, Microsoft.UI.Xaml.Controls.BreadcrumbBarItemClickedEventArgs args)
+        {
+            if (args.Item is BreadcrumbInfo info)
+            {
+                await CodeEditor.RevealPositionInCenterAsync(info.Location);
+            }
+        }
+
+        private void CodeEditor_SelectedRangeChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            _ = UpdateBreadcrumbs();
+        }
+
+        private async Task UpdateBreadcrumbs()
+        {
+            var text = CodeEditor.Text; // This is hopefuly in-sync so we don't round-trip again.
+            var position = await CodeEditor.GetPositionAsync(); // TODO: Should we just monitor and keep track of this vs. polling?
+
+            var _xmlRoot = Parser.ParseText(text);
+
+            var index = text.GetCharacterIndex((int)position.LineNumber, (int)position.Column);
+
+            if (index == -1)
+            {
+                return;
+            }
+
+            Breadcrumbs.Clear();
+
+            foreach (var node in _xmlRoot.FindNode(index + 1).AncestorNodesAndSelf())
+            {
+                if (node is IXmlElementSyntax element)
+                {
+                    var loc = text.GetLineColumnIndex(node.Span.Start);
+                    Breadcrumbs.Insert(0, new BreadcrumbInfo()
+                    {
+                        Name = element.Name,
+                        Location = new Position((uint)loc.Line, (uint)loc.Column),
+                        // TODO: Put child sister nodes in a list so that can have drop-down to navigate within document?
+                    });
+                }
+            }
+
+            // Didn't want to re-write style yet, Workaround for https://github.com/microsoft/microsoft-ui-xaml/issues/7213
+            Breadcrumbs.Add(new BreadcrumbInfo()
+            {
+                Name = "<Caret Location>",
+                Location = position,
+            });
+        }
+        #endregion
+    }
+
+    public class BreadcrumbInfo
+    {
+        public string Name { get; set; }
+
+        public Position Location { get; set; }
     }
 }

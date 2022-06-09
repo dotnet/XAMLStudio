@@ -15,6 +15,7 @@
              xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
              xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
              xmlns:xaml="using:Windows.UI.Xaml"
+             xmlns:views="XamlStudio.Views"
              d:DesignHeight="300"
              d:DesignWidth="400"
              mc:Ignorable="d">
@@ -232,25 +233,46 @@
             </muxc:SplitButton>
         </StackPanel>
 
-        <monaco:CodeEditor x:Name="CodeEditor"
-                           Grid.Row="2"
-                           Grid.ColumnSpan="3"
-                           CodeLanguage="xml"
-                           KeyDown="CodeEditor_KeyDown"
-                           Loading="CodeEditor_Loading"
-                           OpenLinkRequested="CodeEditor_OpenLinkRequested"
-                           Decorations="{x:Bind ViewModel.LineDecorations, Mode=OneWay}"
-                           RequestedTheme="{x:Bind ViewModel.Settings.EditorTheme, Mode=OneWay}"
-                           Text="{x:Bind ViewModel.Document.Content, Mode=TwoWay}">
-            <i:Interaction.Behaviors>
-                <!--<ic:EventTriggerBehavior EventName="LostFocus">
+        <Grid x:Name="EditorArea"
+              Grid.Row="2"
+              Grid.ColumnSpan="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <muxc:BreadcrumbBar ItemsSource="{x:Bind Breadcrumbs}"
+                                ItemClicked="BreadcrumbBar_ItemClicked">
+                <muxc:BreadcrumbBar.ItemTemplate>
+                    <DataTemplate>
+                        <muxc:BreadcrumbBarItem Content="{Binding}" AutomationProperties.Name="{Binding Name}">
+                            <muxc:BreadcrumbBarItem.ContentTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" />
+                                </DataTemplate>
+                            </muxc:BreadcrumbBarItem.ContentTemplate>
+                        </muxc:BreadcrumbBarItem>
+                    </DataTemplate>
+                </muxc:BreadcrumbBar.ItemTemplate>
+            </muxc:BreadcrumbBar>
+            <monaco:CodeEditor x:Name="CodeEditor"
+                               Grid.Row="1"
+                               CodeLanguage="xml"
+                               KeyDown="CodeEditor_KeyDown"
+                               Loading="CodeEditor_Loading"
+                               OpenLinkRequested="CodeEditor_OpenLinkRequested"
+                               Decorations="{x:Bind ViewModel.LineDecorations, Mode=OneWay}"
+                               RequestedTheme="{x:Bind ViewModel.Settings.EditorTheme, Mode=OneWay}"
+                               Text="{x:Bind ViewModel.Document.Content, Mode=TwoWay}">
+                <i:Interaction.Behaviors>
+                    <!--<ic:EventTriggerBehavior EventName="LostFocus">
                     <ic:InvokeCommandAction Command="{x:Bind ViewModel.UpdateXamlCommand}" />
                 </ic:EventTriggerBehavior>-->
-                <!--<ic:EventTriggerBehavior EventName="KeyDown">
+                    <!--<ic:EventTriggerBehavior EventName="KeyDown">
                     <ic:InvokeCommandAction Command="{x:Bind ViewModel.KeyDownCommand}" />
                 </ic:EventTriggerBehavior>-->
-            </i:Interaction.Behaviors>
-        </monaco:CodeEditor>
+                </i:Interaction.Behaviors>
+            </monaco:CodeEditor>
+        </Grid>
 
         <controls:Loading x:Name="LoadingControl"
                           Grid.Row="0"
@@ -304,9 +326,9 @@
                         <Setter Target="SplitterCommandBarRight.Margin" Value="0,150,0,0"/>
 
                         <!-- Bottom Pane -> Left Pane -->
-                        <Setter Target="CodeEditor.(Grid.Row)" Value="0"/>
-                        <Setter Target="CodeEditor.(Grid.RowSpan)" Value="3"/>
-                        <Setter Target="CodeEditor.(Grid.ColumnSpan)" Value="1"/>
+                        <Setter Target="EditorArea.(Grid.Row)" Value="0"/>
+                        <Setter Target="EditorArea.(Grid.RowSpan)" Value="3"/>
+                        <Setter Target="EditorArea.(Grid.ColumnSpan)" Value="1"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="HorizontalPreviewBottom">
@@ -317,7 +339,7 @@
                         <Setter Target="ErrorOverlay.(Grid.Row)" Value="2"/>
 
                         <!-- Bottom Pane -> Top Pane -->
-                        <Setter Target="CodeEditor.(Grid.Row)" Value="0"/>
+                        <Setter Target="EditorArea.(Grid.Row)" Value="0"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="VerticalPreviewLeft">
@@ -352,10 +374,10 @@
                         <Setter Target="SplitterCommandBarRight.Margin" Value="0,150,0,0"/>
 
                         <!-- Bottom Pane -> Right Pane -->
-                        <Setter Target="CodeEditor.(Grid.Row)" Value="0"/>
-                        <Setter Target="CodeEditor.(Grid.Column)" Value="2"/>
-                        <Setter Target="CodeEditor.(Grid.RowSpan)" Value="3"/>
-                        <Setter Target="CodeEditor.(Grid.ColumnSpan)" Value="1"/>
+                        <Setter Target="EditorArea.(Grid.Row)" Value="0"/>
+                        <Setter Target="EditorArea.(Grid.Column)" Value="2"/>
+                        <Setter Target="EditorArea.(Grid.RowSpan)" Value="3"/>
+                        <Setter Target="EditorArea.(Grid.ColumnSpan)" Value="1"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

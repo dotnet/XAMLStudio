@@ -44,7 +44,7 @@ namespace XamlStudio.Toolkit.Extensions
         /// <param name="str">Text context.</param>
         /// <param name="index">Character index</param>
         /// <returns>Line, Column Tuple</returns>
-        public static (int, int) GetLineColumnIndex(this string str, int index)
+        public static (int Line, int Column) GetLineColumnIndex(this string str, int index)
         {
             var line = 1;
             var column = 1;
