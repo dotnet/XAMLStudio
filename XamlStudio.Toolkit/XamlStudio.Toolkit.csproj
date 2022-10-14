@@ -143,10 +143,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GuiLabs.Language.Xml">
-      <Version>1.2.58</Version>
+      <Version>1.2.60</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.13</Version>
+      <Version>6.2.14</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp">
       <Version>7.1.2</Version>
