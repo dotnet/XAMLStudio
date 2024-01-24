@@ -497,10 +497,9 @@ namespace XamlStudio.Views
 
         private async Task UpdateBreadcrumbs()
         {
-            var text = CodeEditor.Text; // This is hopefuly in-sync so we don't round-trip again.
+            var text = CodeEditor.Text; // This is hopefully in-sync so we don't round-trip again.
             var position = await CodeEditor.GetPositionAsync(); // TODO: Should we just monitor and keep track of this vs. polling?
-
-            var _xmlRoot = Parser.ParseText(text);
+            if (position == null) return;
 
             var index = text.GetCharacterIndex((int)position.LineNumber, (int)position.Column);
 
@@ -508,6 +507,9 @@ namespace XamlStudio.Views
             {
                 return;
             }
+
+            // TODO: This is expensive, we should be doing this on a debounce and more globally as the document updates to be used elsewhere for visual tree sync, etc... as part of render loop
+            var _xmlRoot = Parser.ParseText(text);
 
             Breadcrumbs.Clear();
 
@@ -528,7 +530,7 @@ namespace XamlStudio.Views
             // Didn't want to re-write style yet, Workaround for https://github.com/microsoft/microsoft-ui-xaml/issues/7213
             Breadcrumbs.Add(new BreadcrumbInfo()
             {
-                Name = "<Caret Location>",
+                Name = $"Caret @ L{position.LineNumber} Ch{position.Column}",
                 Location = position,
             });
         }
