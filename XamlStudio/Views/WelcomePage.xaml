@@ -151,7 +151,12 @@
             <TextBlock Padding="12,8"
                        Foreground="{ThemeResource Brush-Grey-Light-1}"
                        TextWrapping="WrapWholeWords">
-                - More Quick Access Preview Options like Refresh and Theme Toggle
+                - More Quick Access Preview Options like Refresh, Alignment Grid, Clipping, and Theme Toggle
+            </TextBlock>
+            <TextBlock Padding="12,8"
+                       Foreground="{ThemeResource Brush-Grey-Light-1}"
+                       TextWrapping="WrapWholeWords">
+                - Breadcrumb XAML Navigation Bar
             </TextBlock>
             <TextBlock Padding="12,8"
                        Foreground="{ThemeResource Brush-Grey-Light-1}"
