@@ -1,5 +1,6 @@
 ﻿using Microsoft.AppCenter.Analytics;
 using Microsoft.Services.Store.Engagement;
+using CommunityToolkit.WinUI.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -40,9 +41,9 @@ namespace XamlStudio.Views
             DependencyProperty.Register(nameof(MainViewModel), typeof(MainViewModel), typeof(SettingsPanelPage), new PropertyMetadata(null, (sender, args) =>
             {
                 SettingsPanelPage document = (sender as SettingsPanelPage);
-                if (document != null)
+                if (document != null && args.NewValue is MainViewModel mvm)
                 {
-                    document.ViewModel = (args.NewValue as MainViewModel).SettingsViewModel;
+                    document.ViewModel = mvm.SettingsViewModel;
                 }
             }));
 
@@ -131,16 +132,22 @@ namespace XamlStudio.Views
 
         private void AddNamespaceButton_Click(object sender, RoutedEventArgs e)
         {
+            // Ensure grid is visible
+            KnownNamespacesExpander.IsExpanded = true;
+
             // Add new Row and begin editing
             ViewModel.Settings.KnownNamespaces.Insert(0, new Toolkit.Models.XmlnsNamespace(string.Empty, string.Empty));
 
-            NamespaceDataGrid.SelectedIndex = 0;
+            _ = CompositionTargetHelper.ExecuteAfterCompositionRenderingAsync(() =>
+            {
+                NamespaceDataGrid.SelectedIndex = 0;
 
-            NamespaceDataGrid.ScrollIntoView(NamespaceDataGrid.SelectedItem, null);
+                NamespaceDataGrid.ScrollIntoView(NamespaceDataGrid.SelectedItem, null);
 
-            NamespaceDataGrid.Focus(FocusState.Keyboard);
+                NamespaceDataGrid.Focus(FocusState.Keyboard);
 
-            NamespaceDataGrid.BeginEdit();
+                NamespaceDataGrid.BeginEdit();
+            });
         }
 
         private async void RemoveNamespaceButton_Click(object sender, RoutedEventArgs e)

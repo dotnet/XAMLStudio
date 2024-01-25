@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2010
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamlStudio", "XamlStudio\XamlStudio.csproj", "{9A08E04B-13E0-49C5-A5F1-43E8E2FC1D07}"
 EndProject
@@ -11,6 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamlStudio.Toolkit", "XamlS
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{8B0881BC-A57D-4759-B4D6-DB5846F32970}"
 	ProjectSection(SolutionItems) = preProject
+		nuget.config = nuget.config
 		xamlstyler.vssettings = xamlstyler.vssettings
 	EndProjectSection
 EndProject

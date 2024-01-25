@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Automation.Peers;
 using Windows.UI.Xaml.Controls;
 
-namespace Microsoft.Toolkit.Uwp.UI.Extensions.Future
+namespace CommunityToolkit.WinUI.Extensions.Future
 {
     public static class FrameworkElementExtensions
     {

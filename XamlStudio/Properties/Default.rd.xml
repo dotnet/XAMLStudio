@@ -24,16 +24,16 @@
     <Assembly Name="*Application*" Dynamic="Required All" />
     
     <!-- Add your application specific runtime directives here. -->
-    <Assembly Name="Microsoft.Toolkit.Uwp.Converters" Dynamic="Required All" />
-    <Assembly Name="Microsoft.Toolkit.Uwp.UI.Controls" Dynamic="Required All" />
-    <Assembly Name="Microsoft.Toolkit.Uwp.UI.Controls.DataGrid" Dynamic="Required All" />
-    <Assembly Name="Microsoft.Toolkit.Uwp.UI.Media" Dynamic="Required All" />
-    <Assembly Name="Microsoft.Toolkit.Uwp.UI" Dynamic="Required All" />
+    <Assembly Name="CommunityToolkit.WinUI.Converters" Dynamic="Required All" />
+    <Assembly Name="CommunityToolkit.WinUI.Controls" Dynamic="Required All" />
+    <Assembly Name="CommunityToolkit.WinUI.Controls.DataGrid" Dynamic="Required All" />
+    <Assembly Name="CommunityToolkit.WinUI.Media" Dynamic="Required All" />
+    <Assembly Name="CommunityToolkit.WinUI" Dynamic="Required All" />
     
     <Assembly Name="Microsoft.Xaml.Interactions" Dynamic="Required All" />
 
-    <Namespace Name="Microsoft.Toolkit.Uwp.UI.Controls" Dynamic="Required All" />
-    <Namespace Name="Microsoft.Toolkit.Uwp.UI.Extensions" Dynamic="Required All" />
+    <Namespace Name="CommunityToolkit.WinUI.Controls" Dynamic="Required All" />
+    <Namespace Name="CommunityToolkit.WinUI.Extensions" Dynamic="Required All" />
 
     <Namespace Name="Microsoft.Xaml.Interactions.Core" Dynamic="Required All" />
 

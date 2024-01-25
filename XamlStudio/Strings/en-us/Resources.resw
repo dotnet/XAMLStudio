@@ -209,23 +209,23 @@
     <value>Control Toolbox (Ctrl+Shift+T)</value>
     <comment>Toolbox ActivityBar Tooltip</comment>
   </data>
-  <data name="SettingsPanel_AutoCompileToggle.Header" xml:space="preserve">
+  <data name="SettingsPanel_AutoCompileExpander.Header" xml:space="preserve">
     <value>Immediate Compilation</value>
     <comment>Auto Compile toggle title for SettingsPanel</comment>
   </data>
-  <data name="SettingsPanel_AutoCompileDelay.Text" xml:space="preserve">
+  <data name="SettingsPanel_AutoCompileDelay.Header" xml:space="preserve">
     <value>Auto-Compile Delay (in seconds after no input)</value>
     <comment>Auto Compile Delay description for SettingsPanel</comment>
   </data>
   <data name="SettingsPanel_AutoCompileToggle.OffContent" xml:space="preserve">
-    <value>Off (Compile with F5 or Ctrl+Enter)</value>
+    <value>Off</value>
     <comment>Turn Auto compile off option for SettingsPanel</comment>
   </data>
   <data name="SettingsPanel_AutoCompileToggle.OnContent" xml:space="preserve">
     <value>On</value>
     <comment>Turn Auto compile on option for SettingsPanel</comment>
   </data>
-  <data name="SettingsPanel_PowerBindingToggle.Header" xml:space="preserve">
+  <data name="SettingsPanel_PowerBindingToggleCard.Header" xml:space="preserve">
     <value>Power Binding Debugger</value>
     <comment>Power Binding Debugger toggle title for SettingsPanel</comment>
   </data>
@@ -257,7 +257,7 @@
     <value>When enabled, pressing F5 will only compile the selected text instead of the entire XAML document.  Useful for testing subsections of XAML.</value>
     <comment>Compile Selected Text option description for SettingsPanel</comment>
   </data>
-  <data name="SettingsPanel_UpdateContentToggle.Header" xml:space="preserve">
+  <data name="SettingsPanel_UpdateContentToggleCard.Header" xml:space="preserve">
     <value>Update XAML with Suggestions</value>
     <comment>Update XAML with missing xmlns namespaces automatically when enabled in SettingsPanel</comment>
   </data>
@@ -297,7 +297,7 @@
     <value>XAML Studio [Debug]</value>
     <comment>Display Name used by the application</comment>
   </data>
-  <data name="SettingsPanel_PreviewClippingToggle.Header" xml:space="preserve">
+  <data name="SettingsPanel_PreviewClippingToggleCard.Header" xml:space="preserve">
     <value>Clip Content to Preview Area</value>
     <comment>Preview Area Clipping option header for SettingsPanel</comment>
   </data>
@@ -309,9 +309,9 @@
     <value>Clipping On</value>
     <comment>Preview Area Clip on option</comment>
   </data>
-  <data name="SettingsPanel_AlignmentGridToggle.Header" xml:space="preserve">
-    <value>Enabled</value>
-    <comment>Alignment Grid options header for SettingsPanel</comment>
+  <data name="SettingsPanel_AlignmentGridExpander.Header" xml:space="preserve">
+    <value>Alignment Grid</value>
+    <comment>Alignment Grid expander options header for SettingsPanel</comment>
   </data>
   <data name="SettingsPanel_AlignmentGridToggle.OffContent" xml:space="preserve">
     <value>Off</value>
@@ -325,19 +325,19 @@
     <value>Alignment Grid</value>
     <comment>Header for the Alignment Grid options section in the Settings Panel</comment>
   </data>
-  <data name="SettingsPanel_AlignmentGridHorizontalStep.Text" xml:space="preserve">
+  <data name="SettingsPanel_AlignmentGridHorizontalStep.Header" xml:space="preserve">
     <value>Horizontal Step</value>
     <comment>Set the AlignmentGrid Horizontal Step</comment>
   </data>
-  <data name="SettingsPanel_AlignmentGridLineColor.Header" xml:space="preserve">
+  <data name="SettingsPanel_AlignmentGridLineColorCard.Header" xml:space="preserve">
     <value>Line Color</value>
     <comment>Set the AlignmentGrid brush color</comment>
   </data>
-  <data name="SettingsPanel_AlignmentGridOpacity.Text" xml:space="preserve">
+  <data name="SettingsPanel_AlignmentGridOpacity.Header" xml:space="preserve">
     <value>Opacity</value>
     <comment>Set the AlignmentGrid Opacity</comment>
   </data>
-  <data name="SettingsPanel_AlignmentGridVerticalStep.Text" xml:space="preserve">
+  <data name="SettingsPanel_AlignmentGridVerticalStep.Header" xml:space="preserve">
     <value>Vertical Step</value>
     <comment>Set the AlignmentGrid Vertical Step</comment>
   </data>
@@ -345,7 +345,7 @@
     <value>Editor Theme</value>
     <comment>Choose theme for Code Editor</comment>
   </data>
-  <data name="SettingsPanel_KnownNamespaces.Text" xml:space="preserve">
+  <data name="SettingsPanel_KnownNamespaces.Header" xml:space="preserve">
     <value>Known Namespaces</value>
     <comment>Known Namespaces Title on Settings Page</comment>
   </data>
@@ -375,7 +375,7 @@
     <comment>Button Text for opening the log location.</comment>
   </data>
   <data name="SettingsPanel_About_Copyright.Text" xml:space="preserve">
-    <value>Copyright 2020 Microsoft</value>
+    <value>Copyright 2022 Microsoft</value>
     <comment>Copyright Statement in About Box</comment>
   </data>
   <data name="SettingsPanel_About_Credits.Text" xml:space="preserve">
@@ -539,7 +539,6 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>New Document (Ctrl+N)</value>
     <comment>Tooltip for New Document button in TabView at top of window</comment>
   </data>
-  <!-- TODO: Consolidate Tab_Menu -->
   <data name="MainPage_Tab_Menu_Duplicate.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Duplicate Document</value>
     <comment>Accessibility Name for Tab Menu to duplicate the document</comment>
@@ -596,7 +595,7 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>Refresh Data from Server</value>
     <comment>Tooltip for refresh data from server button in Data Sources Panel.</comment>
   </data>
-  <data name="SettingsPanel_UpdateLiveDataContextToggle.Header" xml:space="preserve">
+  <data name="SettingsPanel_UpdateLiveDataContextToggleCard.Header" xml:space="preserve">
     <value>Update Data Context from Remote Url on Render</value>
     <comment>Update the data context from a remote url (if specified) whenever the XAML is re-rendered.</comment>
   </data>
@@ -856,5 +855,21 @@ Please help us by reporting this issue in Feedback Hub.</value>
   <data name="SettingsPanel_PaneOrientation_Left.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Left</value>
     <comment>Preview Pane Left Editor option</comment>
+  </data>
+  <data name="SettingsPanel_AutoCompileExpander.Description" xml:space="preserve">
+    <value>When enabled, automatically compiles XAML after typing for a short time, otherwise must press F5 or Ctrl+Enter to compile.</value>
+    <comment>Description for Auto Compiling setting expander</comment>
+  </data>
+  <data name="SettingsPanel_KnownNamespaces.Description" xml:space="preserve">
+    <value>List of known namespace abbreviations, when used in XAML, detected namespace usings will automatically be added to root node.</value>
+    <comment>Description for Known namespaces expander card</comment>
+  </data>
+  <data name="SettingsPanel_PowerBindingToggleCard.Description" xml:space="preserve">
+    <value>When enabled, highlights bindings in XAML editor and allows inspecting values and results (may sometimes interfere with expected results)</value>
+    <comment>Description for Power Binding setting card</comment>
+  </data>
+  <data name="SettingsPanel_UpdateContentToggleCard.Description" xml:space="preserve">
+    <value>When enabled, missing xmlns namespaces will automatically be inserted into the code editor on compilation.</value>
+    <comment>Description for update content toggle</comment>
   </data>
 </root>

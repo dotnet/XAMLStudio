@@ -1,7 +1,7 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Microsoft.Toolkit.Uwp.UI.Extensions.Future
+namespace CommunityToolkit.WinUI.Extensions.Future
 {
     public static class ListBoxExtensions
     {

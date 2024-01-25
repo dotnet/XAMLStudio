@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls.Primitives;
 
-namespace Microsoft.Toolkit.Uwp.UI.Controls.Future
+namespace CommunityToolkit.WinUI.Controls.Future
 {
     public class ManualToggleButton : ToggleButton
     {

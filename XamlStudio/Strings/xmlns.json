@@ -13,15 +13,15 @@
   },
   {
     "name": "ex",
-    "path": "using:Microsoft.Toolkit.Uwp.UI.Extensions"
+    "path": "using:CommunityToolkit.WinUI.Extensions"
   },
   {
     "name": "controls",
-    "path": "using:Microsoft.Toolkit.Uwp.UI.Controls"
+    "path": "using:CommunityToolkit.WinUI.Controls"
   },
   {
     "name": "converters",
-    "path": "using:Microsoft.Toolkit.Uwp.UI.Converters"
+    "path": "using:CommunityToolkit.WinUI.Converters"
   },
   {
     "name": "Core",

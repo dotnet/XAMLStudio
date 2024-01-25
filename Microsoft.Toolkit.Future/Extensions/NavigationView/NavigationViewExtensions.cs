@@ -15,7 +15,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 
-namespace Microsoft.Toolkit.Uwp.UI.Extensions.Future
+namespace CommunityToolkit.WinUI.Extensions.Future
 {
     /// <summary>
     /// Set of extensions for the <see cref="NavigationView"/> control.

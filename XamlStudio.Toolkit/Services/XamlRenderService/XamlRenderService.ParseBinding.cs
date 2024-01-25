@@ -105,7 +105,7 @@ namespace XamlStudio.Toolkit.Services
             {
                 char separator = ',';
                 // If no converter on binding, add ours
-                if (string.IsNullOrWhiteSpace(binding.Path))
+                if (string.IsNullOrWhiteSpace(binding.Path) && string.IsNullOrWhiteSpace(binding.ElementName))
                 {
                     separator = ' ';
                 }

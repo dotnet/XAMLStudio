@@ -148,8 +148,11 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.Toolkit.Uwp">
-      <Version>7.1.2</Version>
+    <PackageReference Include="CommunityToolkit.Uwp.Extensions">
+      <Version>8.0.240109</Version>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Uwp.Helpers">
+      <Version>8.0.240109</Version>
     </PackageReference>
     <PackageReference Include="Monaco.Editor">
       <Version>0.8.1-alpha</Version>

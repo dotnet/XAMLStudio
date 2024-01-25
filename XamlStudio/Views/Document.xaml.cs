@@ -249,7 +249,8 @@ namespace XamlStudio.Views
                     foreach (var child in cleanPanel.Children)
                     {
                         // TODO: Check if this helps with the MediaPlayer issue?
-                        VisualTreeHelper.DisconnectChildrenRecursive(child);
+                        //// See WinUI Issue with Expander/AnimatedIcon: https://github.com/microsoft/microsoft-ui-xaml/issues/9278
+                        //// VisualTreeHelper.DisconnectChildrenRecursive(child);
                     }
                     cleanPanel.Children.Clear();
                 }

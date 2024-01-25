@@ -22,7 +22,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 
-namespace Microsoft.Toolkit.Uwp.UI.Extensions.Future
+namespace CommunityToolkit.WinUI.Extensions.Future
 {
     /// <summary>
     /// Set of extensions for the Pivot control.

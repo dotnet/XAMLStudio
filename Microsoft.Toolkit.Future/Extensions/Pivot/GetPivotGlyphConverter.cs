@@ -15,13 +15,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Uwp.UI.Extensions.Future;
+using CommunityToolkit.WinUI.Extensions.Future;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 
-namespace Microsoft.Toolkit.Uwp.UI.Extensions.Pivot.Future
+namespace CommunityToolkit.WinUI.Extensions.Pivot.Future
 {
     /// <summary>
     /// Helper to retrieve the Glyph Attached Property from a PivotItem for the PivotHeaderItem Style Templates.

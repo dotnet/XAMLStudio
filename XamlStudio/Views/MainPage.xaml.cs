@@ -1,6 +1,6 @@
 ﻿using Microsoft.AppCenter.Analytics;
 using Microsoft.Services.Store.Engagement;
-using Microsoft.Toolkit.Uwp.UI;
+using CommunityToolkit.WinUI;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -85,9 +85,9 @@ namespace XamlStudio.Views
                 // TODO: Clean-up these initialize calls to make sure this list is centralized...
                 await AppAssemblyInfo.Instance.InitializeAsync(new Assembly[] {
                     typeof(Microsoft.UI.Xaml.Controls.NavigationView).Assembly,
-                    typeof(Microsoft.Toolkit.Uwp.UI.Controls.BladeView).Assembly,
-                    typeof(Microsoft.Toolkit.Uwp.UI.Controls.DataGrid).Assembly,
-                    typeof(Microsoft.Toolkit.Uwp.UI.Converters.BoolToVisibilityConverter).Assembly,
+                    typeof(CommunityToolkit.WinUI.Controls.GridSplitter).Assembly,
+                    typeof(CommunityToolkit.WinUI.Controls.DockPanel).Assembly,
+                    typeof(CommunityToolkit.WinUI.Converters.BoolToVisibilityConverter).Assembly,
                     typeof(Microsoft.Xaml.Interactions.Core.DataTriggerBehavior).Assembly,
                 });
             });

@@ -1,17 +1,20 @@
 ﻿<Page x:Class="XamlStudio.Views.SettingsPanelPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      xmlns:ani="using:CommunityToolkit.WinUI.Animations"
+      xmlns:controls="using:CommunityToolkit.WinUI.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:fex="using:Microsoft.Toolkit.Uwp.UI.Extensions.Future"
+      xmlns:fex="using:CommunityToolkit.WinUI.Extensions.Future"
       xmlns:helper="using:XamlStudio.Helpers"
       xmlns:i="using:Microsoft.Xaml.Interactivity"
       xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:model="using:XamlStudio.Models"
+      xmlns:mt="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
       xmlns:sys="using:System"
       xmlns:xaml="using:Windows.UI.Xaml"
       xmlns:xstc="using:XamlStudio.Toolkit.Converters"
-      xmlns:model="using:XamlStudio.Models"
       Style="{StaticResource PageStyle}"
       mc:Ignorable="d">
     <Page.Resources>
@@ -23,23 +26,30 @@
             <TextBlock Style="{StaticResource BodyTextStyle}" Text="{Binding}" />
             <!--  TODO: ToolTipService.ToolTip="{Binding Path=(ToolTipService.ToolTip), RelativeSource={RelativeSource TemplatedParent}}"  -->
         </DataTemplate>
+        <ani:ImplicitAnimationSet x:Key="SmoothOffsetAnimation">
+            <ani:OffsetAnimation Duration="0:0:0.25" />
+        </ani:ImplicitAnimationSet>
     </Page.Resources>
 
     <ScrollViewer Background="{ThemeResource Brush-Blue-Dark-2}">
-        <StackPanel Margin="{StaticResource MediumLeftRightMargin}">
+        <StackPanel Margin="12,0,12,12"
+                    HorizontalAlignment="Stretch"
+                    Spacing="4">
+
             <!--  XAML Properties  -->
-            <controls:Expander x:Uid="SettingsPanel_XAML"
-                               HorizontalContentAlignment="Stretch"
-                               VerticalContentAlignment="Top"
-                               Background="Transparent"
-                               HeaderStyle="{StaticResource SimpleExpanderStyle}"
-                               IsExpanded="True">
-                <StackPanel Margin="8,0,0,0">
-                    <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
+            <muxc:Expander x:Uid="SettingsPanel_XAML"
+                           HorizontalContentAlignment="Stretch"
+                           VerticalContentAlignment="Top"
+                           Background="Transparent"
+                           IsExpanded="True"
+                           Style="{StaticResource SimpleExpanderStyle}">
+                <StackPanel HorizontalAlignment="Stretch" Spacing="4">
+                    <controls:SettingsExpander x:Uid="SettingsPanel_AutoCompileExpander">
+                        <controls:SettingsExpander.HeaderIcon>
+                            <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE835;" />
+                        </controls:SettingsExpander.HeaderIcon>
                         <ToggleSwitch x:Name="AutoCompileToggle"
                                       x:Uid="SettingsPanel_AutoCompileToggle"
-                                      Margin="0,4,0,0"
-                                      HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
                                       IsOn="{x:Bind ViewModel.Settings.IsAutoCompileEnabled.Value, Mode=OneWay}"
                                       Tag="IsAutoCompileEnabled">
                             <i:Interaction.Behaviors>
@@ -48,61 +58,49 @@
                                 </ic:EventTriggerBehavior>
                             </i:Interaction.Behaviors>
                         </ToggleSwitch>
-                    </StackPanel>
+                        <controls:SettingsExpander.Items>
+                            <controls:SettingsCard x:Uid="SettingsPanel_AutoCompileDelay"
+                                                   HorizontalContentAlignment="Stretch"
+                                                   IsEnabled="{x:Bind AutoCompileToggle.IsOn, Mode=OneWay}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="30" />
+                                    </Grid.ColumnDefinitions>
+                                    <Slider x:Name="AutoCompileDelaySlider"
+                                            x:Uid="SettingsPanel_AutoCompileDelaySlider"
+                                            Grid.Column="0"
+                                            HorizontalAlignment="Stretch"
+                                            HorizontalContentAlignment="Stretch"
+                                            LargeChange="1"
+                                            Maximum="5"
+                                            Minimum="0.5"
+                                            SmallChange="0.1"
+                                            StepFrequency="0.1"
+                                            TickFrequency="1"
+                                            TickPlacement="Outside"
+                                            Value="{x:Bind ViewModel.Settings.AutoCompileDelay.Value, Mode=OneWay}">
+                                        <i:Interaction.Behaviors>
+                                            <ic:EventTriggerBehavior EventName="ValueChanged">
+                                                <ic:InvokeCommandAction Command="{x:Bind ViewModel.DelayChangedCommand, Mode=OneWay}" />
+                                            </ic:EventTriggerBehavior>
+                                        </i:Interaction.Behaviors>
+                                    </Slider>
+                                    <TextBlock Grid.Column="1"
+                                               MinWidth="30"
+                                               Margin="12,8,0,0"
+                                               Text="{x:Bind sys:String.Format('{0:0.0}', AutoCompileDelaySlider.Value), Mode=OneWay}" />
+                                </Grid>
+                            </controls:SettingsCard>
+                        </controls:SettingsExpander.Items>
+                    </controls:SettingsExpander>
 
-                    <StackPanel Margin="{StaticResource SettingsSubheaderMargin}" Visibility="{x:Bind AutoCompileToggle.IsOn, Mode=OneWay}">
-                        <TextBlock x:Uid="SettingsPanel_AutoCompileDelay" Style="{StaticResource BodyTextStyle}" />
-                        <Grid Margin="0,4,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="30" />
-                            </Grid.ColumnDefinitions>
-                            <Slider x:Name="AutoCompileDelaySlider"
-                                    x:Uid="SettingsPanel_AutoCompileDelaySlider"
-                                    Grid.Column="0"
-                                    HorizontalAlignment="Stretch"
-                                    HorizontalContentAlignment="Stretch"
-                                    LargeChange="1"
-                                    Maximum="5"
-                                    Minimum="0.5"
-                                    SmallChange="0.1"
-                                    StepFrequency="0.1"
-                                    TickFrequency="1"
-                                    TickPlacement="Outside"
-                                    Value="{x:Bind ViewModel.Settings.AutoCompileDelay.Value, Mode=OneWay}">
-                                <i:Interaction.Behaviors>
-                                    <ic:EventTriggerBehavior EventName="ValueChanged">
-                                        <ic:InvokeCommandAction Command="{x:Bind ViewModel.DelayChangedCommand, Mode=OneWay}" />
-                                    </ic:EventTriggerBehavior>
-                                </i:Interaction.Behaviors>
-                            </Slider>
-                            <TextBlock Grid.Column="1"
-                                       MinWidth="30"
-                                       Margin="12,8,0,0"
-                                       Text="{x:Bind sys:String.Format('{0:0.0}', AutoCompileDelaySlider.Value), Mode=OneWay}" />
-                        </Grid>
-                    </StackPanel>
-
-                    <!--<StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
-                        <ToggleSwitch x:Name="SelectionCompileToggle"
-                                      x:Uid="SettingsPanel_SelectionCompileToggle"
-                                      Margin="0,4,0,0"
-                                      HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
-                                      IsOn="{x:Bind ViewModel.Settings.IsCompileSelectionEnabled.Value, Mode=OneWay}"
-                                      Tag="IsCompileSelectionEnabled">
-                            <i:Interaction.Behaviors>
-                                <ic:EventTriggerBehavior EventName="Toggled">
-                                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
-                                </ic:EventTriggerBehavior>
-                            </i:Interaction.Behaviors>
-                        </ToggleSwitch>
-                    </StackPanel>-->
-
-                    <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
+                    <controls:SettingsCard x:Uid="SettingsPanel_PowerBindingToggleCard" ani:Implicit.Animations="{StaticResource SmoothOffsetAnimation}">
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xEBE8;" />
+                        </controls:SettingsCard.HeaderIcon>
                         <ToggleSwitch x:Name="PowerBindingToggle"
                                       x:Uid="SettingsPanel_PowerBindingToggle"
-                                      Margin="0,4,0,0"
-                                      HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
                                       IsOn="{x:Bind ViewModel.Settings.IsPowerBindingDebuggingEnabled.Value, Mode=OneWay}"
                                       Tag="IsPowerBindingDebuggingEnabled">
                             <i:Interaction.Behaviors>
@@ -111,28 +109,29 @@
                                 </ic:EventTriggerBehavior>
                             </i:Interaction.Behaviors>
                         </ToggleSwitch>
-                    </StackPanel>
+                    </controls:SettingsCard>
 
-                    <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
-                        <ToggleSwitch x:Name="UpdateContentToggle"
-                                      x:Uid="SettingsPanel_UpdateContentToggle"
-                                      Margin="0,4,0,0"
-                                      HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
-                                      IsOn="{x:Bind ViewModel.Settings.IsContentUpdatedWithSuggested.Value, Mode=OneWay}"
-                                      Tag="IsContentUpdatedWithSuggested">
-                            <i:Interaction.Behaviors>
-                                <ic:EventTriggerBehavior EventName="Toggled">
-                                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
-                                </ic:EventTriggerBehavior>
-                            </i:Interaction.Behaviors>
-                        </ToggleSwitch>
-                    </StackPanel>
+                    <!--<StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
+                            <ToggleSwitch x:Name="SelectionCompileToggle"
+                                            x:Uid="SettingsPanel_SelectionCompileToggle"
+                                            Margin="0,4,0,0"
+                                            HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
+                                            IsOn="{x:Bind ViewModel.Settings.IsCompileSelectionEnabled.Value, Mode=OneWay}"
+                                            Tag="IsCompileSelectionEnabled">
+                                <i:Interaction.Behaviors>
+                                    <ic:EventTriggerBehavior EventName="Toggled">
+                                        <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
+                                    </ic:EventTriggerBehavior>
+                                </i:Interaction.Behaviors>
+                            </ToggleSwitch>
+                        </StackPanel>-->
 
-                    <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
+                    <controls:SettingsCard x:Uid="SettingsPanel_UpdateLiveDataContextToggleCard" ani:Implicit.Animations="{StaticResource SmoothOffsetAnimation}">
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xEE94;" />
+                        </controls:SettingsCard.HeaderIcon>
                         <ToggleSwitch x:Name="UpdateLiveDataContextToggle"
                                       x:Uid="SettingsPanel_UpdateLiveDataContextToggle"
-                                      Margin="0,4,0,0"
-                                      HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
                                       IsOn="{x:Bind ViewModel.Settings.IsLiveDataContextRefreshedOnRender.Value, Mode=OneWay}"
                                       Tag="IsLiveDataContextRefreshedOnRender">
                             <i:Interaction.Behaviors>
@@ -141,68 +140,90 @@
                                 </ic:EventTriggerBehavior>
                             </i:Interaction.Behaviors>
                         </ToggleSwitch>
-                    </StackPanel>
+                    </controls:SettingsCard>
 
-                    <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock x:Uid="SettingsPanel_KnownNamespaces"
-                                       Margin="0,8,0,12"
-                                       Style="{StaticResource BodyTextStyle}" />
-                            <Button x:Uid="SettingsPanel_KnownNamespaces_Button_Add" Click="AddNamespaceButton_Click" Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
-                                <SymbolIcon fex:SymbolIconExtensions.FontSize="14" Symbol="Add" />
-                            </Button>
-                        </StackPanel>
-                        <controls:DataGrid x:Name="NamespaceDataGrid"
-                                           MaxHeight="450"
-                                           AutoGenerateColumns="False"
-                                           Background="{ThemeResource Brush-Blue-Dark-1}"
-                                           CanUserReorderColumns="False"
-                                           CanUserSortColumns="True"
-                                           IsReadOnly="False"
-                                           ItemsSource="{x:Bind ViewModel.Settings.KnownNamespaces, Mode=OneWay}"
-                                           PreparingCellForEdit="NamespaceDataGrid_PreparingCellForEdit"
-                                           RowEditEnded="DataGrid_RowEditEnded">
-                            <controls:DataGrid.Columns>
-                                <controls:DataGridTextColumn Width="SizeToCells"
-                                                             Binding="{Binding Name}"
-                                                             FontSize="20"
-                                                             Header="Shortcut" />
-                                <controls:DataGridTextColumn Width="SizeToCells"
-                                                             Binding="{Binding Path}"
-                                                             FontSize="20"
-                                                             Header="Namespace" />
-                                <controls:DataGridTemplateColumn>
-                                    <controls:DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Button x:Uid="SettingsPanel_KnownNamespaces_Button_Remove"
-                                                    Click="RemoveNamespaceButton_Click"
-                                                    CommandParameter="{Binding}"
-                                                    Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
-                                                <SymbolIcon fex:SymbolIconExtensions.FontSize="12" Symbol="Delete" />
-                                            </Button>
-                                        </DataTemplate>
-                                    </controls:DataGridTemplateColumn.CellTemplate>
-                                </controls:DataGridTemplateColumn>
-                            </controls:DataGrid.Columns>
-                        </controls:DataGrid>
-                    </StackPanel>
+                    <controls:SettingsExpander x:Name="KnownNamespacesExpander"
+                                               x:Uid="SettingsPanel_KnownNamespaces"
+                                               ani:Implicit.Animations="{StaticResource SmoothOffsetAnimation}">
+                        <controls:SettingsExpander.HeaderIcon>
+                            <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE128;" />
+                        </controls:SettingsExpander.HeaderIcon>
+                        <Button x:Uid="SettingsPanel_KnownNamespaces_Button_Add"
+                                Click="AddNamespaceButton_Click"
+                                Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
+                            <SymbolIcon fex:SymbolIconExtensions.FontSize="14" Symbol="Add" />
+                        </Button>
+                        <controls:SettingsExpander.Items>
+                            <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Vertical">
+                                <mt:DataGrid x:Name="NamespaceDataGrid"
+                                             MaxHeight="450"
+                                             HorizontalAlignment="Stretch"
+                                             AutoGenerateColumns="False"
+                                             Background="{ThemeResource Brush-Blue-Dark-1}"
+                                             CanUserReorderColumns="False"
+                                             CanUserSortColumns="True"
+                                             IsReadOnly="False"
+                                             ItemsSource="{x:Bind ViewModel.Settings.KnownNamespaces, Mode=OneWay}"
+                                             PreparingCellForEdit="NamespaceDataGrid_PreparingCellForEdit"
+                                             RowEditEnded="DataGrid_RowEditEnded">
+                                    <mt:DataGrid.Columns>
+                                        <mt:DataGridTextColumn Width="SizeToCells"
+                                                               Binding="{Binding Name}"
+                                                               FontSize="20"
+                                                               Header="Shortcut" />
+                                        <mt:DataGridTextColumn Width="SizeToCells"
+                                                               Binding="{Binding Path}"
+                                                               FontSize="20"
+                                                               Header="Namespace" />
+                                        <mt:DataGridTemplateColumn>
+                                            <mt:DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button x:Uid="SettingsPanel_KnownNamespaces_Button_Remove"
+                                                            Click="RemoveNamespaceButton_Click"
+                                                            CommandParameter="{Binding}"
+                                                            Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
+                                                        <SymbolIcon fex:SymbolIconExtensions.FontSize="12" Symbol="Delete" />
+                                                    </Button>
+                                                </DataTemplate>
+                                            </mt:DataGridTemplateColumn.CellTemplate>
+                                        </mt:DataGridTemplateColumn>
+                                    </mt:DataGrid.Columns>
+                                </mt:DataGrid>
+                            </controls:SettingsCard>
+
+                            <controls:SettingsCard x:Uid="SettingsPanel_UpdateContentToggleCard">
+                                <!--  TODO: This should just be a diagnostic icon in the editor margin as a suggestion vs. full text replace.  -->
+                                <ToggleSwitch x:Name="UpdateContentToggle"
+                                              x:Uid="SettingsPanel_UpdateContentToggle"
+                                              IsOn="{x:Bind ViewModel.Settings.IsContentUpdatedWithSuggested.Value, Mode=OneWay}"
+                                              Tag="IsContentUpdatedWithSuggested">
+                                    <i:Interaction.Behaviors>
+                                        <ic:EventTriggerBehavior EventName="Toggled">
+                                            <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
+                                        </ic:EventTriggerBehavior>
+                                    </i:Interaction.Behaviors>
+                                </ToggleSwitch>
+                            </controls:SettingsCard>
+                        </controls:SettingsExpander.Items>
+                    </controls:SettingsExpander>
                 </StackPanel>
-            </controls:Expander>
+            </muxc:Expander>
 
             <!--  AlignmentGrid Properties  -->
-            <controls:Expander x:Uid="SettingsPanel_AlignmentGrid"
-                               HorizontalContentAlignment="Stretch"
-                               VerticalContentAlignment="Top"
-                               Background="Transparent"
-                               HeaderStyle="{StaticResource SimpleExpanderStyle}"
-                               IsExpanded="True">
-                <StackPanel Margin="8,0,0,0">
-                    <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
-                        <!--  Preview Clipping - IsEnabled  -->
+            <muxc:Expander x:Uid="SettingsPanel_AlignmentGrid"
+                           HorizontalContentAlignment="Stretch"
+                           VerticalContentAlignment="Top"
+                           Background="Transparent"
+                           IsExpanded="True"
+                           Style="{StaticResource SimpleExpanderStyle}">
+                <StackPanel Spacing="4">
+                    <!--  Preview Clipping - IsEnabled  -->
+                    <controls:SettingsCard x:Uid="SettingsPanel_PreviewClippingToggleCard">
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xF407;" />
+                        </controls:SettingsCard.HeaderIcon>
                         <ToggleSwitch x:Name="PreviewClippingToggle"
                                       x:Uid="SettingsPanel_PreviewClippingToggle"
-                                      Margin="0,4,0,0"
-                                      HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
                                       IsOn="{x:Bind ViewModel.Settings.IsPreviewClippingEnabled.Value, Mode=OneWay}"
                                       Tag="IsPreviewClippingEnabled">
                             <i:Interaction.Behaviors>
@@ -211,12 +232,15 @@
                                 </ic:EventTriggerBehavior>
                             </i:Interaction.Behaviors>
                         </ToggleSwitch>
+                    </controls:SettingsCard>
 
+                    <controls:SettingsExpander x:Uid="SettingsPanel_AlignmentGridExpander">
+                        <controls:SettingsExpander.HeaderIcon>
+                            <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xF0E2;" />
+                        </controls:SettingsExpander.HeaderIcon>
                         <!--  AlignmentGrid - IsEnabled  -->
                         <ToggleSwitch x:Name="AlignmentGridToggle"
                                       x:Uid="SettingsPanel_AlignmentGridToggle"
-                                      Margin="0,4,0,0"
-                                      HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
                                       IsOn="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled.Value, Mode=OneWay}"
                                       Tag="IsAlignmentGridEnabled">
                             <i:Interaction.Behaviors>
@@ -226,133 +250,133 @@
                             </i:Interaction.Behaviors>
                         </ToggleSwitch>
 
-                        <!--  Hidden when disabled  -->
-                        <StackPanel Visibility="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled.Value, Mode=OneWay}">
+                        <controls:SettingsExpander.Items>
                             <!--  AlignmentGrid - Horizontal Step  -->
-                            <TextBlock x:Uid="SettingsPanel_AlignmentGridHorizontalStep"
-                                       Margin="0,12,0,0"
-                                       Style="{StaticResource BodyTextStyle}" />
-                            <Grid Margin="0,4,0,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="30" />
-                                </Grid.ColumnDefinitions>
-                                <Slider x:Name="AlignmentGridHorizontalStepSlider"
-                                        x:Uid="SettingsPanel_AlignmentGridHorizontalStepSlider"
-                                        Grid.Column="0"
-                                        HorizontalAlignment="Stretch"
-                                        HorizontalContentAlignment="Stretch"
-                                        LargeChange="12"
-                                        Maximum="128"
-                                        Minimum="4"
-                                        SmallChange="1"
-                                        StepFrequency="4"
-                                        TickFrequency="4"
-                                        TickPlacement="Outside"
-                                        Value="{x:Bind ViewModel.Settings.AlignmentGridHorizontalStep, Mode=TwoWay}" />
-                                <TextBlock Grid.Column="1"
-                                           MinWidth="30"
-                                           Margin="12,8,0,0"
-                                           Text="{x:Bind AlignmentGridHorizontalStepSlider.Value, Mode=OneWay}" />
-                            </Grid>
-
+                            <controls:SettingsCard x:Uid="SettingsPanel_AlignmentGridHorizontalStep"
+                                                   HorizontalContentAlignment="Stretch"
+                                                   IsEnabled="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled.Value, Mode=OneWay}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="30" />
+                                    </Grid.ColumnDefinitions>
+                                    <Slider x:Name="AlignmentGridHorizontalStepSlider"
+                                            x:Uid="SettingsPanel_AlignmentGridHorizontalStepSlider"
+                                            Grid.Column="0"
+                                            HorizontalAlignment="Stretch"
+                                            HorizontalContentAlignment="Stretch"
+                                            LargeChange="12"
+                                            Maximum="128"
+                                            Minimum="4"
+                                            SmallChange="1"
+                                            StepFrequency="4"
+                                            TickFrequency="4"
+                                            TickPlacement="Outside"
+                                            Value="{x:Bind ViewModel.Settings.AlignmentGridHorizontalStep, Mode=TwoWay}" />
+                                    <TextBlock Grid.Column="1"
+                                               MinWidth="30"
+                                               Margin="12,8,0,0"
+                                               Text="{x:Bind AlignmentGridHorizontalStepSlider.Value, Mode=OneWay}" />
+                                </Grid>
+                            </controls:SettingsCard>
                             <!--  AlignmentGrid - Vertical Step  -->
-                            <TextBlock x:Uid="SettingsPanel_AlignmentGridVerticalStep"
-                                       Margin="0,12,0,0"
-                                       Style="{StaticResource BodyTextStyle}" />
-                            <Grid Margin="0,4,0,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="30" />
-                                </Grid.ColumnDefinitions>
-                                <Slider x:Name="AlignmentGridVerticalStepSlider"
-                                        x:Uid="SettingsPanel_AlignmentGridVerticalStepSlider"
-                                        Grid.Column="0"
-                                        HorizontalAlignment="Stretch"
-                                        HorizontalContentAlignment="Stretch"
-                                        LargeChange="12"
-                                        Maximum="128"
-                                        Minimum="4"
-                                        SmallChange="1"
-                                        StepFrequency="4"
-                                        TickFrequency="4"
-                                        TickPlacement="Outside"
-                                        Value="{x:Bind ViewModel.Settings.AlignmentGridVerticalStep, Mode=TwoWay}" />
-                                <TextBlock Grid.Column="1"
-                                           MinWidth="30"
-                                           Margin="12,8,0,0"
-                                           Text="{x:Bind AlignmentGridVerticalStepSlider.Value, Mode=OneWay}" />
-                            </Grid>
-
+                            <controls:SettingsCard x:Uid="SettingsPanel_AlignmentGridVerticalStep"
+                                                   HorizontalContentAlignment="Stretch"
+                                                   IsEnabled="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled.Value, Mode=OneWay}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="30" />
+                                    </Grid.ColumnDefinitions>
+                                    <Slider x:Name="AlignmentGridVerticalStepSlider"
+                                            x:Uid="SettingsPanel_AlignmentGridVerticalStepSlider"
+                                            Grid.Column="0"
+                                            HorizontalAlignment="Stretch"
+                                            HorizontalContentAlignment="Stretch"
+                                            LargeChange="12"
+                                            Maximum="128"
+                                            Minimum="4"
+                                            SmallChange="1"
+                                            StepFrequency="4"
+                                            TickFrequency="4"
+                                            TickPlacement="Outside"
+                                            Value="{x:Bind ViewModel.Settings.AlignmentGridVerticalStep, Mode=TwoWay}" />
+                                    <TextBlock Grid.Column="1"
+                                               MinWidth="30"
+                                               Margin="12,8,0,0"
+                                               Text="{x:Bind AlignmentGridVerticalStepSlider.Value, Mode=OneWay}" />
+                                </Grid>
+                            </controls:SettingsCard>
                             <!--  AlignmentGrid - Opacity  -->
-                            <TextBlock x:Uid="SettingsPanel_AlignmentGridOpacity"
-                                       Margin="0,12,0,0"
-                                       Style="{StaticResource BodyTextStyle}" />
-                            <Grid Margin="0,4,0,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="30" />
-                                </Grid.ColumnDefinitions>
-                                <Slider x:Name="AlignmentGridOpacitySlider"
-                                        x:Uid="SettingsPanel_AlignmentGridOpacitySlider"
-                                        Grid.Column="0"
-                                        HorizontalAlignment="Stretch"
-                                        HorizontalContentAlignment="Stretch"
-                                        LargeChange="0.2"
-                                        Maximum="1"
-                                        Minimum="0"
-                                        SmallChange="0.05"
-                                        StepFrequency="0.1"
-                                        TickFrequency="1"
-                                        TickPlacement="Outside"
-                                        Value="{x:Bind ViewModel.Settings.AlignmentGridOpacity, Mode=TwoWay}" />
-                                <TextBlock Grid.Column="1"
-                                           MinWidth="30"
-                                           Margin="12,8,0,0"
-                                           Text="{x:Bind AlignmentGridOpacitySlider.Value, Mode=OneWay}" />
-                            </Grid>
-
+                            <controls:SettingsCard x:Uid="SettingsPanel_AlignmentGridOpacity"
+                                                   HorizontalContentAlignment="Stretch"
+                                                   IsEnabled="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled.Value, Mode=OneWay}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="30" />
+                                    </Grid.ColumnDefinitions>
+                                    <Slider x:Name="AlignmentGridOpacitySlider"
+                                            x:Uid="SettingsPanel_AlignmentGridOpacitySlider"
+                                            Grid.Column="0"
+                                            HorizontalAlignment="Stretch"
+                                            HorizontalContentAlignment="Stretch"
+                                            LargeChange="0.2"
+                                            Maximum="1"
+                                            Minimum="0"
+                                            SmallChange="0.05"
+                                            StepFrequency="0.1"
+                                            TickFrequency="1"
+                                            TickPlacement="Outside"
+                                            Value="{x:Bind ViewModel.Settings.AlignmentGridOpacity, Mode=TwoWay}" />
+                                    <TextBlock Grid.Column="1"
+                                               MinWidth="30"
+                                               Margin="12,8,0,0"
+                                               Text="{x:Bind AlignmentGridOpacitySlider.Value, Mode=OneWay}" />
+                                </Grid>
+                            </controls:SettingsCard>
                             <!--  AlignmentGrid - Color  -->
-                            <ComboBox x:Uid="SettingsPanel_AlignmentGridLineColor"
-                                      Margin="0,12,0,4"
-                                      HorizontalAlignment="Stretch"
-                                      HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
-                                      ItemsSource="{x:Bind ViewModel.Colors, Mode=OneWay}"
-                                      SelectedItem="{x:Bind ViewModel.Settings.AlignmentGridColor, Mode=TwoWay, Converter={StaticResource HexToColorConverter}}">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <Grid Width="12"
-                                                  Height="12"
-                                                  Margin="0,0,4,0">
-                                                <Grid.Background>
-                                                    <SolidColorBrush Color="{Binding}" />
-                                                </Grid.Background>
-                                            </Grid>
-                                            <TextBlock Text="{Binding Converter={StaticResource ColorToNameConverter}}" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                        </StackPanel>
-                    </StackPanel>
+                            <controls:SettingsCard x:Uid="SettingsPanel_AlignmentGridLineColorCard" IsEnabled="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled.Value, Mode=OneWay}">
+                                <ComboBox x:Uid="SettingsPanel_AlignmentGridLineColor"
+                                          HorizontalAlignment="Stretch"
+                                          ItemsSource="{x:Bind ViewModel.Colors, Mode=OneWay}"
+                                          SelectedItem="{x:Bind ViewModel.Settings.AlignmentGridColor, Mode=TwoWay, Converter={StaticResource HexToColorConverter}}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Grid Width="12"
+                                                      Height="12"
+                                                      Margin="0,0,4,0">
+                                                    <Grid.Background>
+                                                        <SolidColorBrush Color="{Binding}" />
+                                                    </Grid.Background>
+                                                </Grid>
+                                                <TextBlock Text="{Binding Converter={StaticResource ColorToNameConverter}}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </controls:SettingsCard>
+                        </controls:SettingsExpander.Items>
+                    </controls:SettingsExpander>
                 </StackPanel>
-            </controls:Expander>
+            </muxc:Expander>
 
-            <controls:Expander x:Uid="SettingsPanel_Personalization"
-                               HorizontalContentAlignment="Stretch"
-                               VerticalContentAlignment="Top"
-                               Background="Transparent"
-                               HeaderStyle="{StaticResource SimpleExpanderStyle}"
-                               IsExpanded="True">
+            <muxc:Expander x:Uid="SettingsPanel_Personalization"
+                           HorizontalContentAlignment="Stretch"
+                           VerticalContentAlignment="Top"
+                           Background="Transparent"
+                           IsExpanded="True"
+                           Style="{StaticResource SimpleExpanderStyle}">
                 <StackPanel Margin="8,0,0,0">
-                    <!-- App/Editor Themes -->
+                    <!--  App/Editor Themes  -->
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
 
+                        <!--  TODO: Switch to ComboBox?  -->
                         <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
                             <TextBlock x:Uid="SettingsPanel_Theme" Style="{StaticResource BodyTextStyle}" />
 
@@ -416,7 +440,7 @@
                         </StackPanel>
                     </Grid>
 
-                    <!-- Docked Preview Panel -->
+                    <!--  Docked Preview Panel  -->
                     <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
 
                         <!--  Hidden when above disabled  -->
@@ -434,16 +458,15 @@
                                              GroupName="PaneOrientation"
                                              IsChecked="{x:Bind ViewModel.Settings.DefaultPreviewPanePosition, Converter={StaticResource PaneOrientationToBooleanConverter}, ConverterParameter=HorizontalPreviewTop, Mode=OneWay}">
                                     <StackPanel Margin="4,-12,0,0">
-                                        <FontIcon FontFamily="Segoe MDL2 Assets"
+                                        <FontIcon Margin="4,0,0,0"
+                                                  FontFamily="Segoe MDL2 Assets"
                                                   FontSize="32"
-                                                  Glyph="&#xE745;"
-                                                  Margin="4,0,0,0">
+                                                  Glyph="&#xE745;">
                                             <FontIcon.RenderTransform>
-                                                <RotateTransform Angle="180" CenterX="16" CenterY="16"/>
+                                                <RotateTransform Angle="180" CenterX="16" CenterY="16" />
                                             </FontIcon.RenderTransform>
                                         </FontIcon>
-                                        <TextBlock x:Uid="SettingsPanel_PaneOrientation_TopDescription"
-                                                   Margin="0,4,0,0"/>
+                                        <TextBlock x:Uid="SettingsPanel_PaneOrientation_TopDescription" Margin="0,4,0,0" />
                                     </StackPanel>
                                     <RadioButton.CommandParameter>
                                         <model:PaneOrientation>HorizontalPreviewTop</model:PaneOrientation>
@@ -456,9 +479,8 @@
                                     <StackPanel Margin="4,-12,0,0">
                                         <FontIcon FontFamily="Segoe MDL2 Assets"
                                                   FontSize="32"
-                                                  Glyph="&#xEA61;"/>
-                                        <TextBlock x:Uid="SettingsPanel_PaneOrientation_RightDescription"
-                                                   Margin="0,4,0,0"/>
+                                                  Glyph="&#xEA61;" />
+                                        <TextBlock x:Uid="SettingsPanel_PaneOrientation_RightDescription" Margin="0,4,0,0" />
                                     </StackPanel>
                                     <RadioButton.CommandParameter>
                                         <model:PaneOrientation>VerticalPreviewRight</model:PaneOrientation>
@@ -471,9 +493,8 @@
                                     <StackPanel Margin="4,-12,0,0">
                                         <FontIcon FontFamily="Segoe MDL2 Assets"
                                                   FontSize="32"
-                                                  Glyph="&#xE745;"/>
-                                        <TextBlock x:Uid="SettingsPanel_PaneOrientation_BottomDescription"
-                                                   Margin="0,4,0,0"/>
+                                                  Glyph="&#xE745;" />
+                                        <TextBlock x:Uid="SettingsPanel_PaneOrientation_BottomDescription" Margin="0,4,0,0" />
                                     </StackPanel>
                                     <RadioButton.CommandParameter>
                                         <model:PaneOrientation>HorizontalPreviewBottom</model:PaneOrientation>
@@ -486,9 +507,8 @@
                                     <StackPanel Margin="4,-12,0,0">
                                         <FontIcon FontFamily="Segoe MDL2 Assets"
                                                   FontSize="32"
-                                                  Glyph="&#xE746;"/>
-                                        <TextBlock x:Uid="SettingsPanel_PaneOrientation_LeftDescription"
-                                                   Margin="0,4,0,0"/>
+                                                  Glyph="&#xE746;" />
+                                        <TextBlock x:Uid="SettingsPanel_PaneOrientation_LeftDescription" Margin="0,4,0,0" />
                                     </StackPanel>
                                     <RadioButton.CommandParameter>
                                         <model:PaneOrientation>VerticalPreviewLeft</model:PaneOrientation>
@@ -498,14 +518,14 @@
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
-            </controls:Expander>
+            </muxc:Expander>
 
-            <controls:Expander x:Uid="SettingsPanel_About"
-                               HorizontalContentAlignment="Stretch"
-                               VerticalContentAlignment="Top"
-                               Background="Transparent"
-                               HeaderStyle="{StaticResource SimpleExpanderStyle}"
-                               IsExpanded="True">
+            <muxc:Expander x:Uid="SettingsPanel_About"
+                           HorizontalContentAlignment="Stretch"
+                           VerticalContentAlignment="Top"
+                           Background="Transparent"
+                           IsExpanded="True"
+                           Style="{StaticResource SimpleExpanderStyle}">
                 <StackPanel Margin="20,0,0,0">
                     <TextBlock x:Uid="SettingsPanel_About_Description" Style="{StaticResource BodyTextStyle}" />
 
@@ -542,36 +562,41 @@
                                Margin="0,12,0,12"
                                Style="{StaticResource BodyTextStyle}" />
                 </StackPanel>
-            </controls:Expander>
+            </muxc:Expander>
 
-            <controls:Expander x:Uid="SettingsPanel_ThirdParty"
-                               HorizontalContentAlignment="Stretch"
-                               VerticalContentAlignment="Top"
-                               Background="Transparent"
-                               HeaderStyle="{StaticResource SimpleExpanderStyle}"
-                               IsExpanded="True">
-                <ItemsControl ItemsSource="{x:Bind ViewModel.ThirdPartyLibs, Mode=OneWay}"
-                              Margin="20,0,0,20">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate x:DataType="model:ThirdPartyInfo">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="280"/>
-                                    <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="120"/>
-                                </Grid.ColumnDefinitions>
-                                <HyperlinkButton Content="{Binding Name}" NavigateUri="{Binding Url}"/>
-                                <TextBlock Text="{Binding Version}" Grid.Column="1" Margin="0,6,0,0"/>
-                                <HyperlinkButton Content="{Binding License}" NavigateUri="{Binding LicenseUrl}" Grid.Column="2"
-                                                 AutomationProperties.Name="{Binding LicenseAutomationName}"/>
-                                <HyperlinkButton Content="Read License" Click="HyperlinkButtonLicense_Click" Grid.Column="3"
-                                                 AutomationProperties.Name="{Binding LicenseTextAutomationName}"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </controls:Expander>
+            <controls:SettingsExpander x:Uid="SettingsPanel_ThirdParty"
+                                       IsExpanded="True"
+                                       ItemsSource="{x:Bind ViewModel.ThirdPartyLibs, Mode=OneWay}">
+                <controls:SettingsExpander.ItemTemplate>
+                    <DataTemplate x:DataType="model:ThirdPartyInfo">
+                        <controls:SettingsCard>
+                            <controls:SettingsCard.Header>
+                                <HyperlinkButton Padding="2"
+                                                 Content="{Binding Name}"
+                                                 NavigateUri="{Binding Url}" />
+                            </controls:SettingsCard.Header>
+                            <controls:SettingsCard.Description>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <HyperlinkButton Padding="2"
+                                                     AutomationProperties.Name="{Binding LicenseAutomationName}"
+                                                     Content="{x:Bind License}"
+                                                     NavigateUri="{Binding LicenseUrl}" />
+                                    <TextBlock Grid.Column="1"
+                                               Padding="2"
+                                               Text="{x:Bind Version}" />
+                                </Grid>
+                            </controls:SettingsCard.Description>
+                            <Button AutomationProperties.Name="{Binding LicenseTextAutomationName}"
+                                    Click="HyperlinkButtonLicense_Click"
+                                    Content="Read License" />
+                        </controls:SettingsCard>
+                    </DataTemplate>
+                </controls:SettingsExpander.ItemTemplate>
+            </controls:SettingsExpander>
         </StackPanel>
     </ScrollViewer>
 </Page>

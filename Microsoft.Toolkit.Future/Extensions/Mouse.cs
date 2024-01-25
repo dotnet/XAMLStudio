@@ -8,7 +8,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 
-namespace Microsoft.Toolkit.Uwp.UI.Extensions.Future
+namespace CommunityToolkit.WinUI.Extensions.Future
 {
     /// <summary>
     /// Helper class for easily changing the mouseover cursor type.

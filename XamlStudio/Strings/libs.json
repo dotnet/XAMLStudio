@@ -6,12 +6,12 @@
   },
   {
     "name": "Windows Community Toolkit Controls",
-    "namespace": "Microsoft.Toolkit.Uwp.UI.Controls",
+    "namespace": "CommunityToolkit.WinUI.Controls",
     "docroot": "https://docs.microsoft.com/en-us/windows/communitytoolkit/controls/<type>"
   },
   {
     "name": "Windows Community Toolkit Converters",
-    "namespace": "Microsoft.Toolkit.Uwp.UI.Converters",
+    "namespace": "CommunityToolkit.WinUI.Converters",
     "docroot": "https://docs.microsoft.com/en-us/windows/communitytoolkit/helpers/converters"
   },
   {

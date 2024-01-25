@@ -106,9 +106,6 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Controls\ContentSizer\ContentSizer.cs" />
-    <Compile Include="Controls\ContentSizer\ContentSizer.Events.cs" />
-    <Compile Include="Controls\ContentSizer\ContentSizer.Properties.cs" />
     <Compile Include="Controls\ManualToggleButton.cs" />
     <Compile Include="Converters\CollectionContainsConverter.cs" />
     <Compile Include="Data\Grouping.cs" />
@@ -135,16 +132,14 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
-      <Version>7.1.2</Version>
+    <PackageReference Include="CommunityToolkit.Uwp.Converters">
+      <Version>8.0.240109</Version>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Uwp.Extensions">
+      <Version>8.0.240109</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Controls\ContentSizer\ContentSizer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Page>
     <Page Include="Extensions\Pivot\Pivot.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
