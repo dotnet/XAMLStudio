@@ -37,44 +37,6 @@
                     <Setter Property="FontSize" Value="{ThemeResource PivotHeaderItemFontSize}" />
                 </Style>
             </Grid.Resources>
-            <Image x:Name="Icon"
-                   Grid.Column="0"
-                   Width="16"
-                   Height="16"
-                   Margin="8,0,0,0"
-                   VerticalAlignment="Center"
-                   Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource GetPivotImage}}"
-                   Visibility="{Binding Path=Source, ElementName=Icon, Converter={StaticResource NotNullToVisibility}}" />
-            <ContentPresenter x:Name="ContentPresenter"
-                              Grid.Column="1"
-                              Margin="{TemplateBinding Padding}"
-                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                              Content="{TemplateBinding Content}"
-                              ContentTemplate="{TemplateBinding ContentTemplate}"
-                              FontFamily="{TemplateBinding FontFamily}"
-                              FontSize="{TemplateBinding FontSize}"
-                              FontWeight="{TemplateBinding FontWeight}">
-                <ContentPresenter.RenderTransform>
-                    <TranslateTransform x:Name="ContentPresenterTranslateTransform" />
-                </ContentPresenter.RenderTransform>
-            </ContentPresenter>
-            <Grid Grid.Column="1"
-                  HorizontalAlignment="Right"
-                  Visibility="{Binding Path=Command, ElementName=CloseButton, Converter={StaticResource NotNullToVisibility}}">
-                <Border x:Name="ButtonBorder"
-                        Width="32"
-                        Height="32"
-                        Margin="0,0,4,0"
-                        Background="{TemplateBinding Background}">
-                    <Button x:Name="CloseButton"
-                            Command="{Binding RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource GetPivotCloseCommand}}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource GetPivotItem}}"
-                            Style="{StaticResource MSEdgeCloseButtonStyle}">
-                        &#xE711;
-                    </Button>
-                </Border>
-            </Grid>
             <!--  Command Reach up, visibility look at command not null...  -->
             <VisualStateManager.VisualStateGroups>
                 <VisualStateGroup x:Name="SelectionStates">
@@ -183,6 +145,44 @@
                     </VisualState>
                 </VisualStateGroup>
             </VisualStateManager.VisualStateGroups>
+            <Image x:Name="Icon"
+                   Grid.Column="0"
+                   Width="16"
+                   Height="16"
+                   Margin="8,0,0,0"
+                   VerticalAlignment="Center"
+                   Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource GetPivotImage}}"
+                   Visibility="{Binding Path=Source, ElementName=Icon, Converter={StaticResource NotNullToVisibility}}" />
+            <ContentPresenter x:Name="ContentPresenter"
+                              Grid.Column="1"
+                              Margin="{TemplateBinding Padding}"
+                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                              Content="{TemplateBinding Content}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                              FontFamily="{TemplateBinding FontFamily}"
+                              FontSize="{TemplateBinding FontSize}"
+                              FontWeight="{TemplateBinding FontWeight}">
+                <ContentPresenter.RenderTransform>
+                    <TranslateTransform x:Name="ContentPresenterTranslateTransform" />
+                </ContentPresenter.RenderTransform>
+            </ContentPresenter>
+            <Grid Grid.Column="1"
+                  HorizontalAlignment="Right"
+                  Visibility="{Binding Path=Command, ElementName=CloseButton, Converter={StaticResource NotNullToVisibility}}">
+                <Border x:Name="ButtonBorder"
+                        Width="32"
+                        Height="32"
+                        Margin="0,0,4,0"
+                        Background="{TemplateBinding Background}">
+                    <Button x:Name="CloseButton"
+                            Command="{Binding RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource GetPivotCloseCommand}}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource GetPivotItem}}"
+                            Style="{StaticResource MSEdgeCloseButtonStyle}">
+                        &#xE711;
+                    </Button>
+                </Border>
+            </Grid>
         </Grid>
     </ControlTemplate>
 
@@ -223,16 +223,6 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
-                        <ContentPresenter x:Name="ContentPresenter"
-                                          Padding="{TemplateBinding Padding}"
-                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                          AutomationProperties.AccessibilityView="Raw"
-                                          BorderBrush="{TemplateBinding BorderBrush}"
-                                          BorderThickness="{TemplateBinding BorderThickness}"
-                                          Content="{TemplateBinding Content}"
-                                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                                          ContentTransitions="{TemplateBinding ContentTransitions}" />
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal">
@@ -278,6 +268,16 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
+                        <ContentPresenter x:Name="ContentPresenter"
+                                          Padding="{TemplateBinding Padding}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          AutomationProperties.AccessibilityView="Raw"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          BorderThickness="{TemplateBinding BorderThickness}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          ContentTransitions="{TemplateBinding ContentTransitions}" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

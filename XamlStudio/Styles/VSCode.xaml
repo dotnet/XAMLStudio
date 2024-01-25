@@ -37,16 +37,6 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
-                        <ContentPresenter x:Name="ContentPresenter"
-                                          Padding="{TemplateBinding Padding}"
-                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                          AutomationProperties.AccessibilityView="Raw"
-                                          BorderBrush="{TemplateBinding BorderBrush}"
-                                          BorderThickness="{TemplateBinding BorderThickness}"
-                                          Content="{TemplateBinding Content}"
-                                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                                          ContentTransitions="{TemplateBinding ContentTransitions}" />
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal">
@@ -94,6 +84,16 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
+                        <ContentPresenter x:Name="ContentPresenter"
+                                          Padding="{TemplateBinding Padding}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          AutomationProperties.AccessibilityView="Raw"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          BorderThickness="{TemplateBinding BorderThickness}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          ContentTransitions="{TemplateBinding ContentTransitions}" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -345,16 +345,6 @@
                                     <Setter.Value>
                                         <ControlTemplate TargetType="Button">
                                             <Grid x:Name="RootGrid" Background="Transparent">
-                                                <ContentPresenter x:Name="ContentPresenter"
-                                                                  Padding="{TemplateBinding Padding}"
-                                                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                                  AutomationProperties.AccessibilityView="Raw"
-                                                                  BorderBrush="{TemplateBinding BorderBrush}"
-                                                                  BorderThickness="{TemplateBinding BorderThickness}"
-                                                                  Content="{TemplateBinding Content}"
-                                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                                  ContentTransitions="{TemplateBinding ContentTransitions}" />
 
                                                 <VisualStateManager.VisualStateGroups>
                                                     <VisualStateGroup x:Name="CommonStates">
@@ -367,6 +357,16 @@
                                                         </VisualState>
                                                     </VisualStateGroup>
                                                 </VisualStateManager.VisualStateGroups>
+                                                <ContentPresenter x:Name="ContentPresenter"
+                                                                  Padding="{TemplateBinding Padding}"
+                                                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                                  AutomationProperties.AccessibilityView="Raw"
+                                                                  BorderBrush="{TemplateBinding BorderBrush}"
+                                                                  BorderThickness="{TemplateBinding BorderThickness}"
+                                                                  Content="{TemplateBinding Content}"
+                                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                                  ContentTransitions="{TemplateBinding ContentTransitions}" />
                                             </Grid>
                                         </ControlTemplate>
                                     </Setter.Value>
@@ -387,70 +387,6 @@
                             <RowDefinition x:Name="SeparatorRow" Height="1" />
                             <RowDefinition x:Name="SecondaryButtonRow" />
                         </Grid.RowDefinitions>
-
-                        <Grid x:Name="PrimaryBackgroundGrid"
-                              Grid.RowSpan="3"
-                              Background="{TemplateBinding Background}" />
-
-                        <Grid x:Name="SecondaryBackgroundGrid"
-                              Grid.RowSpan="3"
-                              Grid.Column="2"
-                              Background="{TemplateBinding Background}" />
-
-                        <Grid x:Name="Border"
-                              Grid.RowSpan="3"
-                              Grid.ColumnSpan="3"
-                              BorderBrush="{TemplateBinding BorderBrush}"
-                              BorderThickness="{TemplateBinding BorderThickness}" />
-
-                        <Button x:Name="PrimaryButton"
-                                Grid.RowSpan="3"
-                                Grid.Column="0"
-                                Padding="{TemplateBinding Padding}"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch"
-                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                AutomationProperties.AccessibilityView="Raw"
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="Transparent"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                Command="{TemplateBinding Command}"
-                                CommandParameter="{TemplateBinding CommandParameter}"
-                                Content="{TemplateBinding Content}"
-                                ContentTemplate="{TemplateBinding ContentTemplate}"
-                                ContentTransitions="{TemplateBinding ContentTransitions}"
-                                FontFamily="{TemplateBinding FontFamily}"
-                                FontSize="{TemplateBinding FontSize}"
-                                FontWeight="{TemplateBinding FontWeight}"
-                                Foreground="{TemplateBinding Foreground}"
-                                IsTabStop="False" />
-
-                        <Button x:Name="SecondaryButton"
-                                Grid.Row="0"
-                                Grid.RowSpan="3"
-                                Grid.Column="2"
-                                Padding="0,0,4,0"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch"
-                                HorizontalContentAlignment="Stretch"
-                                VerticalContentAlignment="Stretch"
-                                AutomationProperties.AccessibilityView="Raw"
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="Transparent"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                Foreground="{TemplateBinding Foreground}"
-                                IsTabStop="False">
-                            <Button.Content>
-                                <TextBlock HorizontalAlignment="Right"
-                                           VerticalAlignment="Center"
-                                           AutomationProperties.AccessibilityView="Raw"
-                                           FontFamily="Segoe MDL2 Assets"
-                                           FontSize="12"
-                                           IsTextScaleFactorEnabled="False"
-                                           Text="&#xE70D;" />
-                            </Button.Content>
-                        </Button>
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
@@ -627,6 +563,70 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
+
+                        <Grid x:Name="PrimaryBackgroundGrid"
+                              Grid.RowSpan="3"
+                              Background="{TemplateBinding Background}" />
+
+                        <Grid x:Name="SecondaryBackgroundGrid"
+                              Grid.RowSpan="3"
+                              Grid.Column="2"
+                              Background="{TemplateBinding Background}" />
+
+                        <Grid x:Name="Border"
+                              Grid.RowSpan="3"
+                              Grid.ColumnSpan="3"
+                              BorderBrush="{TemplateBinding BorderBrush}"
+                              BorderThickness="{TemplateBinding BorderThickness}" />
+
+                        <Button x:Name="PrimaryButton"
+                                Grid.RowSpan="3"
+                                Grid.Column="0"
+                                Padding="{TemplateBinding Padding}"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                AutomationProperties.AccessibilityView="Raw"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="Transparent"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Command="{TemplateBinding Command}"
+                                CommandParameter="{TemplateBinding CommandParameter}"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                ContentTransitions="{TemplateBinding ContentTransitions}"
+                                FontFamily="{TemplateBinding FontFamily}"
+                                FontSize="{TemplateBinding FontSize}"
+                                FontWeight="{TemplateBinding FontWeight}"
+                                Foreground="{TemplateBinding Foreground}"
+                                IsTabStop="False" />
+
+                        <Button x:Name="SecondaryButton"
+                                Grid.Row="0"
+                                Grid.RowSpan="3"
+                                Grid.Column="2"
+                                Padding="0,0,4,0"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                HorizontalContentAlignment="Stretch"
+                                VerticalContentAlignment="Stretch"
+                                AutomationProperties.AccessibilityView="Raw"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="Transparent"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Foreground="{TemplateBinding Foreground}"
+                                IsTabStop="False">
+                            <Button.Content>
+                                <TextBlock HorizontalAlignment="Right"
+                                           VerticalAlignment="Center"
+                                           AutomationProperties.AccessibilityView="Raw"
+                                           FontFamily="Segoe MDL2 Assets"
+                                           FontSize="12"
+                                           IsTextScaleFactorEnabled="False"
+                                           Text="&#xE70D;" />
+                            </Button.Content>
+                        </Button>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -653,29 +653,6 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-
-                        <FontIcon x:Name="Arrow"
-                                  Margin="24,0,8,0"
-                                  FontFamily="Segoe MDL2 Assets"
-                                  FontSize="8"
-                                  Foreground="{ThemeResource Brush-Blue-Light-1}"
-                                  Glyph="&#xEDD6;" />
-
-                        <ContentPresenter x:Name="ContentPresenter"
-                                          Grid.Column="1"
-                                          Margin="{TemplateBinding Padding}"
-                                          HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                                          VerticalAlignment="{TemplateBinding VerticalAlignment}"
-                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                          AutomationProperties.AccessibilityView="Raw"
-                                          BorderBrush="{TemplateBinding BorderBrush}"
-                                          BorderThickness="{TemplateBinding BorderThickness}"
-                                          Content="{TemplateBinding Content}"
-                                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                                          ContentTransitions="{TemplateBinding ContentTransitions}"
-                                          Foreground="{ThemeResource Brush-Blue-Light-1}"
-                                          RenderTransformOrigin="0.5,0.5" />
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal">
@@ -715,6 +692,29 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
+
+                        <FontIcon x:Name="Arrow"
+                                  Margin="24,0,8,0"
+                                  FontFamily="Segoe MDL2 Assets"
+                                  FontSize="8"
+                                  Foreground="{ThemeResource Brush-Blue-Light-1}"
+                                  Glyph="&#xEDD6;" />
+
+                        <ContentPresenter x:Name="ContentPresenter"
+                                          Grid.Column="1"
+                                          Margin="{TemplateBinding Padding}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          AutomationProperties.AccessibilityView="Raw"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          BorderThickness="{TemplateBinding BorderThickness}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          ContentTransitions="{TemplateBinding ContentTransitions}"
+                                          Foreground="{ThemeResource Brush-Blue-Light-1}"
+                                          RenderTransformOrigin="0.5,0.5" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

@@ -80,24 +80,6 @@
                     <Grid x:Name="Root"
                           Background="{TemplateBinding Background}"
                           BorderThickness="{TemplateBinding BorderThickness}">
-                        <Rectangle x:Name="PART_HoverVisual"
-                                   Fill="{ThemeResource Brush-Blue-Light-1}"
-                                   Opacity="0" />
-                        <Rectangle x:Name="PART_FocusVisual"
-                                   Control.IsTemplateFocusTarget="True"
-                                   Fill="Transparent" />
-                        <ContentPresenter x:Name="ContentPresenter"
-                                          Margin="{TemplateBinding Padding}"
-                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                          AutomationProperties.AccessibilityView="Raw"
-                                          Content="{TemplateBinding Content}"
-                                          Opacity="0.8"
-                                          RenderTransformOrigin="0.5,0.5">
-                            <ContentPresenter.RenderTransform>
-                                <CompositeTransform />
-                            </ContentPresenter.RenderTransform>
-                        </ContentPresenter>
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualStateGroup.Transitions>
@@ -240,6 +222,24 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
+                        <Rectangle x:Name="PART_HoverVisual"
+                                   Fill="{ThemeResource Brush-Blue-Light-1}"
+                                   Opacity="0" />
+                        <Rectangle x:Name="PART_FocusVisual"
+                                   Control.IsTemplateFocusTarget="True"
+                                   Fill="Transparent" />
+                        <ContentPresenter x:Name="ContentPresenter"
+                                          Margin="{TemplateBinding Padding}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          AutomationProperties.AccessibilityView="Raw"
+                                          Content="{TemplateBinding Content}"
+                                          Opacity="0.8"
+                                          RenderTransformOrigin="0.5,0.5">
+                            <ContentPresenter.RenderTransform>
+                                <CompositeTransform />
+                            </ContentPresenter.RenderTransform>
+                        </ContentPresenter>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -268,33 +268,6 @@
                           Background="{TemplateBinding Background}"
                           BorderBrush="{TemplateBinding BorderBrush}"
                           BorderThickness="{TemplateBinding BorderThickness}">
-                        <Rectangle x:Name="PART_HoverVisual"
-                                   Control.IsTemplateFocusTarget="True"
-                                   Fill="{ThemeResource Brush-Blue-Light-1}"
-                                   Opacity="0" />
-                        <Border x:Name="PART_FocusVisual"
-                                Grid.RowSpan="2"
-                                Grid.ColumnSpan="2"
-                                BorderBrush="{ThemeResource Brush-Grey-Light-2}"
-                                BorderThickness="2"
-                                Opacity="0" />
-                        <ContentControl x:Name="ContentPresenter"
-                                        Margin="{TemplateBinding Padding}"
-                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                        HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                        VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                        AutomationProperties.AccessibilityView="Raw"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                        Content="{TemplateBinding Content}"
-                                        Foreground="{TemplateBinding Foreground}"
-                                        Opacity="0.6"
-                                        RenderTransformOrigin="0.5,0.5">
-                            <ContentControl.RenderTransform>
-                                <CompositeTransform />
-                            </ContentControl.RenderTransform>
-                        </ContentControl>
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualStateGroup.Transitions>
@@ -375,6 +348,33 @@
                                 <VisualState x:Name="PointerFocused" />
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
+                        <Rectangle x:Name="PART_HoverVisual"
+                                   Control.IsTemplateFocusTarget="True"
+                                   Fill="{ThemeResource Brush-Blue-Light-1}"
+                                   Opacity="0" />
+                        <Border x:Name="PART_FocusVisual"
+                                Grid.RowSpan="2"
+                                Grid.ColumnSpan="2"
+                                BorderBrush="{ThemeResource Brush-Grey-Light-2}"
+                                BorderThickness="2"
+                                Opacity="0" />
+                        <ContentControl x:Name="ContentPresenter"
+                                        Margin="{TemplateBinding Padding}"
+                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                        HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                        VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                        AutomationProperties.AccessibilityView="Raw"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        Content="{TemplateBinding Content}"
+                                        Foreground="{TemplateBinding Foreground}"
+                                        Opacity="0.6"
+                                        RenderTransformOrigin="0.5,0.5">
+                            <ContentControl.RenderTransform>
+                                <CompositeTransform />
+                            </ContentControl.RenderTransform>
+                        </ContentControl>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -411,18 +411,6 @@
                                 <Setter Property="FontSize" Value="15" />
                             </Style>
                         </Grid.Resources>
-                        <Rectangle x:Name="PressedBackground"
-                                   Control.IsTemplateFocusTarget="True"
-                                   Fill="Transparent" />
-                        <ContentPresenter x:Name="ContentPresenter"
-                                          Margin="{TemplateBinding Padding}"
-                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                          Content="{TemplateBinding Content}"
-                                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                                          ContentTransitions="{TemplateBinding ContentTransitions}"
-                                          Style="{StaticResource BodyContentPresenterStyle}"
-                                          TextWrapping="NoWrap" />
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal" />
@@ -495,6 +483,18 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
+                        <Rectangle x:Name="PressedBackground"
+                                   Control.IsTemplateFocusTarget="True"
+                                   Fill="Transparent" />
+                        <ContentPresenter x:Name="ContentPresenter"
+                                          Margin="{TemplateBinding Padding}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          ContentTransitions="{TemplateBinding ContentTransitions}"
+                                          Style="{StaticResource BodyContentPresenterStyle}"
+                                          TextWrapping="NoWrap" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

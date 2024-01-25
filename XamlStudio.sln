@@ -12,7 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{8B0881BC-A57D-4759-B4D6-DB5846F32970}"
 	ProjectSection(SolutionItems) = preProject
 		nuget.config = nuget.config
-		xamlstyler.vssettings = xamlstyler.vssettings
+		settings.xamlstyler = settings.xamlstyler
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamlStudio.Toolkit.UnitTests", "XamlStudio.Toolkit.UnitTests\XamlStudio.Toolkit.UnitTests.csproj", "{CBC292EC-884C-4A7A-B0A5-03E6F4C5935C}"
