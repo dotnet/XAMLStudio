@@ -85,7 +85,7 @@
         <Button x:Name="SettingsButton"
                 x:Uid="MainPage_NavMenu_Settings"
                 VerticalAlignment="Bottom"
-                Command="{x:Bind ViewModel.OpenSettingsCommand}"
+                Command="{x:Bind ViewModel.OpenSettingsPageCommand}"
                 Style="{StaticResource Style-Button-CompactMenu}">
             <lcontrols:AppFontIcon IconName="Settings" />
         </Button>

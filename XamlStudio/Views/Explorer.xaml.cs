@@ -50,21 +50,22 @@ namespace XamlStudio.Views
         {
             MainViewModel.PropertyChanged -= MainViewModel_PropertyChanged;
 
-            if (MainViewModel?.Folder != null)
+            if (MainViewModel?.WorkspaceFolder != null)
             {
-                InitializeTreeView(MainViewModel.Folder);
+                // TODO: May already be initialized?
+                WorkspaceTreeView.RootNodes.Clear();
+                InitializeTreeView(MainViewModel.WorkspaceFolder);
             }
 
             MainViewModel.PropertyChanged += MainViewModel_PropertyChanged;
-
         }
 
         private void MainViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(MainViewModel.Folder))
+            if (e.PropertyName == nameof(MainViewModel.WorkspaceFolder))
             {
                 WorkspaceTreeView.RootNodes.Clear();
-                InitializeTreeView(MainViewModel.Folder);
+                InitializeTreeView(MainViewModel.WorkspaceFolder);
             }
         }
 

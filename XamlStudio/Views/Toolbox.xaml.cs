@@ -8,6 +8,8 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using XamlStudio.Services;
 using XamlStudio.ViewModels;
+using CommunityToolkit.Mvvm.Messaging;
+using XamlStudio.Models;
 
 namespace XamlStudio.Views
 {
@@ -37,8 +39,7 @@ namespace XamlStudio.Views
         private void ListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var t = e.ClickedItem as Type;
-            if (t != null && MainViewModel.ActiveDocumentViewModel != null &&
-                MainViewModel.ActiveDocumentViewModel.InsertTextCommand != null)
+            if (t != null && MainViewModel.ActiveDocumentViewModel != null)
             {
                 // Insert tag into active document.
                 var text = "<";
@@ -57,7 +58,8 @@ namespace XamlStudio.Views
 
                 text += t.Name + ">";
 
-                MainViewModel.ActiveDocumentViewModel.InsertTextCommand.Execute(text);
+                // TODO: Include MainViewModel.ActiveDocumentViewModel?
+                WeakReferenceMessenger.Default.Send<InsertTextMessage>(new(text));                
 
                 Analytics.TrackEvent("InsertCode", new Dictionary<string, string> {
                     { "Location", "Toolbox" },

@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using XamlStudio.Helpers;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace XamlStudio.ViewModels
+namespace XamlStudio.ViewModels;
+
+public class ExplorerViewModel : ObservableObject
 {
-    public class ExplorerViewModel : Observable
-    {
-    }
 }

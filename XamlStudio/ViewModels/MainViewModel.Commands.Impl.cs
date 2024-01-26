@@ -1,9 +1,9 @@
-﻿using Microsoft.AppCenter.Analytics;
+﻿using CommunityToolkit.Mvvm.Input;
+using Microsoft.AppCenter.Analytics;
 using Nito.AsyncEx;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -12,7 +12,6 @@ using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using XamlStudio.Helpers;
 using XamlStudio.Models;
 using XamlStudio.Services;
@@ -23,7 +22,8 @@ namespace XamlStudio.ViewModels
     {
         private readonly AsyncLock _openMutex = new AsyncLock();
 
-        private void NewDocument(RoutedEventArgs args)
+        [RelayCommand]
+        private void NewDocument()
         {
             OpenFiles.Add(new Models.XamlDocument("Untitled-" + _untitledCount++)
             {
@@ -36,7 +36,8 @@ namespace XamlStudio.ViewModels
             Analytics.TrackEvent("Document_New");
         }
 
-        private void DuplicateDocument(RoutedEventArgs args)
+        [RelayCommand]
+        private void DuplicateDocument()
         {
             OpenFiles.Add(new Models.XamlDocument("Untitled-" + _untitledCount++)
             {
@@ -47,7 +48,8 @@ namespace XamlStudio.ViewModels
             Analytics.TrackEvent("Document_Duplicate");
         }
 
-        private async void OpenDocument(RoutedEventArgs args)
+        [RelayCommand]
+        private async void OpenDocument()
         {
             var picker = new FileOpenPicker();
             picker.ViewMode = PickerViewMode.List;
@@ -72,7 +74,8 @@ namespace XamlStudio.ViewModels
             }
         }
 
-        private async void OpenFile(StorageFile file)
+        [RelayCommand]
+        private async Task OpenFile(StorageFile file)
         {
             using (await _openMutex.LockAsync())
             {
@@ -118,7 +121,8 @@ namespace XamlStudio.ViewModels
             }
         }
 
-        private async void OpenFolderPicker(RoutedEventArgs args)
+        [RelayCommand]
+        private async Task OpenFolderPicker()
         {
             var picker = new FolderPicker();
             picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
@@ -144,6 +148,7 @@ namespace XamlStudio.ViewModels
             }
         }
 
+        [RelayCommand]
         private async Task<bool> CloseActiveDocument(XamlDocument document)
         {
             // TODO: Why is item null here?
@@ -210,6 +215,7 @@ namespace XamlStudio.ViewModels
         }
 
         // Ctrl+Shift+S
+        [RelayCommand]
         private async Task<bool> SaveDocumentAs(XamlDocument document)
         {
             // TODO: Localize
@@ -242,6 +248,7 @@ namespace XamlStudio.ViewModels
             return await savePicker.PickSaveFileAsync();
         }
 
+        [RelayCommand]
         private async Task<bool> SaveDocument(XamlDocument document)
         {
             StorageFile file = null;
@@ -307,7 +314,8 @@ namespace XamlStudio.ViewModels
         }
 
         // Ctrl+Shift+Tab
-        private void PreviousDocument(RoutedEventArgs args)
+        [RelayCommand]
+        private void PreviousDocument()
         {
             var index = OpenFiles.IndexOf(ActiveFile);
             index = index == 0 ? OpenFiles.Count - 1 : index - 1;
@@ -318,7 +326,8 @@ namespace XamlStudio.ViewModels
         }
 
         // Ctrl+Tab
-        private void NextDocument(RoutedEventArgs args)
+        [RelayCommand]
+        private void NextDocument()
         {
             var index = OpenFiles.IndexOf(ActiveFile);
             index = index == OpenFiles.Count - 1 ? 0 : index + 1;
@@ -329,7 +338,8 @@ namespace XamlStudio.ViewModels
         }
 
         // Ctrl+I
-        private void OpenSettingsPage(RoutedEventArgs args)
+        [RelayCommand]
+        private void OpenSettingsPage()
         {
             XamlDocument settings = OpenFiles.FirstOrDefault(f => f.DocumentType == DocumentType.Settings);
             if (settings != null)
@@ -346,6 +356,7 @@ namespace XamlStudio.ViewModels
         }
 
         // Ctrl+Shift+?
+        [RelayCommand]
         private void OpenActivityPanel(string activity)
         {
             if (activity == OpenActivity)
@@ -359,6 +370,7 @@ namespace XamlStudio.ViewModels
             }
         }
 
+        [RelayCommand]
         private void KeyDown(KeyEventArgs args)
         {
             var ctrl = (Window.Current.CoreWindow.GetKeyState(VirtualKey.Control) & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
@@ -375,22 +387,22 @@ namespace XamlStudio.ViewModels
                         // Open Explorer
                         case VirtualKey.E:
                             active = true;
-                            OpenActivityCommand.Execute("EXPLORER");
+                            OpenActivityPanelCommand.Execute("EXPLORER");
                             break;
                         // Open Data Context
                         case VirtualKey.C:
                             active = true;
-                            OpenActivityCommand.Execute("DATASOURCES");
+                            OpenActivityPanelCommand.Execute("DATASOURCES");
                             break;
                         // Open Binding Debugger
                         case VirtualKey.B:
                             active = true;
-                            OpenActivityCommand.Execute("DEBUG");
+                            OpenActivityPanelCommand.Execute("DEBUG");
                             break;
                         // Open Toolbox
                         case VirtualKey.T:
                             active = true;
-                            OpenActivityCommand.Execute("TOOLBOX");
+                            OpenActivityPanelCommand.Execute("TOOLBOX");
                             break;
                     }
                 }
@@ -401,7 +413,7 @@ namespace XamlStudio.ViewModels
                         // Open Settings
                         case VirtualKey.I:
                             active = true;
-                            OpenSettingsCommand.Execute(null);
+                            OpenActivityPanelCommand.Execute(null);
                             break;
                         // New
                         case VirtualKey.N:

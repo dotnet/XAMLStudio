@@ -1,109 +1,107 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
-using XamlStudio.Helpers;
 using XamlStudio.Models;
 
-namespace XamlStudio.ViewModels
+namespace XamlStudio.ViewModels;
+
+public partial class MainViewModel : WorkspaceWindow
 {
-    public partial class MainViewModel : WorkspaceWindow
+    /// <summary>
+    /// Keeps track of number of untitled documents we've created this session.
+    /// </summary>
+    private int _untitledCount = 1;
+
+    public Dictionary<XamlDocument, DocumentViewModel> DocumentViewModels { get; } = new Dictionary<XamlDocument, DocumentViewModel>();
+
+    [ObservableProperty]
+    private DocumentViewModel _activeDocumentViewModel;
+
+    partial void OnActiveDocumentViewModelChanged(DocumentViewModel oldValue, DocumentViewModel newValue)
     {
-        /// <summary>
-        /// Keeps track of number of untitled documents we've created this session.
-        /// </summary>
-        private int _untitledCount = 1;
+        WeakReferenceMessenger.Default.Send<ActiveDocumentViewModelChangedMessage>(new(oldValue, newValue));
+    }
 
-        public Dictionary<XamlDocument, DocumentViewModel> DocumentViewModels { get; } = new Dictionary<XamlDocument, DocumentViewModel>();
+    public SettingsPanelViewModel SettingsViewModel { get; } = new SettingsPanelViewModel();
 
-        public DocumentViewModel ActiveDocumentViewModel
+    public override void Initialize()
+    {
+        OpenFiles.CollectionChanged += OpenFiles_CollectionChanged;
+        ActiveFileChanged += (sender, file) =>
         {
-            get { return (DocumentViewModel)GetValue(ActiveDocumentViewModelProperty); }
-            set { SetValue(ActiveDocumentViewModelProperty, value); }
+            if (file != null) // TabView can give us null first as it changes to the next one, is this a bug?
+            {
+                ActiveDocumentViewModel = DocumentViewModels[file];
+            }
+        };
+
+        var welcome = XamlDocument.WelcomeDocument();
+
+        OpenFiles.Add(welcome);
+        ActiveFile = welcome;
+    }
+
+    public async Task RestoreWorkspaceAsync(XamlDocument[] docs)
+    {
+        if (OpenFiles.Count == 1 && OpenFiles.First().DocumentType != DocumentType.Document)
+        {
+            OpenFiles.Clear();
         }
 
-        public static readonly DependencyProperty ActiveDocumentViewModelProperty =
-            DependencyProperty.Register(nameof(ActiveDocumentViewModelProperty), typeof(DocumentViewModel), typeof(WorkspaceWindow), new PropertyMetadata(null));
+        bool welcome = false;
 
-        public SettingsPanelViewModel SettingsViewModel { get; } = new SettingsPanelViewModel();
-
-        public override void Initialize()
+        foreach(var doc in docs)
         {
-            OpenFiles.CollectionChanged += OpenFiles_CollectionChanged;
-            RegisterPropertyChangedCallback(ActiveFileProperty, (s, dp) =>
+            // Reopen/make connection to backing OS file.
+            await doc.RestoreFileAsync();
+
+            // Restore Data Context File (if one).
+            await doc.DataContext.RestoreFileAsync();
+
+            OpenFiles.Add(doc);
+
+            if (doc.DocumentType == DocumentType.Welcome)
             {
-                if (ActiveFile != null) // TabView can give us null first as it changes to the next one, is this a bug?
-                {
-                    ActiveDocumentViewModel = DocumentViewModels[ActiveFile];
-                }
-            });
-
-            var welcome = XamlDocument.WelcomeDocument();
-
-            OpenFiles.Add(welcome);
-            ActiveFile = welcome;
-        }
-
-        public async Task RestoreWorkspaceAsync(XamlDocument[] docs)
-        {
-            if (OpenFiles.Count == 1 && OpenFiles.First().DocumentType != DocumentType.Document)
-            {
-                OpenFiles.Clear();
+                welcome = true;
             }
 
-            bool welcome = false;
-
-            foreach(var doc in docs)
+            if (doc.IsActive)
             {
-                // Reopen/make connection to backing OS file.
-                await doc.RestoreFileAsync();
-
-                // Restore Data Context File (if one).
-                await doc.DataContext.RestoreFileAsync();
-
-                OpenFiles.Add(doc);
-
-                if (doc.DocumentType == DocumentType.Welcome)
-                {
-                    welcome = true;
-                }
-
-                if (doc.IsActive)
-                {
-                    ActiveFile = doc;
-                }
-            }
-
-            // Add our welcome screen back at the end for convenience.
-            if (!welcome)
-            {
-                OpenFiles.Add(XamlDocument.WelcomeDocument());
+                ActiveFile = doc;
             }
         }
 
-        private void OpenFiles_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        // Add our welcome screen back at the end for convenience.
+        if (!welcome)
         {
-            if (e.Action == NotifyCollectionChangedAction.Add)
+            OpenFiles.Add(XamlDocument.WelcomeDocument());
+        }
+    }
+
+    private void OpenFiles_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        if (e.Action == NotifyCollectionChangedAction.Add)
+        {
+            foreach (var item in e.NewItems)
             {
-                foreach (var item in e.NewItems)
+                if (item is XamlDocument xd)
                 {
-                    if (item is XamlDocument xd)
-                    {
-                        // Need MainViewModel to own these so we can keep track of them all.
-                        DocumentViewModels[xd] = new DocumentViewModel() { Document = xd, MainViewModel = this };
-                    }
+                    // Need MainViewModel to own these so we can keep track of them all.
+                    DocumentViewModels[xd] = new DocumentViewModel() { Document = xd, MainViewModel = this };
                 }
             }
-            else if (e.Action == NotifyCollectionChangedAction.Remove)
+        }
+        else if (e.Action == NotifyCollectionChangedAction.Remove)
+        {
+            foreach (var item in e.OldItems)
             {
-                foreach (var item in e.OldItems)
+                if (item is XamlDocument xd)
                 {
-                    if (item is XamlDocument xd)
-                    {
-                        DocumentViewModels.Remove(xd);
-                    }
+                    DocumentViewModels.Remove(xd);
                 }
             }
         }

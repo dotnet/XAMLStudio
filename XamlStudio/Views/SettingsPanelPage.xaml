@@ -455,6 +455,8 @@
                                         Orientation="Horizontal">
                                 <RadioButton x:Uid="SettingsPanel_PaneOrientation_Top"
                                              Command="{x:Bind ViewModel.SwitchPaneOrientationCommand, Mode=OneWay}"
+                                             CommandParameter="{helper:EnumValue Type=model:PaneOrientation,
+                                                                                 Member=HorizontalPreviewTop}"
                                              GroupName="PaneOrientation"
                                              IsChecked="{x:Bind ViewModel.Settings.DefaultPreviewPanePosition, Converter={StaticResource PaneOrientationToBooleanConverter}, ConverterParameter=HorizontalPreviewTop, Mode=OneWay}">
                                     <StackPanel Margin="4,-12,0,0">
@@ -468,12 +470,11 @@
                                         </FontIcon>
                                         <TextBlock x:Uid="SettingsPanel_PaneOrientation_TopDescription" Margin="0,4,0,0" />
                                     </StackPanel>
-                                    <RadioButton.CommandParameter>
-                                        <model:PaneOrientation>HorizontalPreviewTop</model:PaneOrientation>
-                                    </RadioButton.CommandParameter>
                                 </RadioButton>
                                 <RadioButton x:Uid="SettingsPanel_PaneOrientation_Right"
                                              Command="{x:Bind ViewModel.SwitchPaneOrientationCommand, Mode=OneWay}"
+                                             CommandParameter="{helper:EnumValue Type=model:PaneOrientation,
+                                                                                 Member=VerticalPreviewRight}"
                                              GroupName="PaneOrientation"
                                              IsChecked="{x:Bind ViewModel.Settings.DefaultPreviewPanePosition, Converter={StaticResource PaneOrientationToBooleanConverter}, ConverterParameter=VerticalPreviewRight, Mode=OneWay}">
                                     <StackPanel Margin="4,-12,0,0">
@@ -482,12 +483,11 @@
                                                   Glyph="&#xEA61;" />
                                         <TextBlock x:Uid="SettingsPanel_PaneOrientation_RightDescription" Margin="0,4,0,0" />
                                     </StackPanel>
-                                    <RadioButton.CommandParameter>
-                                        <model:PaneOrientation>VerticalPreviewRight</model:PaneOrientation>
-                                    </RadioButton.CommandParameter>
                                 </RadioButton>
                                 <RadioButton x:Uid="SettingsPanel_PaneOrientation_Bottom"
                                              Command="{x:Bind ViewModel.SwitchPaneOrientationCommand, Mode=OneWay}"
+                                             CommandParameter="{helper:EnumValue Type=model:PaneOrientation,
+                                                                                 Member=HorizontalPreviewBottom}"
                                              GroupName="PaneOrientation"
                                              IsChecked="{x:Bind ViewModel.Settings.DefaultPreviewPanePosition, Converter={StaticResource PaneOrientationToBooleanConverter}, ConverterParameter=HorizontalPreviewBottom, Mode=OneWay}">
                                     <StackPanel Margin="4,-12,0,0">
@@ -496,12 +496,11 @@
                                                   Glyph="&#xE745;" />
                                         <TextBlock x:Uid="SettingsPanel_PaneOrientation_BottomDescription" Margin="0,4,0,0" />
                                     </StackPanel>
-                                    <RadioButton.CommandParameter>
-                                        <model:PaneOrientation>HorizontalPreviewBottom</model:PaneOrientation>
-                                    </RadioButton.CommandParameter>
                                 </RadioButton>
                                 <RadioButton x:Uid="SettingsPanel_PaneOrientation_Left"
                                              Command="{x:Bind ViewModel.SwitchPaneOrientationCommand, Mode=OneWay}"
+                                             CommandParameter="{helper:EnumValue Type=model:PaneOrientation,
+                                                                                 Member=VerticalPreviewLeft}"
                                              GroupName="PaneOrientation"
                                              IsChecked="{x:Bind ViewModel.Settings.DefaultPreviewPanePosition, Converter={StaticResource PaneOrientationToBooleanConverter}, ConverterParameter=VerticalPreviewLeft, Mode=OneWay}">
                                     <StackPanel Margin="4,-12,0,0">
@@ -510,9 +509,6 @@
                                                   Glyph="&#xE746;" />
                                         <TextBlock x:Uid="SettingsPanel_PaneOrientation_LeftDescription" Margin="0,4,0,0" />
                                     </StackPanel>
-                                    <RadioButton.CommandParameter>
-                                        <model:PaneOrientation>VerticalPreviewLeft</model:PaneOrientation>
-                                    </RadioButton.CommandParameter>
                                 </RadioButton>
                             </StackPanel>
                         </StackPanel>

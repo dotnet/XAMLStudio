@@ -21,10 +21,11 @@ using XamlStudio.Services;
 using XamlStudio.Toolkit.Helpers;
 using XamlStudio.Toolkit.Services;
 using XamlStudio.ViewModels;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace XamlStudio.Views
 {
-    public sealed partial class MainPage : Page, IFileOpener
+    public sealed partial class MainPage : Page, IFileOpener, IRecipient<OpenActivityChangedMessaged>
     {
         public MainViewModel ViewModel { get; }
 
@@ -47,7 +48,7 @@ namespace XamlStudio.Views
 
             Singleton<SuspendAndResumeService>.Instance.OnBackgroundEntering += Instance_OnBackgroundEntering;
 
-            ViewModel.RegisterPropertyChangedCallback(WorkspaceWindow.OpenActivityProperty, OpenActivityChanged);
+            WeakReferenceMessenger.Default.RegisterAll(this);
         }
 
         private void Instance_OnBackgroundEntering(object sender, OnBackgroundEnteringEventArgs e)
@@ -277,9 +278,9 @@ namespace XamlStudio.Views
             }
         }
 
-        private void OpenActivityChanged(DependencyObject sender, DependencyProperty dp)
+        public void Receive(OpenActivityChangedMessaged message)
         {
-            if (string.IsNullOrWhiteSpace(ViewModel.OpenActivity))
+            if (string.IsNullOrWhiteSpace(message.NewActivity))
             {
                 // Deselect
                 NavMenu.SelectedIndex = -1;
@@ -289,7 +290,7 @@ namespace XamlStudio.Views
             // Sync from ViewModel to UI
             foreach (var item in NavMenu.Items)
             {
-                if (item is ListBoxItem lbi && lbi.Tag.ToString() == ViewModel.OpenActivity)
+                if (item is ListBoxItem lbi && lbi.Tag.ToString() == message.NewActivity)
                 {
                     NavMenu.SelectedItem = item;
 

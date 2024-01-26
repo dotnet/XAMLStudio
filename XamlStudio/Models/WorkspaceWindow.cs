@@ -1,90 +1,75 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using System;
 using System.Collections.ObjectModel;
-using Windows.ApplicationModel.UserDataTasks;
 using Windows.Storage;
-using Windows.UI.Xaml;
-using XamlStudio.Helpers;
 
-namespace XamlStudio.Models
+namespace XamlStudio.Models;
+
+public abstract partial class WorkspaceWindow: ObservableObject
 {
-    public abstract class WorkspaceWindow: Observable
+    [ObservableProperty]
+    private XamlDocument _activeFile;
+
+    public event EventHandler<XamlDocument> ActiveFileChanged;
+
+    [ObservableProperty]
+    private string _openActivity = "EXPLORER";
+
+    [ObservableProperty]
+    private bool _isWorkspaceOpen;
+
+    // Holds the default folder or workspace folder location
+    [ObservableProperty]
+    private StorageFolder _workspaceFolder;
+
+    public ObservableCollection<XamlDocument> OpenFiles { get; private set; }
+
+    // Keep track of files opened from outside our pervue, as we'll need to tokenize these separately.
+    public ObservableCollection<StorageFile> NonWorkspaceFiles { get; private set; }
+
+    public WorkspaceWindow()
     {
-        public XamlDocument ActiveFile
+        OpenFiles = new ObservableCollection<XamlDocument>();
+        NonWorkspaceFiles = new ObservableCollection<StorageFile>();
+
+        Initialize();
+    }
+
+    public abstract void Initialize();
+
+    public static WorkspaceWindow GetDefaultWorkspace()
+    {
+        //SettingsService.Instance.DefaultWorkspaceFolder
+        // Get Settings Folder
+        // IsWorkspaceOpen = false still.
+        throw new NotImplementedException();
+    }
+
+    public void SetupWorkspace(StorageFolder folder)
+    {
+        WorkspaceFolder = folder;
+        IsWorkspaceOpen = folder != null;
+    }
+
+    partial void OnActiveFileChanged(XamlDocument oldValue, XamlDocument newValue)
+    {
+        // Mark child XamlDocument as Active File
+        if (oldValue != null)
         {
-            get { return (XamlDocument)GetValue(ActiveFileProperty); }
-            set { SetValue(ActiveFileProperty, value); }
+            oldValue.IsActive = false;
         }
 
-        // Using a DependencyProperty as the backing store for ActiveFile.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ActiveFileProperty =
-            DependencyProperty.Register(nameof(ActiveFile), typeof(XamlDocument), typeof(WorkspaceWindow), new PropertyMetadata(null, ActiveFile_Changed));
-
-        public string OpenActivity
+        if (newValue != null)
         {
-            get { return (string)GetValue(OpenActivityProperty); }
-            set { SetValue(OpenActivityProperty, value); }
+            newValue.IsActive = true;
         }
 
-        // Using a DependencyProperty as the backing store for OpenActivity.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty OpenActivityProperty =
-            DependencyProperty.Register(nameof(OpenActivity), typeof(string), typeof(WorkspaceWindow), new PropertyMetadata("EXPLORER"));
+        ActiveFileChanged?.Invoke(this, newValue);
+    }
 
-        private bool _isWorkspaceOpen;
-        public bool IsWorkspaceOpen
-        {
-            get { return _isWorkspaceOpen; }
-            set { Set(ref _isWorkspaceOpen, value); }
-        }
-
-        // Holds the default folder or workspace folder location
-        private StorageFolder _workspaceFolder;
-        public StorageFolder Folder
-        {
-            get { return _workspaceFolder; }
-            set { Set(ref _workspaceFolder, value); }
-        }
-
-        public ObservableCollection<XamlDocument> OpenFiles { get; private set; }
-
-        // Keep track of files opened from outside our pervue, as we'll need to tokenize these separately.
-        public ObservableCollection<StorageFile> NonWorkspaceFiles { get; private set; }
-
-        public WorkspaceWindow()
-        {
-            OpenFiles = new ObservableCollection<XamlDocument>();
-            NonWorkspaceFiles = new ObservableCollection<StorageFile>();
-
-            Initialize();
-        }
-
-        public abstract void Initialize();
-
-        public static WorkspaceWindow GetDefaultWorkspace()
-        {
-            //SettingsService.Instance.DefaultWorkspaceFolder
-            // Get Settings Folder
-            // IsWorkspaceOpen = false still.
-            throw new NotImplementedException();
-        }
-
-        public void SetupWorkspace(StorageFolder folder)
-        {
-            Folder = folder;
-            IsWorkspaceOpen = folder != null;
-        }
-
-        private static void ActiveFile_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            // Mark child XamlDocument as Active File
-            if (e.OldValue != null && e.OldValue is XamlDocument xd)
-            {
-                xd.IsActive = false;
-            }
-
-            if (e.NewValue != null && e.NewValue is XamlDocument xd2)
-            {
-                xd2.IsActive = true;
-            }
-        }
+    partial void OnOpenActivityChanged(string value)
+    {
+        WeakReferenceMessenger.Default.Send<OpenActivityChangedMessaged>(new(value));
     }
 }

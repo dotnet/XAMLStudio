@@ -105,7 +105,7 @@
                                  Foreground="{ThemeResource Brush-Red-Light-2}">
                     Open file...
                 </HyperlinkButton>
-                <HyperlinkButton Command="{x:Bind MainViewModel.OpenSettingsCommand, Mode=OneWay}"
+                <HyperlinkButton Command="{x:Bind MainViewModel.OpenSettingsPageCommand, Mode=OneWay}"
                                  FontWeight="SemiBold"
                                  Foreground="{ThemeResource Brush-Red-Light-2}">
                     Settings

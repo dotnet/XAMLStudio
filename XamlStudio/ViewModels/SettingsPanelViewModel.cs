@@ -1,4 +1,6 @@
-﻿using Microsoft.AppCenter.Analytics;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.AppCenter.Analytics;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -6,7 +8,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 using Windows.ApplicationModel;
 using Windows.Storage;
@@ -14,173 +15,118 @@ using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using XamlStudio.Helpers;
 using XamlStudio.Models;
 using XamlStudio.Services;
 
-namespace XamlStudio.ViewModels
+namespace XamlStudio.ViewModels;
+
+public partial class SettingsPanelViewModel : ObservableObject
 {
-    public class SettingsPanelViewModel : Observable
+    // TODO WTS: Add other settings as necessary. For help see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/pages/settings.md
+    [ObservableProperty]
+    private ElementTheme _elementTheme = ThemeSelectorService.Theme;
+
+
+    [ObservableProperty]
+    private string _versionDescription;
+    
+    [RelayCommand]
+    public async Task SwitchTheme(ElementTheme param)
     {
-        // TODO WTS: Add other settings as necessary. For help see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/pages/settings.md
-        private ElementTheme _elementTheme = ThemeSelectorService.Theme;
+        ElementTheme = param;
 
-        public ElementTheme ElementTheme
-        {
-            get { return _elementTheme; }
+        await ThemeSelectorService.SetThemeAsync(param);
 
-            set { Set(ref _elementTheme, value); }
-        }
-
-        private string _versionDescription;
-
-        public string VersionDescription
-        {
-            get { return _versionDescription; }
-
-            set { Set(ref _versionDescription, value); }
-        }
-
-        private ICommand _switchThemeCommand;
-
-        public ICommand SwitchThemeCommand
-        {
-            get
-            {
-                if (_switchThemeCommand == null)
-                {
-                    _switchThemeCommand = new RelayCommand<ElementTheme>(
-                        async (param) =>
-                        {
-                            ElementTheme = param;
-                            await ThemeSelectorService.SetThemeAsync(param);
-
-                            Analytics.TrackEvent("Settings_ChangeTheme", new Dictionary<string, string> {
-                                { "Type", "App" },
-                                { "Theme", "" + param },
-                            });
+        Analytics.TrackEvent("Settings_ChangeTheme", new Dictionary<string, string> {
+                            { "Type", "App" },
+                            { "Theme", "" + param },
                         });
-                }
+    }
 
-                return _switchThemeCommand;
-            }
-        }
+    [RelayCommand]
+    public void SwitchEditorTheme(ElementTheme param)
+    {
+        Settings.EditorTheme = param;
 
-        private ICommand _switchEditorThemeCommand;
-
-        public ICommand SwitchEditorThemeCommand
-        {
-            get
-            {
-                if (_switchEditorThemeCommand == null)
-                {
-                    _switchEditorThemeCommand = new RelayCommand<ElementTheme>(
-                        (param) =>
-                        {
-                            Settings.EditorTheme = param;
-
-                            Analytics.TrackEvent("Settings_ChangeTheme", new Dictionary<string, string> {
-                                { "Type", "Editor" },
-                                { "Theme", "" + param },
-                            });
+        Analytics.TrackEvent("Settings_ChangeTheme", new Dictionary<string, string> {
+                            { "Type", "Editor" },
+                            { "Theme", "" + param },
                         });
-                }
+    }
 
-                return _switchEditorThemeCommand;
-            }
-        }
+    [RelayCommand]
+    public void SwitchPaneOrientation(PaneOrientation param)
+    {
+        Settings.DefaultPreviewPanePosition = param;
 
-        private ICommand _switchPaneOrientationCommand;
-
-        public ICommand SwitchPaneOrientationCommand
-        {
-            get
-            {
-                if (_switchPaneOrientationCommand == null)
-                {
-                    _switchPaneOrientationCommand = new RelayCommand<PaneOrientation>(
-                        (param) =>
-                        {
-                            Settings.DefaultPreviewPanePosition = param;
-
-                            Analytics.TrackEvent("Settings_ChangePaneOrientation", new Dictionary<string, string> {
-                                { "Type", "Personalization" },
-                                { "Orientation", "" + param },
-                            });
+        Analytics.TrackEvent("Settings_ChangePaneOrientation", new Dictionary<string, string> {
+                            { "Type", "Personalization" },
+                            { "Orientation", "" + param },
                         });
-                }
+    }
 
-                return _switchPaneOrientationCommand;
-            }
-        }
+    public ObservableCollection<Color> Colors { get; set; }
 
-        public ObservableCollection<Color> Colors { get; set; }
+    public SettingsService Settings { get; } = SettingsService.Instance;
 
-        public SettingsService Settings { get; } = SettingsService.Instance;
+    public ObservableCollection<ThirdPartyInfo> ThirdPartyLibs { get; set; } = new ObservableCollection<ThirdPartyInfo>();
 
-        public ICommand SwitchToggleCommand { get; private set; }
-        public ICommand DelayChangedCommand { get; private set; }
+    public SettingsPanelViewModel()
+    {
+        VersionDescription = GetVersionDescription();
 
-        public ObservableCollection<ThirdPartyInfo> ThirdPartyLibs { get; set; } = new ObservableCollection<ThirdPartyInfo>();
+        Colors = new ObservableCollection<Color>(typeof(Colors).GetRuntimeProperties().Select((color) => (Color)color.GetValue(null)));
 
-        public SettingsPanelViewModel()
+        LoadThirdPartyInfo();
+    }
+
+    private string GetVersionDescription()
+    {
+        var package = Package.Current;
+        var packageId = package.Id;
+        var version = packageId.Version;
+
+        if (version.Revision != 0)
         {
-            SwitchToggleCommand = new RelayCommand<RoutedEventArgs>(SwitchToggle);
-            DelayChangedCommand = new RelayCommand<RangeBaseValueChangedEventArgs>(DelayChanged);
-
-            VersionDescription = GetVersionDescription();
-
-            Colors = new ObservableCollection<Color>(typeof(Colors).GetRuntimeProperties().Select((color) => (Color)color.GetValue(null)));
-
-            LoadThirdPartyInfo();
+            return $"v{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
         }
-
-        private string GetVersionDescription()
+        else
         {
-            var package = Package.Current;
-            var packageId = package.Id;
-            var version = packageId.Version;
-
-            if (version.Revision != 0)
-            {
-                return $"v{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
-            }
-            else
-            {
-                return $"v{version.Major}.{version.Minor}.{version.Build}";
-            }
+            return $"v{version.Major}.{version.Minor}.{version.Build}";
         }
+    }
 
-        private async void LoadThirdPartyInfo()
+    private async void LoadThirdPartyInfo()
+    {
+        var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Strings/thirdparty.json"));
+
+        var text = await FileIO.ReadTextAsync(file);
+
+        JsonConvert.DeserializeObject<ThirdPartyInfo[]>(text).ToList().ForEach(item => ThirdPartyLibs.Add(item));
+    }
+
+    [RelayCommand]
+    private void SwitchToggle(RoutedEventArgs args)
+    {
+        var toggle = (args.OriginalSource as ToggleSwitch);
+
+        Settings.Set(toggle.IsOn, toggle.Tag as string);
+
+        Analytics.TrackEvent("Settings_Toggle", new Dictionary<string, string>()
         {
-            var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Strings/thirdparty.json"));
+            { "Setting", toggle.Tag as string },
+            { "Value", toggle.IsOn.ToString() }
+        });
+    }
 
-            var text = await FileIO.ReadTextAsync(file);
+    [RelayCommand]
+    private void DelayChanged(RangeBaseValueChangedEventArgs args)
+    {
+        Settings.AutoCompileDelay = args.NewValue;
 
-            JsonConvert.DeserializeObject<ThirdPartyInfo[]>(text).ToList().ForEach(item => ThirdPartyLibs.Add(item));
-        }
-
-        private void SwitchToggle(RoutedEventArgs args)
-        {
-            var toggle = (args.OriginalSource as ToggleSwitch);
-
-            Settings.Set(toggle.IsOn, toggle.Tag as string);
-
-            Analytics.TrackEvent("Settings_Toggle", new Dictionary<string, string>()
-            {
-                { "Setting", toggle.Tag as string },
-                { "Value", toggle.IsOn.ToString() }
-            });
-        }
-
-        private void DelayChanged(RangeBaseValueChangedEventArgs args)
-        {
-            Settings.AutoCompileDelay = args.NewValue;
-
-            // TODO: Need to use a ThreadPoolTimer to wait for last change?
-            ////Analytics.TrackEvent("Settings_CompileDelayChanged", new Dictionary<string, string> {
-            ////    { "Value", "" + args.NewValue },
-            ////});
-        }
+        // TODO: Need to use a ThreadPoolTimer to wait for last change?
+        ////Analytics.TrackEvent("Settings_CompileDelayChanged", new Dictionary<string, string> {
+        ////    { "Value", "" + args.NewValue },
+        ////});
     }
 }

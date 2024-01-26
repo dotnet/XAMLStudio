@@ -1,27 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Windows.UI.Xaml;
-using XamlStudio.Helpers;
 
-namespace XamlStudio.Models
+namespace XamlStudio.Models;
+
+public partial class DocumentState : ObservableObject
 {
-    public class DocumentState : SimpleObservable
-    {
-        private PaneOrientation? _paneOrientation;
-        public PaneOrientation? PreviewOrientation
-        {
-            get { return _paneOrientation; }
-            set { Set(ref _paneOrientation, value); }
-        }
+    [ObservableProperty]
+    private PaneOrientation? _previewOrientation;
 
-        private ElementTheme? _previewAreaTheme;
-        public ElementTheme? PreviewAreaTheme
-        {
-            get { return _previewAreaTheme; }
-            set { Set(ref _previewAreaTheme, value); }
-        }
-    }
+    [ObservableProperty]
+    private ElementTheme? _previewAreaTheme;
 }
