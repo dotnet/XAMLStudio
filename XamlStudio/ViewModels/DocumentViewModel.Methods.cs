@@ -65,7 +65,7 @@ public partial class DocumentViewModel
             IsBindingDebuggingEnabled = overrideBinding ? false : SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value,
             KeepSuggestedContentSameLength = keepContentSameLength,
             DataContext = DataContext, // TODO: Resolve conflict here and between design-data file
-            ResourceRoot = Document.ParentFolder,
+            ResourceRoot = Document.ParentFolder ?? MainViewModel.WorkspaceFolder,
         };
 
         // If we override the binding, we're calling it from within and already saved.
