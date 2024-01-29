@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -170,7 +171,8 @@ namespace XamlStudio.Views
                     // TODO: Open the json file in the Data Context Activity.
                     break;
                 case StorageFile file when ExplorerItemTemplateSelector.ImageFileTypes.Contains(file.FileType.ToLower()):
-                    // TODO: Nothing at the moment.
+                    // Insert image tag into document
+                    WeakReferenceMessenger.Default.Send<InsertTextMessage>(new($"<Image Source=\"{file.Path.Replace('\\', '/').Substring(MainViewModel.WorkspaceFolder.Path.Length)}\" />"));
                     break;
                 case StorageFile file when ExplorerItemTemplateSelector.XamlFileTypes.Contains(file.FileType.ToLower()):
                     // Find top-level node.
