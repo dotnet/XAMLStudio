@@ -26,6 +26,7 @@ public abstract partial class FileBackedDocument : ObservableObject
         set { SetProperty(ref _title, value.Trim('*')); }
     }
 
+    //// TODO: This is effectively private, but needs to be serialized, investigate options when switching away from Newtonsoft
     public string StorageToken { get; set; }
 
     /// <summary>

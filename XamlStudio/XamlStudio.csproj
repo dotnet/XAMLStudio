@@ -215,6 +215,7 @@
     <Compile Include="Helpers\EnumValueExtension.cs" />
     <Compile Include="Helpers\Json.cs" />
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
+    <Compile Include="Models\FolderLocation.cs" />
     <Compile Include="Models\Messages.cs" />
     <Compile Include="Views\StorageFileThumbnailConverter.cs" />
     <Compile Include="Models\DataContext.cs" />

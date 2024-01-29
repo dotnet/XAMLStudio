@@ -49,32 +49,30 @@ namespace XamlStudio.Views
 
         private void Explorer_Loaded(object sender, RoutedEventArgs e)
         {
-            MainViewModel.PropertyChanged -= MainViewModel_PropertyChanged;
-
-            if (MainViewModel?.WorkspaceFolder != null)
+            WorkspaceTreeView.RootNodes.Clear();
+            if (MainViewModel?.WorkspaceFolders.Count > 0)
             {
                 // TODO: May already be initialized?
-                WorkspaceTreeView.RootNodes.Clear();
-                InitializeTreeView(MainViewModel.WorkspaceFolder);
+                InitializeTreeView(MainViewModel.WorkspaceFolders.FirstOrDefault());
             }
 
-            MainViewModel.PropertyChanged += MainViewModel_PropertyChanged;
+            MainViewModel.WorkspaceFolders.CollectionChanged += WorkspaceFolders_CollectionChanged;
         }
 
-        private void MainViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(MainViewModel.WorkspaceFolder))
+        private void WorkspaceFolders_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {            
+            WorkspaceTreeView.RootNodes.Clear();
+            if (MainViewModel.WorkspaceFolders.Count > 0)
             {
-                WorkspaceTreeView.RootNodes.Clear();
-                InitializeTreeView(MainViewModel.WorkspaceFolder);
+                InitializeTreeView(MainViewModel.WorkspaceFolders.FirstOrDefault());
             }
         }
 
-        private void InitializeTreeView(StorageFolder folder)
+        private void InitializeTreeView(FolderLocation folder)
         {
             // FYI A TreeView can have more than 1 root node. TODO: Support multiple workspaces? Or would we just separate outside the TreeView anyway?
             muxc.TreeViewNode mainNode = new muxc.TreeViewNode();
-            mainNode.Content = folder;
+            mainNode.Content = folder.BackingFolder;
             mainNode.IsExpanded = true;
             mainNode.HasUnrealizedChildren = true;
             FillTreeNode(mainNode);
@@ -162,17 +160,22 @@ namespace XamlStudio.Views
         {
             var node = args.InvokedItem as muxc.TreeViewNode;
 
+            // TODO: Can we get here accidently without a backing folder?
+            var workspacePathLength = MainViewModel.WorkspaceFolders.First().BackingFolder.Path.Length;
+
             switch (node.Content)
             {
                 case StorageFolder folder:
                     node.IsExpanded = !node.IsExpanded;
                     break;
                 case StorageFile file when ExplorerItemTemplateSelector.DataFileTypes.Contains(file.FileType.ToLower()):
-                    // TODO: Open the json file in the Data Context Activity.
+                    // Insert the d:DataContext="{d:DesignData /SampleData/XAMLing.json}" attribute
+                    // TODO: Should we instead explicitly update/insert this into root tag?
+                    WeakReferenceMessenger.Default.Send<InsertTextMessage>(new($"d:DataContext=\"{{d:DesignData {file.Path.Replace('\\', '/').Substring(workspacePathLength)}}}\""));
                     break;
                 case StorageFile file when ExplorerItemTemplateSelector.ImageFileTypes.Contains(file.FileType.ToLower()):
                     // Insert image tag into document
-                    WeakReferenceMessenger.Default.Send<InsertTextMessage>(new($"<Image Source=\"{file.Path.Replace('\\', '/').Substring(MainViewModel.WorkspaceFolder.Path.Length)}\" />"));
+                    WeakReferenceMessenger.Default.Send<InsertTextMessage>(new($"<Image Source=\"{file.Path.Replace('\\', '/').Substring(workspacePathLength)}\" />"));
                     break;
                 case StorageFile file when ExplorerItemTemplateSelector.XamlFileTypes.Contains(file.FileType.ToLower()):
                     // Find top-level node.

@@ -19,20 +19,12 @@ public abstract partial class WorkspaceWindow: ObservableObject
     [ObservableProperty]
     private bool _isWorkspaceOpen;
 
-    // Holds the default folder or workspace folder location
-    [ObservableProperty]
-    private StorageFolder _workspaceFolder;
+    public ObservableCollection<FolderLocation> WorkspaceFolders { get; private set; } = new();
 
-    public ObservableCollection<XamlDocument> OpenFiles { get; private set; }
-
-    // Keep track of files opened from outside our pervue, as we'll need to tokenize these separately.
-    public ObservableCollection<StorageFile> NonWorkspaceFiles { get; private set; }
+    public ObservableCollection<XamlDocument> OpenFiles { get; private set; } = new();
 
     public WorkspaceWindow()
     {
-        OpenFiles = new ObservableCollection<XamlDocument>();
-        NonWorkspaceFiles = new ObservableCollection<StorageFile>();
-
         Initialize();
     }
 
@@ -48,8 +40,16 @@ public abstract partial class WorkspaceWindow: ObservableObject
 
     public void SetupWorkspace(StorageFolder folder)
     {
-        WorkspaceFolder = folder;
-        IsWorkspaceOpen = folder != null;
+        WorkspaceFolders.Clear(); // TODO: Add support for multiples
+        if (folder != null)
+        {
+            WorkspaceFolders.Add(new(folder));
+            IsWorkspaceOpen = true;
+        }
+        else
+        {
+            IsWorkspaceOpen = false;
+        }
     }
 
     partial void OnActiveFileChanged(XamlDocument oldValue, XamlDocument newValue)

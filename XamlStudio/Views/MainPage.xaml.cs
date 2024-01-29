@@ -55,6 +55,7 @@ namespace XamlStudio.Views
         {
             // Save State of Documents here
             e.SuspensionState.OpenFiles = ViewModel.OpenFiles.ToArray();
+            e.SuspensionState.OpenWorkspaces = ViewModel.WorkspaceFolders.ToArray();
 
             // Save Open Drawer, null = closed.
             e.SuspensionState.OpenActivity = (NavMenu.SelectedItems.FirstOrDefault() as ListBoxItem)?.Tag?.ToString();
@@ -113,6 +114,16 @@ namespace XamlStudio.Views
                 else
                 {
                     NavMenu.SelectedItem = null;
+                }
+
+                if (_restoreState.OpenWorkspaces != null && _restoreState.OpenWorkspaces.Length > 0)
+                {
+                    foreach (var folderLocation in _restoreState.OpenWorkspaces)
+                    {
+                        await folderLocation.RestoreFolderAsync();
+                        ViewModel.WorkspaceFolders.Add(folderLocation);
+                    }
+                    ViewModel.IsWorkspaceOpen = true;
                 }
 
                 if (_restoreState.OpenFiles != null && _restoreState.OpenFiles.Length > 0)
