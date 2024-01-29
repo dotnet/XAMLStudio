@@ -86,6 +86,11 @@ namespace XamlStudio.Toolkit.Models
         public object DataContext { get; internal set; }
 
         /// <summary>
+        /// Gets the DataContext source file path (from the <see cref="XamlRenderSettings.ResourceRoot"/>) if loaded from d:DesignData.
+        /// </summary>
+        public string DataContextSource { get; internal set; }
+
+        /// <summary>
         /// Gets the list of Errors found if <see cref="Services.XamlRenderService.RenderAsync(string)"/> was unsuccessful.
         /// </summary>
         public IList<XamlExceptionRange> Errors { get; internal set; } = new List<XamlExceptionRange>();

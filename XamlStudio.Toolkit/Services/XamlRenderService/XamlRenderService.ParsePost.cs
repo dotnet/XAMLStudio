@@ -70,7 +70,7 @@ namespace XamlStudio.Toolkit.Services
                             var ei = dd.IndexOf(","); // Next Argument
                             if (ei == -1)
                             {
-                                ei = dd.IndexOf("}"); // Or End of Bind
+                                ei = dd.Length; // Or End of Bind
                             }
 
                             if (ei != -1)
@@ -81,6 +81,7 @@ namespace XamlStudio.Toolkit.Services
                                 {
                                     fwe.DataContext = data;
                                     context.DataContext = data;
+                                    context.DataContextSource = source;
                                 }
                             }
                         }
