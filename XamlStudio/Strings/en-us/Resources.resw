@@ -872,4 +872,20 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>When enabled, missing xmlns namespaces will automatically be inserted into the code editor on compilation.</value>
     <comment>Description for update content toggle</comment>
   </data>
+  <data name="Explorer_WorkspaceButton_Open.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Open Workspace Folder</value>
+    <comment>Accessibility Name for Open Workspace Button on Explorer Panel</comment>
+  </data>
+  <data name="Explorer_WorkspaceButton_Open.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open Workspace Folder</value>
+    <comment>Tooltip for Open Workspace Button on Explorer Panel</comment>
+  </data>
+  <data name="Explorer_WorkspaceHeader.Text" xml:space="preserve">
+    <value>WORKSPACE FOLDER</value>
+    <comment>Header for Workspace Folder Expander on Explorer Panel</comment>
+  </data>
+  <data name="Explorer_WorkspaceUnopenedHint.Text" xml:space="preserve">
+    <value>Choose a folder to get started with a workspace and access additional features.</value>
+    <comment>Text show in Workspace Folder panel when there isn't an open Workspace folder.</comment>
+  </data>
 </root>

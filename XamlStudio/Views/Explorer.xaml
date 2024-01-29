@@ -183,14 +183,34 @@
         <muxc:Expander Grid.Row="2"
                        HorizontalContentAlignment="Stretch"
                        VerticalContentAlignment="Top"
-                       Header="WORKSPACE FOLDERS"
                        IsExpanded="True"
                        Style="{StaticResource VSCodeExpanderStyle}">
+            <muxc:Expander.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Uid="Explorer_WorkspaceHeader" VerticalAlignment="Center" />
+                    <Button x:Uid="Explorer_WorkspaceButton_Open"
+                            Grid.Column="1"
+                            Margin="0,0,-12,0"
+                            Command="{x:Bind MainViewModel.OpenFolderPickerCommand}"
+                            Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
+                        <SymbolIcon fex:SymbolIconExtensions.FontSize="14" Symbol="Folder" />
+                    </Button>
+                </Grid>
+            </muxc:Expander.Header>
             <controls:SwitchPresenter TargetType="x:Boolean" Value="{x:Bind MainViewModel.IsWorkspaceOpen, Mode=OneWay}">
                 <controls:Case IsDefault="True">
                     <StackPanel Margin="16">
-                        <TextBlock Text="Choose a folder to get started with a workspace and access additional features." TextWrapping="WrapWholeWords" />
-                        <Button Margin="0,8,0,0" Command="{x:Bind MainViewModel.OpenFolderPickerCommand}">Open Folder</Button>
+                        <Button x:Uid="Explorer_WorkspaceButton_Open"
+                                Command="{x:Bind MainViewModel.OpenFolderPickerCommand}"
+                                Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
+                            <SymbolIcon fex:SymbolIconExtensions.FontSize="32" Symbol="Folder" />
+                        </Button>
+                        <TextBlock x:Uid="Explorer_WorkspaceUnopenedHint" TextWrapping="WrapWholeWords" />
+                        <!--<Button Margin="0,8,0,0" Command="{x:Bind MainViewModel.OpenFolderPickerCommand}">Open Folder</Button>-->
                     </StackPanel>
                 </controls:Case>
                 <controls:Case Value="True">
