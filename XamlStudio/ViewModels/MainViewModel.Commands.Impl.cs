@@ -145,6 +145,8 @@ namespace XamlStudio.ViewModels
                 SetupWorkspace(folder);
 
                 SettingsService.Instance.RememberFileOrFolder(folder);
+
+                Analytics.TrackEvent("Open_Workspace");
             }
         }
 

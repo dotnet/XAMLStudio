@@ -10,6 +10,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:model="using:XamlStudio.Models"
       xmlns:monaco="using:Monaco"
+      xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
       IsEnabled="{x:Bind model:DocumentType.Document.Equals(MainViewModel.ActiveFile.DocumentType), Mode=OneWay}"
       mc:Ignorable="d">
 
@@ -48,7 +49,8 @@
                                            Background="{ThemeResource Brush-Blue-Dark-1}"
                                            Click="Open_DataSource"
                                            FontSize="12"
-                                           IsChecked="{x:Bind ActiveDataContext.CanSave, Mode=OneWay}">
+                                           IsChecked="{x:Bind ActiveDataContext.CanSave, Mode=OneWay}"
+                                           IsEnabled="{x:Bind IsRenderedDataContext.Equals(x:False), Mode=OneWay}">
                     <SymbolIcon fex:SymbolIconExtensions.FontSize="14" Symbol="OpenFile" />
                 </future:ManualToggleButton>
                 <Button x:Uid="DataSource_Button_Save"
@@ -65,11 +67,19 @@
                               Padding="12"
                               Background="{ThemeResource Brush-Blue-Dark-1}"
                               FontSize="12"
+                              IsEnabled="{x:Bind IsRenderedDataContext.Equals(x:False), Mode=OneWay}"
                               Unchecked="RemoteDataSourceButton_Unchecked">
                     <SymbolIcon fex:SymbolIconExtensions.FontSize="14" Symbol="Remote" />
                 </ToggleButton>
             </Grid>
         </Border>
+
+        <muxc:InfoBar Title="d:DesignData"
+                      Grid.Row="1"
+                      IsClosable="False"
+                      IsOpen="{x:Bind IsRenderedDataContext, Mode=OneWay}"
+                      Message="{x:Bind ActiveDataContextPath, Mode=OneWay}"
+                      Severity="Warning" />
 
         <!--  Panel Content  -->
         <Grid Grid.Row="1"

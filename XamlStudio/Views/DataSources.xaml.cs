@@ -2,6 +2,7 @@
 using Microsoft.AppCenter.Analytics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -14,6 +15,7 @@ using Windows.UI.Xaml.Controls;
 using XamlStudio.Helpers;
 using XamlStudio.Models;
 using XamlStudio.Services;
+using XamlStudio.Toolkit.Services;
 using XamlStudio.ViewModels;
 
 namespace XamlStudio.Views;
@@ -21,7 +23,9 @@ namespace XamlStudio.Views;
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class DataSources : Page, IRecipient<ActiveDocumentViewModelChangedMessage>
+public sealed partial class DataSources : Page,
+    IRecipient<ActiveDocumentViewModelChangedMessage>,
+    IRecipient<DataSourceSetInFileMessage>
 {
     private ThreadPoolTimer _autocompileTimer;
 
@@ -36,6 +40,26 @@ public sealed partial class DataSources : Page, IRecipient<ActiveDocumentViewMod
     // Using a DependencyProperty as the backing store for ActiveDataContext.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty ActiveDataContextProperty =
         DependencyProperty.Register(nameof(ActiveDataContext), typeof(DataContext), typeof(DataSources), new PropertyMetadata(null));
+
+    public string ActiveDataContextPath
+    {
+        get { return (string)GetValue(ActiveDataContextPathProperty); }
+        set { SetValue(ActiveDataContextPathProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for ActiveDataContextPath.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty ActiveDataContextPathProperty =
+        DependencyProperty.Register(nameof(ActiveDataContextPath), typeof(string), typeof(DataSources), new PropertyMetadata(string.Empty));
+
+    public bool IsRenderedDataContext
+    {
+        get { return (bool)GetValue(IsRenderedDataContextProperty); }
+        set { SetValue(IsRenderedDataContextProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for IsDocumentDataContext.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty IsRenderedDataContextProperty =
+        DependencyProperty.Register(nameof(IsRenderedDataContext), typeof(bool), typeof(DataSources), new PropertyMetadata(false));
 
     private XamlDocument _activeDocument;
 
@@ -52,6 +76,7 @@ public sealed partial class DataSources : Page, IRecipient<ActiveDocumentViewMod
         WeakReferenceMessenger.Default.RegisterAll(this);
 
         Receive(new ActiveDocumentViewModelChangedMessage(null, MainViewModel.ActiveDocumentViewModel));
+        // TODO: How to detect/get info on if d:DesignData was used to display here if opened after render...
     }
 
     public void Receive(ActiveDocumentViewModelChangedMessage message)
@@ -62,6 +87,31 @@ public sealed partial class DataSources : Page, IRecipient<ActiveDocumentViewMod
 
         // Toggle showing the panel if we have a remote source, though not explicitly bound as we initially open it with no url.
         RemoteDataSourceButton.IsChecked = ActiveDataContext.IsRemote;
+        IsRenderedDataContext = false;
+    }
+
+    public async void Receive(DataSourceSetInFileMessage message)
+    {
+        if (message?.FileName == null)
+        {
+            IsRenderedDataContext = false;
+            return;
+        }
+        else if (MainViewModel.WorkspaceFolders.FirstOrDefault()?.BackingFolder is StorageFolder folder)
+        {
+            var dataContext = await Models.DataContext.LoadFromFileAsync(await XamlRenderService.GetFileFromPath(folder, message.FileName));
+
+            ActiveDataContext = dataContext;
+            _activeDocument.DataContext = ActiveDataContext;
+            ActiveDataContextPath = message.FileName;
+            IsRenderedDataContext = true;
+
+            Analytics.TrackEvent("DataSources_Rendered_DataContext");
+        }
+        else
+        {
+            IsRenderedDataContext = false;
+        }
     }
 
     private void LiveDataSourceUri_LostFocus(object sender, RoutedEventArgs e)
@@ -95,6 +145,7 @@ public sealed partial class DataSources : Page, IRecipient<ActiveDocumentViewMod
 
         MainViewModel.ActiveDocumentViewModel.DataContext = null;
         MainViewModel.ActiveDocumentViewModel.LiveDataContextRefreshError = null;
+        IsRenderedDataContext = false;
 
         Analytics.TrackEvent("DataSources_Clear");
     }

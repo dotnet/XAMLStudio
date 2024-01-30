@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.AppCenter.Analytics;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -172,10 +173,12 @@ namespace XamlStudio.Views
                     // Insert the d:DataContext="{d:DesignData /SampleData/XAMLing.json}" attribute
                     // TODO: Should we instead explicitly update/insert this into root tag?
                     WeakReferenceMessenger.Default.Send<InsertTextMessage>(new($"d:DataContext=\"{{d:DesignData {file.Path.Replace('\\', '/').Substring(workspacePathLength)}}}\""));
+                    Analytics.TrackEvent("Explorer_Workspace_InsertDataContext");
                     break;
                 case StorageFile file when ExplorerItemTemplateSelector.ImageFileTypes.Contains(file.FileType.ToLower()):
                     // Insert image tag into document
                     WeakReferenceMessenger.Default.Send<InsertTextMessage>(new($"<Image Source=\"{file.Path.Replace('\\', '/').Substring(workspacePathLength)}\" />"));
+                    Analytics.TrackEvent("Explorer_Workspace_InsertImage");
                     break;
                 case StorageFile file when ExplorerItemTemplateSelector.XamlFileTypes.Contains(file.FileType.ToLower()):
                     // Find top-level node.

@@ -234,6 +234,17 @@ public sealed partial class Document : UserControl,
             // Restore cursor to where it was.
             await CodeEditor.SetPositionAsync(pos);
         }
+
+        if (!string.IsNullOrWhiteSpace(newcontent.DataContextSource))
+        {
+            // TODO: We loaded a d:DesignData data source, we should show this instead in the DataSources tab
+            // Along with an InfoBar to say the file has been loaded directly.
+            WeakReferenceMessenger.Default.Send<DataSourceSetInFileMessage>(new(newcontent.DataContextSource));
+        }
+        else
+        {
+            WeakReferenceMessenger.Default.Send<DataSourceSetInFileMessage>(new(null));
+        }
     }
 
     private void ViewModel_Compiled(object sender, XamlRenderResultContext result)

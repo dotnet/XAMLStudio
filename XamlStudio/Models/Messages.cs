@@ -12,3 +12,5 @@ public record InsertTextMessage(string Text);
 public record RenderXamlMessage();
 
 public record ActiveDocumentViewModelChangedMessage(DocumentViewModel PreviousDocVM, DocumentViewModel NewDocVM);
+
+public record DataSourceSetInFileMessage(string? FileName);

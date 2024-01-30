@@ -71,13 +71,14 @@ namespace XamlStudio.Toolkit.Services
             return data;
         }
 
+        //// TODO: Move to general helper location somewhere?
         /// <summary>
         /// Given a path, e.g. "Images\Owl.jpg", navigates the structure from StorageFolder/Files.
         /// </summary>
         /// <param name="root">Starting StorageFolder.</param>
         /// <param name="path">string path.</param>
         /// <returns></returns>
-        private static async Task<StorageFile> GetFileFromPath(StorageFolder root, string path)
+        public static async Task<StorageFile> GetFileFromPath(StorageFolder root, string path)
         {
             // Flip path around and try again.
             if (path.Contains("\\"))
