@@ -589,7 +589,7 @@ public sealed partial class Document : UserControl,
         }
 
         // TODO: This is expensive, we should be doing this on a debounce and more globally as the document updates to be used elsewhere for visual tree sync, etc... as part of render loop
-        var _xmlRoot = Parser.ParseText(text);
+        var _xmlRoot = ViewModel.HasCompiled ? ViewModel.Result.XmlDocument : Parser.ParseText(text);
 
         Breadcrumbs.Clear();
 

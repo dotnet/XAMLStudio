@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Language.Xml;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -76,9 +77,14 @@ namespace XamlStudio.Toolkit.Models
         public bool IsFrameworkElement { get; internal set; }
 
         /// <summary>
+        /// <see cref="XmlDocumentSyntax"/> New XML document result from <see cref="Parser.ParseText(string)"/> from GuiLabs.
+        /// </summary>
+        public XmlDocumentSyntax XmlDocument { get; internal set; }
+
+        /// <summary>
         /// <see cref="XDocument"/> representing <see cref="RenderedContent"/>.
         /// </summary>
-        public XDocument Document { get; internal set; }
+        public XDocument Document { get; internal set; } // TODO: Should move away from?
 
         /// <summary>
         /// Gets the DataContext provided to the <see cref="Services.XamlRenderService"/> or loaded from d:DesignData.

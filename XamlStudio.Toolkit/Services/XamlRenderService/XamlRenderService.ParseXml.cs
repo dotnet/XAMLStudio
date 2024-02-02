@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Microsoft.Language.Xml;
+using System;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using Windows.UI.Xaml.Shapes;
 using XamlStudio.Toolkit.Extensions;
 using XamlStudio.Toolkit.Models;
 using XamlStudio.Toolkit.Parsers;
@@ -12,6 +15,25 @@ namespace XamlStudio.Toolkit.Services
 
     public partial class XamlRenderService
     {
+        private (int, int) GetLineColumnIndex(string str, int index)
+        {
+            var line = 1;
+            var column = 1;
+
+            for (var i = 0; i < index; i++)
+            {
+                if (str[i] == '\n')
+                {
+                    line++;
+                    column = 0;
+                }
+
+                column++;
+            }
+
+            return (line, column);
+        }
+
         private void ReadXmlTree(ref XamlRenderResultContext context)
         {
             try
@@ -41,6 +63,17 @@ namespace XamlStudio.Toolkit.Services
 
                 var lineContent = GetLine(context.RenderedContent, line);
                 context.Errors.Add(new XamlExceptionRange(msg, e, line, column, lineContent));
+            }
+
+            //// New XML Document Parsing
+            // TODO: Move this to a pre phase before the 'RenderedContent' in order to save off valid bits to enable parsing while typing, can leave error message processing here (should remain to use the original document lines?? Need to figure that bit out...
+            context.XmlDocument = Parser.ParseText(context.RenderedContent);
+
+            foreach (var errorNode in context.XmlDocument.DescendantNodesAndSelf().Where((node) => node.ContainsDiagnostics))
+            {
+                var diagnostic = errorNode.GetDiagnostics().Select(d => d.GetDescription());
+                (var line, var column) = GetLineColumnIndex(context.RenderedContent, errorNode.FullSpan.Start);
+                context.Errors.Add(new XamlExceptionRange(string.Join('\n', diagnostic), null, (uint)line, (uint)column, GetLine(context.RenderedContent, (uint)line)));
             }
         }
 
