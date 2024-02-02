@@ -36,7 +36,8 @@ namespace XamlStudio.Views;
 public sealed partial class Document : UserControl,
     IRecipient<InsertTextMessage>,
     IRecipient<NavigateToLineMessage>,
-    IRecipient<RenderXamlMessage>
+    IRecipient<RenderXamlMessage>,
+    IRecipient<XamlCompiledMessage>
 {
     private string[] _decorations = Array.Empty<string>();
 
@@ -115,7 +116,6 @@ public sealed partial class Document : UserControl,
     private void UnloadViewModel(DocumentViewModel model)
     {
         ViewModel.XamlRoot = null;
-        ViewModel.Compiled -= ViewModel_Compiled;
 
         WeakReferenceMessenger.Default.UnregisterAll(this);
 
@@ -129,9 +129,6 @@ public sealed partial class Document : UserControl,
         // Pass Reference to our Control so we can 'render' to it.
         ViewModel.XamlRoot = XamlRoot;
         ViewModel.ActualTheme = ActualTheme;
-
-        // Listen for Line Highlighting Changes and Update our Editor
-        ViewModel.Compiled += ViewModel_Compiled;
 
         CodeEditor.Options.Folding = true;
 
@@ -216,7 +213,10 @@ public sealed partial class Document : UserControl,
     public async void Receive(RenderXamlMessage message)
     {
         // Check if nothing to do
-        if (ViewModel.Document.Content == null || ViewModel.Document.Content.Length == 0 || ViewModel.HasCompiled)
+        if (ViewModel.Document.Content == null
+            || ViewModel.Document.Content.Length == 0
+            || ViewModel.HasCompiled
+            || !ViewModel.Document.IsActive)
         {
             return;
         }
@@ -248,8 +248,14 @@ public sealed partial class Document : UserControl,
         }
     }
 
-    private void ViewModel_Compiled(object sender, XamlRenderResultContext result)
+    public void Receive(XamlCompiledMessage message)
     {
+        // TODO: Is there a better way for us to manage that only the active document cares about this message
+        // TODO: We should probably do a better job of managing the listening of messages based on active document
+        // TODO: Then we can use StrongReferenceMessenger instead?
+        if (!ViewModel.Document.IsActive) return;
+
+        var result = message.Context;
         if (result.Element != null)
         {
             var cleanPanel = IsSpecificPreviewSize ? XamlRootSpecific : XamlRoot;

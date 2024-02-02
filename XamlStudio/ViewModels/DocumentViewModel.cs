@@ -24,8 +24,6 @@ namespace XamlStudio.ViewModels;
 
 public partial class DocumentViewModel : ObservableObject
 {
-    public event EventHandler<XamlRenderResultContext> Compiled;
-
     [ObservableProperty]
     private XamlDocument _document;
 

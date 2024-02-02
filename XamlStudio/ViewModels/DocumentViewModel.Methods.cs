@@ -147,7 +147,7 @@ public partial class DocumentViewModel
             CreateBindingDecorations();
         }
 
-        Compiled?.Invoke(this, Result);
+        WeakReferenceMessenger.Default.Send<XamlCompiledMessage>(new(Result));
 
         render_analytics.Add("TotalRenderTimeSec", Math.Round((DateTime.UtcNow.Ticks - start) / 10000000d, 2).ToString());
         Analytics.TrackEvent("Render_XAML", render_analytics);

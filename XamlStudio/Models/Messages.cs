@@ -1,5 +1,6 @@
 ﻿
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using XamlStudio.Toolkit.Models;
 using XamlStudio.ViewModels;
 
 namespace XamlStudio.Models;
@@ -8,9 +9,23 @@ public record OpenActivityChangedMessage(string NewActivity);
 
 public record NavigateToLineMessage(uint Line); // TODO: Need document?
 
+/// <summary>
+/// Inserts the specified text into the current document location (or replaces an active selection).
+/// </summary>
+/// <param name="Text"></param>
 public record InsertTextMessage(string Text);
 
+/// <summary>
+/// Requests the rendering process the current document Xml to via XamlRenderService in
+/// LINK:Document.xaml.cs:Receive(RenderXamlMessage
+/// </summary>
 public record RenderXamlMessage();
+
+/// <summary>
+/// Sent after <see cref="RenderXamlMessage"/> has completed and has a context (successful or unsuccessful).
+/// </summary>
+/// <param name="Context"><see cref="XamlRenderResultContext"/></param>
+public record XamlCompiledMessage(XamlRenderResultContext Context);
 
 public record ActiveDocumentViewModelChangedMessage(DocumentViewModel PreviousDocVM, DocumentViewModel NewDocVM);
 
