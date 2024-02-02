@@ -29,8 +29,6 @@ namespace XamlStudio.Views
     {
         public MainViewModel MainViewModel { get; set; }
 
-        public SettingsPanelViewModel SettingsViewModel { get; set; }
-
         public XamlBindingInfo HistoryFilter
         {
             get { return (XamlBindingInfo)GetValue(HistoryFilterProperty); }

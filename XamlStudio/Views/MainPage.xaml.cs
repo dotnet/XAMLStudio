@@ -22,10 +22,13 @@ using XamlStudio.Toolkit.Helpers;
 using XamlStudio.Toolkit.Services;
 using XamlStudio.ViewModels;
 using CommunityToolkit.Mvvm.Messaging;
+using Windows.UI.Core;
 
 namespace XamlStudio.Views
 {
-    public sealed partial class MainPage : Page, IFileOpener, IRecipient<OpenActivityChangedMessaged>
+    public sealed partial class MainPage : Page, IFileOpener,
+        IRecipient<OpenActivityChangedMessage>,
+        IRecipient<KeyDownMessage>
     {
         public MainViewModel ViewModel { get; }
 
@@ -76,7 +79,119 @@ namespace XamlStudio.Views
 
         private void CoreWindow_KeyDown(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs args)
         {
-            ViewModel.KeyDownCommand.Execute(args);
+            var ctrl = (Window.Current.CoreWindow.GetKeyState(VirtualKey.Control) & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+            var shift = (Window.Current.CoreWindow.GetKeyState(VirtualKey.Shift) & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+
+            Receive(new KeyDownMessage(ctrl, shift, (int)args.VirtualKey));
+        }
+
+        /// <summary>
+        /// Handle all global keyboard shortcuts.
+        /// </summary>
+        /// <param name="keyInfo"></param>
+        public void Receive(KeyDownMessage keyInfo)
+        {
+            var active = false;
+            if (keyInfo.Ctrl)
+            {
+                if (keyInfo.Shift)
+                {
+                    // Quick Shortcuts for Things
+                    switch ((VirtualKey)keyInfo.KeyCode)
+                    {
+                        // Open Explorer
+                        case VirtualKey.E:
+                            active = true;
+                            ViewModel.OpenActivityPanelCommand.Execute("EXPLORER");
+                            break;
+                        // Open Data Context
+                        case VirtualKey.C:
+                            active = true;
+                            ViewModel.OpenActivityPanelCommand.Execute("DATASOURCES");
+                            break;
+                        // Open Binding Debugger
+                        case VirtualKey.B:
+                            active = true;
+                            ViewModel.OpenActivityPanelCommand.Execute("DEBUG");
+                            break;
+                        // Open Toolbox
+                        case VirtualKey.T:
+                            active = true;
+                            ViewModel.OpenActivityPanelCommand.Execute("TOOLBOX");
+                            break;
+                    }
+                }
+                else
+                {
+                    switch ((VirtualKey)keyInfo.KeyCode)
+                    {
+                        // Open Settings
+                        case VirtualKey.I:
+                            active = true;
+                            ViewModel.OpenActivityPanelCommand.Execute(null);
+                            break;
+                        // New
+                        case VirtualKey.N:
+                            active = true;
+                            ViewModel.NewDocumentCommand.Execute(null);
+                            break;
+                        // Open
+                        case VirtualKey.O:
+                            active = true;
+                            ViewModel.OpenDocumentCommand.Execute(null);
+                            break;
+                        // Save
+                        case VirtualKey.S:
+                            if (keyInfo.Shift)
+                            {
+                                ViewModel.SaveDocumentAsCommand.Execute(ViewModel.ActiveFile);
+                            }
+                            else
+                            {
+                                ViewModel.SaveDocumentCommand.Execute(ViewModel.ActiveFile);
+                            }
+                            active = true;
+                            break;
+                        // Close
+                        case VirtualKey.W:
+                        case VirtualKey.F4:
+                            active = true;
+                            ViewModel.CloseActiveDocumentCommand.Execute(ViewModel.ActiveFile);
+                            break;
+                        // Prev/Next Document
+                        case VirtualKey.Tab:
+                            if (keyInfo.Shift)
+                            {
+                                active = true;
+                                ViewModel.PreviousDocumentCommand.Execute(null);
+                            }
+                            else
+                            {
+                                active = true;
+                                ViewModel.NextDocumentCommand.Execute(null);
+                            }
+                            break;
+                    }
+                }
+
+                if (active)
+                {
+                    Analytics.TrackEvent("Key_Shortcut", new Dictionary<string, string>()
+                    {
+                        { "Location", "MainView" },
+                        { "Action", active.ToString() },
+                        { "Ctrl", keyInfo.Ctrl.ToString() },
+                        { "Shift", keyInfo.Shift.ToString() },
+                        { "Code", keyInfo.KeyCode.ToString() }
+                    });
+
+                    keyInfo.Reply(true);
+                }
+                else
+                {
+                    keyInfo.Reply(false);
+                }
+            }
         }
 
         private async void MainPage_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -289,7 +404,7 @@ namespace XamlStudio.Views
             }
         }
 
-        public void Receive(OpenActivityChangedMessaged message)
+        public void Receive(OpenActivityChangedMessage message)
         {
             if (string.IsNullOrWhiteSpace(message.NewActivity))
             {

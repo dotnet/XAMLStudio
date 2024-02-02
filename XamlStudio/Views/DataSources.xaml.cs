@@ -266,78 +266,6 @@ public sealed partial class DataSources : Page,
             // Eat key stroke
             args.Handled = true;
         }
-        else if (args.CtrlKey)
-        {
-            if (args.ShiftKey)
-            {
-                switch (args.KeyCode)
-                {
-                    // E - Open Explorer
-                    case 69:
-                        args.Handled = true;
-                        MainViewModel.OpenActivityPanelCommand.Execute("EXPLORER");
-                        break;
-                    // C - Open Data Context
-                    case 67:
-                        args.Handled = true;
-                        MainViewModel.OpenActivityPanelCommand.Execute("DATASOURCES");
-                        break;
-                    // B - Open Binding Debugger
-                    case 66:
-                        args.Handled = true;
-                        MainViewModel.OpenActivityPanelCommand.Execute("DEBUG");
-                        break;
-                    // T - Open Toolbox
-                    case 84:
-                        args.Handled = true;
-                        MainViewModel.OpenActivityPanelCommand.Execute("TOOLBOX");
-                        break;
-                }
-            }
-            // Need to duplicate this here from ShellViewModel as Control eats CoreWindow event.
-            switch (args.KeyCode)
-            {
-                case 73: // I
-                    MainViewModel.OpenSettingsPageCommand.Execute(null);
-                    args.Handled = true;
-                    break;
-                case 78: // N
-                    MainViewModel.NewDocumentCommand.Execute(null);
-                    args.Handled = true;
-                    break;
-                case 79: // O
-                    MainViewModel.OpenDocumentCommand.Execute(null);
-                    args.Handled = true;
-                    break;
-                case 83: // S
-                    if (args.ShiftKey)
-                    {
-                        MainViewModel.SaveDocumentAsCommand.Execute(MainViewModel.ActiveFile);
-                    }
-                    else
-                    {
-                        MainViewModel.SaveDocumentCommand.Execute(MainViewModel.ActiveFile);
-                    }
-                    args.Handled = true;
-                    break;
-                case 87: // W
-                case 115: // F4
-                    MainViewModel.CloseActiveDocumentCommand.Execute(MainViewModel.ActiveFile);
-                    args.Handled = true;
-                    break;
-                case 9: // TAB
-                    if (args.ShiftKey)
-                    {
-                        MainViewModel.PreviousDocumentCommand.Execute(null);
-                    }
-                    else
-                    {
-                        MainViewModel.NextDocumentCommand.Execute(null);
-                    }
-                    args.Handled = true;
-                    break;
-            }
-        }
 
         if (args.Handled)
         {
@@ -350,6 +278,8 @@ public sealed partial class DataSources : Page,
                 { "Code", args.KeyCode.ToString() }
             });
         }
+
+        args.Handled = WeakReferenceMessenger.Default.Send<KeyDownMessage>(new(args.CtrlKey, args.ShiftKey, args.KeyCode));
 
         if (!IsEnabled)
         {

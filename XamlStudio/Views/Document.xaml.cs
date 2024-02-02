@@ -16,6 +16,7 @@ using Windows.Graphics.DirectX;
 using Windows.Graphics.Display;
 using Windows.Storage.Streams;
 using Windows.System;
+using Windows.System.Threading;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
@@ -345,6 +346,19 @@ public sealed partial class Document : UserControl,
         ViewModel.HasCompiled = true;
     }
 
+    private ThreadPoolTimer _autocompileTimer;
+
+    private static readonly int[] NonCharacterCodes = new int[] {
+        // Modifier Keys
+        16, 17, 18, 20, 91,
+        // Esc / Page Keys / Home / End / Insert
+        27, 33, 34, 35, 36, 45,
+        // Arrow Keys
+        37, 38, 39, 40,
+        // Function Keys
+        112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123
+    };
+
     private void CodeEditor_KeyDown(Monaco.CodeEditor sender, Monaco.Helpers.WebKeyEventArgs args)
     {
         // Workaround to https://github.com/hawkerm/monaco-editor-uwp/issues/6
@@ -355,8 +369,63 @@ public sealed partial class Document : UserControl,
             ViewModel.SelectedText = CodeEditor.SelectedText;
         }
 
-        // Now pass onto VM now that we have SelectedText set.
-        ViewModel.KeyDownCommand.Execute(args);
+        // Handle Shortcuts. https://keycode.info/
+        // Ctrl+Enter or F5 Update // TODO: Do we need this in the app handler too? (Thinking no)
+        if ((args.KeyCode == 13 && args.CtrlKey) ||
+             args.KeyCode == 116)
+        {
+            ////if (args.KeyCode == 116 &&
+            ////    SettingsService.Instance.IsCompileSelectionEnabled.Value == true &&
+            ////    !string.IsNullOrWhiteSpace(SelectedText))
+            ////{
+            ////    SelectiveRenderXaml(SelectedText);
+            ////}
+            ////else
+            ////{
+            ViewModel.ForceRefreshCommand?.Execute(null);
+            ////}
+
+            // Eat key stroke
+            args.Handled = true;
+        }
+
+        if (args.Handled)
+        {
+            Analytics.TrackEvent("Key_Shortcut", new Dictionary<string, string>()
+            {
+                { "Location", "Document" },
+                { "Action", args.Handled.ToString() },
+                { "Ctrl", args.CtrlKey.ToString() },
+                { "Shift", args.ShiftKey.ToString() },
+                { "Code", args.KeyCode.ToString() }
+            });
+        }
+
+        args.Handled = WeakReferenceMessenger.Default.Send<KeyDownMessage>(new(args.CtrlKey, args.ShiftKey, args.KeyCode));
+
+        // Ignore as a change to the document if we handle it as a shortcut above or it's a special char.
+        if (!args.Handled && Array.IndexOf(NonCharacterCodes, args.KeyCode) == -1)
+        {
+            // TODO: Filter out non-display characters or look for text change...
+            ViewModel.Document.HasChanged = true; // Mark Dirty
+            ViewModel.HasCompiled = false;
+
+            // Setup Time for Auto-Compile
+            if (SettingsService.Instance.IsAutoCompileEnabled.Value)
+            {
+                _autocompileTimer?.Cancel(); // Stop Old Timer
+                                             // Create Compile Timer
+                // TODO: Clean up and use debounce method from toolkit instead?
+                var dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+                _autocompileTimer = ThreadPoolTimer.CreateTimer((e) =>
+                {
+                    dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
+                    {
+                        WeakReferenceMessenger.Default.Send<RenderXamlMessage>();
+                    });
+                }, TimeSpan.FromSeconds(SettingsService.Instance.AutoCompileDelay.Value));
+            }
+        }
     }
 
     private void CodeEditor_OpenLinkRequested(WebView sender, WebViewNewWindowRequestedEventArgs args)

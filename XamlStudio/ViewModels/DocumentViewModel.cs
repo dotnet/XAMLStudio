@@ -24,8 +24,6 @@ namespace XamlStudio.ViewModels;
 
 public partial class DocumentViewModel : ObservableObject
 {
-    private ThreadPoolTimer _autocompileTimer;
-
     public event EventHandler<XamlRenderResultContext> Compiled;
 
     [ObservableProperty]

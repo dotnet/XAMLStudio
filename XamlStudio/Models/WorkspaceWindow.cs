@@ -70,6 +70,6 @@ public abstract partial class WorkspaceWindow: ObservableObject
 
     partial void OnOpenActivityChanged(string value)
     {
-        WeakReferenceMessenger.Default.Send<OpenActivityChangedMessaged>(new(value));
+        WeakReferenceMessenger.Default.Send<OpenActivityChangedMessage>(new(value));
     }
 }
