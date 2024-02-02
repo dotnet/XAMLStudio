@@ -1,236 +1,232 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
-using System.Reflection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using XamlStudio.Toolkit.Parsers;
 
-namespace XamlStudio.Toolkit.UnitTests
+namespace XamlStudio.Toolkit.UnitTests;
+
+[TestClass]
+public class BindingParserTests
 {
-    [TestClass]
-    public class BindingParserTests
+    [TestMethod]
+    public void BindingTest_Converter()
     {
-        [TestMethod]
-        public void BindingTest_Converter()
+        string xaml = @"{Binding IsOn, ElementName=AutoCompileToggle, Converter={StaticResource BooleanToVisibilityConverter}}";
+        var expected = new BindingValue()
         {
-            string xaml = @"{Binding IsOn, ElementName=AutoCompileToggle, Converter={StaticResource BooleanToVisibilityConverter}}";
-            var expected = new BindingValue()
-            {
-                ElementName = "AutoCompileToggle",
-                Path = "IsOn",
-                Converter = "BooleanToVisibilityConverter",
-            };
-            var binding = BindingParser.Parse(xaml);
-            TestBinding(expected, binding);
-            PrintBinding(xaml, binding);
-        }
+            ElementName = "AutoCompileToggle",
+            Path = "IsOn",
+            Converter = "BooleanToVisibilityConverter",
+        };
+        var binding = BindingParser.Parse(xaml);
+        TestBinding(expected, binding);
+        PrintBinding(xaml, binding);
+    }
 
-        [TestMethod]
-        public void BindingTest_ConverterParameterString1()
+    [TestMethod]
+    public void BindingTest_ConverterParameterString1()
+    {
+        string xaml = @"{Binding IsOn, ElementName=AutoCompileToggle, Converter={StaticResource StringFormatConverter}, ConverterParameter='Is Loading: {0}'}";
+        var expected = new BindingValue()
         {
-            string xaml = @"{Binding IsOn, ElementName=AutoCompileToggle, Converter={StaticResource StringFormatConverter}, ConverterParameter='Is Loading: {0}'}";
-            var expected = new BindingValue()
-            {
-                ElementName = "AutoCompileToggle",
-                Path = "IsOn",
-                Converter = "StringFormatConverter",
-                ConverterParameter = "Is Loading: {0}",
-                ConverterParameterRaw = "'Is Loading: {0}'"
-            };
-            var binding = BindingParser.Parse(xaml);
-            TestBinding(expected, binding);
-            PrintBinding(xaml, binding);
-        }
+            ElementName = "AutoCompileToggle",
+            Path = "IsOn",
+            Converter = "StringFormatConverter",
+            ConverterParameter = "Is Loading: {0}",
+            ConverterParameterRaw = "'Is Loading: {0}'"
+        };
+        var binding = BindingParser.Parse(xaml);
+        TestBinding(expected, binding);
+        PrintBinding(xaml, binding);
+    }
 
-        [TestMethod]
-        public void BindingTest_ConverterParameterString2()
+    [TestMethod]
+    public void BindingTest_ConverterParameterString2()
+    {
+        string xaml = @"{Binding RangeMin, ElementName=RangeSelector, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.##}'}";
+        var expected = new BindingValue()
         {
-            string xaml = @"{Binding RangeMin, ElementName=RangeSelector, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.##}'}";
-            var expected = new BindingValue()
-            {
-                Path = "RangeMin",
-                ElementName = "RangeSelector",
-                Converter = "StringFormatConverter",
-                ConverterParameter = "{0:0.##}",
-                ConverterParameterRaw = "'{}{0:0.##}'"
-            };
-            var binding = BindingParser.Parse(xaml);
-            TestBinding(expected, binding);
-            PrintBinding(xaml, binding);
-        }
+            Path = "RangeMin",
+            ElementName = "RangeSelector",
+            Converter = "StringFormatConverter",
+            ConverterParameter = "{0:0.##}",
+            ConverterParameterRaw = "'{}{0:0.##}'"
+        };
+        var binding = BindingParser.Parse(xaml);
+        TestBinding(expected, binding);
+        PrintBinding(xaml, binding);
+    }
 
-        [TestMethod]
-        public void BindingTest_ConverterParameterValue()
+    [TestMethod]
+    public void BindingTest_ConverterParameterValue()
+    {
+        string xaml = @"{Binding Path=MyBoolValue, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=True}";
+        var expected = new BindingValue()
         {
-            string xaml = @"{Binding Path=MyBoolValue, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=True}";
-            var expected = new BindingValue()
-            {
-                Path = "MyBoolValue",
-                Converter = "BoolToVisibilityConverter",
-                ConverterParameter = "True",
-                ConverterParameterRaw = "True"
-            };
-            var binding = BindingParser.Parse(xaml);
-            TestBinding(expected, binding);
-            PrintBinding(xaml, binding);
-        }
+            Path = "MyBoolValue",
+            Converter = "BoolToVisibilityConverter",
+            ConverterParameter = "True",
+            ConverterParameterRaw = "True"
+        };
+        var binding = BindingParser.Parse(xaml);
+        TestBinding(expected, binding);
+        PrintBinding(xaml, binding);
+    }
 
-        [TestMethod]
-        public void BindingTest_ConverterParameterValue2()
+    [TestMethod]
+    public void BindingTest_ConverterParameterValue2()
+    {
+        string xaml = @"{Binding RangeMin, ElementName=RangeSelector, Converter={StaticResource StringFormatConverter}, ConverterParameter=\{0:0.##\}}";
+        var expected = new BindingValue()
         {
-            string xaml = @"{Binding RangeMin, ElementName=RangeSelector, Converter={StaticResource StringFormatConverter}, ConverterParameter=\{0:0.##\}}";
-            var expected = new BindingValue()
-            {
-                Path = "RangeMin",
-                ElementName = "RangeSelector",
-                Converter = "StringFormatConverter",
-                ConverterParameter = "{0:0.##}",
-                ConverterParameterRaw = "\\{0:0.##\\}"
-            };
-            var binding = BindingParser.Parse(xaml);
-            TestBinding(expected, binding);
-            PrintBinding(xaml, binding);
-        }
+            Path = "RangeMin",
+            ElementName = "RangeSelector",
+            Converter = "StringFormatConverter",
+            ConverterParameter = "{0:0.##}",
+            ConverterParameterRaw = "\\{0:0.##\\}"
+        };
+        var binding = BindingParser.Parse(xaml);
+        TestBinding(expected, binding);
+        PrintBinding(xaml, binding);
+    }
 
-        [TestMethod]
-        public void BindingTest_Path1()
+    [TestMethod]
+    public void BindingTest_Path1()
+    {
+        string xaml = @"{Binding ElementName=AutoCompileToggle, Path=IsOn}";
+        var expected = new BindingValue()
         {
-            string xaml = @"{Binding ElementName=AutoCompileToggle, Path=IsOn}";
-            var expected = new BindingValue()
-            {
-                ElementName = "AutoCompileToggle",
-                Path = "IsOn"
-            };
-            var binding = BindingParser.Parse(xaml);
-            TestBinding(expected, binding);
-            PrintBinding(xaml, binding);
-        }
+            ElementName = "AutoCompileToggle",
+            Path = "IsOn"
+        };
+        var binding = BindingParser.Parse(xaml);
+        TestBinding(expected, binding);
+        PrintBinding(xaml, binding);
+    }
 
-        [TestMethod]
-        public void BindingTest_Path2()
+    [TestMethod]
+    public void BindingTest_Path2()
+    {
+        string xaml = @"{Binding local:myprop, ElementName=AutoCompileToggle}";
+        var expected = new BindingValue()
         {
-            string xaml = @"{Binding local:myprop, ElementName=AutoCompileToggle}";
-            var expected = new BindingValue()
-            {
-                ElementName = "AutoCompileToggle",
-                Path = "local:myprop"
-            };
-            var binding = BindingParser.Parse(xaml);
-            TestBinding(expected, binding);
-            PrintBinding(xaml, binding);
-        }
+            ElementName = "AutoCompileToggle",
+            Path = "local:myprop"
+        };
+        var binding = BindingParser.Parse(xaml);
+        TestBinding(expected, binding);
+        PrintBinding(xaml, binding);
+    }
 
-        [TestMethod]
-        public void BindingTest_Path3()
+    [TestMethod]
+    public void BindingTest_Path3()
+    {
+        string xaml = @"{Binding Placeholder}";
+        var expected = new BindingValue()
         {
-            string xaml = @"{Binding Placeholder}";
-            var expected = new BindingValue()
-            {
-                Path = "Placeholder"
-            };
-            var binding = BindingParser.Parse(xaml);
-            TestBinding(expected, binding);
-            PrintBinding(xaml, binding);
-        }
+            Path = "Placeholder"
+        };
+        var binding = BindingParser.Parse(xaml);
+        TestBinding(expected, binding);
+        PrintBinding(xaml, binding);
+    }
 
-        [TestMethod]
-        public void BindingTest_Path4()
+    [TestMethod]
+    public void BindingTest_Path4()
+    {
+        string xaml = @"{Binding Path=Placeholder}";
+        var expected = new BindingValue()
         {
-            string xaml = @"{Binding Path=Placeholder}";
-            var expected = new BindingValue()
-            {
-                Path = "Placeholder"
-            };
-            var binding = BindingParser.Parse(xaml);
-            TestBinding(expected, binding);
-            PrintBinding(xaml, binding);
-        }
+            Path = "Placeholder"
+        };
+        var binding = BindingParser.Parse(xaml);
+        TestBinding(expected, binding);
+        PrintBinding(xaml, binding);
+    }
 
-        [TestMethod]
-        public void BindingTest_NoPath()
+    [TestMethod]
+    public void BindingTest_NoPath()
+    {
+        string xaml = @"{Binding}";
+        var expected = new BindingValue();
+        var binding = BindingParser.Parse(xaml);
+        TestBinding(expected, binding);
+        PrintBinding(xaml, binding);
+    }
+
+    [TestMethod]
+    public void BindingTest_DotPath()
+    {
+        string xaml = @"{Binding .}";
+        var expected = new BindingValue()
         {
-            string xaml = @"{Binding}";
-            var expected = new BindingValue();
-            var binding = BindingParser.Parse(xaml);
-            TestBinding(expected, binding);
-            PrintBinding(xaml, binding);
-        }
+            Path = "."
+        };
+        var binding = BindingParser.Parse(xaml);
+        TestBinding(expected, binding);
+        PrintBinding(xaml, binding);
+    }
 
-        [TestMethod]
-        public void BindingTest_DotPath()
+    [TestMethod]
+    public void BindingTest_DotPath2()
+    {
+        string xaml = @"{Binding Path=.}";
+        var expected = new BindingValue()
         {
-            string xaml = @"{Binding .}";
-            var expected = new BindingValue()
-            {
-                Path = "."
-            };
-            var binding = BindingParser.Parse(xaml);
-            TestBinding(expected, binding);
-            PrintBinding(xaml, binding);
-        }
+            Path = "."
+        };
+        var binding = BindingParser.Parse(xaml);
+        TestBinding(expected, binding);
+        PrintBinding(xaml, binding);
+    }
 
-        [TestMethod]
-        public void BindingTest_DotPath2()
+    [TestMethod]
+    public void BindingTest_DotPath_Converter()
+    {
+        string xaml = @"{Binding ., Converter={StaticResource BooleanToVisibilityConverter}}";
+        var expected = new BindingValue()
         {
-            string xaml = @"{Binding Path=.}";
-            var expected = new BindingValue()
-            {
-                Path = "."
-            };
-            var binding = BindingParser.Parse(xaml);
-            TestBinding(expected, binding);
-            PrintBinding(xaml, binding);
-        }
+            Path = ".",
+            Converter = "BooleanToVisibilityConverter",
+        };
+        var binding = BindingParser.Parse(xaml);
+        TestBinding(expected, binding);
+        PrintBinding(xaml, binding);
+    }
 
-        [TestMethod]
-        public void BindingTest_DotPath_Converter()
+    [TestMethod]
+    public void BindingTest_RelativeSource()
+    {
+        string xaml = @"{Binding DataContext, RelativeSource={RelativeSource Self}}";
+        var expected = new BindingValue()
         {
-            string xaml = @"{Binding ., Converter={StaticResource BooleanToVisibilityConverter}}";
-            var expected = new BindingValue()
-            {
-                Path = ".",
-                Converter = "BooleanToVisibilityConverter",
-            };
-            var binding = BindingParser.Parse(xaml);
-            TestBinding(expected, binding);
-            PrintBinding(xaml, binding);
-        }
+            RelativeSource = "{RelativeSource Self}",
+            Path = "DataContext"
+        };
+        var binding = BindingParser.Parse(xaml);
+        TestBinding(expected, binding);
+        PrintBinding(xaml, binding);
+    }
 
-        [TestMethod]
-        public void BindingTest_RelativeSource()
+    private static void TestBinding(BindingValue expected, BindingValue actual)
+    {
+        foreach (var prop in expected.GetType().GetProperties())
         {
-            string xaml = @"{Binding DataContext, RelativeSource={RelativeSource Self}}";
-            var expected = new BindingValue()
-            {
-                RelativeSource = "{RelativeSource Self}",
-                Path = "DataContext"
-            };
-            var binding = BindingParser.Parse(xaml);
-            TestBinding(expected, binding);
-            PrintBinding(xaml, binding);
+            Debug.WriteLine("Comparing {0} : {1} to {2}", prop.Name, prop.GetValue(expected), prop.GetValue(actual));
+            Assert.AreEqual(prop.GetValue(expected), prop.GetValue(actual),
+                $"{prop.Name} is not equal: expected {prop.GetValue(expected)}, actual: {prop.GetValue(actual)}");
         }
+    }
 
-        private static void TestBinding(BindingValue expected, BindingValue actual)
+    private static void PrintBinding(string xaml, BindingValue binding)
+    {
+        Debug.WriteLine(xaml);
+        Debug.WriteLine("--------------");
+
+        foreach (var prop in binding.GetType().GetProperties())
         {
-            foreach (var prop in expected.GetType().GetProperties())
-            {
-                Debug.WriteLine("Comparing {0} : {1} to {2}", prop.Name, prop.GetValue(expected), prop.GetValue(actual));
-                Assert.AreEqual(prop.GetValue(expected), prop.GetValue(actual),
-                    $"{prop.Name} is not equal: expected {prop.GetValue(expected)}, actual: {prop.GetValue(actual)}");
-            }
+            Debug.WriteLine("{0} : {1}", prop.Name, prop.GetValue(binding));
         }
-
-        private static void PrintBinding(string xaml, BindingValue binding)
-        {
-            Debug.WriteLine(xaml);
-            Debug.WriteLine("--------------");
-
-            foreach (var prop in binding.GetType().GetProperties())
-            {
-                Debug.WriteLine("{0} : {1}", prop.Name, prop.GetValue(binding));
-            }
-            Debug.WriteLine(binding.Converter);
-            Debug.WriteLine("--------------\n\n");
-        }
+        Debug.WriteLine(binding.Converter);
+        Debug.WriteLine("--------------\n\n");
     }
 }

@@ -104,7 +104,7 @@
       <Version>8.2.2</Version>
     </PackageReference>
     <PackageReference Include="GuiLabs.Language.Xml">
-      <Version>1.2.60</Version>
+      <Version>1.2.88</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
       <Version>3.4.0</Version>
