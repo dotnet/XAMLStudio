@@ -54,21 +54,27 @@
 
         <!--  TODO: Show Parent (if one) and current selected tree item  -->
         <Border Grid.Row="1" Visibility="{x:Bind ViewModel.HasParent, Mode=OneWay}">
-            <TextBlock>
+            <TextBlock Padding="24,4,12,4">
                 <Run Text="Parent: " />
                 <Run Text="{x:Bind views:Properties.GetElementInfo(ViewModel.SelectedElementParent), Mode=OneWay}" />
             </TextBlock>
         </Border>
 
-        <!--  TODO: Don't indent if no parent  -->
+        <!--  TODO: Don't indent if no parent, need to detect and exclude our internal XamlRoot parent...  -->
         <TextBlock Grid.Row="2"
-                   Margin="16,0,0,0"
+                   Margin="24,0,0,0"
+                   Padding="16,4,12,4"
+                   FontWeight="Bold"
                    Text="{x:Bind views:Properties.GetElementInfo(ViewModel.SelectedElement), Mode=OneWay}" />
 
-        <ItemsControl Grid.Row="3" ItemsSource="{x:Bind ViewModel.PropertyValues, Mode=OneWay}">
+        <ItemsControl Grid.Row="3"
+                      Margin="12,2,0,0"
+                      ItemsSource="{x:Bind ViewModel.PropertyValues, Mode=OneWay}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="model:PropertyInfo">
-                    <Grid>
+                    <Grid Padding="12,6,8,6"
+                          BorderBrush="{ThemeResource Brush-Blue-Dark-2}"
+                          BorderThickness="0,0,0,1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
