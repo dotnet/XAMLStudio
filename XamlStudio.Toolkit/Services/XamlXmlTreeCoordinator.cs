@@ -149,6 +149,8 @@ public class XamlXmlTreeCoordinator
 
     private BidirectionalDictionary<IXmlElementSyntax, DependencyObject> _treeMapper = new();
 
+    public int Count => _treeMapper.Count;
+
     public XamlXmlTreeCoordinator()
     {
     }
@@ -168,6 +170,13 @@ public class XamlXmlTreeCoordinator
     {
         _treeMapper.Clear();
         ////_treeMapper.Add(docRoot, visualRoot);
+        
+        /* --- NOTES ---
+         * 
+         * We do make some assumptions that assume the order of children within the tree will be consistent.
+         * i.e. the first and second child listed in XML will be the first and second child in the Visual Tree child collection.
+         * 
+         */
 
         // Map entire Xml Tree
         foreach (var child in docRoot.DescendantsAndSelf())
@@ -219,7 +228,8 @@ public class XamlXmlTreeCoordinator
         while (queue.Count > 0)
         {
             var node = queue.Dequeue();
-            if (DoElementsMatch(node, findElement))
+            if (!_treeMapper.ContainsValue(node) 
+                && DoElementsMatch(node, findElement))
             {
                 return node;
             }
@@ -227,7 +237,9 @@ public class XamlXmlTreeCoordinator
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(node); i++)
             {
                 var child = VisualTreeHelper.GetChild(node, i);
-                if (!explored.Contains(child) && !_treeMapper.ContainsValue(child))
+
+                if (!explored.Contains(child) 
+                    && !_treeMapper.ContainsValue(child))
                 {
                     explored.Add(child);
                     queue.Enqueue(child);
