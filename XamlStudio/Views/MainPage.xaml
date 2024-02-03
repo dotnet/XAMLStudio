@@ -74,6 +74,11 @@
                          Tag="DEBUG">
                 <lcontrols:AppFontIcon IconName="Bug" />
             </ListBoxItem>
+            <ListBoxItem x:Uid="MainPage_NavMenu_Properties"
+                         IsEnabled="{x:Bind models:DocumentType.Document.Equals(ViewModel.ActiveFile.DocumentType), Mode=OneWay}"
+                         Tag="PROPERTIES">
+                <lcontrols:AppFontIcon IconName="Properties" />
+            </ListBoxItem>
             <ListBoxItem x:Uid="MainPage_NavMenu_Toolbox" Tag="TOOLBOX">
                 <lcontrols:AppFontIcon IconName="Work" />
             </ListBoxItem>
@@ -114,6 +119,9 @@
                 </controls:Case>
                 <controls:Case Value="DEBUG">
                     <local:Binding MainViewModel="{x:Bind ViewModel}" />
+                </controls:Case>
+                <controls:Case Value="PROPERTIES">
+                    <local:Properties MainViewModel="{x:Bind ViewModel}" />
                 </controls:Case>
                 <controls:Case Value="TOOLBOX">
                     <local:Toolbox MainViewModel="{x:Bind ViewModel}" />

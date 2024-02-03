@@ -347,9 +347,15 @@ public sealed partial class Document : UserControl,
                 // Add element to main panel
                 targetPanel.Children.Add(element as UIElement);
             }
-        }
 
-        ViewModel.HasCompiled = true;
+            ViewModel.HasCompiled = true;
+
+            WeakReferenceMessenger.Default.Send<XamlRenderedMessage>(new(result));
+        }
+        else
+        {
+            ViewModel.HasCompiled = true;
+        }
     }
 
     private ThreadPoolTimer _autocompileTimer;
@@ -599,7 +605,11 @@ public sealed partial class Document : UserControl,
 
         Breadcrumbs.Clear();
 
-        foreach (var node in _xmlRoot.FindNode(index + 1).AncestorNodesAndSelf())
+        var current = _xmlRoot.FindNode(index + 1);
+
+        WeakReferenceMessenger.Default.Send<EditorSelectedElementMessage>(new(current.ParentElement));
+
+        foreach (var node in current.AncestorNodesAndSelf())
         {
             if (node is IXmlElementSyntax element)
             {

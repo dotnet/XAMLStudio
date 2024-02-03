@@ -114,6 +114,11 @@ namespace XamlStudio.Views
                             active = true;
                             ViewModel.OpenActivityPanelCommand.Execute("DEBUG");
                             break;
+                        // Live Properties
+                        case VirtualKey.P:
+                            active = true;
+                            ViewModel.OpenActivityPanelCommand.Execute("PROPERTIES");
+                            break;
                         // Open Toolbox
                         case VirtualKey.T:
                             active = true;

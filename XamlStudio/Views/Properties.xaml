@@ -1,0 +1,85 @@
+﻿<Page x:Class="XamlStudio.Views.Properties"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:model="using:XamlStudio.Models"
+      xmlns:views="using:XamlStudio.Views"
+      IsEnabled="{x:Bind model:DocumentType.Document.Equals(MainViewModel.ActiveFile.DocumentType), Mode=OneWay}"
+      mc:Ignorable="d">
+
+    <Page.Resources>
+        <Style x:Key="ListViewItemContainerWideStyle" TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource Brush-Blue-Dark-1}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="54" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <!--  TODO: Should make this a grid style and collapse?  -->
+        <Border Margin="0,0,-12,0"
+                Padding="0,12,0,0"
+                Style="{StaticResource VSCodeAppBarHeaderStyle}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Uid="Properties_Header" Style="{StaticResource VSCodeAppBarHeaderTextStyle}" />
+                <!--  TODO: Probably should have the 'select element' tool here too?  -->
+                <!--<ToggleSwitch x:Name="PowerBindingToggle"
+                              x:Uid="Debug_PowerBindingToggle"
+                              Grid.Column="1"
+                              Width="92"
+                              Height="32"
+                              IsOn="{x:Bind services:SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value, Mode=OneWay}"
+                              Tag="IsPowerBindingDebuggingEnabled">
+                    <i:Interaction.Behaviors>
+                        <ic:EventTriggerBehavior EventName="Toggled">
+                            <ic:InvokeCommandAction Command="{x:Bind MainViewModel.SettingsViewModel.SwitchToggleCommand}" />
+                            <ic:ChangePropertyAction PropertyName="HasCompiled"
+                                                     TargetObject="{x:Bind MainViewModel.ActiveDocumentViewModel}"
+                                                     Value="false" />
+                        </ic:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                </ToggleSwitch>-->
+            </Grid>
+        </Border>
+
+        <!--  TODO: Show Parent (if one) and current selected tree item  -->
+        <Border Grid.Row="1" Visibility="{x:Bind ViewModel.HasParent, Mode=OneWay}">
+            <TextBlock>
+                <Run Text="Parent: " />
+                <Run Text="{x:Bind views:Properties.GetElementInfo(ViewModel.SelectedElementParent), Mode=OneWay}" />
+            </TextBlock>
+        </Border>
+
+        <!--  TODO: Don't indent if no parent  -->
+        <TextBlock Grid.Row="2"
+                   Margin="16,0,0,0"
+                   Text="{x:Bind views:Properties.GetElementInfo(ViewModel.SelectedElement), Mode=OneWay}" />
+
+        <ItemsControl Grid.Row="3" ItemsSource="{x:Bind ViewModel.PropertyValues, Mode=OneWay}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="model:PropertyInfo">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Bind Name}" ToolTipService.ToolTip="{x:Bind Type.FullName}" />
+                        <TextBlock Grid.Column="1" Text="{Binding Value}" />
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!--  TODO: Have message if no element is selected yet (or stale?)  -->
+    </Grid>
+</Page>

@@ -154,13 +154,14 @@ namespace XamlStudio.Controls
         /// </summary>
         private static readonly Dictionary<IconGlyphNames, string> IconMapping = new Dictionary<IconGlyphNames, string>()
         {
-            {IconGlyphNames.Search,   "\uE721"},
-            {IconGlyphNames.Work,     "\uE821"},
-            {IconGlyphNames.Copy,     "\uE8C8"},
-            {IconGlyphNames.Photo2,   "\uEB9F"},
-            {IconGlyphNames.Bug,      "\uEBE8"},
-            {IconGlyphNames.Wheel,    "\uEE94"},
-            {IconGlyphNames.Settings, "\uE713"},
+            {IconGlyphNames.Search,     "\uE721"},
+            {IconGlyphNames.Work,       "\uE821"},
+            {IconGlyphNames.Copy,       "\uE8C8"},
+            {IconGlyphNames.Photo2,     "\uEB9F"},
+            {IconGlyphNames.Bug,        "\uEBE8"},
+            {IconGlyphNames.Wheel,      "\uEE94"},
+            {IconGlyphNames.Settings,   "\uE713"},
+            {IconGlyphNames.Properties, "\uE90F"},
         };
     }
 
@@ -175,7 +176,8 @@ namespace XamlStudio.Controls
         Photo2,
         Bug,
         Wheel,
-        Settings
+        Settings,
+        Properties,
     }
 
     #endregion

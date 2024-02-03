@@ -888,4 +888,16 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>Choose a folder to get started with a workspace and access additional features.</value>
     <comment>Text show in Workspace Folder panel when there isn't an open Workspace folder.</comment>
   </data>
+  <data name="Properties_Header.Text" xml:space="preserve">
+    <value>PROPERTIES</value>
+    <comment>Header text for Live Properties Panel</comment>
+  </data>
+  <data name="MainPage_NavMenu_Properties.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Live Properties</value>
+    <comment>Accessibility Name for Live Properties Activity</comment>
+  </data>
+  <data name="MainPage_NavMenu_Properties.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Inspect Live Properties (Ctrl+Shift+P)</value>
+    <comment>Live Properties ActivityBar Tooltip</comment>
+  </data>
 </root>

@@ -217,6 +217,11 @@
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
     <Compile Include="Models\FolderLocation.cs" />
     <Compile Include="Models\Messages.cs" />
+    <Compile Include="Models\PropertyInfo.cs" />
+    <Compile Include="ViewModels\PropertiesViewModel.cs" />
+    <Compile Include="Views\Properties.xaml.cs">
+      <DependentUpon>Properties.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\StorageFileThumbnailConverter.cs" />
     <Compile Include="Models\DataContext.cs" />
     <Compile Include="Models\FileBackedDocument.cs" />
@@ -326,6 +331,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Views\Properties.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Toolbox.xaml">
       <Generator>MSBuild:Compile</Generator>

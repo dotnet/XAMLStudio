@@ -1,5 +1,6 @@
 ﻿
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using Microsoft.Language.Xml;
 using XamlStudio.Toolkit.Models;
 using XamlStudio.ViewModels;
 
@@ -27,9 +28,21 @@ public record RenderXamlMessage();
 /// <param name="Context"><see cref="XamlRenderResultContext"/></param>
 public record XamlCompiledMessage(XamlRenderResultContext Context);
 
+/// <summary>
+/// Sent after a successful render cycle started with <see cref="RenderXamlMessage"/> after <see cref="XamlCompiledMessage"/>.
+/// </summary>
+/// <param name="Context"><see cref="XamlRenderResultContext"/></param>
+public record XamlRenderedMessage(XamlRenderResultContext Context);
+
 public record ActiveDocumentViewModelChangedMessage(DocumentViewModel PreviousDocVM, DocumentViewModel NewDocVM);
 
 public record DataSourceSetInFileMessage(string? FileName);
+
+/// <summary>
+/// Sent when the caret is moved within the document and provides the XmlDocument Element which corresponds to that location.
+/// </summary>
+/// <param name="Element"><see cref="IXmlElementSyntax"/></param>
+public record EditorSelectedElementMessage(IXmlElementSyntax Element);
 
 /// <summary>
 /// Replies with true if the shortcut was handled.

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Language.Xml;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -22,7 +23,7 @@ public class XamlXmlTreeCoordinator
     /// Dictionary that maps a string name that will be seen in XML for an Attribute of a property to a DependencyProperty.
     /// These are used to help identify and align Visual tree elements to their XML counterparts.
     /// </summary>
-    private static readonly Dictionary<string, DependencyProperty> _matchableProperties = new()
+    public static ReadOnlyDictionary<string, DependencyProperty> AttributeNameToDependencyProperty { get; } = new(new Dictionary<string, DependencyProperty>()
     {
         { nameof(UIElement.AccessKey), UIElement.AccessKeyProperty },
         { nameof(UIElement.AccessKeyScopeOwner), UIElement.AccessKeyScopeOwnerProperty },
@@ -86,7 +87,7 @@ public class XamlXmlTreeCoordinator
         { nameof(FrameworkElement.Width), FrameworkElement.WidthProperty },
         // TODO: Should do 'Background' but that can be Control.BackgroundProperty or Panel.BackgroundProperty, this may need to be a list of DependencyProperty(s) to try and fetch...
         // Should handle 'Content' of ContentControl
-    };
+    });
 
     /// <summary>
     /// These are special helpers which can map short-hand values in XML text like Margin="4" to the actual value of the struct or value in the Framework, for instance in the Margin case Thickness. String input should not be empty.
@@ -267,7 +268,7 @@ public class XamlXmlTreeCoordinator
         foreach (var attr in xml.Attributes)
         {
             // TODO: Should we check if attr.Value is empty that there's no value/default for the element?
-            if (_matchableProperties.TryGetValue(attr.Name, out var depProp) 
+            if (AttributeNameToDependencyProperty.TryGetValue(attr.Name, out var depProp) 
                 && !string.IsNullOrEmpty(attr.Value))
             {
                 // TODO: Check if xml value is binding, if so check if the visual element has a BindingExpression
