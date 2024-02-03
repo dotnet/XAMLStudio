@@ -36,7 +36,11 @@ public sealed partial class Properties : Page,
         WeakReferenceMessenger.Default.UnregisterAll(this);
         WeakReferenceMessenger.Default.RegisterAll(this);
 
-        // TODO: We need to check if there's a render and intialize our existing state...
+        // Check if there's a render and initialize our existing state
+        if (MainViewModel.ActiveDocumentViewModel.HasCompiled)
+        {
+            Receive(new XamlRenderedMessage(MainViewModel.ActiveDocumentViewModel.Result));
+        }
     }
 
     private void Properties_Unloaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -97,7 +101,7 @@ public sealed partial class Properties : Page,
 
         var name = element.ReadLocalValue(FrameworkElement.NameProperty);
 
-        return (name != DependencyProperty.UnsetValue) ? $"\"{name}\" " : "" +
-            element.GetType().Name;
+        return ((name != DependencyProperty.UnsetValue) ? $"\"{name}\" " : "") +
+            "<" + element.GetType().Name + ">";
     } 
 }
