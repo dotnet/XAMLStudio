@@ -13,6 +13,10 @@
         <Style x:Key="ListViewItemContainerWideStyle" TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         </Style>
+
+        <CollectionViewSource x:Name="PropertyViewSource"
+                              IsSourceGrouped="True"
+                              Source="{x:Bind ViewModel.PropertyValues, Mode=OneWay}" />
     </Page.Resources>
 
     <Grid Background="{ThemeResource Brush-Blue-Dark-1}">
@@ -68,8 +72,18 @@
                    Text="{x:Bind views:Properties.GetElementInfo(ViewModel.SelectedElement), Mode=OneWay}" />
 
         <ItemsControl Grid.Row="3"
-                      Margin="12,2,0,0"
-                      ItemsSource="{x:Bind ViewModel.PropertyValues, Mode=OneWay}">
+                      Margin="24,8,0,0"
+                      ItemsSource="{x:Bind PropertyViewSource.View, Mode=OneWay}">
+            <ItemsControl.GroupStyle>
+                <GroupStyle HidesIfEmpty="True">
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock FontWeight="Bold" Text="{Binding Key}" />
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </ItemsControl.GroupStyle>
+
             <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="model:PropertyInfo">
                     <Grid Padding="12,6,8,6"
@@ -80,7 +94,10 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{x:Bind Name}" ToolTipService.ToolTip="{x:Bind Type.FullName}" />
-                        <TextBlock Grid.Column="1" Text="{Binding Value}" />
+                        <!--  TODO: Have a template selector here to make editing certain values easier...  -->
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding Value}"
+                                 TextChanged="PropertyValue_TextChanged" />
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

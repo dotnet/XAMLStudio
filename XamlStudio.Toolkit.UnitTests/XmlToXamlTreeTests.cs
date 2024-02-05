@@ -3,9 +3,11 @@ using CommunityToolkit.WinUI;
 using Microsoft.Language.Xml;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
+using Windows.UI.Xaml.Media;
 using XamlStudio.Toolkit.Services;
 
 namespace XamlStudio.Toolkit.UnitTests;
@@ -30,8 +32,7 @@ public class XmlToXamlTreeTests : VisualUITestBase
                     </Style>
                 </Page.Resources>
 
-                <Grid Background="Blue"
-                      x:Name="RootGrid">
+                <Grid x:Name="RootGrid">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="54" />
                         <RowDefinition Height="Auto" />
@@ -54,13 +55,11 @@ public class XmlToXamlTreeTests : VisualUITestBase
             XamlXmlTreeCoordinator coordinator = new();
             coordinator.Initialize(xml, fwe);
 
-            // TODO: Make some assertions...
             var grid = fwe.FindChild("RootGrid");
             Assert.IsTrue(coordinator.TryGetXmlElement(grid, out var gridNode));
             if (gridNode is IXmlElementSyntax gridElement)
             {
                 Assert.AreEqual("RootGrid", gridElement.GetAttributeValue("Name", "x"));
-                Assert.AreEqual("Blue", gridElement.GetAttributeValue("Background"));
             }
             else
             {
@@ -105,8 +104,7 @@ public class XmlToXamlTreeTests : VisualUITestBase
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     mc:Ignorable="d"
-                    d:DataContext="{d:DesignData /SampleData/XAMLing.json, Type=local:XamlingInfo}"
-                    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"><!-- Note: d:DesignData is crashing designer currently, opened issue. -->
+                    d:DataContext="{d:DesignData /SampleData/XAMLing.json, Type=local:XamlingInfo}">
 
                     <StackPanel>
                         <TextBlock FontSize="36">
@@ -152,6 +150,74 @@ public class XmlToXamlTreeTests : VisualUITestBase
             Assert.AreEqual(sp2Node, sp2NodeRetrieved, "Second StackPanel XML Element didn't match.");
 
             Assert.AreEqual(7, coordinator.Count, "Expected 7 elements to be mapped.");
+
+            await UnloadTestContentAsync(fwe);
+        });
+    }
+
+    [TestMethod]
+    public async Task ColorConversion_XmlToXamlTest()
+    {
+        await EnqueueAsync(async () =>
+        {
+            var xaml =
+            """
+            <Page xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+                <StackPanel>
+                    <Border Background="Blue"/>
+                    <Border Background="#FFFF0000"/>
+                    <Border Background="#0000FF"/>
+                </StackPanel>
+            </Page>
+            """;
+
+            var fwe = XamlReader.Load(xaml) as FrameworkElement;
+            var xml = Parser.ParseText(xaml);
+
+            await LoadTestContentAsync(fwe);
+
+            XamlXmlTreeCoordinator coordinator = new();
+            coordinator.Initialize(xml, fwe);
+
+            var sp = fwe.FindChild<StackPanel>();
+            Assert.IsTrue(coordinator.TryGetXmlElement(sp, out var spNode));
+            if (spNode is not IXmlElementSyntax)
+            {
+                Assert.Fail("Xml Node not an Element for StackPanel");
+            }
+
+            var colorMatches = new[]
+            {
+                Colors.Blue,
+                Color.FromArgb(255, 255, 0, 0),
+                Color.FromArgb(255, 0, 0, 255),
+            };
+            var i = 0;
+            var j = 0;
+
+            Assert.AreEqual(3, sp.Children.Count, "Expected StackPanel to have 3 children");
+            foreach (var child in sp.Children)
+            {
+                i = xaml.IndexOf("<Border", i) + 1;
+                var node = xml.FindNode(i).ParentElement;
+                if (node is IXmlElementSyntax nodeElement)
+                {
+                    Assert.IsTrue(coordinator.TryGetVisualElement(nodeElement, out var element));
+                    if (element is Border border
+                        && element == child)
+                    {
+                        Assert.AreEqual(colorMatches[j++], (border.Background as SolidColorBrush).Color, $"Unexpected color for Border[{j-1}]");
+                    }
+                    else 
+                    {
+                        Assert.Fail("Unexpected Child Border element");
+                    }
+                }
+            }
+
+            Assert.AreEqual(5, coordinator.Count, "Expected 5 elements to be mapped.");
 
             await UnloadTestContentAsync(fwe);
         });

@@ -2,14 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
+using System.Runtime.Serialization;
 using System.Xml.Linq;
-using Windows.UI.Composition;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
 
 namespace XamlStudio.Toolkit.Services;
@@ -23,128 +20,163 @@ public class XamlXmlTreeCoordinator
     /// Dictionary that maps a string name that will be seen in XML for an Attribute of a property to a DependencyProperty.
     /// These are used to help identify and align Visual tree elements to their XML counterparts.
     /// </summary>
-    public static ReadOnlyDictionary<string, DependencyProperty> AttributeNameToDependencyProperty { get; } = new(new Dictionary<string, DependencyProperty>()
+    public static ReadOnlyDictionary<Type, ReadOnlyDictionary<string, DependencyProperty>> AttributeNameToDependencyProperty { get; } = new(new Dictionary<Type, ReadOnlyDictionary<string, DependencyProperty>>()
     {
-        { nameof(UIElement.AccessKey), UIElement.AccessKeyProperty },
-        { nameof(UIElement.AccessKeyScopeOwner), UIElement.AccessKeyScopeOwnerProperty },
-        { nameof(UIElement.AllowDrop), UIElement.AllowDropProperty },
-        { nameof(UIElement.CacheMode), UIElement.CacheModeProperty },
-        { nameof(UIElement.CanBeScrollAnchor), UIElement.CanBeScrollAnchorProperty },
-        { nameof(UIElement.CanDrag), UIElement.CanDragProperty },
-        { nameof(UIElement.CompositeMode), UIElement.CanBeScrollAnchorProperty },
-        { nameof(UIElement.ContextFlyout), UIElement.ContextFlyoutProperty },
-        { nameof(UIElement.ExitDisplayModeOnAccessKeyInvoked), UIElement.ExitDisplayModeOnAccessKeyInvokedProperty },
-        { nameof(UIElement.HighContrastAdjustment), UIElement.HighContrastAdjustmentProperty },
-        { nameof(UIElement.IsAccessKeyScope), UIElement.IsAccessKeyScopeProperty },
-        { nameof(UIElement.IsDoubleTapEnabled), UIElement.IsDoubleTapEnabledProperty },
-        { nameof(UIElement.IsHitTestVisible), UIElement.IsHitTestVisibleProperty },
-        { nameof(UIElement.IsHoldingEnabled), UIElement.IsHoldingEnabledProperty },
-        { nameof(UIElement.IsRightTapEnabled), UIElement.IsRightTapEnabledProperty },
-        { nameof(UIElement.IsTapEnabled), UIElement.IsTapEnabledProperty },
-        { nameof(UIElement.KeyboardAcceleratorPlacementMode), UIElement.KeyboardAcceleratorPlacementModeProperty },
-        { nameof(UIElement.KeyboardAcceleratorPlacementTarget), UIElement.KeyboardAcceleratorPlacementTargetProperty },
-        { nameof(UIElement.KeyTipHorizontalOffset), UIElement.KeyTipHorizontalOffsetProperty },
-        { nameof(UIElement.KeyTipPlacementMode), UIElement.KeyTipPlacementModeProperty },
-        { nameof(UIElement.KeyTipTarget), UIElement.KeyTipTargetProperty },
-        { nameof(UIElement.KeyTipVerticalOffset), UIElement.KeyTipVerticalOffsetProperty },
-        { nameof(UIElement.Lights), UIElement.LightsProperty },
-        { nameof(UIElement.ManipulationMode), UIElement.ManipulationModeProperty },
-        { nameof(UIElement.Opacity), UIElement.OpacityProperty },
-        { nameof(UIElement.PointerCaptures), UIElement.PointerCapturesProperty },
-        { nameof(UIElement.Projection), UIElement.ProjectionProperty },
-        { nameof(UIElement.RenderTransform), UIElement.RenderTransformProperty },
-        { nameof(UIElement.RenderTransformOrigin), UIElement.RenderTransformOriginProperty },
-        { nameof(UIElement.Shadow), UIElement.ShadowProperty },
-        { nameof(UIElement.Transform3D), UIElement.Transform3DProperty },
-        { nameof(UIElement.Transitions), UIElement.TransitionsProperty },
-        { nameof(UIElement.UseLayoutRounding), UIElement.UseLayoutRoundingProperty },
-        { nameof(UIElement.Visibility), UIElement.VisibilityProperty },
-        { nameof(UIElement.XYFocusDownNavigationStrategy), UIElement.XYFocusDownNavigationStrategyProperty },
-        { nameof(UIElement.XYFocusKeyboardNavigation), UIElement.XYFocusKeyboardNavigationProperty },
-        { nameof(UIElement.XYFocusLeftNavigationStrategy), UIElement.XYFocusLeftNavigationStrategyProperty },
-        { nameof(UIElement.XYFocusRightNavigationStrategy), UIElement.XYFocusRightNavigationStrategyProperty },
-        { nameof(UIElement.XYFocusUpNavigationStrategy), UIElement.XYFocusUpNavigationStrategyProperty },
-        // Actual Height/Width (not set)
-        { nameof(FrameworkElement.AllowFocusOnInteraction), FrameworkElement.AllowFocusOnInteractionProperty },
-        { nameof(FrameworkElement.AllowFocusWhenDisabled), FrameworkElement.AllowFocusWhenDisabledProperty },
-        // DataContext... too complex?
-        { nameof(FrameworkElement.FlowDirection), FrameworkElement.FlowDirectionProperty },
-        { nameof(FrameworkElement.FocusVisualMargin), FrameworkElement.FocusVisualMarginProperty },
-        // TODO: FocusVisual... Brushes
-        { nameof(FrameworkElement.Height), FrameworkElement.HeightProperty },
-        { nameof(FrameworkElement.HorizontalAlignment), FrameworkElement.HorizontalAlignmentProperty },
-        { nameof(FrameworkElement.Language), FrameworkElement.LanguageProperty },
-        { nameof(FrameworkElement.Margin), FrameworkElement.MarginProperty },
-        { nameof(FrameworkElement.MaxHeight), FrameworkElement.MaxHeightProperty },
-        { nameof(FrameworkElement.MaxWidth), FrameworkElement.MaxWidthProperty },
-        { nameof(FrameworkElement.MinHeight), FrameworkElement.MinHeightProperty },
-        { nameof(FrameworkElement.MinWidth), FrameworkElement.MinWidthProperty },
-        // Note: Name is special cased below due to XML x:Name usage...
-        { nameof(FrameworkElement.RequestedTheme), FrameworkElement.RequestedThemeProperty },
-        // Style... probably need special case???
-        { nameof(FrameworkElement.Tag), FrameworkElement.TagProperty },
-        { nameof(FrameworkElement.VerticalAlignment), FrameworkElement.VerticalAlignmentProperty },
-        { nameof(FrameworkElement.Width), FrameworkElement.WidthProperty },
-        // TODO: Should do 'Background' but that can be Control.BackgroundProperty or Panel.BackgroundProperty, this may need to be a list of DependencyProperty(s) to try and fetch...
-        // Should handle 'Content' of ContentControl
+        { typeof(UIElement), new(new Dictionary<string, DependencyProperty>()
+        {
+            { nameof(UIElement.AccessKey), UIElement.AccessKeyProperty },
+            { nameof(UIElement.AccessKeyScopeOwner), UIElement.AccessKeyScopeOwnerProperty },
+            { nameof(UIElement.AllowDrop), UIElement.AllowDropProperty },
+            { nameof(UIElement.CacheMode), UIElement.CacheModeProperty },
+            { nameof(UIElement.CanBeScrollAnchor), UIElement.CanBeScrollAnchorProperty },
+            { nameof(UIElement.CanDrag), UIElement.CanDragProperty },
+            { nameof(UIElement.CompositeMode), UIElement.CanBeScrollAnchorProperty },
+            { nameof(UIElement.ContextFlyout), UIElement.ContextFlyoutProperty },
+            { nameof(UIElement.ExitDisplayModeOnAccessKeyInvoked), UIElement.ExitDisplayModeOnAccessKeyInvokedProperty },
+            { nameof(UIElement.HighContrastAdjustment), UIElement.HighContrastAdjustmentProperty },
+            { nameof(UIElement.IsAccessKeyScope), UIElement.IsAccessKeyScopeProperty },
+            { nameof(UIElement.IsDoubleTapEnabled), UIElement.IsDoubleTapEnabledProperty },
+            { nameof(UIElement.IsHitTestVisible), UIElement.IsHitTestVisibleProperty },
+            { nameof(UIElement.IsHoldingEnabled), UIElement.IsHoldingEnabledProperty },
+            { nameof(UIElement.IsRightTapEnabled), UIElement.IsRightTapEnabledProperty },
+            { nameof(UIElement.IsTapEnabled), UIElement.IsTapEnabledProperty },
+            { nameof(UIElement.KeyboardAcceleratorPlacementMode), UIElement.KeyboardAcceleratorPlacementModeProperty },
+            { nameof(UIElement.KeyboardAcceleratorPlacementTarget), UIElement.KeyboardAcceleratorPlacementTargetProperty },
+            { nameof(UIElement.KeyTipHorizontalOffset), UIElement.KeyTipHorizontalOffsetProperty },
+            { nameof(UIElement.KeyTipPlacementMode), UIElement.KeyTipPlacementModeProperty },
+            { nameof(UIElement.KeyTipTarget), UIElement.KeyTipTargetProperty },
+            { nameof(UIElement.KeyTipVerticalOffset), UIElement.KeyTipVerticalOffsetProperty },
+            { nameof(UIElement.Lights), UIElement.LightsProperty },
+            { nameof(UIElement.ManipulationMode), UIElement.ManipulationModeProperty },
+            { nameof(UIElement.Opacity), UIElement.OpacityProperty },
+            { nameof(UIElement.PointerCaptures), UIElement.PointerCapturesProperty },
+            { nameof(UIElement.Projection), UIElement.ProjectionProperty },
+            { nameof(UIElement.RenderTransform), UIElement.RenderTransformProperty },
+            { nameof(UIElement.RenderTransformOrigin), UIElement.RenderTransformOriginProperty },
+            { nameof(UIElement.Shadow), UIElement.ShadowProperty },
+            { nameof(UIElement.Transform3D), UIElement.Transform3DProperty },
+            { nameof(UIElement.Transitions), UIElement.TransitionsProperty },
+            { nameof(UIElement.UseLayoutRounding), UIElement.UseLayoutRoundingProperty },
+            { nameof(UIElement.Visibility), UIElement.VisibilityProperty },
+            { nameof(UIElement.XYFocusDownNavigationStrategy), UIElement.XYFocusDownNavigationStrategyProperty },
+            { nameof(UIElement.XYFocusKeyboardNavigation), UIElement.XYFocusKeyboardNavigationProperty },
+            { nameof(UIElement.XYFocusLeftNavigationStrategy), UIElement.XYFocusLeftNavigationStrategyProperty },
+            { nameof(UIElement.XYFocusRightNavigationStrategy), UIElement.XYFocusRightNavigationStrategyProperty },
+            { nameof(UIElement.XYFocusUpNavigationStrategy), UIElement.XYFocusUpNavigationStrategyProperty },
+        })},
+        { typeof(Control), new(new Dictionary<string, DependencyProperty>()
+        {
+            { nameof(Control.Background), Control.BackgroundProperty },
+            { nameof(Control.BackgroundSizing), Control.BackgroundSizingProperty },
+            { nameof(Control.BorderBrush), Control.BorderBrushProperty },
+            { nameof(Control.BorderThickness), Control.BorderThicknessProperty },
+            { nameof(Control.CharacterSpacing), Control.CharacterSpacingProperty },
+            { nameof(Control.CornerRadius), Control.CornerRadiusProperty },
+            { nameof(Control.ElementSoundMode), Control.ElementSoundModeProperty },
+            { nameof(Control.FocusState), Control.FocusStateProperty },
+            { nameof(Control.FontFamily), Control.FontFamilyProperty },
+            { nameof(Control.FontSize), Control.FontSizeProperty },
+            { nameof(Control.FontStretch), Control.FontStretchProperty },
+            { nameof(Control.FontStyle), Control.FontStyleProperty },
+            { nameof(Control.FontWeight), Control.FontWeightProperty },
+            { nameof(Control.Foreground), Control.ForegroundProperty },
+            { nameof(Control.HorizontalContentAlignment), Control.HorizontalContentAlignmentProperty },
+            { nameof(Control.IsEnabled), Control.IsEnabledProperty },
+            { nameof(Control.IsFocusEngaged), Control.IsFocusEngagedProperty },
+            { nameof(Control.IsFocusEngagementEnabled), Control.IsFocusEngagementEnabledProperty },
+            { nameof(Control.IsTabStop), Control.IsTabStopProperty },
+            // TODO: IsTemplateFocus/IsTextScaleFactor
+            { nameof(Control.Padding), Control.PaddingProperty },
+            // TODO: RequiresPointer
+            { nameof(Control.TabIndex), Control.TabIndexProperty },
+            // TODO: TabNavigation/UseSystemFocusVisuals
+            { nameof(Control.VerticalContentAlignment), Control.VerticalContentAlignmentProperty },
+            // TODO: XYFocus
+        })},
+        { typeof(FrameworkElement), new(new Dictionary<string, DependencyProperty>()
+        {
+            // Actual Height/Width (not set)
+            { nameof(FrameworkElement.AllowFocusOnInteraction), FrameworkElement.AllowFocusOnInteractionProperty },
+            { nameof(FrameworkElement.AllowFocusWhenDisabled), FrameworkElement.AllowFocusWhenDisabledProperty },
+            // DataContext... too complex?
+            { nameof(FrameworkElement.FlowDirection), FrameworkElement.FlowDirectionProperty },
+            { nameof(FrameworkElement.FocusVisualMargin), FrameworkElement.FocusVisualMarginProperty },
+            // TODO: FocusVisual... Brushes
+            { nameof(FrameworkElement.Height), FrameworkElement.HeightProperty },
+            { nameof(FrameworkElement.HorizontalAlignment), FrameworkElement.HorizontalAlignmentProperty },
+            { nameof(FrameworkElement.Language), FrameworkElement.LanguageProperty },
+            { nameof(FrameworkElement.Margin), FrameworkElement.MarginProperty },
+            { nameof(FrameworkElement.MaxHeight), FrameworkElement.MaxHeightProperty },
+            { nameof(FrameworkElement.MaxWidth), FrameworkElement.MaxWidthProperty },
+            { nameof(FrameworkElement.MinHeight), FrameworkElement.MinHeightProperty },
+            { nameof(FrameworkElement.MinWidth), FrameworkElement.MinWidthProperty },
+            // Note: Name is special cased below due to XML x:Name usage...
+            { nameof(FrameworkElement.RequestedTheme), FrameworkElement.RequestedThemeProperty },
+            // Style... probably need special case???
+            { nameof(FrameworkElement.Tag), FrameworkElement.TagProperty },
+            { nameof(FrameworkElement.VerticalAlignment), FrameworkElement.VerticalAlignmentProperty },
+            { nameof(FrameworkElement.Width), FrameworkElement.WidthProperty },
+        })},
+        { typeof(Grid), new (new Dictionary<string, DependencyProperty>()
+        {
+            { nameof(Grid.BackgroundSizing), Grid.BackgroundSizingProperty },
+            { nameof(Grid.BorderBrush), Grid.BorderBrushProperty },
+            { nameof(Grid.BorderThickness), Grid.BorderThicknessProperty },
+            { nameof(Grid.ColumnSpacing), Grid.ColumnSpacingProperty },
+            { nameof(Grid.CornerRadius), Grid.CornerRadiusProperty },
+            { nameof(Grid.Padding), Grid.PaddingProperty },
+            { nameof(Grid.RowSpacing), Grid.RowSpacingProperty },
+        })},
+        { typeof(Panel), new (new Dictionary<string, DependencyProperty>()
+        {
+            { nameof(Panel.Background), Panel.BackgroundProperty },
+            // ChildTransitions
+            { nameof(Panel.IsItemsHost), Panel.IsItemsHostProperty },
+        })},
+        { typeof(StackPanel), new (new Dictionary<string, DependencyProperty>()
+        {
+            { nameof(StackPanel.AreScrollSnapPointsRegular), StackPanel.AreScrollSnapPointsRegularProperty },
+            { nameof(StackPanel.BackgroundSizing), StackPanel.BackgroundSizingProperty },
+            { nameof(StackPanel.BorderBrush), StackPanel.BorderBrushProperty },
+            { nameof(StackPanel.CornerRadius), StackPanel.CornerRadiusProperty },
+            { nameof(StackPanel.Orientation), StackPanel.OrientationProperty },
+            { nameof(StackPanel.Padding), StackPanel.PaddingProperty },
+            { nameof(StackPanel.Spacing), StackPanel.SpacingProperty },
+        })},
+        { typeof(TextBlock), new(new Dictionary<string, DependencyProperty>()
+        {
+            { nameof(TextBlock.CharacterSpacing), TextBlock.CharacterSpacingProperty },
+            { nameof(TextBlock.FontFamily), TextBlock.FontFamilyProperty },
+            { nameof(TextBlock.FontSize), TextBlock.FontSizeProperty },
+            { nameof(TextBlock.FontStretch), TextBlock.FontStretchProperty },
+            { nameof(TextBlock.FontStyle), TextBlock.FontStyleProperty },
+            { nameof(TextBlock.FontWeight), TextBlock.FontWeightProperty },
+            { nameof(TextBlock.Foreground), TextBlock.ForegroundProperty },
+            { nameof(TextBlock.HorizontalTextAlignment), TextBlock.HorizontalTextAlignmentProperty },
+            // Is properties...
+            { nameof(TextBlock.Padding), TextBlock.PaddingProperty },
+            { nameof(TextBlock.Text), TextBlock.TextProperty },
+            // Other Text properties
+        })},
     });
 
     /// <summary>
-    /// These are special helpers which can map short-hand values in XML text like Margin="4" to the actual value of the struct or value in the Framework, for instance in the Margin case Thickness. String input should not be empty.
-    /// They should return <c>true</c> if the text matches the value.
+    /// There are some types which get converter to more complex types, but we want to compare the intent of the values instead...
     /// </summary>
-    private static Dictionary<DependencyProperty, Func<string, object, bool>> _propertyConverters = new()
+    private static Dictionary<Type, Func<object, object, bool>> _comparators = new()
     {
-        // TODO: Names colors will probably come up when we get Foreground/Background above.
-        // Could we use this approach for names resources and values as well to parse the resource text, we'd need access to the resources...
-        [FrameworkElement.MarginProperty] = (text, value) =>
+        [typeof(SolidColorBrush)] = (v1, v2) =>
         {
-            // Get the individual values, see https://learn.microsoft.com/uwp/api/windows.ui.xaml.thickness
-            if (value is Thickness thickness)
+            if (v1 is SolidColorBrush s1
+                && v2 is SolidColorBrush s2
+                && s1.Color == s2.Color
+                && s1.Opacity == s2.Opacity)
             {
-                var parts = text.Split(",");
-                switch (parts.Length)
-                {
-                    case 1: // Uniform
-                        if (double.TryParse(parts[0], out var uniform))
-                        {
-                            return thickness.Left == uniform
-                                && thickness.Right == uniform
-                                && thickness.Top == uniform
-                                && thickness.Bottom == uniform;
-                        }
-                        break;
-                    case 2: // Left/Right, Top/Bottom
-                        if (double.TryParse(parts[0], out var leftright)
-                            && double.TryParse(parts[1], out var topbottom))
-                        {
-                            return thickness.Left == leftright
-                                && thickness.Right == leftright
-                                && thickness.Top == topbottom
-                                && thickness.Bottom == topbottom;
-                        }
-                        break;
-                    case 4: // Left, Top, Right, Bottom
-                        if (double.TryParse(parts[0], out var left)
-                            && double.TryParse(parts[1], out var top)
-                            && double.TryParse(parts[2], out var right)
-                            && double.TryParse(parts[3], out var bottom))
-                        {
-                            return thickness.Left == left
-                                && thickness.Right == right
-                                && thickness.Top == top
-                                && thickness.Bottom == bottom;
-                        }
-                        break;
-                    default:
-                        // We can't compare, we don't understand this format.
-                        return false; 
-                }
+                return true;
             }
 
-            // Value isn't a thickness we can't compare.
-            return false; 
-        },
+            return false;
+        }
     };
 
     private BidirectionalDictionary<IXmlElementSyntax, DependencyObject> _treeMapper = new();
@@ -280,20 +312,36 @@ public class XamlXmlTreeCoordinator
         foreach (var attr in xml.Attributes)
         {
             // TODO: Should we check if attr.Value is empty that there's no value/default for the element?
-            if (AttributeNameToDependencyProperty.TryGetValue(attr.Name, out var depProp) 
+            if (TryGetValueForPropertyByTypeAndString(element.GetType(), attr.Name, out var depProp) 
                 && !string.IsNullOrEmpty(attr.Value))
             {
                 // TODO: Check if xml value is binding, if so check if the visual element has a BindingExpression
                 //// if (element is FrameworkElement fwe && fwe.GetBindingExpression(depProp))
 
-                var vvalue = element.GetValue(depProp);
+                var vvalue = element.ReadLocalValue(depProp);
 
                 // See if we have a converter for this type of property (like Margin) to check against,
                 // otherwise, we just do straight string comparison.
-                if (_propertyConverters.TryGetValue(depProp, out var converter))                    
+                //// TODO: Can we just use XamlBindingHelper here for everything?
+                if (vvalue != DependencyProperty.UnsetValue)
                 {
-                    if (!converter(attr.Value, vvalue)) return false;
-                } 
+                    var nvalue = DependencyProperty.UnsetValue;
+                    try
+                    {
+                        // TODO: Deal with theme resources?
+                        nvalue = XamlBindingHelper.ConvertValue(vvalue.GetType(), attr.Value);
+                    }
+                    catch { }
+
+                    if (_comparators.TryGetValue(vvalue.GetType(), out var comparator))
+                    {
+                        if (!comparator(vvalue, nvalue)) return false;
+                    }
+                    else if (!vvalue.Equals(nvalue))
+                    {
+                        return false;
+                    }
+                }
                 else if (attr.Value != vvalue.ToString())
                 {
                     return false;
@@ -306,5 +354,37 @@ public class XamlXmlTreeCoordinator
 
         // We've survived the gauntlet of matching different criteria, so we must be a match...
         return true;
+    }
+
+    /// <summary>
+    /// Walks the list of type inheritance and tries to find the matching property by name to get the DependencyProperty.
+    /// </summary>
+    /// <param name="type"></param>
+    /// <param name="name"></param>
+    /// <param name="property"></param>
+    /// <returns></returns>
+    private static bool TryGetValueForPropertyByTypeAndString(Type type, string name, out DependencyProperty? property)
+    {
+        // Double-check incoming type is a UI type.
+        if (!typeof(DependencyObject).IsAssignableFrom(type))
+        {
+            property = null;
+            return false;
+        }
+
+        var t = type;
+        do
+        {
+            if (AttributeNameToDependencyProperty.TryGetValue(t, out var properties) &&
+                properties.TryGetValue(name, out var depProp))
+            {
+                property = depProp;
+                return true;
+            }
+            t = t.BaseType;
+        } while (t != typeof(DependencyObject)); // All UI Controls should inherit from this, so we can stop there.
+
+        property = null;
+        return false;
     }
 }

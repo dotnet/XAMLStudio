@@ -1,9 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Markup;
 using XamlStudio.Models;
 using XamlStudio.Toolkit.Services;
 using XamlStudio.ViewModels;
@@ -52,6 +54,22 @@ public sealed partial class Properties : Page,
         }
     }
 
+    private void PropertyValue_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (sender is TextBox tb
+            && tb.DataContext is PropertyInfo pi)
+        {
+            try
+            {
+                ViewModel.SelectedElement.SetValue(pi.Property, XamlBindingHelper.ConvertValue(pi.Type, tb.Text));
+            }
+            catch
+            {
+                // TODO: Show error in property editor...
+            }
+        }
+    }
+
     public void Receive(EditorSelectedElementMessage message)
     {
         if (_coordinator.TryGetVisualElement(message.Element, out var element))
@@ -69,17 +87,47 @@ public sealed partial class Properties : Page,
             // Find properties of interest...
             List<PropertyInfo> properties = new();
 
-            // First list properties we've modified in XML?
-            foreach (var attr in message.Element.Attributes.Select(a => a.Name))
+            // Helper Function to Add Property Values to our List (if value is set)
+            void AddProperty(Type type, string propName, string? group = null)
             {
-                if (XamlXmlTreeCoordinator.AttributeNameToDependencyProperty.TryGetValue(attr, out var depProp))
+                if (XamlXmlTreeCoordinator.AttributeNameToDependencyProperty.TryGetValue(type, out var depProps)
+                    && depProps.TryGetValue(propName, out var depProp))
                 {
                     var value = element.ReadLocalValue(depProp);
-                    properties.Add(new(attr, value, value?.GetType()));
+
+                    if (value != DependencyProperty.UnsetValue)
+                    {
+                        properties.Add(new(type, depProp, propName, value, value?.GetType(), group));
+                    }
                 }
             }
 
-            ViewModel.PropertyValues = new(properties);
+            // TODO: Pinned...
+
+            // First list properties we've modified in XML
+            var definedAttributes = new HashSet<string>(message.Element.Attributes.Select(a => a.Name));
+            foreach (var attr in definedAttributes)
+            {
+                AddProperty(element.GetType(), attr, "- Set in XAML -");
+            }
+
+            // Add other known properties, if their values are set.
+            foreach ((var type, var propsLookup) in XamlXmlTreeCoordinator.AttributeNameToDependencyProperty)
+            {
+                foreach ((var key, var depProp) in propsLookup)
+                {
+                    if (!definedAttributes.Contains(key))
+                    {
+                        AddProperty(element.GetType(), key);
+                    }
+                }                
+            }
+
+            // TODO: Add properties we don't know about???
+
+            ViewModel.PropertyValues = new(properties
+                                           .GroupBy(static pi => pi.Group)
+                                           .OrderBy(static g => g.Key));
         }
     }
 
@@ -103,5 +151,5 @@ public sealed partial class Properties : Page,
 
         return ((name != DependencyProperty.UnsetValue) ? $"\"{name}\" " : "") +
             "<" + element.GetType().Name + ">";
-    } 
+    }
 }
