@@ -151,6 +151,11 @@
             <TextBlock Padding="12,8"
                        Foreground="{ThemeResource Brush-Grey-Light-1}"
                        TextWrapping="WrapWholeWords">
+                - Live Property Panel: Edit, Inspect, and Experiment
+            </TextBlock>
+            <TextBlock Padding="12,8"
+                       Foreground="{ThemeResource Brush-Grey-Light-1}"
+                       TextWrapping="WrapWholeWords">
                 - More Quick Access Preview Options like Refresh, Alignment Grid, Clipping, and Theme Toggle
             </TextBlock>
             <TextBlock Padding="12,8"

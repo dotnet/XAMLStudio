@@ -900,4 +900,8 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>Inspect Live Properties (Ctrl+Shift+P)</value>
     <comment>Live Properties ActivityBar Tooltip</comment>
   </data>
+  <data name="Properties_ComboBox_AddProperty.PlaceholderText" xml:space="preserve">
+    <value>Add Property...</value>
+    <comment>Placeholder Text for Property Panel's ComboBox to add a new property to the list to modify.</comment>
+  </data>
 </root>

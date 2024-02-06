@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Mvvm.Collections;
+using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using System;
 using System.Collections.Generic;
@@ -62,6 +63,14 @@ public sealed partial class Properties : Page,
             try
             {
                 ViewModel.SelectedElement.SetValue(pi.Property, XamlBindingHelper.ConvertValue(pi.Type, tb.Text));
+                // TODO: Localize these group names
+                var group = ViewModel.PropertyValues.FirstGroupByKey("- Set In XAML -");
+                if (group.Contains(pi))
+                {
+                    group.Remove(pi);
+                    // TODO: pi.Group = "- Modified -";
+                    ViewModel.PropertyValues.AddItem("- Modified -", pi);
+                }
             }
             catch
             {
@@ -70,9 +79,24 @@ public sealed partial class Properties : Page,
         }
     }
 
+    private void AddNewValueComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (e.AddedItems.FirstOrDefault() is PropertyInfo pi)
+        {
+            // TODO: Do we need to remember these modified properties somehow so if you come back later they still show as modified?
+            //       Maybe with an attached property on the element to store the list of prop names?
+            ViewModel.PropertyValues.AddItem("- Modified -", pi);
+            ViewModel.UnsetPropertyValues.RemoveItem(pi.Group, pi);
+
+            // TODO: Set focus to TextBox of new item inserted...
+            //// DispatcherQueue...?
+        }
+    }
+
     public void Receive(EditorSelectedElementMessage message)
     {
-        if (_coordinator.TryGetVisualElement(message.Element, out var element))
+        if (message.Element != ViewModel.SelectedElement
+            && _coordinator.TryGetVisualElement(message.Element, out var element))
         {
             ViewModel.SelectedElement = element;
             if (element.FindAscendant<DependencyObject>() is DependencyObject parent)
@@ -86,9 +110,10 @@ public sealed partial class Properties : Page,
 
             // Find properties of interest...
             List<PropertyInfo> properties = new();
+            List<PropertyInfo> unsetProperties = new();
 
             // Helper Function to Add Property Values to our List (if value is set)
-            void AddProperty(Type type, string propName, string? group = null)
+            PropertyInfo AddProperty(Type type, string propName, string? group = null)
             {
                 if (XamlXmlTreeCoordinator.AttributeNameToDependencyProperty.TryGetValue(type, out var depProps)
                     && depProps.TryGetValue(propName, out var depProp))
@@ -99,7 +124,15 @@ public sealed partial class Properties : Page,
                     {
                         properties.Add(new(type, depProp, propName, value, value?.GetType(), group));
                     }
+                    else
+                    {
+                        var defaultValue = element.GetValue(depProp);
+                        /// TODO: Do we need a DepProp to type map? Could also be handy to have the default values...?
+                        return new(type, depProp, propName, defaultValue, defaultValue?.GetType() ?? typeof(string));
+                    }
                 }
+
+                return null;
             }
 
             // TODO: Pinned...
@@ -111,23 +144,41 @@ public sealed partial class Properties : Page,
                 AddProperty(element.GetType(), attr, "- Set in XAML -");
             }
 
+            PropertyInfo unset = null;
+
             // Add other known properties, if their values are set.
-            foreach ((var type, var propsLookup) in XamlXmlTreeCoordinator.AttributeNameToDependencyProperty)
+            var type = element.GetType();
+            do
             {
-                foreach ((var key, var depProp) in propsLookup)
+                if (XamlXmlTreeCoordinator.AttributeNameToDependencyProperty.TryGetValue(type, out var depPropsLookup))
                 {
-                    if (!definedAttributes.Contains(key))
+                    foreach ((var key, var depProp) in depPropsLookup)
                     {
-                        AddProperty(element.GetType(), key);
+                        if (!definedAttributes.Contains(key))
+                        {
+                            unset = AddProperty(type, key);
+
+                            if (unset != null)
+                            {
+                                unsetProperties.Add(unset);
+                            }
+                        }
                     }
-                }                
-            }
+                }
+                type = type.BaseType;
+            } while (type != typeof(DependencyObject));
 
             // TODO: Add properties we don't know about???
 
+            // TODO: Group by topmost type and then down to base type...
+            // TODO: Do we need empty Pinned and Modified groups at top empty so they stay in the sort position?
             ViewModel.PropertyValues = new(properties
                                            .GroupBy(static pi => pi.Group)
                                            .OrderBy(static g => g.Key));
+
+            ViewModel.UnsetPropertyValues = new(unsetProperties
+                                                .GroupBy(static pi => pi.Group)
+                                                .OrderBy(static g => g.Key));
         }
     }
 

@@ -9,7 +9,10 @@ namespace XamlStudio.ViewModels;
 public partial class PropertiesViewModel : ObservableObject
 {
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasElement))]
     private DependencyObject _selectedElement;
+
+    public bool HasElement => SelectedElement != null;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasParent))]
@@ -19,4 +22,7 @@ public partial class PropertiesViewModel : ObservableObject
 
     [ObservableProperty]
     private ObservableGroupedCollection<string, PropertyInfo> _propertyValues;
+
+    [ObservableProperty]
+    private ObservableGroupedCollection<string, PropertyInfo> _unsetPropertyValues;
 }

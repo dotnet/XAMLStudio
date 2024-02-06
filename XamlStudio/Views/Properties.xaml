@@ -17,11 +17,16 @@
         <CollectionViewSource x:Name="PropertyViewSource"
                               IsSourceGrouped="True"
                               Source="{x:Bind ViewModel.PropertyValues, Mode=OneWay}" />
+
+        <CollectionViewSource x:Name="UnsetPropertyViewSource"
+                              IsSourceGrouped="True"
+                              Source="{x:Bind ViewModel.UnsetPropertyValues, Mode=OneWay}" />
     </Page.Resources>
 
     <Grid Background="{ThemeResource Brush-Blue-Dark-1}">
         <Grid.RowDefinitions>
             <RowDefinition Height="54" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -36,6 +41,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <TextBlock x:Uid="Properties_Header" Style="{StaticResource VSCodeAppBarHeaderTextStyle}" />
+                <!--  TODO: Have a button to toggle unset properties shown...  -->
                 <!--  TODO: Probably should have the 'select element' tool here too?  -->
                 <!--<ToggleSwitch x:Name="PowerBindingToggle"
                               x:Uid="Debug_PowerBindingToggle"
@@ -69,39 +75,70 @@
                    Margin="24,0,0,0"
                    Padding="16,4,12,4"
                    FontWeight="Bold"
-                   Text="{x:Bind views:Properties.GetElementInfo(ViewModel.SelectedElement), Mode=OneWay}" />
+                   Text="{x:Bind views:Properties.GetElementInfo(ViewModel.SelectedElement), Mode=OneWay}"
+                   Visibility="{x:Bind ViewModel.HasElement, Mode=OneWay}" />
 
-        <ItemsControl Grid.Row="3"
-                      Margin="24,8,0,0"
-                      ItemsSource="{x:Bind PropertyViewSource.View, Mode=OneWay}">
-            <ItemsControl.GroupStyle>
+        <ComboBox x:Uid="Properties_ComboBox_AddProperty"
+                  Grid.Row="3"
+                  Margin="24,8,8,0"
+                  HorizontalAlignment="Stretch"
+                  ItemsSource="{x:Bind UnsetPropertyViewSource.View, Mode=OneWay}"
+                  SelectionChanged="AddNewValueComboBox_SelectionChanged"
+                  Visibility="{x:Bind ViewModel.HasElement, Mode=OneWay}">
+            <ComboBox.GroupStyle>
                 <GroupStyle HidesIfEmpty="True">
                     <GroupStyle.HeaderTemplate>
                         <DataTemplate>
-                            <TextBlock FontWeight="Bold" Text="{Binding Key}" />
+                            <TextBlock Margin="16,4,0,4"
+                                       FontWeight="Bold"
+                                       Text="{Binding Key}" />
                         </DataTemplate>
                     </GroupStyle.HeaderTemplate>
                 </GroupStyle>
-            </ItemsControl.GroupStyle>
+            </ComboBox.GroupStyle>
 
-            <ItemsControl.ItemTemplate>
+            <ComboBox.ItemTemplate>
                 <DataTemplate x:DataType="model:PropertyInfo">
-                    <Grid Padding="12,6,8,6"
-                          BorderBrush="{ThemeResource Brush-Blue-Dark-2}"
-                          BorderThickness="0,0,0,1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Bind Name}" ToolTipService.ToolTip="{x:Bind Type.FullName}" />
-                        <!--  TODO: Have a template selector here to make editing certain values easier...  -->
-                        <TextBox Grid.Column="1"
-                                 Text="{Binding Value}"
-                                 TextChanged="PropertyValue_TextChanged" />
-                    </Grid>
+                    <TextBlock Padding="12,0,0,0" Text="{x:Bind Name}" />
                 </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <ScrollViewer Grid.Row="4" Margin="24,8,8,0">
+            <ItemsControl ItemsSource="{x:Bind PropertyViewSource.View, Mode=OneWay}">
+                <ItemsControl.GroupStyle>
+                    <GroupStyle HidesIfEmpty="True">
+                        <GroupStyle.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock FontWeight="Bold" Text="{Binding Key}" />
+                            </DataTemplate>
+                        </GroupStyle.HeaderTemplate>
+                    </GroupStyle>
+                </ItemsControl.GroupStyle>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="model:PropertyInfo">
+                        <Grid Padding="12,6,8,6"
+                              BorderBrush="{ThemeResource Brush-Blue-Dark-2}"
+                              BorderThickness="0,0,0,1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <!--  TODO: Have button to pin property  -->
+                            <TextBlock VerticalAlignment="Center"
+                                       Text="{x:Bind Name}"
+                                       ToolTipService.ToolTip="{x:Bind Type.FullName}" />
+                            <!--  TODO: Have a template selector here to make editing certain values easier...  -->
+                            <TextBox Grid.Column="1"
+                                     Text="{Binding Value}"
+                                     TextChanged="PropertyValue_TextChanged" />
+                            <!--  TODO: Have Button to modify/add XAML to current value  -->
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
 
         <!--  TODO: Have message if no element is selected yet (or stale?)  -->
     </Grid>
