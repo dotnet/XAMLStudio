@@ -196,10 +196,20 @@ public class XamlXmlTreeCoordinator
         [typeof(BitmapImage)] = (v1, v2) =>
         {
             if (v1 is BitmapImage b1
-                && v2 is BitmapImage b2
-                && b1.UriSource.AbsoluteUri == b2.UriSource.AbsoluteUri)
+                && v2 is BitmapImage b2)
             {
-                return true;
+                if (b1.UriSource.AbsoluteUri == b2.UriSource.AbsoluteUri)
+                {
+                    return true;
+                }
+                // With the XamlBindingHelper.ConvertValue we see it convert differently than the XamlReader.Load, so use this in case the resource scheme was picked differently.
+                else if ((b1.UriSource.Scheme == "ms-appx" && b2.UriSource.Scheme == "ms-resource") ||
+                         (b1.UriSource.Scheme == "ms-resource" && b2.UriSource.Scheme == "ms-appx"))
+                {
+                    var path1 = b1.UriSource.AbsoluteUri.Replace("ms-appx:///", "").Replace("ms-resource:///Files/", "");
+                    var path2 = b2.UriSource.AbsoluteUri.Replace("ms-appx:///", "").Replace("ms-resource:///Files/", "");
+                    return path1 == path2;
+                }
             }
 
             return false;
