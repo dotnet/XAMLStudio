@@ -144,12 +144,15 @@ public sealed partial class Properties : Page,
                 AddProperty(element.GetType(), attr, "- Set in XAML -");
             }
 
+            List<string> groupOrder = new() { "- Modified -", "- Set in XAML -" };
+
             PropertyInfo unset = null;
 
             // Add other known properties, if their values are set.
             var type = element.GetType();
             do
             {
+                groupOrder.Add(type.Name);
                 if (XamlXmlTreeCoordinator.AttributeNameToDependencyProperty.TryGetValue(type, out var depPropsLookup))
                 {
                     foreach ((var key, var depProp) in depPropsLookup)
@@ -170,15 +173,14 @@ public sealed partial class Properties : Page,
 
             // TODO: Add properties we don't know about???
 
-            // TODO: Group by topmost type and then down to base type...
             // TODO: Do we need empty Pinned and Modified groups at top empty so they stay in the sort position?
             ViewModel.PropertyValues = new(properties
                                            .GroupBy(static pi => pi.Group)
-                                           .OrderBy(static g => g.Key));
+                                           .OrderBy(g => groupOrder.IndexOf(g.Key)));
 
             ViewModel.UnsetPropertyValues = new(unsetProperties
                                                 .GroupBy(static pi => pi.Group)
-                                                .OrderBy(static g => g.Key));
+                                                .OrderBy(g => groupOrder.IndexOf(g.Key)));
         }
     }
 
