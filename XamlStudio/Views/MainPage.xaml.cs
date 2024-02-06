@@ -269,7 +269,14 @@ namespace XamlStudio.Views
 	                        if (file != null)
 	                        {
 	                            var text = await FileIO.ReadTextAsync(file as StorageFile);
-	                            exception = JsonConvert.DeserializeObject<UnhandledException>(text);
+                                try
+                                {
+                                    exception = JsonConvert.DeserializeObject<UnhandledException>(text);
+                                }
+                                catch (Exception ex)
+                                {
+                                    exception = new($"Error Deserializing Last Exception Information:\n{text}", ex);
+                                }
 
                                 // TODO: Used to work, doesn't now?
                                 document.Result.Errors.Add(new Toolkit.Models.XamlExceptionRange(exception?.Message, exception?.Exception, 1, 1, 1, 1));
