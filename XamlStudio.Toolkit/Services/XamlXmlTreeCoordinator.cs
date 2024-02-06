@@ -6,8 +6,10 @@ using System.Runtime.Serialization;
 using System.Xml.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace XamlStudio.Toolkit.Services;
 
@@ -117,6 +119,22 @@ public class XamlXmlTreeCoordinator
             { nameof(FrameworkElement.VerticalAlignment), FrameworkElement.VerticalAlignmentProperty },
             { nameof(FrameworkElement.Width), FrameworkElement.WidthProperty },
         })},
+        { typeof(Image), new (new Dictionary<string, DependencyProperty>()
+        {
+            { nameof(Image.NineGrid), Image.NineGridProperty },
+            // PlayToSource obsolete?
+            { nameof(Image.Source), Image.SourceProperty },
+            { nameof(Image.Stretch), Image.StretchProperty },
+        })},
+        { typeof(Border), new (new Dictionary<string, DependencyProperty>()
+        {
+            { nameof(Border.Background), Border.BackgroundProperty },
+            { nameof(Border.BackgroundSizing), Border.BackgroundSizingProperty },
+            { nameof(Border.BorderBrush), Border.BorderBrushProperty },
+            { nameof(Border.BorderThickness), Border.BorderThicknessProperty },
+            { nameof(Border.CornerRadius), Border.CornerRadiusProperty },
+            { nameof(Border.Padding), Border.PaddingProperty },
+        })},
         { typeof(Grid), new (new Dictionary<string, DependencyProperty>()
         {
             { nameof(Grid.BackgroundSizing), Grid.BackgroundSizingProperty },
@@ -132,6 +150,10 @@ public class XamlXmlTreeCoordinator
             { nameof(Panel.Background), Panel.BackgroundProperty },
             // ChildTransitions
             { nameof(Panel.IsItemsHost), Panel.IsItemsHostProperty },
+        })},
+        { typeof(RadioButton), new (new Dictionary<string, DependencyProperty>()
+        {
+            { nameof(RadioButton.GroupName), RadioButton.GroupNameProperty },
         })},
         { typeof(StackPanel), new (new Dictionary<string, DependencyProperty>()
         {
@@ -158,6 +180,11 @@ public class XamlXmlTreeCoordinator
             { nameof(TextBlock.Text), TextBlock.TextProperty },
             // Other Text properties
         })},
+        { typeof(ToggleButton), new(new Dictionary<string, DependencyProperty>()
+        {
+            { nameof(ToggleButton.IsChecked), ToggleButton.IsCheckedProperty },
+            { nameof(ToggleButton.IsThreeState), ToggleButton.IsThreeStateProperty },
+        })},
     });
 
     /// <summary>
@@ -165,6 +192,18 @@ public class XamlXmlTreeCoordinator
     /// </summary>
     private static Dictionary<Type, Func<object, object, bool>> _comparators = new()
     {
+        // For Image.Source for instance
+        [typeof(BitmapImage)] = (v1, v2) =>
+        {
+            if (v1 is BitmapImage b1
+                && v2 is BitmapImage b2
+                && b1.UriSource.AbsoluteUri == b2.UriSource.AbsoluteUri)
+            {
+                return true;
+            }
+
+            return false;
+        },
         [typeof(SolidColorBrush)] = (v1, v2) =>
         {
             if (v1 is SolidColorBrush s1
@@ -313,7 +352,10 @@ public class XamlXmlTreeCoordinator
         {
             // TODO: Should we check if attr.Value is empty that there's no value/default for the element?
             if (TryGetValueForPropertyByTypeAndString(element.GetType(), attr.Name, out var depProp) 
-                && !string.IsNullOrEmpty(attr.Value))
+                && !string.IsNullOrEmpty(attr.Value)
+                && !attr.Value.StartsWith("{Binding") // TODO: Need to handle these scenarios for matching somehow...
+                && !attr.Value.StartsWith("{StaticResource")
+                && !attr.Value.StartsWith("{ThemeResource"))
             {
                 // TODO: Check if xml value is binding, if so check if the visual element has a BindingExpression
                 //// if (element is FrameworkElement fwe && fwe.GetBindingExpression(depProp))

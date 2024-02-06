@@ -8,6 +8,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using XamlStudio.Toolkit.Services;
 
 namespace XamlStudio.Toolkit.UnitTests;
@@ -21,31 +22,31 @@ public class XmlToXamlTreeTests : VisualUITestBase
         await EnqueueAsync(async () =>
         {
             var xaml =
-            """
-            <Page xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"              
-                  x:Name="ToolboxPage">
+                """
+                <Page xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"              
+                      x:Name="ToolboxPage">
 
-                <Page.Resources>
-                    <Style x:Key="ListViewItemContainerWideStyle" TargetType="ListViewItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                    </Style>
-                </Page.Resources>
+                    <Page.Resources>
+                        <Style x:Key="ListViewItemContainerWideStyle" TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </Page.Resources>
 
-                <Grid x:Name="RootGrid">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="54" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Button Content="First"
-                            Margin="4"/>
-                    <Button>
-                        <TextBlock Text="Second"/>
-                    </Button>
-                </Grid>
-            </Page>
-            """;
+                    <Grid x:Name="RootGrid">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="54" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Button Content="First"
+                                Margin="4"/>
+                        <Button>
+                            <TextBlock Text="Second"/>
+                        </Button>
+                    </Grid>
+                </Page>
+                """;
 
             var fwe = XamlReader.Load(xaml) as FrameworkElement;
             var xml = Parser.ParseText(xaml);
@@ -71,7 +72,7 @@ public class XmlToXamlTreeTests : VisualUITestBase
             {
                 Assert.IsTrue(coordinator.TryGetVisualElement(textblockElement, out var dotbe));
                 if (dotbe is TextBlock textblock)
-                { 
+                {
                     Assert.AreEqual("Second", textblock.Text);
                 }
                 else
@@ -87,13 +88,13 @@ public class XmlToXamlTreeTests : VisualUITestBase
             Assert.AreEqual(5, coordinator.Count, "Expected 5 elements to be mapped.");
 
             await UnloadTestContentAsync(fwe);
-        });                
+        });
     }
 
     [TestMethod]
     public async Task NestedParentTypes_XmlToXamlTest()
     {
-        await EnqueueAsync(async() =>
+        await EnqueueAsync(async () =>
         {
             var xaml =
                 """
@@ -161,17 +162,17 @@ public class XmlToXamlTreeTests : VisualUITestBase
         await EnqueueAsync(async () =>
         {
             var xaml =
-            """
-            <Page xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                """
+                <Page xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-                <StackPanel>
-                    <Border Background="Blue"/>
-                    <Border Background="#FFFF0000"/>
-                    <Border Background="#0000FF"/>
-                </StackPanel>
-            </Page>
-            """;
+                    <StackPanel>
+                        <Border Background="Blue"/>
+                        <Border Background="#FFFF0000"/>
+                        <Border Background="#0000FF"/>
+                    </StackPanel>
+                </Page>
+                """;
 
             var fwe = XamlReader.Load(xaml) as FrameworkElement;
             var xml = Parser.ParseText(xaml);
@@ -208,9 +209,9 @@ public class XmlToXamlTreeTests : VisualUITestBase
                     if (element is Border border
                         && element == child)
                     {
-                        Assert.AreEqual(colorMatches[j++], (border.Background as SolidColorBrush).Color, $"Unexpected color for Border[{j-1}]");
+                        Assert.AreEqual(colorMatches[j++], (border.Background as SolidColorBrush).Color, $"Unexpected color for Border[{j - 1}]");
                     }
-                    else 
+                    else
                     {
                         Assert.Fail("Unexpected Child Border element");
                     }
@@ -218,6 +219,76 @@ public class XmlToXamlTreeTests : VisualUITestBase
             }
 
             Assert.AreEqual(5, coordinator.Count, "Expected 5 elements to be mapped.");
+
+            await UnloadTestContentAsync(fwe);
+        });
+    }
+
+    [TestMethod]
+    public async Task ImageConversion_XmlToXamlTest()
+    {
+        await EnqueueAsync(async () =>
+        {
+            var xaml =
+                """
+                <Page xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                
+                    <StackPanel>
+                        <Image Source="ms-appx:///Assets/StoreLogo.png"/>
+                        <Image Source="ms-appx:///Assets/SplashScreen.png"/>
+                        <Image Source="/Assets/StoreLogo.png"/>
+                        <Image Source="https://picsum.photos/200/200"/>
+                    </StackPanel>
+                </Page>
+                """;
+
+            var fwe = XamlReader.Load(xaml) as FrameworkElement;
+            var xml = Parser.ParseText(xaml);
+
+            await LoadTestContentAsync(fwe);
+
+            XamlXmlTreeCoordinator coordinator = new();
+            coordinator.Initialize(xml, fwe);
+
+            var sp = fwe.FindChild<StackPanel>();
+            Assert.IsTrue(coordinator.TryGetXmlElement(sp, out var spNode));
+            if (spNode is not IXmlElementSyntax)
+            {
+                Assert.Fail("Xml Node not an Element for StackPanel");
+            }
+
+            var uriMatches = new[]
+            {
+                "ms-appx:///Assets/StoreLogo.png",
+                "ms-appx:///Assets/SplashScreen.png",
+                "ms-resource:///Files/Assets/StoreLogo.png", // Gets converted to ms-resource:// path prepended with /Files by System
+                "https://picsum.photos/200/200",
+            };
+            var i = 0;
+            var j = 0;
+
+            Assert.AreEqual(4, sp.Children.Count, "Expected StackPanel to have 3 children");
+            foreach (var child in sp.Children)
+            {
+                i = xaml.IndexOf("<Image", i) + 1;
+                var node = xml.FindNode(i).ParentElement;
+                if (node is IXmlElementSyntax nodeElement)
+                {
+                    Assert.IsTrue(coordinator.TryGetVisualElement(nodeElement, out var element));
+                    if (element is Image image
+                        && element == child)
+                    {
+                        Assert.AreEqual(uriMatches[j++], (image.Source as BitmapImage).UriSource.AbsoluteUri, $"Unexpected uri for Image[{j - 1}]");
+                    }
+                    else
+                    {
+                        Assert.Fail("Unexpected Child Image element");
+                    }
+                }
+            }
+
+            Assert.AreEqual(6, coordinator.Count, "Expected 5 elements to be mapped.");
 
             await UnloadTestContentAsync(fwe);
         });
