@@ -115,22 +115,27 @@ public sealed partial class Properties : Page,
             // Helper Function to Add Property Values to our List (if value is set)
             PropertyInfo AddProperty(Type type, string propName, string? group = null)
             {
-                if (XamlXmlTreeCoordinator.AttributeNameToDependencyProperty.TryGetValue(type, out var depProps)
-                    && depProps.TryGetValue(propName, out var depProp))
+                var ctype = type;
+                do
                 {
-                    var value = element.ReadLocalValue(depProp);
+                    if (XamlXmlTreeCoordinator.AttributeNameToDependencyProperty.TryGetValue(ctype, out var depProps)
+                        && depProps.TryGetValue(propName, out var depProp))
+                    {
+                        var value = element.ReadLocalValue(depProp);
 
-                    if (value != DependencyProperty.UnsetValue)
-                    {
-                        properties.Add(new(type, depProp, propName, value, value?.GetType(), group));
+                        if (value != DependencyProperty.UnsetValue)
+                        {
+                            properties.Add(new(ctype, depProp, propName, value, value?.GetType(), group));
+                        }
+                        else
+                        {
+                            var defaultValue = element.GetValue(depProp);
+                            /// TODO: Do we need a DepProp to type map? Could also be handy to have the default values...?
+                            return new(ctype, depProp, propName, defaultValue, defaultValue?.GetType() ?? typeof(string));
+                        }
                     }
-                    else
-                    {
-                        var defaultValue = element.GetValue(depProp);
-                        /// TODO: Do we need a DepProp to type map? Could also be handy to have the default values...?
-                        return new(type, depProp, propName, defaultValue, defaultValue?.GetType() ?? typeof(string));
-                    }
-                }
+                    ctype = ctype.BaseType;
+                } while (ctype != typeof(DependencyObject));
 
                 return null;
             }
