@@ -8,6 +8,7 @@
              xmlns:fex="using:CommunityToolkit.WinUI.Extensions.Future"
              xmlns:i="using:Microsoft.Xaml.Interactivity"
              xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
+             xmlns:labs="using:CommunityToolkit.WinUI.Controls.Future"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:models="using:XamlStudio.Toolkit.Models"
              xmlns:monaco="using:Monaco"
@@ -25,6 +26,48 @@
         <xstc:HexToColorConverter x:Key="HexToColorConverter" />
         <xstc:StringToUriConverter x:Key="StringToUriConverter" />
         <xstc:XamlBindingWrapperConverter x:Key="XamlBindingWrapper" />
+
+        <DataTemplate x:Key="AdornerCanvasElement">
+            <Canvas x:Name="AdornerCanvas"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    ui:FrameworkElementExtensions.EnableActualSizeBinding="True"
+                    Background="Cyan"
+                    IsHitTestVisible="False"
+                    Opacity="0.3">
+
+                <!--  Horizontal Bound Lines  -->
+                <Line Stroke="Cyan"
+                      StrokeThickness="1"
+                      X1="-10000"
+                      X2="10000"
+                      Y1="0"
+                      Y2="0" />
+                <!--  TODO: Can't use x:Bind due to Uno bug: https://github.com/unoplatform/uno/issues/7893  -->
+                <Line Stroke="Cyan"
+                      StrokeThickness="1"
+                      X1="-10000"
+                      X2="10000"
+                      Y1="{Binding ElementName=AdornerCanvas, Path=(ui:FrameworkElementExtensions.ActualHeight)}"
+                      Y2="{Binding ElementName=AdornerCanvas, Path=(ui:FrameworkElementExtensions.ActualHeight)}" />
+
+                <!--  Vertical Bound Lines  -->
+                <Line HorizontalAlignment="Left"
+                      Stroke="Cyan"
+                      StrokeThickness="1"
+                      X1="0"
+                      X2="0"
+                      Y1="-10000"
+                      Y2="10000" />
+                <Line HorizontalAlignment="Right"
+                      Stroke="Cyan"
+                      StrokeThickness="1"
+                      X1="{Binding ElementName=AdornerCanvas, Path=(ui:FrameworkElementExtensions.ActualWidth)}"
+                      X2="{Binding ElementName=AdornerCanvas, Path=(ui:FrameworkElementExtensions.ActualWidth)}"
+                      Y1="-10000"
+                      Y2="10000" />
+            </Canvas>
+        </DataTemplate>
     </UserControl.Resources>
 
     <Grid>
@@ -38,6 +81,98 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="PaneRotationStates">
+                <VisualState x:Name="HorizontalPreviewTop" />
+                <VisualState x:Name="VerticalPreviewRight">
+                    <VisualState.Setters>
+                        <!--  Top Pane -> Right Pane  -->
+                        <Setter Target="PreviewArea.(Grid.Column)" Value="2" />
+                        <Setter Target="PreviewArea.(Grid.RowSpan)" Value="3" />
+                        <Setter Target="PreviewArea.(Grid.ColumnSpan)" Value="1" />
+
+                        <Setter Target="ErrorOverlay.(Grid.Column)" Value="2" />
+                        <Setter Target="ErrorOverlay.(Grid.RowSpan)" Value="3" />
+                        <Setter Target="ErrorOverlay.(Grid.ColumnSpan)" Value="1" />
+
+                        <!--  Middle Splitter Bar  -->
+                        <Setter Target="SplitterBar.(Grid.Row)" Value="0" />
+                        <Setter Target="SplitterBar.(Grid.Column)" Value="1" />
+                        <Setter Target="SplitterBar.(Grid.RowSpan)" Value="3" />
+                        <Setter Target="SplitterBar.(Grid.ColumnSpan)" Value="1" />
+                        <Setter Target="SplitterBar.ResizeDirection" Value="Columns" />
+
+                        <Setter Target="SplitterCommandBarLeft.(Grid.Row)" Value="0" />
+                        <Setter Target="SplitterCommandBarLeft.(Grid.Column)" Value="1" />
+                        <Setter Target="SplitterCommandBarLeft.(Grid.RowSpan)" Value="3" />
+                        <Setter Target="SplitterCommandBarLeft.(Grid.ColumnSpan)" Value="1" />
+                        <Setter Target="SplitterCommandBarLeft.Orientation" Value="Vertical" />
+                        <Setter Target="SplitterCommandBarLeft.Margin" Value="0,0,0,200" />
+
+                        <Setter Target="SplitterCommandBarRight.(Grid.Row)" Value="0" />
+                        <Setter Target="SplitterCommandBarRight.(Grid.Column)" Value="1" />
+                        <Setter Target="SplitterCommandBarRight.(Grid.RowSpan)" Value="3" />
+                        <Setter Target="SplitterCommandBarRight.(Grid.ColumnSpan)" Value="1" />
+                        <Setter Target="SplitterCommandBarRight.Orientation" Value="Vertical" />
+                        <Setter Target="SplitterCommandBarRight.Margin" Value="0,150,0,0" />
+
+                        <!--  Bottom Pane -> Left Pane  -->
+                        <Setter Target="EditorArea.(Grid.Row)" Value="0" />
+                        <Setter Target="EditorArea.(Grid.RowSpan)" Value="3" />
+                        <Setter Target="EditorArea.(Grid.ColumnSpan)" Value="1" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="HorizontalPreviewBottom">
+                    <VisualState.Setters>
+                        <!--  Top Pane -> Bottom Pane  -->
+                        <Setter Target="PreviewArea.(Grid.Row)" Value="2" />
+
+                        <Setter Target="ErrorOverlay.(Grid.Row)" Value="2" />
+
+                        <!--  Bottom Pane -> Top Pane  -->
+                        <Setter Target="EditorArea.(Grid.Row)" Value="0" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="VerticalPreviewLeft">
+                    <VisualState.Setters>
+                        <!--  Top Pane -> Left Pane  -->
+                        <Setter Target="PreviewArea.(Grid.RowSpan)" Value="3" />
+                        <Setter Target="PreviewArea.(Grid.ColumnSpan)" Value="1" />
+
+                        <Setter Target="ErrorOverlay.(Grid.RowSpan)" Value="3" />
+                        <Setter Target="ErrorOverlay.(Grid.ColumnSpan)" Value="1" />
+
+                        <!--  Middle Splitter Bar  -->
+                        <Setter Target="SplitterBar.(Grid.Row)" Value="0" />
+                        <Setter Target="SplitterBar.(Grid.Column)" Value="1" />
+                        <Setter Target="SplitterBar.(Grid.RowSpan)" Value="3" />
+                        <Setter Target="SplitterBar.(Grid.ColumnSpan)" Value="1" />
+                        <Setter Target="SplitterBar.ResizeDirection" Value="Columns" />
+
+                        <Setter Target="SplitterCommandBarLeft.(Grid.Row)" Value="0" />
+                        <Setter Target="SplitterCommandBarLeft.(Grid.Column)" Value="1" />
+                        <Setter Target="SplitterCommandBarLeft.(Grid.RowSpan)" Value="3" />
+                        <Setter Target="SplitterCommandBarLeft.(Grid.ColumnSpan)" Value="1" />
+                        <Setter Target="SplitterCommandBarLeft.Orientation" Value="Vertical" />
+                        <Setter Target="SplitterCommandBarLeft.Margin" Value="0,0,0,200" />
+
+                        <Setter Target="SplitterCommandBarRight.(Grid.Row)" Value="0" />
+                        <Setter Target="SplitterCommandBarRight.(Grid.Column)" Value="1" />
+                        <Setter Target="SplitterCommandBarRight.(Grid.RowSpan)" Value="3" />
+                        <Setter Target="SplitterCommandBarRight.(Grid.ColumnSpan)" Value="1" />
+                        <Setter Target="SplitterCommandBarRight.Orientation" Value="Vertical" />
+                        <Setter Target="SplitterCommandBarRight.Margin" Value="0,150,0,0" />
+
+                        <!--  Bottom Pane -> Right Pane  -->
+                        <Setter Target="EditorArea.(Grid.Row)" Value="0" />
+                        <Setter Target="EditorArea.(Grid.Column)" Value="2" />
+                        <Setter Target="EditorArea.(Grid.RowSpan)" Value="3" />
+                        <Setter Target="EditorArea.(Grid.ColumnSpan)" Value="1" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
 
         <controls:SwitchPresenter x:Name="PreviewArea"
                                   Grid.Row="0"
@@ -68,20 +203,22 @@
                 </ScrollViewer>
             </controls:Case>
             <controls:Case IsDefault="True">
-                <Grid x:Name="PreviewRoot"
-                      ui:UIElementExtensions.ClipToBounds="{x:Bind ViewModel.Settings.IsPreviewClippingEnabled.Value, Mode=OneWay}"
-                      Background="{ThemeResource Brush-Blue-Dark-1}">
-                    <Grid x:Name="XamlRoot" />
+                <labs:AdornerDecorator ui:UIElementExtensions.ClipToBounds="True">
+                    <Grid x:Name="PreviewRoot"
+                          ui:UIElementExtensions.ClipToBounds="{x:Bind ViewModel.Settings.IsPreviewClippingEnabled.Value, Mode=OneWay}"
+                          Background="{ThemeResource Brush-Blue-Dark-1}">
+                        <Grid x:Name="XamlRoot" />
 
-                    <developerTools:AlignmentGrid HorizontalStep="{x:Bind ViewModel.Settings.AlignmentGridHorizontalStep, Mode=OneWay, FallbackValue=8}"
-                                                  Opacity="{x:Bind ViewModel.Settings.AlignmentGridOpacity, Mode=OneWay}"
-                                                  VerticalStep="{x:Bind ViewModel.Settings.AlignmentGridVerticalStep, Mode=OneWay, FallbackValue=8}"
-                                                  Visibility="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled, Mode=OneWay}">
-                        <developerTools:AlignmentGrid.LineBrush>
-                            <SolidColorBrush Color="{x:Bind ViewModel.Settings.AlignmentGridColor, Mode=OneWay, Converter={StaticResource HexToColorConverter}}" />
-                        </developerTools:AlignmentGrid.LineBrush>
-                    </developerTools:AlignmentGrid>
-                </Grid>
+                        <developerTools:AlignmentGrid HorizontalStep="{x:Bind ViewModel.Settings.AlignmentGridHorizontalStep, Mode=OneWay, FallbackValue=8}"
+                                                      Opacity="{x:Bind ViewModel.Settings.AlignmentGridOpacity, Mode=OneWay}"
+                                                      VerticalStep="{x:Bind ViewModel.Settings.AlignmentGridVerticalStep, Mode=OneWay, FallbackValue=8}"
+                                                      Visibility="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled, Mode=OneWay}">
+                            <developerTools:AlignmentGrid.LineBrush>
+                                <SolidColorBrush Color="{x:Bind ViewModel.Settings.AlignmentGridColor, Mode=OneWay, Converter={StaticResource HexToColorConverter}}" />
+                            </developerTools:AlignmentGrid.LineBrush>
+                        </developerTools:AlignmentGrid>
+                    </Grid>
+                </labs:AdornerDecorator>
             </controls:Case>
         </controls:SwitchPresenter>
 
@@ -133,7 +270,7 @@
         <StackPanel x:Name="SplitterCommandBarLeft"
                     Grid.Row="1"
                     Grid.ColumnSpan="3"
-                    Margin="0,2,160,2"
+                    Margin="0,2,200,2"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Background="Transparent"
@@ -145,6 +282,12 @@
                     Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
                 <SymbolIcon fex:SymbolIconExtensions.FontSize="16" Symbol="Refresh" />
             </Button>
+            <ToggleButton x:Uid="Document_Button_HighlightElement"
+                          Padding="1"
+                          Click="HighlightElement_Click"
+                          Style="{StaticResource VSCodeAppBarHeaderToggleButtonStyle}">
+                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xEB3C;" />
+            </ToggleButton>
             <ToggleButton x:Uid="Document_Button_AlignmentGrid"
                           Padding="1"
                           IsChecked="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled, Mode=TwoWay}"
@@ -275,97 +418,5 @@
             </controls:Case>
             <controls:Case Value="True" />
         </controls:SwitchPresenter>
-
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="PaneRotationStates">
-                <VisualState x:Name="HorizontalPreviewTop" />
-                <VisualState x:Name="VerticalPreviewRight">
-                    <VisualState.Setters>
-                        <!--  Top Pane -> Right Pane  -->
-                        <Setter Target="PreviewArea.(Grid.Column)" Value="2" />
-                        <Setter Target="PreviewArea.(Grid.RowSpan)" Value="3" />
-                        <Setter Target="PreviewArea.(Grid.ColumnSpan)" Value="1" />
-
-                        <Setter Target="ErrorOverlay.(Grid.Column)" Value="2" />
-                        <Setter Target="ErrorOverlay.(Grid.RowSpan)" Value="3" />
-                        <Setter Target="ErrorOverlay.(Grid.ColumnSpan)" Value="1" />
-
-                        <!--  Middle Splitter Bar  -->
-                        <Setter Target="SplitterBar.(Grid.Row)" Value="0" />
-                        <Setter Target="SplitterBar.(Grid.Column)" Value="1" />
-                        <Setter Target="SplitterBar.(Grid.RowSpan)" Value="3" />
-                        <Setter Target="SplitterBar.(Grid.ColumnSpan)" Value="1" />
-                        <Setter Target="SplitterBar.ResizeDirection" Value="Columns" />
-
-                        <Setter Target="SplitterCommandBarLeft.(Grid.Row)" Value="0" />
-                        <Setter Target="SplitterCommandBarLeft.(Grid.Column)" Value="1" />
-                        <Setter Target="SplitterCommandBarLeft.(Grid.RowSpan)" Value="3" />
-                        <Setter Target="SplitterCommandBarLeft.(Grid.ColumnSpan)" Value="1" />
-                        <Setter Target="SplitterCommandBarLeft.Orientation" Value="Vertical" />
-                        <Setter Target="SplitterCommandBarLeft.Margin" Value="0,0,0,160" />
-
-                        <Setter Target="SplitterCommandBarRight.(Grid.Row)" Value="0" />
-                        <Setter Target="SplitterCommandBarRight.(Grid.Column)" Value="1" />
-                        <Setter Target="SplitterCommandBarRight.(Grid.RowSpan)" Value="3" />
-                        <Setter Target="SplitterCommandBarRight.(Grid.ColumnSpan)" Value="1" />
-                        <Setter Target="SplitterCommandBarRight.Orientation" Value="Vertical" />
-                        <Setter Target="SplitterCommandBarRight.Margin" Value="0,150,0,0" />
-
-                        <!--  Bottom Pane -> Left Pane  -->
-                        <Setter Target="EditorArea.(Grid.Row)" Value="0" />
-                        <Setter Target="EditorArea.(Grid.RowSpan)" Value="3" />
-                        <Setter Target="EditorArea.(Grid.ColumnSpan)" Value="1" />
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="HorizontalPreviewBottom">
-                    <VisualState.Setters>
-                        <!--  Top Pane -> Bottom Pane  -->
-                        <Setter Target="PreviewArea.(Grid.Row)" Value="2" />
-
-                        <Setter Target="ErrorOverlay.(Grid.Row)" Value="2" />
-
-                        <!--  Bottom Pane -> Top Pane  -->
-                        <Setter Target="EditorArea.(Grid.Row)" Value="0" />
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="VerticalPreviewLeft">
-                    <VisualState.Setters>
-                        <!--  Top Pane -> Left Pane  -->
-                        <Setter Target="PreviewArea.(Grid.RowSpan)" Value="3" />
-                        <Setter Target="PreviewArea.(Grid.ColumnSpan)" Value="1" />
-
-                        <Setter Target="ErrorOverlay.(Grid.RowSpan)" Value="3" />
-                        <Setter Target="ErrorOverlay.(Grid.ColumnSpan)" Value="1" />
-
-                        <!--  Middle Splitter Bar  -->
-                        <Setter Target="SplitterBar.(Grid.Row)" Value="0" />
-                        <Setter Target="SplitterBar.(Grid.Column)" Value="1" />
-                        <Setter Target="SplitterBar.(Grid.RowSpan)" Value="3" />
-                        <Setter Target="SplitterBar.(Grid.ColumnSpan)" Value="1" />
-                        <Setter Target="SplitterBar.ResizeDirection" Value="Columns" />
-
-                        <Setter Target="SplitterCommandBarLeft.(Grid.Row)" Value="0" />
-                        <Setter Target="SplitterCommandBarLeft.(Grid.Column)" Value="1" />
-                        <Setter Target="SplitterCommandBarLeft.(Grid.RowSpan)" Value="3" />
-                        <Setter Target="SplitterCommandBarLeft.(Grid.ColumnSpan)" Value="1" />
-                        <Setter Target="SplitterCommandBarLeft.Orientation" Value="Vertical" />
-                        <Setter Target="SplitterCommandBarLeft.Margin" Value="0,0,0,160" />
-
-                        <Setter Target="SplitterCommandBarRight.(Grid.Row)" Value="0" />
-                        <Setter Target="SplitterCommandBarRight.(Grid.Column)" Value="1" />
-                        <Setter Target="SplitterCommandBarRight.(Grid.RowSpan)" Value="3" />
-                        <Setter Target="SplitterCommandBarRight.(Grid.ColumnSpan)" Value="1" />
-                        <Setter Target="SplitterCommandBarRight.Orientation" Value="Vertical" />
-                        <Setter Target="SplitterCommandBarRight.Margin" Value="0,150,0,0" />
-
-                        <!--  Bottom Pane -> Right Pane  -->
-                        <Setter Target="EditorArea.(Grid.Row)" Value="0" />
-                        <Setter Target="EditorArea.(Grid.Column)" Value="2" />
-                        <Setter Target="EditorArea.(Grid.RowSpan)" Value="3" />
-                        <Setter Target="EditorArea.(Grid.ColumnSpan)" Value="1" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
     </Grid>
 </UserControl>

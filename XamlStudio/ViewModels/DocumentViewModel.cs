@@ -42,6 +42,9 @@ public partial class DocumentViewModel : ObservableObject
     [ObservableProperty]
     private XamlRenderResultContext _result;
 
+    [ObservableProperty]
+    private XamlXmlTreeCoordinator _xamlCoordinator = new();
+
     private ObservableCollection<ConversionRecord> _bindingHistory = new ObservableCollection<ConversionRecord>();
     public AdvancedCollectionView BindingHistory
     {

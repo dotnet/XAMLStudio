@@ -350,6 +350,9 @@ public sealed partial class Document : UserControl,
 
             ViewModel.HasCompiled = true;
 
+            //// TODO: Only do this if property panel is open or design mode is active?
+            ViewModel.XamlCoordinator.Initialize(result.XmlDocument, (DependencyObject)result.Element);
+
             WeakReferenceMessenger.Default.Send<XamlRenderedMessage>(new(result));
         }
         else

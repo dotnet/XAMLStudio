@@ -29,8 +29,6 @@ public sealed partial class Properties : Page,
 
     public PropertiesViewModel ViewModel { get; private set; } = new();
 
-    private XamlXmlTreeCoordinator _coordinator = new();
-
     public Properties()
     {
         this.InitializeComponent();
@@ -111,7 +109,7 @@ public sealed partial class Properties : Page,
 
     public void Receive(EditorSelectedElementMessage message)
     {
-        if (_coordinator.TryGetVisualElement(message.Element, out var element))
+        if (MainViewModel.ActiveDocumentViewModel.XamlCoordinator.TryGetVisualElement(message.Element, out var element))
         {
             UpdateProperties(element, message.Element);
         }
@@ -184,7 +182,7 @@ public sealed partial class Properties : Page,
 
             // Check if we have an associated XML element to see what we set in our Editor text
             if (xmlHint == null
-                && _coordinator.TryGetXmlElement(element, out xmlHint))
+                && MainViewModel.ActiveDocumentViewModel.XamlCoordinator.TryGetXmlElement(element, out xmlHint))
             {
                 // First list properties we've modified in XML
                 definedAttributes = new(xmlHint.Attributes.Select(a => a.Name));
@@ -240,7 +238,7 @@ public sealed partial class Properties : Page,
     public void Receive(XamlRenderedMessage message)
     {
         // TODO: Is this recalled when document changes?
-        _coordinator.Initialize(message.Context.XmlDocument, (DependencyObject)message.Context.Element);
+        ////_coordinator.Initialize(message.Context.XmlDocument, (DependencyObject)message.Context.Element);
 
         // TODO: Need to get current editor node/context between renders, reference won't work as will be stale Xml Node.
         // Send message? GetEditorPositionMessage?

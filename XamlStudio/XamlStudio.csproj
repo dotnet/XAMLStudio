@@ -219,6 +219,9 @@
     <Compile Include="Models\Messages.cs" />
     <Compile Include="Models\PropertyInfo.cs" />
     <Compile Include="ViewModels\PropertiesViewModel.cs" />
+    <Compile Include="Views\Document.Design.xaml.cs">
+      <DependentUpon>Document.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Properties.xaml.cs">
       <DependentUpon>Properties.xaml</DependentUpon>
     </Compile>
