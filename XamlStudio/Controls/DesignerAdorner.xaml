@@ -10,20 +10,56 @@
              mc:Ignorable="d">
 
     <Canvas x:Name="AdornerCanvas"
+            Margin="{x:Bind NegativeMargin}"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             ui:FrameworkElementExtensions.EnableActualSizeBinding="True"
-            Background="#3300FFFF"
             IsHitTestVisible="False">
 
-        <!--  Attached Element Name  -->
+        <!--  Attached Element Name / Position / Size  -->
         <Border Canvas.Left="0"
                 Canvas.Top="-24"
                 Height="23"
                 Padding="4,2"
                 VerticalAlignment="Center"
                 Background="DarkCyan">
-            <TextBlock Text="{x:Bind local:DesignerAdorner.GetElementInfo(AttachedElement)}" ToolTipService.ToolTip="{x:Bind AttachedElementType.FullName}" />
+            <TextBlock ToolTipService.ToolTip="{x:Bind AttachedElementType.FullName}">
+                <Run Text="{x:Bind local:DesignerAdorner.GetElementInfo(AttachedElement)}" />
+                <Run Text=" @ " />
+                <Run Text="{x:Bind Position.ToString()}" />
+                <Run Text=" - " />
+                <Run Text="{x:Bind Size.ToString()}" />
+            </TextBlock>
+        </Border>
+
+        <!--  Margin/Padding Display  -->
+        <Border x:Name="MarginBorder"
+                Width="{x:Bind AdornerCanvas.(ui:FrameworkElementExtensions.ActualWidth), Mode=OneWay}"
+                Height="{x:Bind AdornerCanvas.(ui:FrameworkElementExtensions.ActualHeight), Mode=OneWay}"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                BorderBrush="#33FF6600"
+                BorderThickness="{x:Bind AttachedElement.Margin}">
+            <Border x:Name="BorderBorder"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    BorderBrush="#33FFFF00"
+                    BorderThickness="{x:Bind AttachedBorder}">
+                <Border x:Name="PaddingBorder"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        BorderBrush="#3300FF00"
+                        BorderThickness="{x:Bind AttachedPadding}">
+                    <Border x:Name="ContentBorder"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Background="#330000FF">
+                        <TextBlock HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Text="{x:Bind InnerSize.ToString()}" />
+                    </Border>
+                </Border>
+            </Border>
         </Border>
 
         <!--  Horizontal Bound Lines  -->

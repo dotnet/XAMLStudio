@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Controls.Future;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -62,7 +63,7 @@ public partial class Document :
 
         if (_isDesignEnabled)
         {
-            AdornerLayer.SetXaml(_highlightedElement, new DesignerAdorner(_highlightedElement));
+            AdornerLayer.SetXaml(_highlightedElement, new DesignerAdorner(_highlightedElement, _highlightedElement.CoordinatesFrom((UIElement)ViewModel.Result.Element)));
         }
     }
 

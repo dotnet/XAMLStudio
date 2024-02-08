@@ -100,7 +100,7 @@ public partial class AdornerLayer : Canvas
             {
                 return true;
             }
-            else if (element is ScrollViewer scoller)
+            else if (element is ScrollViewer)
             {
                 return true;
             }
