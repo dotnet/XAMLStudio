@@ -1,7 +1,6 @@
 ﻿<Page x:Class="XamlStudio.Views.Properties"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:controls="using:CommunityToolkit.WinUI.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:model="using:XamlStudio.Models"
@@ -10,10 +9,6 @@
       mc:Ignorable="d">
 
     <Page.Resources>
-        <Style x:Key="ListViewItemContainerWideStyle" TargetType="ListViewItem">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-        </Style>
-
         <CollectionViewSource x:Name="PropertyViewSource"
                               IsSourceGrouped="True"
                               Source="{x:Bind ViewModel.PropertyValues, Mode=OneWay}" />
@@ -78,31 +73,61 @@
                    Text="{x:Bind views:Properties.GetElementInfo(ViewModel.SelectedElement), Mode=OneWay}"
                    Visibility="{x:Bind ViewModel.HasElement, Mode=OneWay}" />
 
-        <ComboBox x:Uid="Properties_ComboBox_AddProperty"
-                  Grid.Row="3"
-                  Margin="24,8,8,0"
-                  HorizontalAlignment="Stretch"
-                  ItemsSource="{x:Bind UnsetPropertyViewSource.View, Mode=OneWay}"
-                  SelectionChanged="AddNewValueComboBox_SelectionChanged"
-                  Visibility="{x:Bind ViewModel.HasElement, Mode=OneWay}">
-            <ComboBox.GroupStyle>
-                <GroupStyle HidesIfEmpty="True">
-                    <GroupStyle.HeaderTemplate>
-                        <DataTemplate>
-                            <TextBlock Margin="16,4,0,4"
-                                       FontWeight="Bold"
-                                       Text="{Binding Key}" />
-                        </DataTemplate>
-                    </GroupStyle.HeaderTemplate>
-                </GroupStyle>
-            </ComboBox.GroupStyle>
+        <!--  This was simple ComboBox, which worked great once, and then continued to crash with the grouping enabled with an invalid cast exception.  -->
+        <HyperlinkButton x:Uid="Properties_AddProperty"
+                         Grid.Row="3"
+                         Margin="24,8,8,0"
+                         Click="AddProperties_HyperlinkButton_Click"
+                         Visibility="{x:Bind ViewModel.HasElement, Mode=OneWay}">
+            <HyperlinkButton.ContextFlyout>
+                <Flyout>
+                    <ListView Width="360"
+                              Padding="0"
+                              IsItemClickEnabled="True"
+                              ItemClick="ListView_ItemClick"
+                              ItemsSource="{x:Bind UnsetPropertyViewSource.View, Mode=OneWay}"
+                              SelectionMode="None">
+                        <ListView.GroupStyle>
+                            <GroupStyle HidesIfEmpty="True">
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock FontSize="14"
+                                                   FontWeight="Bold"
+                                                   Text="{Binding Key}" />
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </ListView.GroupStyle>
 
-            <ComboBox.ItemTemplate>
-                <DataTemplate x:DataType="model:PropertyInfo">
-                    <TextBlock Padding="12,0,0,0" Text="{x:Bind Name}" />
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="Padding" Value="0" />
+                                <Setter Property="Margin" Value="12,0,8,0" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="model:PropertyInfo">
+                                <Grid Padding="16,0,12,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <!--  TODO: Have button to pin property  -->
+                                    <TextBlock VerticalAlignment="Center"
+                                               Text="{x:Bind Name}"
+                                               ToolTipService.ToolTip="{x:Bind Type.FullName}" />
+                                    <!--  TODO: Have a template selector here to make editing certain values easier...  -->
+                                    <TextBlock Grid.Column="1" Text="{Binding Value}" />
+                                    <!--  TODO: Have Button to modify/add XAML to current value  -->
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Flyout>
+            </HyperlinkButton.ContextFlyout>
+        </HyperlinkButton>
 
         <ScrollViewer Grid.Row="4" Margin="24,8,8,0">
             <ItemsControl ItemsSource="{x:Bind PropertyViewSource.View, Mode=OneWay}">

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Markup;
 using XamlStudio.Models;
 using XamlStudio.Toolkit.Services;
@@ -79,9 +80,20 @@ public sealed partial class Properties : Page,
         }
     }
 
-    private void AddNewValueComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void AddProperties_HyperlinkButton_Click(object sender, RoutedEventArgs e)
     {
-        if (e.AddedItems.FirstOrDefault() is PropertyInfo pi)
+        if (sender is HyperlinkButton button)
+        {
+            button.ContextFlyout.ShowAt(button, new()
+            {
+                Placement = FlyoutPlacementMode.BottomEdgeAlignedLeft
+            });
+        }
+    }
+
+    private void ListView_ItemClick(object sender, ItemClickEventArgs e)
+    {
+        if (e.ClickedItem is PropertyInfo pi)
         {
             // TODO: Do we need to remember these modified properties somehow so if you come back later they still show as modified?
             //       Maybe with an attached property on the element to store the list of prop names?
