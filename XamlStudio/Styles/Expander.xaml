@@ -26,29 +26,6 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-
-                        <FontIcon x:Name="Arrow"
-                                  Margin="0,0,8,0"
-                                  FontFamily="Segoe MDL2 Assets"
-                                  FontSize="8"
-                                  Foreground="{TemplateBinding Foreground}"
-                                  Glyph="&#xEDD6;" />
-
-                        <ContentPresenter x:Name="ContentPresenter"
-                                          Grid.Column="1"
-                                          Margin="{TemplateBinding Padding}"
-                                          HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                                          VerticalAlignment="{TemplateBinding VerticalAlignment}"
-                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                          AutomationProperties.AccessibilityView="Raw"
-                                          BorderBrush="{TemplateBinding BorderBrush}"
-                                          BorderThickness="{TemplateBinding BorderThickness}"
-                                          Content="{TemplateBinding Content}"
-                                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                                          ContentTransitions="{TemplateBinding ContentTransitions}"
-                                          Foreground="{TemplateBinding Foreground}"
-                                          RenderTransformOrigin="0.5,0.5" />
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal">
@@ -88,6 +65,29 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
+
+                        <FontIcon x:Name="Arrow"
+                                  Margin="0,0,8,0"
+                                  FontFamily="Segoe MDL2 Assets"
+                                  FontSize="8"
+                                  Foreground="{TemplateBinding Foreground}"
+                                  Glyph="&#xEDD6;" />
+
+                        <ContentPresenter x:Name="ContentPresenter"
+                                          Grid.Column="1"
+                                          Margin="{TemplateBinding Padding}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          AutomationProperties.AccessibilityView="Raw"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          BorderThickness="{TemplateBinding BorderThickness}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          ContentTransitions="{TemplateBinding ContentTransitions}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          RenderTransformOrigin="0.5,0.5" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -129,44 +129,6 @@
                             <RowDefinition x:Name="Row0" Height="Auto" />
                             <RowDefinition x:Name="Row1" Height="*" />
                         </Grid.RowDefinitions>
-                        <ToggleButton x:Name="ExpanderHeader"
-                                      MinHeight="{TemplateBinding MinHeight}"
-                                      Padding="{StaticResource ExpanderHeaderPadding}"
-                                      HorizontalAlignment="Stretch"
-                                      HorizontalContentAlignment="{StaticResource ExpanderHeaderHorizontalContentAlignment}"
-                                      VerticalContentAlignment="{StaticResource ExpanderHeaderVerticalContentAlignment}"
-                                      AutomationProperties.AutomationId="ExpanderToggleButton"
-                                      BackgroundSizing="{TemplateBinding BackgroundSizing}"
-                                      Content="{TemplateBinding Header}"
-                                      ContentTemplate="{TemplateBinding HeaderTemplate}"
-                                      ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"
-                                      CornerRadius="{TemplateBinding CornerRadius}"
-                                      IsChecked="{Binding Path=IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                      IsEnabled="{TemplateBinding IsEnabled}"
-                                      Style="{StaticResource SimpleHeaderToggleButtonStyle}" />
-                        <!--  The clip is a composition clip applied in code  -->
-                        <Border x:Name="ExpanderContentClip" Grid.Row="1">
-                            <Border x:Name="ExpanderContent"
-                                    MinHeight="{TemplateBinding MinHeight}"
-                                    Padding="{TemplateBinding Padding}"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch"
-                                    Background="{TemplateBinding Background}"
-                                    BackgroundSizing="{TemplateBinding BackgroundSizing}"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="{StaticResource ExpanderContentDownBorderThickness}"
-                                    CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BottomCornerRadiusFilterConverter}}"
-                                    Visibility="Collapsed">
-                                <ContentPresenter HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                  Content="{TemplateBinding Content}"
-                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                  ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}" />
-                                <Border.RenderTransform>
-                                    <CompositeTransform />
-                                </Border.RenderTransform>
-                            </Border>
-                        </Border>
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="ExpandStates">
                                 <VisualState x:Name="ExpandUp">
@@ -251,6 +213,44 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
+                        <ToggleButton x:Name="ExpanderHeader"
+                                      MinHeight="{TemplateBinding MinHeight}"
+                                      Padding="{StaticResource ExpanderHeaderPadding}"
+                                      HorizontalAlignment="Stretch"
+                                      HorizontalContentAlignment="{StaticResource ExpanderHeaderHorizontalContentAlignment}"
+                                      VerticalContentAlignment="{StaticResource ExpanderHeaderVerticalContentAlignment}"
+                                      AutomationProperties.AutomationId="ExpanderToggleButton"
+                                      BackgroundSizing="{TemplateBinding BackgroundSizing}"
+                                      Content="{TemplateBinding Header}"
+                                      ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                      ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"
+                                      CornerRadius="{TemplateBinding CornerRadius}"
+                                      IsChecked="{Binding Path=IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                      IsEnabled="{TemplateBinding IsEnabled}"
+                                      Style="{StaticResource SimpleHeaderToggleButtonStyle}" />
+                        <!--  The clip is a composition clip applied in code  -->
+                        <Border x:Name="ExpanderContentClip" Grid.Row="1">
+                            <Border x:Name="ExpanderContent"
+                                    MinHeight="{TemplateBinding MinHeight}"
+                                    Padding="{TemplateBinding Padding}"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    Background="{TemplateBinding Background}"
+                                    BackgroundSizing="{TemplateBinding BackgroundSizing}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{StaticResource ExpanderContentDownBorderThickness}"
+                                    CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BottomCornerRadiusFilterConverter}}"
+                                    Visibility="Collapsed">
+                                <ContentPresenter HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  Content="{TemplateBinding Content}"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                  ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}" />
+                                <Border.RenderTransform>
+                                    <CompositeTransform />
+                                </Border.RenderTransform>
+                            </Border>
+                        </Border>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -279,41 +279,6 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Slider x:Name="ArrowRotation"
-                                Maximum="180"
-                                Minimum="-180"
-                                Visibility="Collapsed"
-                                Value="90" />
-                        <FontIcon x:Name="Arrow"
-                                  Margin="12"
-                                  FontFamily="Segoe MDL2 Assets"
-                                  FontSize="12"
-                                  Glyph="&#xE76C;"
-                                  RenderTransformOrigin="0.5,0.5">
-                            <FontIcon.RenderTransform>
-                                <RotateTransform />
-                            </FontIcon.RenderTransform>
-                        </FontIcon>
-                        <ContentPresenter x:Name="ContentPresenter"
-                                          Grid.Column="1"
-                                          Margin="0,0,12,0"
-                                          Padding="{TemplateBinding Padding}"
-                                          HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                                          VerticalAlignment="{TemplateBinding VerticalAlignment}"
-                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                          AutomationProperties.AccessibilityView="Raw"
-                                          BorderBrush="{TemplateBinding BorderBrush}"
-                                          BorderThickness="{TemplateBinding BorderThickness}"
-                                          Content="{TemplateBinding Content}"
-                                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                                          ContentTransitions="{TemplateBinding ContentTransitions}"
-                                          Foreground="{TemplateBinding Foreground}"
-                                          RenderTransformOrigin="0.5,0.5" />
-                        <Rectangle x:Name="HoverPanel"
-                                   Grid.ColumnSpan="2"
-                                   Fill="Transparent"
-                                   Visibility="Collapsed" />
                         <!--  TODO: This is turning Pink for some reason with the change in Visual states between old Toolkit expander and MUXC expander, not sure which resource that is, so just hiding for now so it works...  -->
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
@@ -484,6 +449,41 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
+                        <Slider x:Name="ArrowRotation"
+                                Maximum="180"
+                                Minimum="-180"
+                                Visibility="Collapsed"
+                                Value="90" />
+                        <FontIcon x:Name="Arrow"
+                                  Margin="12"
+                                  FontFamily="Segoe MDL2 Assets"
+                                  FontSize="12"
+                                  Glyph="&#xE76C;"
+                                  RenderTransformOrigin="0.5,0.5">
+                            <FontIcon.RenderTransform>
+                                <RotateTransform />
+                            </FontIcon.RenderTransform>
+                        </FontIcon>
+                        <ContentPresenter x:Name="ContentPresenter"
+                                          Grid.Column="1"
+                                          Margin="0,0,12,0"
+                                          Padding="{TemplateBinding Padding}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          AutomationProperties.AccessibilityView="Raw"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          BorderThickness="{TemplateBinding BorderThickness}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          ContentTransitions="{TemplateBinding ContentTransitions}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          RenderTransformOrigin="0.5,0.5" />
+                        <Rectangle x:Name="HoverPanel"
+                                   Grid.ColumnSpan="2"
+                                   Fill="Transparent"
+                                   Visibility="Collapsed" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -523,46 +523,6 @@
                             <RowDefinition x:Name="Row0" Height="Auto" />
                             <RowDefinition x:Name="Row1" Height="*" />
                         </Grid.RowDefinitions>
-                        <ToggleButton x:Name="ExpanderHeader"
-                                      MinHeight="{TemplateBinding MinHeight}"
-                                      Padding="{StaticResource ExpanderHeaderPadding}"
-                                      HorizontalAlignment="Stretch"
-                                      HorizontalContentAlignment="{StaticResource ExpanderHeaderHorizontalContentAlignment}"
-                                      VerticalContentAlignment="{StaticResource ExpanderHeaderVerticalContentAlignment}"
-                                      AutomationProperties.AutomationId="ExpanderToggleButton"
-                                      BackgroundSizing="{TemplateBinding BackgroundSizing}"
-                                      BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
-                                      BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
-                                      Content="{TemplateBinding Header}"
-                                      ContentTemplate="{TemplateBinding HeaderTemplate}"
-                                      ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"
-                                      CornerRadius="{TemplateBinding CornerRadius}"
-                                      IsChecked="{Binding Path=IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                      IsEnabled="{TemplateBinding IsEnabled}"
-                                      Style="{StaticResource VSCodeHeaderToggleButtonStyle}" />
-                        <!--  The clip is a composition clip applied in code  -->
-                        <Border x:Name="ExpanderContentClip" Grid.Row="1">
-                            <Border x:Name="ExpanderContent"
-                                    MinHeight="{TemplateBinding MinHeight}"
-                                    Padding="{TemplateBinding Padding}"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch"
-                                    Background="{TemplateBinding Background}"
-                                    BackgroundSizing="{TemplateBinding BackgroundSizing}"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="{StaticResource ExpanderContentDownBorderThickness}"
-                                    CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BottomCornerRadiusFilterConverter}}"
-                                    Visibility="Collapsed">
-                                <ContentPresenter HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                  Content="{TemplateBinding Content}"
-                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                  ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}" />
-                                <Border.RenderTransform>
-                                    <CompositeTransform />
-                                </Border.RenderTransform>
-                            </Border>
-                        </Border>
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="ExpandStates">
                                 <VisualState x:Name="ExpandUp">
@@ -647,6 +607,46 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
+                        <ToggleButton x:Name="ExpanderHeader"
+                                      MinHeight="{TemplateBinding MinHeight}"
+                                      Padding="{StaticResource ExpanderHeaderPadding}"
+                                      HorizontalAlignment="Stretch"
+                                      HorizontalContentAlignment="{StaticResource ExpanderHeaderHorizontalContentAlignment}"
+                                      VerticalContentAlignment="{StaticResource ExpanderHeaderVerticalContentAlignment}"
+                                      AutomationProperties.AutomationId="ExpanderToggleButton"
+                                      BackgroundSizing="{TemplateBinding BackgroundSizing}"
+                                      BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
+                                      BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
+                                      Content="{TemplateBinding Header}"
+                                      ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                      ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"
+                                      CornerRadius="{TemplateBinding CornerRadius}"
+                                      IsChecked="{Binding Path=IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                      IsEnabled="{TemplateBinding IsEnabled}"
+                                      Style="{StaticResource VSCodeHeaderToggleButtonStyle}" />
+                        <!--  The clip is a composition clip applied in code  -->
+                        <Border x:Name="ExpanderContentClip" Grid.Row="1">
+                            <Border x:Name="ExpanderContent"
+                                    MinHeight="{TemplateBinding MinHeight}"
+                                    Padding="{TemplateBinding Padding}"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    Background="{TemplateBinding Background}"
+                                    BackgroundSizing="{TemplateBinding BackgroundSizing}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{StaticResource ExpanderContentDownBorderThickness}"
+                                    CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BottomCornerRadiusFilterConverter}}"
+                                    Visibility="Collapsed">
+                                <ContentPresenter HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  Content="{TemplateBinding Content}"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                  ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}" />
+                                <Border.RenderTransform>
+                                    <CompositeTransform />
+                                </Border.RenderTransform>
+                            </Border>
+                        </Border>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
