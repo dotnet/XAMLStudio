@@ -177,6 +177,7 @@
         <controls:SwitchPresenter x:Name="PreviewArea"
                                   Grid.Row="0"
                                   Grid.ColumnSpan="3"
+                                  ui:UIElementExtensions.ClipToBounds="True"
                                   TargetType="x:Boolean"
                                   Value="{x:Bind IsSpecificPreviewSize, Mode=OneWay}">
             <controls:Case Value="True">
@@ -186,24 +187,26 @@
                               HorizontalScrollBarVisibility="Auto"
                               HorizontalScrollMode="Auto"
                               VerticalScrollMode="Auto">
-                    <Grid x:Name="PreviewRootSpecific"
-                          ui:UIElementExtensions.ClipToBounds="{x:Bind ViewModel.Settings.IsPreviewClippingEnabled.Value, Mode=OneWay}"
-                          Background="{ThemeResource Brush-Blue-Dark-1}">
-                        <Grid x:Name="XamlRootSpecific" />
+                    <labs:AdornerDecorator>
+                        <Grid x:Name="PreviewRootSpecific"
+                              ui:UIElementExtensions.ClipToBounds="{x:Bind ViewModel.Settings.IsPreviewClippingEnabled.Value, Mode=OneWay}"
+                              Background="{ThemeResource Brush-Blue-Dark-1}">
+                            <Grid x:Name="XamlRootSpecific" />
 
-                        <developerTools:AlignmentGrid HorizontalStep="{x:Bind ViewModel.Settings.AlignmentGridHorizontalStep, Mode=OneWay, FallbackValue=8}"
-                                                      Opacity="{x:Bind ViewModel.Settings.AlignmentGridOpacity, Mode=OneWay}"
-                                                      VerticalStep="{x:Bind ViewModel.Settings.AlignmentGridVerticalStep, Mode=OneWay, FallbackValue=8}"
-                                                      Visibility="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled, Mode=OneWay}">
-                            <developerTools:AlignmentGrid.LineBrush>
-                                <SolidColorBrush Color="{x:Bind ViewModel.Settings.AlignmentGridColor, Mode=OneWay, Converter={StaticResource HexToColorConverter}}" />
-                            </developerTools:AlignmentGrid.LineBrush>
-                        </developerTools:AlignmentGrid>
-                    </Grid>
+                            <developerTools:AlignmentGrid HorizontalStep="{x:Bind ViewModel.Settings.AlignmentGridHorizontalStep, Mode=OneWay, FallbackValue=8}"
+                                                          Opacity="{x:Bind ViewModel.Settings.AlignmentGridOpacity, Mode=OneWay}"
+                                                          VerticalStep="{x:Bind ViewModel.Settings.AlignmentGridVerticalStep, Mode=OneWay, FallbackValue=8}"
+                                                          Visibility="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled, Mode=OneWay}">
+                                <developerTools:AlignmentGrid.LineBrush>
+                                    <SolidColorBrush Color="{x:Bind ViewModel.Settings.AlignmentGridColor, Mode=OneWay, Converter={StaticResource HexToColorConverter}}" />
+                                </developerTools:AlignmentGrid.LineBrush>
+                            </developerTools:AlignmentGrid>
+                        </Grid>
+                    </labs:AdornerDecorator>
                 </ScrollViewer>
             </controls:Case>
             <controls:Case IsDefault="True">
-                <labs:AdornerDecorator ui:UIElementExtensions.ClipToBounds="True">
+                <labs:AdornerDecorator>
                     <Grid x:Name="PreviewRoot"
                           ui:UIElementExtensions.ClipToBounds="{x:Bind ViewModel.Settings.IsPreviewClippingEnabled.Value, Mode=OneWay}"
                           Background="{ThemeResource Brush-Blue-Dark-1}">
