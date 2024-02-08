@@ -4,6 +4,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:model="using:XamlStudio.Models"
+      xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
       xmlns:views="using:XamlStudio.Views"
       IsEnabled="{x:Bind model:DocumentType.Document.Equals(MainViewModel.ActiveFile.DocumentType), Mode=OneWay}"
       mc:Ignorable="d">
@@ -21,6 +22,7 @@
     <Grid Background="{ThemeResource Brush-Blue-Dark-1}">
         <Grid.RowDefinitions>
             <RowDefinition Height="54" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -58,12 +60,15 @@
         </Border>
 
         <!--  TODO: Show Parent (if one) and current selected tree item  -->
-        <Border Grid.Row="1" Visibility="{x:Bind ViewModel.HasParent, Mode=OneWay}">
-            <TextBlock Padding="24,4,12,4">
-                <Run Text="Parent: " />
+        <TextBlock Grid.Row="1"
+                   Padding="24,4,12,4"
+                   DataContext="{x:Bind ViewModel.SelectedElementParent, Mode=OneWay}"
+                   Visibility="{x:Bind ViewModel.HasParent, Mode=OneWay}">
+            <Run Text="Parent: " />
+            <Hyperlink Click="VisualTreeElement_Click">
                 <Run Text="{x:Bind views:Properties.GetElementInfo(ViewModel.SelectedElementParent), Mode=OneWay}" />
-            </TextBlock>
-        </Border>
+            </Hyperlink>
+        </TextBlock>
 
         <!--  TODO: Don't indent if no parent, need to detect and exclude our internal XamlRoot parent...  -->
         <TextBlock Grid.Row="2"
@@ -73,9 +78,28 @@
                    Text="{x:Bind views:Properties.GetElementInfo(ViewModel.SelectedElement), Mode=OneWay}"
                    Visibility="{x:Bind ViewModel.HasElement, Mode=OneWay}" />
 
+        <Border Grid.Row="3"
+                Margin="24,0,4,4"
+                Padding="0,0,0,8"
+                BorderBrush="{ThemeResource Brush-Blue-Dark-2}"
+                BorderThickness="0,0,0,1">
+            <!--  TODO: Do we want a 'Children' label here?  -->
+            <muxc:ItemsRepeater ItemsSource="{x:Bind ViewModel.SelectedElementChildren, Mode=OneWay}" Visibility="{x:Bind ViewModel.HasChildren, Mode=OneWay}">
+                <muxc:ItemsRepeater.ItemTemplate>
+                    <DataTemplate x:DataType="DependencyObject">
+                        <TextBlock Padding="36,4,12,4" DataContext="{x:Bind (DependencyObject)}">
+                            <Hyperlink Click="VisualTreeElement_Click">
+                                <Run Text="{x:Bind views:Properties.GetElementInfo((DependencyObject)), Mode=OneWay}" />
+                            </Hyperlink>
+                        </TextBlock>
+                    </DataTemplate>
+                </muxc:ItemsRepeater.ItemTemplate>
+            </muxc:ItemsRepeater>
+        </Border>
+
         <!--  This was simple ComboBox, which worked great once, and then continued to crash with the grouping enabled with an invalid cast exception.  -->
         <HyperlinkButton x:Uid="Properties_AddProperty"
-                         Grid.Row="3"
+                         Grid.Row="4"
                          Margin="24,8,8,0"
                          Click="AddProperties_HyperlinkButton_Click"
                          Visibility="{x:Bind ViewModel.HasElement, Mode=OneWay}">
@@ -129,8 +153,8 @@
             </HyperlinkButton.ContextFlyout>
         </HyperlinkButton>
 
-        <ScrollViewer Grid.Row="4" Margin="24,8,8,0">
-            <ItemsControl ItemsSource="{x:Bind PropertyViewSource.View, Mode=OneWay}">
+        <ScrollViewer Grid.Row="5" Margin="24,8,0,0">
+            <ItemsControl Margin="0,0,8,0" ItemsSource="{x:Bind PropertyViewSource.View, Mode=OneWay}">
                 <ItemsControl.GroupStyle>
                     <GroupStyle HidesIfEmpty="True">
                         <GroupStyle.HeaderTemplate>

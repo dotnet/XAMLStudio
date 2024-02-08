@@ -1,13 +1,17 @@
 ﻿using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
+using Microsoft.Language.Xml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel.Channels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Markup;
+using Windows.UI.Xaml.Media;
 using XamlStudio.Models;
 using XamlStudio.Toolkit.Services;
 using XamlStudio.ViewModels;
@@ -107,8 +111,16 @@ public sealed partial class Properties : Page,
 
     public void Receive(EditorSelectedElementMessage message)
     {
-        if (message.Element != ViewModel.SelectedElement
-            && _coordinator.TryGetVisualElement(message.Element, out var element))
+        if (_coordinator.TryGetVisualElement(message.Element, out var element))
+        {
+            UpdateProperties(element, message.Element);
+        }
+    }
+
+    // Method used to update state based on a given Visual element.
+    private void UpdateProperties(DependencyObject element, IXmlElementSyntax xmlHint = null)
+    {
+        if (element != ViewModel.SelectedElement)
         {
             ViewModel.SelectedElement = element;
             if (element.FindAscendant<DependencyObject>() is DependencyObject parent)
@@ -118,6 +130,20 @@ public sealed partial class Properties : Page,
             else
             {
                 ViewModel.SelectedElementParent = null;
+            }
+
+            if (VisualTreeHelper.GetChildrenCount(element) is int count && count > 0)
+            {
+                List<DependencyObject> children = new();
+                for (int i = 0; i < count; i++)
+                {
+                    children.Add(VisualTreeHelper.GetChild(element, i));
+                }
+                ViewModel.SelectedElementChildren = children.ToArray();
+            }
+            else
+            {
+                ViewModel.SelectedElementChildren = null;
             }
 
             // Find properties of interest...
@@ -154,11 +180,18 @@ public sealed partial class Properties : Page,
 
             // TODO: Pinned...
 
-            // First list properties we've modified in XML
-            var definedAttributes = new HashSet<string>(message.Element.Attributes.Select(a => a.Name));
-            foreach (var attr in definedAttributes)
+            HashSet<string> definedAttributes = new();
+
+            // Check if we have an associated XML element to see what we set in our Editor text
+            if (xmlHint == null
+                && _coordinator.TryGetXmlElement(element, out xmlHint))
             {
-                AddProperty(element.GetType(), attr, "- Set in XAML -");
+                // First list properties we've modified in XML
+                definedAttributes = new(xmlHint.Attributes.Select(a => a.Name));
+                foreach (var attr in definedAttributes)
+                {
+                    AddProperty(element.GetType(), attr, "- Set in XAML -");
+                }
             }
 
             List<string> groupOrder = new() { "- Modified -", "- Set in XAML -" };
@@ -221,5 +254,13 @@ public sealed partial class Properties : Page,
 
         return ((name != DependencyProperty.UnsetValue) ? $"\"{name}\" " : "") +
             "<" + element.GetType().Name + ">";
+    }
+
+    private void VisualTreeElement_Click(Hyperlink sender, HyperlinkClickEventArgs args)
+    {
+        if (sender.FindAscendant<TextBlock>()?.DataContext is DependencyObject element)
+        {
+            UpdateProperties(element);
+        } 
     }
 }
