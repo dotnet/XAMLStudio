@@ -1,6 +1,7 @@
 ﻿
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.Language.Xml;
+using Windows.UI.Xaml;
 using XamlStudio.Toolkit.Models;
 using XamlStudio.ViewModels;
 
@@ -43,6 +44,12 @@ public record DataSourceSetInFileMessage(string? FileName);
 /// </summary>
 /// <param name="Element"><see cref="IXmlElementSyntax"/></param>
 public record EditorSelectedElementMessage(IXmlElementSyntax Element);
+
+/// <summary>
+/// Sent when an editor selects an explicit Visual Element component and needs to update other related tools interacting with a selected visual element.
+/// </summary>
+/// <param name="Element"></param>
+public record SelectedVisualElementMessage(DependencyObject Element);
 
 /// <summary>
 /// Replies with true if the shortcut was handled.

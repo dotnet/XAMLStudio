@@ -5,7 +5,6 @@ using Microsoft.Language.Xml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.ServiceModel.Channels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -23,6 +22,7 @@ namespace XamlStudio.Views;
 /// </summary>
 public sealed partial class Properties : Page,
     IRecipient<EditorSelectedElementMessage>,
+    IRecipient<SelectedVisualElementMessage>,
     IRecipient<XamlRenderedMessage>
 {
     public MainViewModel MainViewModel { get; set; }
@@ -105,6 +105,11 @@ public sealed partial class Properties : Page,
             // TODO: Set focus to TextBox of new item inserted...
             //// DispatcherQueue...?
         }
+    }
+
+    public void Receive(SelectedVisualElementMessage message)
+    {
+        UpdateProperties(message.Element);
     }
 
     public void Receive(EditorSelectedElementMessage message)
@@ -258,7 +263,7 @@ public sealed partial class Properties : Page,
     {
         if (sender.FindAscendant<TextBlock>()?.DataContext is DependencyObject element)
         {
-            UpdateProperties(element);
+            WeakReferenceMessenger.Default.Send<SelectedVisualElementMessage>(new(element));
         } 
     }
 }

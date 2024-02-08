@@ -218,8 +218,11 @@ public partial class AdornerLayer : Canvas
     {
         var border = adorner.FindAscendant<Border>();
 
-        layer.Children.Remove(border);
+        if (border != null)
+        {
+            layer.Children.Remove(border);
 
-        VisualTreeHelper.DisconnectChildrenRecursive(border);
+            VisualTreeHelper.DisconnectChildrenRecursive(border);
+        }
     }
 }

@@ -8,7 +8,8 @@ using XamlStudio.Models;
 namespace XamlStudio.Views;
 
 public partial class Document :
-    IRecipient<EditorSelectedElementMessage>
+    IRecipient<EditorSelectedElementMessage>,
+    IRecipient<SelectedVisualElementMessage>
 {
     private bool _isDesignEnabled = false;
     private FrameworkElement? _highlightedElement;
@@ -21,7 +22,7 @@ public partial class Document :
 
             if (_isDesignEnabled)
             {
-                AttachAdorner();                
+                AttachAdorner(_highlightedElement);                
             }
             else
             {
@@ -30,25 +31,39 @@ public partial class Document :
         }
     }
 
+    public void Receive(SelectedVisualElementMessage message)
+    {
+        AttachAdorner(message.Element as FrameworkElement);
+    }
+
     public void Receive(EditorSelectedElementMessage message)
     {
-        if (_isDesignEnabled
-            && ViewModel.XamlCoordinator.TryGetVisualElement(message.Element, out var uie)
+        if (ViewModel.XamlCoordinator.TryGetVisualElement(message.Element, out var uie)
             && uie is FrameworkElement fwe)
         {
-            RemoveAdorner();
-
-            _highlightedElement = fwe;
-
-            AttachAdorner();
+            AttachAdorner(fwe);
         }
     }
 
-    private void AttachAdorner()
+    private void AttachAdorner(FrameworkElement element)
     {
-        if (_highlightedElement == null) return;
+        if (element == null)
+        {
+            return;
+        }
+        else if (_highlightedElement != null)
+        {
+            // TODO: In the future, we could maybe support selecting multiple elements for comparison/measuring?
+            // Remove prior adorner before attaching a new one.
+            RemoveAdorner();
+        }
 
-        AdornerLayer.SetXaml(_highlightedElement, new DesignerAdorner(_highlightedElement));
+        _highlightedElement = element;
+
+        if (_isDesignEnabled)
+        {
+            AdornerLayer.SetXaml(_highlightedElement, new DesignerAdorner(_highlightedElement));
+        }
     }
 
     private void RemoveAdorner()
