@@ -2,6 +2,7 @@
 using CommunityToolkit.WinUI.Controls.Future;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls.Primitives;
+using XamlStudio.Controls;
 using XamlStudio.Models;
 
 namespace XamlStudio.Views;
@@ -47,13 +48,7 @@ public partial class Document :
     {
         if (_highlightedElement == null) return;
 
-        if (Resources.TryGetValue("AdornerCanvasElement", out var resource)
-            && resource is DataTemplate template)
-        {
-            var adorner = template.LoadContent() as FrameworkElement;
-
-            AdornerLayer.SetXaml(_highlightedElement, adorner);
-        }        
+        AdornerLayer.SetXaml(_highlightedElement, new DesignerAdorner(_highlightedElement));
     }
 
     private void RemoveAdorner()

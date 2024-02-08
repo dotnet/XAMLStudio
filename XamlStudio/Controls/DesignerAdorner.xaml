@@ -1,0 +1,59 @@
+﻿<UserControl x:Class="XamlStudio.Controls.DesignerAdorner"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="using:XamlStudio.Controls"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="using:CommunityToolkit.WinUI"
+             d:DesignHeight="300"
+             d:DesignWidth="400"
+             mc:Ignorable="d">
+
+    <Canvas x:Name="AdornerCanvas"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            ui:FrameworkElementExtensions.EnableActualSizeBinding="True"
+            Background="#3300FFFF"
+            IsHitTestVisible="False">
+
+        <!--  Attached Element Name  -->
+        <Border Canvas.Left="0"
+                Canvas.Top="-24"
+                Height="23"
+                Padding="4,2"
+                VerticalAlignment="Center"
+                Background="DarkCyan">
+            <TextBlock Text="{x:Bind local:DesignerAdorner.GetElementInfo(AttachedElement)}" ToolTipService.ToolTip="{x:Bind AttachedElementType.FullName}" />
+        </Border>
+
+        <!--  Horizontal Bound Lines  -->
+        <Line Stroke="Cyan"
+              StrokeThickness="1"
+              X1="-10000"
+              X2="10000"
+              Y1="0"
+              Y2="0" />
+        <Line Stroke="Cyan"
+              StrokeThickness="1"
+              X1="-10000"
+              X2="10000"
+              Y1="{x:Bind AdornerCanvas.(ui:FrameworkElementExtensions.ActualHeight), Mode=OneWay}"
+              Y2="{x:Bind AdornerCanvas.(ui:FrameworkElementExtensions.ActualHeight), Mode=OneWay}" />
+
+        <!--  Vertical Bound Lines  -->
+        <Line HorizontalAlignment="Left"
+              Stroke="Cyan"
+              StrokeThickness="1"
+              X1="0"
+              X2="0"
+              Y1="-10000"
+              Y2="10000" />
+        <Line HorizontalAlignment="Right"
+              Stroke="Cyan"
+              StrokeThickness="1"
+              X1="{x:Bind AdornerCanvas.(ui:FrameworkElementExtensions.ActualWidth), Mode=OneWay}"
+              X2="{x:Bind AdornerCanvas.(ui:FrameworkElementExtensions.ActualWidth), Mode=OneWay}"
+              Y1="-10000"
+              Y2="10000" />
+    </Canvas>
+</UserControl>

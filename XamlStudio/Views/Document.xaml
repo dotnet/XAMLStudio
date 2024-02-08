@@ -26,48 +26,6 @@
         <xstc:HexToColorConverter x:Key="HexToColorConverter" />
         <xstc:StringToUriConverter x:Key="StringToUriConverter" />
         <xstc:XamlBindingWrapperConverter x:Key="XamlBindingWrapper" />
-
-        <DataTemplate x:Key="AdornerCanvasElement">
-            <Canvas x:Name="AdornerCanvas"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    ui:FrameworkElementExtensions.EnableActualSizeBinding="True"
-                    Background="Cyan"
-                    IsHitTestVisible="False"
-                    Opacity="0.3">
-
-                <!--  Horizontal Bound Lines  -->
-                <Line Stroke="Cyan"
-                      StrokeThickness="1"
-                      X1="-10000"
-                      X2="10000"
-                      Y1="0"
-                      Y2="0" />
-                <!--  TODO: Can't use x:Bind due to Uno bug: https://github.com/unoplatform/uno/issues/7893  -->
-                <Line Stroke="Cyan"
-                      StrokeThickness="1"
-                      X1="-10000"
-                      X2="10000"
-                      Y1="{Binding ElementName=AdornerCanvas, Path=(ui:FrameworkElementExtensions.ActualHeight)}"
-                      Y2="{Binding ElementName=AdornerCanvas, Path=(ui:FrameworkElementExtensions.ActualHeight)}" />
-
-                <!--  Vertical Bound Lines  -->
-                <Line HorizontalAlignment="Left"
-                      Stroke="Cyan"
-                      StrokeThickness="1"
-                      X1="0"
-                      X2="0"
-                      Y1="-10000"
-                      Y2="10000" />
-                <Line HorizontalAlignment="Right"
-                      Stroke="Cyan"
-                      StrokeThickness="1"
-                      X1="{Binding ElementName=AdornerCanvas, Path=(ui:FrameworkElementExtensions.ActualWidth)}"
-                      X2="{Binding ElementName=AdornerCanvas, Path=(ui:FrameworkElementExtensions.ActualWidth)}"
-                      Y1="-10000"
-                      Y2="10000" />
-            </Canvas>
-        </DataTemplate>
     </UserControl.Resources>
 
     <Grid>

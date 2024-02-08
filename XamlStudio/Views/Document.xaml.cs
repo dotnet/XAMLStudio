@@ -258,6 +258,9 @@ public sealed partial class Document : UserControl,
         var result = message.Context;
         if (result.Element != null)
         {
+            // Remove any existing Adorner before we re-render
+            RemoveAdorner();
+
             var cleanPanel = IsSpecificPreviewSize ? XamlRootSpecific : XamlRoot;
 
             // Clean-up existing XAML content
