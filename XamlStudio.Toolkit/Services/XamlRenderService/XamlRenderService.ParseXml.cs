@@ -34,7 +34,7 @@ namespace XamlStudio.Toolkit.Services
             return (line, column);
         }
 
-        private void ReadXmlTree(ref XamlRenderResultContext context)
+        private bool ReadXmlTree(ref XamlRenderResultContext context)
         {
             try
             {
@@ -75,6 +75,8 @@ namespace XamlStudio.Toolkit.Services
                 (var line, var column) = GetLineColumnIndex(context.RenderedContent, errorNode.FullSpan.Start);
                 context.Errors.Add(new XamlExceptionRange(string.Join('\n', diagnostic), null, (uint)line, (uint)column, GetLine(context.RenderedContent, (uint)line)));
             }
+
+            return context.Errors.Count == 0;
         }
 
         private void GetBindings(XamlRenderResultContext context, bool isBinding)

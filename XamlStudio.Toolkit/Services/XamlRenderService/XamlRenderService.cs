@@ -44,6 +44,7 @@ namespace XamlStudio.Toolkit.Services
 
             // Hold all outcomes of this process in an object we'll return when done.
             var result = new XamlRenderResultContext(content);
+            result.Bindings = Enumerable.Empty<XamlBindingInfo>();
 
             // Load extra Metadata about other available types.
             if (!AppAssemblyInfo.Instance.IsLoaded)
@@ -63,138 +64,136 @@ namespace XamlStudio.Toolkit.Services
             // Start by pre-processing raw string to add any missing namespaces.
             PreProcessXmlns(ref result, ref settings);
 
-            ReadXmlTree(ref result);
-
-            // TODO: Figure out best way to split this into binding part and non-binding parts.
-            GetBindings(result, settings.IsBindingDebuggingEnabled);
-
-            if (settings.IsBindingDebuggingEnabled)
-            {    
-                // TODO: Record Line, Start, and Length of Changes to re-adjust error messages back to original positions.
-                // TODO: Do this in XML (add required resources)
-                InterceptBindings(ref result);
-            }
-
-            // Attempt RenderAsync
-            try
+            if (ReadXmlTree(ref result)) // TODO: Pass in pre-parsed XmlDocumentSyntax
             {
-                if (settings.IsInitialTemplateValidated)
-                {
-                    result.Element = XamlReader.LoadWithInitialTemplateValidation(result.RenderedContent);
-                }
-                else
-                {
-                    result.Element = XamlReader.Load(result.RenderedContent);
-                }
-            }
-            catch (Exception e)
-            {
-                // Highlight Error (we'll only get one at a time).
-                string msg = e.Message;
 
-                msg = msg.Replace("The text associated with this error code could not be found.", "").Trim();
+                // TODO: Figure out best way to split this into binding part and non-binding parts.
+                GetBindings(result, settings.IsBindingDebuggingEnabled);
 
-                uint line = 1;
-                uint column = 1;
-
-                //No default namespace has been declared. [Line: 1 Position: 2]
-                int il = msg.IndexOf("Line: ");
-                if (il >= 0)
-                {
-                    line = uint.Parse(msg.Substring(il + 6, msg.IndexOf("P", il) - il - 7));
-                }
-
-                int pl = msg.IndexOf("Position: ");
-                if (pl >= 0)
-                {
-                    column = uint.Parse(msg.Substring(pl + 9, msg.IndexOf("]", pl) - pl - 9));
-                }
-
-                var lineContent = GetLine(result.RenderedContent, line);
-                result.Errors.Add(new XamlExceptionRange(msg, e, line, column, lineContent));
-            }
-
-            // Need to look for Design-Time 'd:' properties and link to object somehow for modification afterwards as they're ignored by parser usually with mc:Ignorable="d"
-            await ProcessDesignDataAsync(result, settings);
-
-            // Load Binding Converters
-            if (result.Element is FrameworkElement fwe)
-            {
                 if (settings.IsBindingDebuggingEnabled)
                 {
-                    foreach (var binding in XamlBindingWrapperManager.Instance.GetBindings(this.Id))
+                    // TODO: Record Line, Start, and Length of Changes to re-adjust error messages back to original positions.
+                    // TODO: Do this in XML (add required resources)
+                    InterceptBindings(ref result);
+                }
+
+                // Attempt RenderAsync
+                try
+                {
+                    if (settings.IsInitialTemplateValidated)
                     {
-                        if (!string.IsNullOrWhiteSpace(binding.ConverterKey) && fwe.Resources.ContainsKey(binding.ConverterKey))
-                        {
-                            binding.Converter = fwe.Resources[binding.ConverterKey] as IValueConverter;
-                        }
-                        // If Key not found, should already be Xaml Compiler Error and not get here.
+                        result.Element = XamlReader.LoadWithInitialTemplateValidation(result.RenderedContent);
+                    }
+                    else
+                    {
+                        result.Element = XamlReader.Load(result.RenderedContent);
                     }
                 }
-            }
-
-            if (result.Element != null && result.IsUIElement)
-            {
-                if (settings.ResourceRoot != null)
+                catch (Exception e)
                 {
-                    // Look for Image Objects in order to replace their Sources with our Images Loaded from Disk.
-                    VisitUIElements(result.Element as UIElement, async (child) =>
+                    // Highlight Error (we'll only get one at a time).
+                    string msg = e.Message;
+
+                    msg = msg.Replace("The text associated with this error code could not be found.", "").Trim();
+
+                    uint line = 1;
+                    uint column = 1;
+
+                    //No default namespace has been declared. [Line: 1 Position: 2]
+                    int il = msg.IndexOf("Line: ");
+                    if (il >= 0)
                     {
-                        // TODO: Generalize to support toolkit:ImageEx, toolkit:RoundImageEx, Converters?
-                        if (child is Image img && img.Source is BitmapImage bmp &&
-                            bmp.UriSource?.AbsoluteUri is string uri)
-                        {
-                            // TODO: Extract into private method
-                            // TODO: Support ms-appdata? protocol //local/, etc...
-                            if (uri.StartsWith("ms-appx:///", StringComparison.OrdinalIgnoreCase) == true)
-                            {
-                                uri = uri.Substring(11);
-                            }
-                            else if (uri.StartsWith("ms-resource:///Files/", StringComparison.OrdinalIgnoreCase))
-                            {
-                                uri = uri.Substring(21);
-                            }
+                        line = uint.Parse(msg.Substring(il + 6, msg.IndexOf("P", il) - il - 7));
+                    }
 
-                            var imagefile = await GetFileFromPath(settings.ResourceRoot, uri);
-                            var bitmapImage = new BitmapImage();
-                            if (imagefile != null)
-                            {
-                                using (var stream = await (imagefile as StorageFile).OpenAsync(FileAccessMode.Read))
-                                {
-                                    await bitmapImage.SetSourceAsync(stream);
-                                }
+                    int pl = msg.IndexOf("Position: ");
+                    if (pl >= 0)
+                    {
+                        column = uint.Parse(msg.Substring(pl + 9, msg.IndexOf("]", pl) - pl - 9));
+                    }
 
-                                // Replace Image Source with our now injected image.
-                                img.Source = bitmapImage;
-                            }
-                        }
-                        else if (child is MediaPlayerElement mpe && mpe.Source is MediaPlaybackItem mpi 
-                                && mpi.Source?.Uri?.AbsoluteUri is string uri2)
-                        {
-                            if (uri2.StartsWith("ms-appx:///", StringComparison.OrdinalIgnoreCase) == true)
-                            {
-                                uri2 = uri2.Substring(11);
-                            }
-                            else if (uri2.StartsWith("ms-resource:///Files/", StringComparison.OrdinalIgnoreCase))
-                            {
-                                uri2 = uri2.Substring(21);
-                            }
-
-                            var mediafile = await GetFileFromPath(settings.ResourceRoot, uri2);
-                            var source = MediaSource.CreateFromStorageFile(mediafile);
-                            if (source != null)
-                            {
-                                mpe.Source = source;
-                            }
-                        }
-                    });
+                    var lineContent = GetLine(result.RenderedContent, line);
+                    result.Errors.Add(new XamlExceptionRange(msg, e, line, column, lineContent));
                 }
 
-                result.Bindings = XamlBindingWrapperManager.Instance.GetBindings(Id);
-            }
-            else
-            {
-                result.Bindings = Enumerable.Empty<XamlBindingInfo>();
+                // Need to look for Design-Time 'd:' properties and link to object somehow for modification afterwards as they're ignored by parser usually with mc:Ignorable="d"
+                await ProcessDesignDataAsync(result, settings);
+
+                // Load Binding Converters
+                if (result.Element is FrameworkElement fwe)
+                {
+                    if (settings.IsBindingDebuggingEnabled)
+                    {
+                        foreach (var binding in XamlBindingWrapperManager.Instance.GetBindings(this.Id))
+                        {
+                            if (!string.IsNullOrWhiteSpace(binding.ConverterKey) && fwe.Resources.ContainsKey(binding.ConverterKey))
+                            {
+                                binding.Converter = fwe.Resources[binding.ConverterKey] as IValueConverter;
+                            }
+                            // If Key not found, should already be Xaml Compiler Error and not get here.
+                        }
+                    }
+                }
+
+                if (result.Element != null && result.IsUIElement)
+                {
+                    if (settings.ResourceRoot != null)
+                    {
+                        // Look for Image Objects in order to replace their Sources with our Images Loaded from Disk.
+                        VisitUIElements(result.Element as UIElement, async (child) =>
+                        {
+                            // TODO: Generalize to support toolkit:ImageEx, toolkit:RoundImageEx, Converters?
+                            if (child is Image img && img.Source is BitmapImage bmp &&
+                                bmp.UriSource?.AbsoluteUri is string uri)
+                            {
+                                // TODO: Extract into private method
+                                // TODO: Support ms-appdata? protocol //local/, etc...
+                                if (uri.StartsWith("ms-appx:///", StringComparison.OrdinalIgnoreCase) == true)
+                                {
+                                    uri = uri.Substring(11);
+                                }
+                                else if (uri.StartsWith("ms-resource:///Files/", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    uri = uri.Substring(21);
+                                }
+
+                                var imagefile = await GetFileFromPath(settings.ResourceRoot, uri);
+                                var bitmapImage = new BitmapImage();
+                                if (imagefile != null)
+                                {
+                                    using (var stream = await (imagefile as StorageFile).OpenAsync(FileAccessMode.Read))
+                                    {
+                                        await bitmapImage.SetSourceAsync(stream);
+                                    }
+
+                                    // Replace Image Source with our now injected image.
+                                    img.Source = bitmapImage;
+                                }
+                            }
+                            else if (child is MediaPlayerElement mpe && mpe.Source is MediaPlaybackItem mpi
+                                    && mpi.Source?.Uri?.AbsoluteUri is string uri2)
+                            {
+                                if (uri2.StartsWith("ms-appx:///", StringComparison.OrdinalIgnoreCase) == true)
+                                {
+                                    uri2 = uri2.Substring(11);
+                                }
+                                else if (uri2.StartsWith("ms-resource:///Files/", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    uri2 = uri2.Substring(21);
+                                }
+
+                                var mediafile = await GetFileFromPath(settings.ResourceRoot, uri2);
+                                var source = MediaSource.CreateFromStorageFile(mediafile);
+                                if (source != null)
+                                {
+                                    mpe.Source = source;
+                                }
+                            }
+                        });
+                    }
+
+                    result.Bindings = XamlBindingWrapperManager.Instance.GetBindings(Id);
+                }
             }
 
             return result;
