@@ -457,5 +457,7 @@ namespace XamlStudio.Views
                 ViewModel.ActiveFile = ViewModel.OpenFiles.First();
             }
         }
+
+        public static Visibility IsVisibleIfDocument(DocumentType type) => type == DocumentType.Document ? Visibility.Visible : Visibility.Collapsed;        
     }
 }

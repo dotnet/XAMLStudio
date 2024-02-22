@@ -157,7 +157,33 @@
             </muxc:TabView.Resources>
             <muxc:TabView.TabItemTemplate>
                 <DataTemplate x:DataType="models:XamlDocument">
-                    <muxc:TabViewItem ContextFlyout="{StaticResource TabItemFlyout}" Header="{x:Bind Title, Mode=OneWay}">
+                    <muxc:TabViewItem ContextFlyout="{StaticResource TabItemFlyout}" HorizontalContentAlignment="Stretch">
+                        <muxc:TabViewItem.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{x:Bind Title, Mode=OneWay}"/>
+                                <controls:SwitchPresenter Grid.Column="1" Value="{x:Bind State.RenderState, Mode=OneWay}"
+                                                          TargetType="models:SyncStatus"
+                                                          Visibility="{x:Bind local:MainPage.IsVisibleIfDocument(DocumentType), Mode=OneWay}">
+                                    <!-- TODO: Placeholders, should have Tooltips too -->
+                                    <controls:Case Value="Unrendered">
+                                        <TextBlock Text="⚫"/>
+                                    </controls:Case>
+                                    <controls:Case Value="Error">
+                                        <TextBlock Text="🛑"/>
+                                    </controls:Case>
+                                    <controls:Case Value="OutOfSync">
+                                        <TextBlock Text="🟡"/>
+                                    </controls:Case>
+                                    <controls:Case Value="Synced">
+                                        <TextBlock Text="✅"/>
+                                    </controls:Case>
+                                </controls:SwitchPresenter>
+                            </Grid>
+                        </muxc:TabViewItem.Header>
                         <controls:SwitchPresenter x:Name="Parent"
                                                   HorizontalAlignment="Stretch"
                                                   VerticalAlignment="Stretch"

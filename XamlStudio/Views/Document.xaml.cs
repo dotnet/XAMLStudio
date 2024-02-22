@@ -352,6 +352,7 @@ public sealed partial class Document : UserControl,
             }
 
             ViewModel.HasCompiled = true;
+            ViewModel.Document.State.RenderState = SyncStatus.Synced;
 
             //// TODO: Only do this if property panel is open or design mode is active?
             ViewModel.XamlCoordinator.Initialize(result.XmlDocument, (DependencyObject)result.Element);
@@ -427,6 +428,7 @@ public sealed partial class Document : UserControl,
             // TODO: Filter out non-display characters or look for text change...
             ViewModel.Document.HasChanged = true; // Mark Dirty
             ViewModel.HasCompiled = false;
+            ViewModel.Document.State.RenderState = SyncStatus.OutOfSync;
 
             // Setup Time for Auto-Compile
             if (SettingsService.Instance.IsAutoCompileEnabled.Value)
