@@ -9,6 +9,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media.Imaging;
+using XamlStudio.Toolkit.Extensions;
 using XamlStudio.Toolkit.Models;
 
 namespace XamlStudio.Toolkit.Services
@@ -67,6 +68,7 @@ namespace XamlStudio.Toolkit.Services
             if (ReadXmlTree(ref result)) // TODO: Pass in pre-parsed XmlDocumentSyntax
             {
 
+                // Note: This function is called regardless as it also currently removes the x:Class attribute...
                 // TODO: Figure out best way to split this into binding part and non-binding parts.
                 GetBindings(result, settings.IsBindingDebuggingEnabled);
 
@@ -113,6 +115,25 @@ namespace XamlStudio.Toolkit.Services
                     }
 
                     var lineContent = GetLine(result.RenderedContent, line);
+                    var gap = lineContent.IndexOf(' ', (int)column - 1);
+                    if (gap == -1)
+                    {
+                        gap = lineContent.IndexOf('>', (int)column - 1);
+                    }
+                    if (gap == -1)
+                    {
+                        gap = lineContent.Length;
+                    }
+
+                    // TODO: Need to do a better mapping between original and modified doc. Or See issue in GetBindings function and Xml Tree modification strategy between our two XmlParsers, need to converage on GuiLabs I think, it has merge/diff comparison support which may help here.
+                    var errorLoc = lineContent.Substring((int)column - 1,  gap - (int)column + 1);
+                    var opos = content.IndexOf(errorLoc);
+                    if (opos != -1)
+                    {
+                        (line, column) = ((uint, uint))content.GetLineColumnIndex(opos);
+                        lineContent = GetLine(content, line); // Get original full line, as the XamlExceptionRange does scoping for us to highlight the area
+                    }
+
                     result.Errors.Add(new XamlExceptionRange(msg, e, line, column, lineContent));
                 }
 

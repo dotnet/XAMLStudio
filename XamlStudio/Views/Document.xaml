@@ -50,9 +50,9 @@
                         <Setter Target="PreviewArea.(Grid.RowSpan)" Value="3" />
                         <Setter Target="PreviewArea.(Grid.ColumnSpan)" Value="1" />
 
-                        <Setter Target="ErrorOverlay.(Grid.Column)" Value="2" />
+                        <!--<Setter Target="ErrorOverlay.(Grid.Column)" Value="2" />
                         <Setter Target="ErrorOverlay.(Grid.RowSpan)" Value="3" />
-                        <Setter Target="ErrorOverlay.(Grid.ColumnSpan)" Value="1" />
+                        <Setter Target="ErrorOverlay.(Grid.ColumnSpan)" Value="1" />-->
 
                         <!--  Middle Splitter Bar  -->
                         <Setter Target="SplitterBar.(Grid.Row)" Value="0" />
@@ -86,7 +86,7 @@
                         <!--  Top Pane -> Bottom Pane  -->
                         <Setter Target="PreviewArea.(Grid.Row)" Value="2" />
 
-                        <Setter Target="ErrorOverlay.(Grid.Row)" Value="2" />
+                        <!--<Setter Target="ErrorOverlay.(Grid.Row)" Value="2" />-->
 
                         <!--  Bottom Pane -> Top Pane  -->
                         <Setter Target="EditorArea.(Grid.Row)" Value="0" />
@@ -98,8 +98,8 @@
                         <Setter Target="PreviewArea.(Grid.RowSpan)" Value="3" />
                         <Setter Target="PreviewArea.(Grid.ColumnSpan)" Value="1" />
 
-                        <Setter Target="ErrorOverlay.(Grid.RowSpan)" Value="3" />
-                        <Setter Target="ErrorOverlay.(Grid.ColumnSpan)" Value="1" />
+                        <!--<Setter Target="ErrorOverlay.(Grid.RowSpan)" Value="3" />
+                        <Setter Target="ErrorOverlay.(Grid.ColumnSpan)" Value="1" />-->
 
                         <!--  Middle Splitter Bar  -->
                         <Setter Target="SplitterBar.(Grid.Row)" Value="0" />
@@ -185,39 +185,39 @@
 
 
         <!--  Error Overlay  -->
-        <Grid x:Name="ErrorOverlay"
+        <!--<Grid x:Name="ErrorOverlay"
               Grid.Row="0"
               Grid.ColumnSpan="3"
               fex:FrameworkElementExtensions.UpdateLiveRegionChangedOnVisible="True"
               Background="#66000000"
               Visibility="{x:Bind ViewModel.Result.Errors, Mode=OneWay, Converter={StaticResource CollectionVisibilityConverter}, FallbackValue=Collapsed}">
-            <!--<controls:DropShadowPanel Margin="16"
+            <controls:DropShadowPanel Margin="16"
                                       HorizontalAlignment="Center"
                                       VerticalAlignment="Center"
                                       BlurRadius="8.0"
                                       OffsetX="8"
                                       OffsetY="8"
                                       ShadowOpacity="0.6"
-                                      Color="Black"> TODO: Switch to AttachedCardShadow-->
+                                      Color="Black"> TODO: Switch to AttachedCardShadow
             <StackPanel Padding="24" Background="{ThemeResource Brush-Red-Light-2}">
                 <TextBlock x:Uid="Document_ErrorsHeader"
-                           Margin="0,0,0,8"
-                           AutomationProperties.LiveSetting="Assertive"
-                           FontWeight="SemiBold"
-                           Foreground="White" />
+                               Margin="0,0,0,8"
+                               AutomationProperties.LiveSetting="Assertive"
+                               FontWeight="SemiBold"
+                               Foreground="White" />
                 <ItemsControl ItemsSource="{x:Bind ViewModel.Result.Errors, Mode=OneWay}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="models:XamlExceptionRange">
                             <TextBlock fex:FrameworkElementExtensions.UpdateLiveRegionChangedOnLoad="True"
-                                       AutomationProperties.LiveSetting="Assertive"
-                                       Foreground="White"
-                                       Text="{x:Bind Message}" />
+                                           AutomationProperties.LiveSetting="Assertive"
+                                           Foreground="White"
+                                           Text="{x:Bind Message}" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </StackPanel>
-            <!--</controls:DropShadowPanel>-->
-        </Grid>
+            </controls:DropShadowPanel>
+        </Grid>-->
 
         <!--  Row Grid Splitter  -->
         <controls:GridSplitter x:Name="SplitterBar"
