@@ -189,14 +189,10 @@ namespace XamlStudio.Views
                         { "Shift", keyInfo.Shift.ToString() },
                         { "Code", keyInfo.KeyCode.ToString() }
                     });
-
-                    keyInfo.Reply(true);
-                }
-                else
-                {
-                    keyInfo.Reply(false);
                 }
             }
+
+            keyInfo.Reply(active);
         }
 
         private async void MainPage_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
