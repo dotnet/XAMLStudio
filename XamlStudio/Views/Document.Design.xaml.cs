@@ -72,7 +72,5 @@ public partial class Document :
         if (_highlightedElement == null) return;
 
         AdornerLayer.SetXaml(_highlightedElement, null);
-
-        _highlightedElement = null;
     }
 }

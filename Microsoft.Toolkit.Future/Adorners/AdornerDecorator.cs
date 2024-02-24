@@ -9,7 +9,7 @@ using Windows.UI.Xaml;
 namespace CommunityToolkit.WinUI.Controls.Future;
 
 /// <summary>
-/// Helper class to hold content with an <see cref="AdornerLayer"/>.
+/// Helper class to hold content with an <see cref="AdornerLayer"/>. Use this to wrap another <see cref="UIElement"/> and direct where the <see cref="AdornerLayer"/> should sit. This class is helpful to constrain the <see cref="AdornerLayer"/> or in cases where an appropriate location for the layer can't be automatically determined.
 /// </summary>
 [TemplatePart(Name = PartAdornerLayer, Type = typeof(AdornerLayer))]
 [ContentProperty(Name = nameof(Child))]

@@ -12,7 +12,7 @@ public static partial class FrameworkElementExtensions
 {
     public static Task<bool> WaitUntilLoadedAsync(this FrameworkElement element, TaskCreationOptions? options = null)
     {
-        if (element.IsLoaded && element.Parent != null)
+        if (element.IsLoaded) // && element.Parent != null) // TODO: Seeing a case where IsLoaded is true, but Parent is null still... gumming up the works, as Loaded I don't think is called again after in that case.
         {
             return Task.FromResult(true);
         }
