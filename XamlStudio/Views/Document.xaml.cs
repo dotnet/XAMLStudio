@@ -25,7 +25,6 @@ using XamlStudio.Models;
 using XamlStudio.Services;
 using XamlStudio.Toolkit.Controls;
 using XamlStudio.Toolkit.Extensions;
-using XamlStudio.Toolkit.Models;
 using XamlStudio.Toolkit.Services;
 using XamlStudio.ViewModels;
 
@@ -100,17 +99,25 @@ public sealed partial class Document : UserControl,
         dataTransferManager.DataRequested += DataTransferManager_DataRequested;
 
         Loaded += Document_Loaded;
+        Unloaded += Document_Unloaded;
 
         CodeEditor.RegisterPropertyChangedCallback(CodeEditor.SelectedRangeProperty, CodeEditor_SelectedRangeChanged);
     }
 
     private void Document_Loaded(object sender, RoutedEventArgs e)
     {
+        WeakReferenceMessenger.Default.RegisterAll(this);
+
         // HACK: TODO: Workaround for Monaco editor not updating it's content?
         ViewModel.Document.Content = ViewModel.Document.Content + " ";
         ViewModel.Document.Content = ViewModel.Document.Content.Substring(0, ViewModel.Document.Content.Length - 1);
 
         _ = UpdateBreadcrumbs();
+    }
+
+    private void Document_Unloaded(object sender, RoutedEventArgs e)
+    {
+        WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 
     private void UnloadViewModel(DocumentViewModel model)
@@ -131,9 +138,6 @@ public sealed partial class Document : UserControl,
         ViewModel.ActualTheme = ActualTheme;
 
         CodeEditor.Options.Folding = true;
-
-        WeakReferenceMessenger.Default.UnregisterAll(this);
-        WeakReferenceMessenger.Default.RegisterAll(this);
 
         SetPaneOrientation();
         SetPreviewAreaTheme();
