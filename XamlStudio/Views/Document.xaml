@@ -247,7 +247,7 @@
                           Padding="1"
                           Click="HighlightElement_Click"
                           Style="{StaticResource VSCodeAppBarHeaderToggleButtonStyle}">
-                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xEB3C;" />
+                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE75A;" />
             </ToggleButton>
             <ToggleButton x:Uid="Document_Button_AlignmentGrid"
                           Padding="1"

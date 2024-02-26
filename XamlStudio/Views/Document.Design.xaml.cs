@@ -12,16 +12,16 @@ public partial class Document :
     IRecipient<EditorSelectedElementMessage>,
     IRecipient<SelectedVisualElementMessage>
 {
-    private bool _isDesignEnabled = false;
+    private bool _isHighlightEnabled = false;
     private FrameworkElement? _highlightedElement;
 
     private void HighlightElement_Click(object sender, RoutedEventArgs e)
     {
         if (sender is ToggleButton button)
         {
-            _isDesignEnabled = button.IsChecked == true;
+            _isHighlightEnabled = button.IsChecked == true;
 
-            if (_isDesignEnabled)
+            if (_isHighlightEnabled)
             {
                 AttachAdorner(_highlightedElement);                
             }
@@ -61,9 +61,9 @@ public partial class Document :
 
         _highlightedElement = element;
 
-        if (_isDesignEnabled)
+        if (_isHighlightEnabled)
         {
-            AdornerLayer.SetXaml(_highlightedElement, new DesignerAdorner(_highlightedElement, _highlightedElement.CoordinatesFrom((UIElement)ViewModel.Result.Element)));
+            AdornerLayer.SetXaml(_highlightedElement, new SurroundingAdorner(_highlightedElement, _highlightedElement.CoordinatesFrom((UIElement)ViewModel.Result.Element)));
         }
     }
 

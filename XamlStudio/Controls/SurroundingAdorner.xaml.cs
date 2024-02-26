@@ -6,7 +6,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace XamlStudio.Controls;
 
-public sealed partial class DesignerAdorner : UserControl
+public sealed partial class SurroundingAdorner : UserControl
 {
     public FrameworkElement AttachedElement { get; }
 
@@ -24,7 +24,7 @@ public sealed partial class DesignerAdorner : UserControl
 
     public Thickness NegativeMargin;
 
-    public DesignerAdorner(FrameworkElement attachedElement, Point position)
+    public SurroundingAdorner(FrameworkElement attachedElement, Point position)
     {
         AttachedElement = attachedElement;
         AttachedElementType = AttachedElement.GetType();

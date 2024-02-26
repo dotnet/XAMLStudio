@@ -208,8 +208,8 @@
     <Compile Include="Activation\SchemeActivationHandler.cs" />
     <Compile Include="Activation\WebToAppLinkActivationHandler.cs" />
     <Compile Include="Controls\AppFontIcon.cs" />
-    <Compile Include="Controls\DesignerAdorner.xaml.cs">
-      <DependentUpon>DesignerAdorner.xaml</DependentUpon>
+    <Compile Include="Controls\SurroundingAdorner.xaml.cs">
+      <DependentUpon>SurroundingAdorner.xaml</DependentUpon>
     </Compile>
     <Compile Include="DummyPage.xaml.cs">
       <DependentUpon>DummyPage.xaml</DependentUpon>
@@ -298,7 +298,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Controls\DesignerAdorner.xaml">
+    <Page Include="Controls\SurroundingAdorner.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

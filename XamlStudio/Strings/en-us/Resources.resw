@@ -785,7 +785,7 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <comment>Accessibility Name for Highlight element Button on document Gripper Bar</comment>
   </data>
   <data name="Document_Button_HighlightElement.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Toggles showing the boundaries within the preview area of the editor element where the caret is located.</value>
+    <value>Toggles showing the margin, border, padding boundaries within the preview area of the editor element where the caret is located.</value>
     <comment>Tooltip for Toggle Highlight element Button on document Gripper Bar</comment>
   </data>
   <data name="Document_Button_PreviewTheme.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
