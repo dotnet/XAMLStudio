@@ -231,7 +231,7 @@
         <StackPanel x:Name="SplitterCommandBarLeft"
                     Grid.Row="1"
                     Grid.ColumnSpan="3"
-                    Margin="0,2,200,2"
+                    Margin="0,2,300,2"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Background="Transparent"
@@ -243,12 +243,27 @@
                     Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
                 <SymbolIcon fex:SymbolIconExtensions.FontSize="16" Symbol="Refresh" />
             </Button>
-            <ToggleButton x:Uid="Document_Button_HighlightElement"
+            <controls:Segmented SelectedIndex="0"
+                                SelectionChanged="Segmented_SelectionChanged"
+                                SelectionMode="Single">
+                <!--  TODO: Move Tooltip to Resources...  -->
+                <controls:SegmentedItem Icon="{ui:FontIcon Glyph=&#xE890;}"
+                                        Tag="View"
+                                        ToolTipService.ToolTip="Normal" />
+                <!--<controls:SegmentedItem ToolTipService.ToolTip="Add Control" Icon="{ui:FontIcon Glyph=&#xE82E;}" Tag="Add"/>-->
+                <controls:SegmentedItem Icon="{ui:FontIcon Glyph=&#xE90F;}"
+                                        Tag="Modify"
+                                        ToolTipService.ToolTip="Modify" />
+                <controls:SegmentedItem Icon="{ui:FontIcon Glyph=&#xE75A;}"
+                                        Tag="Highlight"
+                                        ToolTipService.ToolTip="Highlight" />
+            </controls:Segmented>
+            <!--<ToggleButton x:Uid="Document_Button_HighlightElement"
                           Padding="1"
                           Click="HighlightElement_Click"
                           Style="{StaticResource VSCodeAppBarHeaderToggleButtonStyle}">
                 <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE75A;" />
-            </ToggleButton>
+            </ToggleButton>-->
             <ToggleButton x:Uid="Document_Button_AlignmentGrid"
                           Padding="1"
                           IsChecked="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled, Mode=TwoWay}"

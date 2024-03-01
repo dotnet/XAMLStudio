@@ -39,7 +39,7 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 BorderBrush="#33FF6600"
-                BorderThickness="{x:Bind AttachedElement.Margin}">
+                BorderThickness="{x:Bind AttachedElement.Margin}"><!-- TODO: Bug here with AttachedElement.Margin being negative, framework throws... -->
             <Border x:Name="BorderBorder"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"

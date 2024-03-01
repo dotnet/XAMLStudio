@@ -39,6 +39,12 @@ public partial class DocumentViewModel : ObservableObject
     [ObservableProperty]
     private string _selectedText;
 
+    /// <summary>
+    /// Visual Element that has focus for design mode elements, either through user selection or caret navigation in editor.
+    /// </summary>
+    [ObservableProperty]
+    private FrameworkElement _highlightedElement;
+
     [ObservableProperty]
     private XamlRenderResultContext _result;
 

@@ -1,8 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
+using CommunityToolkit.WinUI.Controls;
 using CommunityToolkit.WinUI.Controls.Future;
+using System.Diagnostics;
+using System.Linq;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using XamlStudio.Controls;
 using XamlStudio.Models;
 
@@ -12,33 +18,128 @@ public partial class Document :
     IRecipient<EditorSelectedElementMessage>,
     IRecipient<SelectedVisualElementMessage>
 {
-    private bool _isHighlightEnabled = false;
-    private FrameworkElement? _highlightedElement;
+    private DesignerMode _designerMode = DesignerMode.View;
 
-    private void HighlightElement_Click(object sender, RoutedEventArgs e)
+    private void Segmented_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (sender is ToggleButton button)
-        {
-            _isHighlightEnabled = button.IsChecked == true;
+        RemoveAdorner();
 
-            if (_isHighlightEnabled)
+        var si = e.AddedItems.FirstOrDefault() as SegmentedItem;
+        switch (si?.Tag)
+        {
+            case "View":
+                _designerMode = DesignerMode.View;
+                break;
+            case "Add": // TODO: Do we need Add Mode vs. Modify (one for manipulating panels/containers for new item, and one for manipulating existing elements?)
+                _designerMode = DesignerMode.Add;
+                break;
+            case "Modify":
+                _designerMode = DesignerMode.Modify;
+                break;
+            // TODO: Probably need 'Delete' as well...
+            case "Highlight":
+                _designerMode = DesignerMode.Highlight;
+                break;
+        }        
+
+        if (_designerMode == DesignerMode.Modify)
+        {
+            foreach (FrameworkElement element in ViewModel.XamlCoordinator.GetVisualElements().Where((e) => e is FrameworkElement))
             {
-                AttachAdorner(_highlightedElement);                
+                AdornerLayer.SetXaml(element, new ModifySelectorAdorner(element, ViewModel.MainViewModel));
+            }
+        }
+        else if (_designerMode != DesignerMode.View)
+        {
+            AttachAdorner(ViewModel.HighlightedElement);
+        }
+    }
+
+    protected override void OnPointerMoved(PointerRoutedEventArgs e)
+    {
+        base.OnPointerMoved(e);
+
+        return;
+
+        // Note: Leaving this hear for future usage, heuristic needed for selecting the 'right' type of element we want.
+
+        // TODO: This doesn't work with Runs...
+        if (_designerMode == DesignerMode.Modify
+            && e.OriginalSource is FrameworkElement source
+            && source != ViewModel.HighlightedElement)
+        {
+            // Detect if Source in document...
+            // TODO: Need to figure out differences if our Custom ResourceViewer root...
+            var root = IsSpecificPreviewSize ? XamlRootSpecific : XamlRoot;
+
+            // Question: Do we want to prioritize the Elements in Position or walking the ascendents of the visual tree?
+            UIElement attachElement = source;
+            bool found = false;
+
+            // Check and try and find closest matching Xml Element to something in the coordinate space
+            var point = e.GetCurrentPoint(root).Position;
+            var elements = VisualTreeHelper.FindElementsInHostCoordinates(point, root, true);
+            foreach (var element in elements)
+            {
+                Debug.WriteLine("Checking Host Element: " + element);
+                if (ViewModel.XamlCoordinator.TryGetXmlElement(element, out _))
+                {
+                    Debug.WriteLine("Found Matching Xml Parent Visual: " + element);
+                    attachElement = element;
+                    found = true;
+                    break;
+                }
+            }
+
+            // We didn't find a different element in our Xml, try the visual tree (also checks we're within the preview area)
+            if (!found)
+            {
+                foreach (var element in source.FindAscendants())
+                {
+                    Debug.WriteLine("Checking Parent Element: " + element);
+                    if (ViewModel.XamlCoordinator.TryGetXmlElement(element, out _))
+                    {
+                        Debug.WriteLine("Found Matching Xml Parent Visual: " + element);
+                        attachElement = element as FrameworkElement;
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            /* var parent = source.FindAscendant<Grid>((element) => element == root);
+
+            // Did we end up finding we had the XamlRoot as a parent?
+            if (parent is not null*/
+
+            if (found
+                && attachElement != ViewModel.HighlightedElement)
+            {
+                Debug.WriteLine("Attached Original Source: " + attachElement);
+                AttachAdorner(attachElement as FrameworkElement);
             }
             else
             {
-                RemoveAdorner();
-            }
+                Debug.WriteLine("NA Original Source: " + e.OriginalSource);
+            }           
+        }
+        else
+        {
+            Debug.WriteLine("NF Original Source: " + e.OriginalSource);
         }
     }
 
     public void Receive(SelectedVisualElementMessage message)
     {
+        RemoveAdorner();
+        
         AttachAdorner(message.Element as FrameworkElement);
     }
 
     public void Receive(EditorSelectedElementMessage message)
     {
+        RemoveAdorner();
+
         if (ViewModel.XamlCoordinator.TryGetVisualElement(message.Element, out var uie)
             && uie is FrameworkElement fwe)
         {
@@ -52,25 +153,50 @@ public partial class Document :
         {
             return;
         }
-        else if (_highlightedElement != null)
+        else if (ViewModel.HighlightedElement != null)
         {
             // TODO: In the future, we could maybe support selecting multiple elements for comparison/measuring?
             // Remove prior adorner before attaching a new one.
             RemoveAdorner();
         }
 
-        _highlightedElement = element;
+        ViewModel.HighlightedElement = element;
 
-        if (_isHighlightEnabled)
+        if (_designerMode == DesignerMode.Highlight)
         {
-            AdornerLayer.SetXaml(_highlightedElement, new SurroundingAdorner(_highlightedElement, _highlightedElement.CoordinatesFrom((UIElement)ViewModel.Result.Element)));
+            AdornerLayer.SetXaml(ViewModel.HighlightedElement, new SurroundingAdorner(ViewModel.HighlightedElement, ViewModel.HighlightedElement.CoordinatesFrom((UIElement)ViewModel.Result.Element)));
+        }
+        else if (_designerMode == DesignerMode.Modify)
+        {
+            // TODO: This is the case where we'll have selected something, so we probably want to have a more specific 'editing' adorener here for the specific types of controls
+            // e.g for an image it could have a button which opens a file picker for the workspace (or can detect dragged image from there or something)
+            // for a textblock it can have a textbox for the contents
+            // for a button it can have the behavior for navigation, etc...
+            AdornerLayer.SetXaml(ViewModel.HighlightedElement, new ModifySelectorAdorner(ViewModel.HighlightedElement, ViewModel.MainViewModel));
         }
     }
 
     private void RemoveAdorner()
     {
-        if (_highlightedElement == null) return;
+        if (_designerMode == DesignerMode.Modify)
+        {
+            // Remove all adorners from other elements we had added above for selection
+            foreach (FrameworkElement element in ViewModel.XamlCoordinator.GetVisualElements().Where((e) => e is FrameworkElement))
+            {
+                AdornerLayer.SetXaml(element, null);
+            }
+        }
 
-        AdornerLayer.SetXaml(_highlightedElement, null);
+        if (ViewModel?.HighlightedElement == null) return;
+
+        AdornerLayer.SetXaml(ViewModel.HighlightedElement, null);
+    }
+
+    private enum DesignerMode
+    {
+        View,
+        Add,
+        Modify,
+        Highlight,
     }
 }

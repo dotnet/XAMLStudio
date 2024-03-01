@@ -246,8 +246,10 @@ public sealed partial class Properties : Page,
         // TODO: Is this recalled when document changes?
         ////_coordinator.Initialize(message.Context.XmlDocument, (DependencyObject)message.Context.Element);
 
-        // TODO: Need to get current editor node/context between renders, reference won't work as will be stale Xml Node.
-        // Send message? GetEditorPositionMessage?
+        if (MainViewModel.ActiveDocumentViewModel.HighlightedElement != null)
+        {
+            UpdateProperties(MainViewModel.ActiveDocumentViewModel.HighlightedElement);
+        }
     }
 
     public static string GetElementInfo(DependencyObject element)

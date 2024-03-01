@@ -106,6 +106,7 @@ public sealed partial class Document : UserControl,
 
     private void Document_Loaded(object sender, RoutedEventArgs e)
     {
+        WeakReferenceMessenger.Default.UnregisterAll(this);
         WeakReferenceMessenger.Default.RegisterAll(this);
 
         // HACK: TODO: Workaround for Monaco editor not updating it's content?
@@ -113,6 +114,8 @@ public sealed partial class Document : UserControl,
         ViewModel.Document.Content = ViewModel.Document.Content.Substring(0, ViewModel.Document.Content.Length - 1);
 
         _ = UpdateBreadcrumbs();
+
+        SetPaneOrientation();
     }
 
     private void Document_Unloaded(object sender, RoutedEventArgs e)
@@ -134,7 +137,7 @@ public sealed partial class Document : UserControl,
         LoadedDocument = model.Document;
 
         // Pass Reference to our Control so we can 'render' to it.
-        ViewModel.XamlRoot = XamlRoot;
+        ViewModel.XamlRoot = XamlRoot; // TODO: this probably a bug as we have two xaml roots now...
         ViewModel.ActualTheme = ActualTheme;
 
         CodeEditor.Options.Folding = true;
@@ -579,7 +582,7 @@ public sealed partial class Document : UserControl,
         var scale = displayInfo.RawPixelsPerViewPixel;
         var scaleWidth = (int)Math.Ceiling(XamlRoot.ActualWidth / scale);
         var scaleHeight = (int)Math.Ceiling(XamlRoot.ActualHeight / scale);
-        await renderTarget.RenderAsync(XamlRoot, scaleWidth, scaleHeight);
+        await renderTarget.RenderAsync(XamlRoot, scaleWidth, scaleHeight); // TODO: Bug need to get specific for specific size ones...
         var pixels = await renderTarget.GetPixelsAsync();
         return CanvasBitmap.CreateFromBytes(_device.Value, pixels, renderTarget.PixelWidth, renderTarget.PixelHeight, DirectXPixelFormat.B8G8R8A8UIntNormalized);
     }

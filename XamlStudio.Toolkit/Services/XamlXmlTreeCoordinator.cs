@@ -236,6 +236,10 @@ public class XamlXmlTreeCoordinator
     {
     }
 
+    public IReadOnlyCollection<DependencyObject> GetVisualElements() => _treeMapper.Values;
+
+    public IReadOnlyCollection<IXmlElementSyntax> GetXmlElements() => _treeMapper.Keys;
+
     public bool TryGetVisualElement(IXmlElementSyntax node, out DependencyObject element)
     {
         return _treeMapper.TryGetValue(node, out element);
