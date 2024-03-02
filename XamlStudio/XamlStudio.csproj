@@ -208,6 +208,9 @@
     <Compile Include="Activation\SchemeActivationHandler.cs" />
     <Compile Include="Activation\WebToAppLinkActivationHandler.cs" />
     <Compile Include="Controls\AppFontIcon.cs" />
+    <Compile Include="Controls\EditorAdorners\TextBlockEditAdorner.xaml.cs">
+      <DependentUpon>TextBlockEditAdorner.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ModifySelectorAdorner.xaml.cs">
       <DependentUpon>ModifySelectorAdorner.xaml</DependentUpon>
     </Compile>
@@ -301,6 +304,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\EditorAdorners\TextBlockEditAdorner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ModifySelectorAdorner.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

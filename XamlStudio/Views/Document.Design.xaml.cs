@@ -2,8 +2,11 @@
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Controls;
 using CommunityToolkit.WinUI.Controls.Future;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -172,7 +175,18 @@ public partial class Document :
             // e.g for an image it could have a button which opens a file picker for the workspace (or can detect dragged image from there or something)
             // for a textblock it can have a textbox for the contents
             // for a button it can have the behavior for navigation, etc...
-            AdornerLayer.SetXaml(ViewModel.HighlightedElement, new ModifySelectorAdorner(ViewModel.HighlightedElement, ViewModel.MainViewModel));
+
+            if (_editorAdornerTypeMap.TryGetValue(ViewModel.HighlightedElement.GetType(), out var adornerType))
+            {
+                // All editor adorners just accept a FrameworkElement
+                ConstructorInfo constructor = adornerType.GetConstructor(new[] { typeof(FrameworkElement) });
+
+                AdornerLayer.SetXaml(ViewModel.HighlightedElement, constructor.Invoke(new[] { ViewModel.HighlightedElement }) as FrameworkElement);
+            }
+            else
+            {
+                AdornerLayer.SetXaml(ViewModel.HighlightedElement, new ModifySelectorAdorner(ViewModel.HighlightedElement, ViewModel.MainViewModel));
+            }
         }
     }
 
@@ -199,4 +213,9 @@ public partial class Document :
         Modify,
         Highlight,
     }
+
+    private Dictionary<Type, Type> _editorAdornerTypeMap = new()
+    {
+        { typeof(TextBlock), typeof(TextBlockEditAdorner) },
+    };
 }
