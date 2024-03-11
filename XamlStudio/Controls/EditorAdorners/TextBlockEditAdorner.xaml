@@ -24,13 +24,17 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <TextBox Text="{x:Bind AttachedElement.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:AutoSelectBehavior />
                 </interactivity:Interaction.Behaviors>
             </TextBox>
-            <Button Grid.Column="1" Click="CloseButton_Click">
+            <Button Grid.Column="1" Click="AcceptButton_Click">
+                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE73E;" />
+            </Button>
+            <Button Grid.Column="2" Click="CloseButton_Click">
                 <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE711;" />
             </Button>
         </Grid>

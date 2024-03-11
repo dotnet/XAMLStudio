@@ -17,6 +17,8 @@ public record NavigateToLineMessage(uint Line); // TODO: Need document?
 /// <param name="Text"></param>
 public record InsertTextMessage(string Text);
 
+public record AddToXamlMessage(FrameworkElement Element, string Property, string Value);
+
 /// <summary>
 /// Requests the rendering process the current document Xml to via XamlRenderService in
 /// LINK:Document.xaml.cs:Receive(RenderXamlMessage

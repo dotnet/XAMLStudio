@@ -1,7 +1,9 @@
-﻿using CommunityToolkit.WinUI.Controls.Future;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI.Controls.Future;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using XamlStudio.Models;
 
 namespace XamlStudio.Controls;
 
@@ -9,17 +11,28 @@ public sealed partial class TextBlockEditAdorner : UserControl
 {
     public TextBlock AttachedElement { get; }
 
+    private string _originalText;
+
     public TextBlockEditAdorner(FrameworkElement attachedElement)
     {
         AttachedElement = attachedElement as TextBlock;
-
-        // TODO: We may want to snapshot text and have a confirm/cancel approach, where it either goes back to original text or gets applied to the XAML in the editor...
+        _originalText = AttachedElement.Text;
 
         InitializeComponent();
+    }
+
+    private void AcceptButton_Click(object sender, RoutedEventArgs e)
+    {
+        WeakReferenceMessenger.Default.Send<AddToXamlMessage>(new(AttachedElement, "Text", AttachedElement.Text.Replace("\"", "&quot;")));
+
+        AdornerLayer.SetXaml(AttachedElement, null);
     }
 
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
         AdornerLayer.SetXaml(AttachedElement, null);
+
+        // TODO: We may want to do our trick to check if there's a binding here?
+        AttachedElement.Text = _originalText;
     }
 }
