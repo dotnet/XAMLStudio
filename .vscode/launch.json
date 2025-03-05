@@ -1,0 +1,29 @@
+{
+  // Use IntelliSense to find out which attributes exist for C# debugging
+  // Use hover for the description of the existing attributes
+  // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // Use IntelliSense to find out which attributes exist for C# debugging
+      // Use hover for the description of the existing attributes
+      // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+      "name": "Uno Platform WebAssembly Debug (Chrome)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:5000",
+      "webRoot": "${workspaceFolder}/XamlStudio3",
+      "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
+      "timeout": 30000,
+      "preLaunchTask": "build-wasm",
+      "server": {
+        "runtimeExecutable": "dotnet",
+        "program": "run",
+        "args": ["--no-build","-f","net9.0-browserwasm","--launch-profile", "XamlStudio3 (WebAssembly)"],
+        "outputCapture": "std",
+        "timeout": 30000,
+        "cwd": "${workspaceFolder}/XamlStudio3"
+      }
+    },
+  ]
+}
