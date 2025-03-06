@@ -228,7 +228,12 @@ public sealed partial class MainPage : Page
             // Update UI
             if (ResultRoot.Child is FrameworkElement fe)
             {
-                fe.DataContext = _viewModel;
+                // It seems swapping out the DataContext on this complex object breaks all the bindings...
+                // I think they're still just bound to the old object in memory, vs. re-attaching to this new object.
+                // I haven't seen something quite like this before; should compare to old XAML Studio code, but that just uses a simpler setup
+                // For now, just recompile the XAML and re-hook things up that way.
+                // Maybe in the future if we're doing binding ownership/debugging/x:Bind emulation stuff, we can go and reset all the bindings ourselves...
+                CompileXaml();
             }
         }
         catch (Exception exception)
