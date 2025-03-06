@@ -4,6 +4,7 @@
 
     <OutputType>Exe</OutputType>
     <UnoSingleProject>true</UnoSingleProject>
+    <LangVersion>preview</LangVersion>
 
     <!-- Display name -->
     <ApplicationTitle>XamlStudio3</ApplicationTitle>
@@ -33,7 +34,6 @@
       https://aka.platform.uno/singleproject-features
     -->
     <UnoFeatures>
-      Mvvm;
       ThemeService;
     </UnoFeatures>
   </PropertyGroup>
@@ -62,8 +62,17 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" GeneratePathProperty="true" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.HeaderedControls" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.Sizers" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+  </ItemGroup>
+  <!-- We need an explicit reference to the SourceGenerator dlls in order to references them within our app's code outside VS.
+       We get this by using GeneratePathProperty above in the CommunityToolkit.Mvvm PackageReference -->
+  <ItemGroup>
+    <Reference Include="CommunityToolkit.Mvvm.SourceGenerators">
+      <HintPath>$(PkgCommunityToolkit_Mvvm)\analyzers\dotnet\roslyn4.3\cs\CommunityToolkit.Mvvm.SourceGenerators.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

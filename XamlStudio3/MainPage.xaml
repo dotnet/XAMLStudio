@@ -68,7 +68,7 @@
         <controls:GridSplitter Grid.Column="4" Grid.Row="1" Orientation="Horizontal" ResizeBehavior="PreviousAndNext"/>
 
         <controls:HeaderedContentControl Header="Result" Grid.Column="4" Grid.Row="2">
-            <Grid x:Name="ResultGrid"/>
+            <Border x:Name="ResultRoot"/>
         </controls:HeaderedContentControl>
     </Grid>
 </Page>
