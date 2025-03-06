@@ -7,4 +7,8 @@
   -->
   <ItemGroup>
   </ItemGroup>
+  <ItemGroup>
+    <PackageVersion Include="CommunityToolkit.WinUI.Controls.HeaderedControls" Version="8.2.250129-preview2" />
+    <PackageVersion Include="CommunityToolkit.WinUI.Controls.Sizers" Version="8.2.250129-preview2" />
+  </ItemGroup>
 </Project>

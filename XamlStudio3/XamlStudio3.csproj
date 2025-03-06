@@ -37,5 +37,33 @@
       ThemeService;
     </UnoFeatures>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Templates\Default\ViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Templates\Default\BlankPage.txaml" />
+    <None Remove="Templates\Default\ResourceDictionary.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Remove="Templates\Default\BlankPage.txaml" />
+    <Page Remove="Templates\Default\ResourceDictionary.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Templates\Default\BlankPage.txaml">
+      <Generator></Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Default\ResourceDictionary.xaml">
+      <Generator></Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Default\ViewModel.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.HeaderedControls" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.Sizers" />
+  </ItemGroup>
 
 </Project>
