@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using CommunityToolkit.Mvvm.SourceGenerators;
@@ -30,6 +29,8 @@ public sealed partial class MainPage : Page
     private readonly DispatcherQueueTimer _debounceTimerCode = DispatcherQueue.GetForCurrentThread().CreateTimer();
     private readonly DispatcherQueueTimer _debounceTimerResources = DispatcherQueue.GetForCurrentThread().CreateTimer();
     private readonly TimeSpan _debounceInterval = TimeSpan.FromMilliseconds(150);
+
+    private readonly DispatcherQueue _queue = DispatcherQueue.GetForCurrentThread();
 
     // Private cached intermediary results
     private object _viewModel;
@@ -103,14 +104,17 @@ public sealed partial class MainPage : Page
             // Depends on CompileResources and CompileCode to be most efficient
             if (XamlReader.Load(XamlMarkup.Text) is FrameworkElement fe)
             {
+                // Unload old element and its resources
                 if (ResultRoot.Child is FrameworkElement oldFe)
                 {
+                    oldFe.Resources.MergedDictionaries.Clear();
+                    oldFe.Resources.Clear();
+                    oldFe.Resources = null;
 #if WINDOWS
                     VisualTreeHelper.DisconnectChildrenRecursive(oldFe);
 #endif
                     ResultRoot.Child = null;
-                }
-                ResultRoot.Child = fe;
+                }                
 
                 // Re-hook cached drivers
                 if (_viewModel != null)
@@ -120,9 +124,13 @@ public sealed partial class MainPage : Page
 
                 if (_resources != null)
                 {
-                    fe.Resources.MergedDictionaries.Clear();
+                    // Add resources to the merged dictionary of the new element
+                    // It's important we do this BEFORE the element is added to the visual tree
                     fe.Resources.MergedDictionaries.Add(_resources);
                 }
+
+                // Add to visual tree
+                ResultRoot.Child = fe;
             }
         }
         catch (Exception exception)
@@ -140,13 +148,24 @@ public sealed partial class MainPage : Page
         {
             if (XamlReader.Load(XamlResourceMarkup.Text) is ResourceDictionary rd)
             {
+                if (ResultRoot.Child is FrameworkElement oldFe)
+                {
+                    // There may be merged dictionaries added by the XAML file, so we want to find ours and remove it only.
+                    oldFe.Resources.MergedDictionaries.Remove(_resources);
+                }
+
                 _resources = rd;
 
                 // Update UI
                 if (ResultRoot.Child is FrameworkElement fe)
                 {
-                    fe.Resources.MergedDictionaries.Clear();
                     fe.Resources.MergedDictionaries.Add(_resources);
+
+                    // TODO: Remember what setting we actually want and pick a different one...
+                    // Workaround, see https://github.com/microsoft/microsoft-ui-xaml/issues/5457 and https://github.com/microsoft/microsoft-ui-xaml/issues/4443
+                    // We remove and re-add the framework element from the visual tree to re-apply style (toggling theme as called out in issue didn't work).
+                    ResultRoot.Child = null;
+                    ResultRoot.Child = fe;
                 }
             }
         }

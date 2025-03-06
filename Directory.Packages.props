@@ -11,6 +11,8 @@
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageVersion Include="CommunityToolkit.WinUI.Controls.HeaderedControls" Version="8.2.250129-preview2" />
     <PackageVersion Include="CommunityToolkit.WinUI.Controls.Sizers" Version="8.2.250129-preview2" />
+    <PackageVersion Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250129-preview2" />
+    <PackageVersion Include="CommunityToolkit.WinUI.Helpers" Version="8.2.250129-preview2" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.13.0" />
   </ItemGroup>
 </Project>

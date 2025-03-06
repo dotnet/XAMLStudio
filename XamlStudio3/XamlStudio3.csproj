@@ -65,6 +65,8 @@
     <PackageReference Include="CommunityToolkit.Mvvm" GeneratePathProperty="true" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.HeaderedControls" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.Sizers" />
+    <PackageReference Include="CommunityToolkit.WinUI.Extensions" />
+    <PackageReference Include="CommunityToolkit.WinUI.Helpers" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
   </ItemGroup>
   <!-- We need an explicit reference to the SourceGenerator dlls in order to references them within our app's code outside VS.
