@@ -42,8 +42,23 @@
 
         <!-- Col 0 Readme -->
         <!-- TODO: Make this a collapsable panel w/ ContentSizer ala XAML Studio -->
-        <controls:HeaderedContentControl Header="Readme" Grid.RowSpan="3">
-            <TextBlock Text="Placeholder text for Markdown / Instructions..." TextWrapping="WrapWholeWords"/>
+        <controls:HeaderedContentControl Header="Readme" Grid.RowSpan="3" MaxWidth="300">
+            <TextBlock TextWrapping="WrapWholeWords" MaxWidth="300">
+                <Run Text="XAML Studio 3" FontSize="24" FontWeight="Bold" />
+                <LineBreak />
+                <LineBreak />
+                <Run Text="Welcome to an interactive playground where you can fiddle to your hearts content."/>
+                <LineBreak />
+                <LineBreak />
+                <Run Text="You have access to not only your XAML in the top-left, but an included resource dictionary for separate styling in the top-right. And you can modify the viewmodel with C# code in the bottom-left, all recompiled on the fly and displayed in the bottom-right." />
+                <LineBreak />
+                <LineBreak />
+                <Run Text="Note: " FontWeight="Bold" />
+                <Run Text="Modifying your C# code will reset your state as the variables get recreated!" />
+                <LineBreak />
+                <LineBreak />
+                <Run Text="Happy coding!" FontStyle="Italic" />
+            </TextBlock>
         </controls:HeaderedContentControl>
 
         <controls:GridSplitter Grid.Column="1" Grid.RowSpan="3" Orientation="Vertical" ResizeBehavior="PreviousAndNext"/>
