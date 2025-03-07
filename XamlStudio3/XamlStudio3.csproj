@@ -1,4 +1,4 @@
-<Project Sdk="Uno.Sdk">
+﻿<Project Sdk="Uno.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net9.0-windows10.0.26100;net9.0-browserwasm</TargetFrameworks>
 
@@ -61,6 +61,17 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'=='net9.0-browserwasm'">
+    <Content Include="dotnet-sdk\**\*.clr" Link="dotnet-sdk\%(Filename)%(Extension)">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="dotnet-sdk\fileslist.txt" Link="dotnet-sdk\%(Filename)%(Extension)">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'!='net9.0-browserwasm'">
+    <None Include="dotnet-sdk\**\*"/>
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" GeneratePathProperty="true" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.HeaderedControls" />
@@ -76,5 +87,28 @@
       <HintPath>$(PkgCommunityToolkit_Mvvm)\analyzers\dotnet\roslyn4.3\cs\CommunityToolkit.Mvvm.SourceGenerators.dll</HintPath>
     </Reference>
   </ItemGroup>
-
+  <!-- We only need a reference to the .NET Runtime to load in the browser -->
+  <!-- Note: This seems to run too late the first time? Works 2nd time... need to fix... -->
+  <Target Name="BuildSDKFilesList" BeforeTargets="BeforeBuild" Condition="'$(TargetFramework)'=='net9.0-browserwasm'">
+    <ItemGroup>
+      <MyDotnetSDKFiles Include="$(MSBuildProjectDirectory)\dotnet-sdk\*.clr" />
+    </ItemGroup>
+    <WriteLinesToFile File="$(MSBuildProjectDirectory)\dotnet-sdk\fileslist.txt" Lines="@(MyDotnetSDKFiles)" Overwrite="true" />
+  </Target>  
+  <Target Name="CopySDKFiles" BeforeTargets="BuildSDKFilesList" Condition="'$(TargetFramework)'=='net9.0-browserwasm'">
+    <ItemGroup>
+      <!-- Collect platform dll files -->
+      <WasmDllFiles Include="$(WasmToolsFolder)\runtimes\browser-wasm\lib\net9.0\*.dll" />
+      <WasmDllFiles Include="$(WasmToolsFolder)\runtimes\browser-wasm\native\*.dll" />
+      <!-- Other dll files -->
+      <MvvmDllFiles Include="$(PkgCommunityToolkit_Mvvm)\lib\net8.0\CommunityToolkit.Mvvm.dll" />
+      <MvvmDllFiles Include="$(PkgCommunityToolkit_Mvvm)\analyzers\dotnet\roslyn4.3\cs\CommunityToolkit.Mvvm.SourceGenerators.dll" />
+    </ItemGroup>
+    <Message Text="WASM Files to Copy $(WasmDllFiles)" Importance="high"/>
+    <Message Text="MVVM Files to Copy $(MvvmDllFiles)" Importance="high"/>
+    <Copy SourceFiles="@(WasmDllFiles)"
+          DestinationFiles="@(WasmDllFiles->'$(MSBuildProjectDirectory)\dotnet-sdk\%(RecursiveDir)%(Filename).clr')" />
+    <Copy SourceFiles="@(MvvmDllFiles)"
+          DestinationFiles="@(MvvmDllFiles->'$(MSBuildProjectDirectory)\dotnet-sdk\%(Filename).clr')" />
+  </Target>
 </Project>

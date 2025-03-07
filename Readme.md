@@ -6,3 +6,11 @@ Initial prototype of a playground/fiddle type environment that works with [WinUI
 ## Inspiration
 
 While XAML Studio's backlog has desired to mix-in C# code for a while now, the practical application of this being possible and demonstrated was inspired by [AndrewKeepCoding's great prototype here](https://github.com/AndrewKeepCoding/DynamicWinUI3SampleApp) as well as [Jerome Laban's Uno SkiaSharp Fiddle here](https://github.com/jeromelaban/uno.skiasharpfiddle).
+
+## Build Requirements
+
+```console
+dotnet workload install wasm-tools
+```
+
+If your main drive or Program Files folder is in a different location, update the `WasmToolsFolder` path property in `Directory.Packages.props`.

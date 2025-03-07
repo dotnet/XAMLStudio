@@ -15,4 +15,8 @@
     <PackageVersion Include="CommunityToolkit.WinUI.Helpers" Version="8.2.250129-preview2" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.13.0" />
   </ItemGroup>
+  <PropertyGroup>
+    <!-- Install with: dotnet workload install wasm-tools -->
+    <WasmToolsFolder>C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Runtime.Mono.browser-wasm\9.0.2\</WasmToolsFolder>
+  </PropertyGroup>
 </Project>

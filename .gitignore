@@ -403,3 +403,6 @@ FodyWeavers.xsd
 solution-config.props
 # Publish Profiles
 !**/Properties/PublishProfiles/*.pubxml
+
+# Copied WASM dependencies
+XamlStudio3/dotnet-sdk/*

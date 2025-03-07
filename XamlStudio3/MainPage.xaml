@@ -21,6 +21,7 @@
                 <Setter Property="FontWeight" Value="Normal"/>
                 <Setter Property="FontSize" Value="20"/>
                 <Setter Property="FontFamily" Value="Cascadia Code, Consolas, Courier New"/>
+                <Setter Property="IsSpellCheckEnabled" Value="False"/>
             </Style>
         </Grid.Resources>
         <Grid.RowDefinitions>

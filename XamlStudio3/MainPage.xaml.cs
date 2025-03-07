@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using CommunityToolkit.Mvvm.SourceGenerators;
@@ -15,7 +16,7 @@ public sealed partial class MainPage : Page
 {
     // Cache of all our compilation inputs
     private static readonly string RuntimePath = RuntimeEnvironment.GetRuntimeDirectory();
-    private static readonly ImmutableArray<MetadataReference> AssemblyReferences = CreateReferences();
+    private static ImmutableArray<MetadataReference>? AssemblyReferences;
     private static readonly IIncrementalGenerator[] Generators = [
         new ObservablePropertyGenerator(),
         new RelayCommandGenerator()
@@ -47,6 +48,11 @@ public sealed partial class MainPage : Page
 
     private async void MainPage_Loaded(object sender, RoutedEventArgs e)
     {
+        if (AssemblyReferences == null)
+        {
+            AssemblyReferences = await CreateReferencesAsync();
+        }
+
         XamlMarkup.Text = await ReadTemplateTextAsync(@"Templates\Default\BlankPage.txaml");
         CSharpCode.Text = await ReadTemplateTextAsync(@"Templates\Default\ViewModel.cs");
         XamlResourceMarkup.Text = await ReadTemplateTextAsync(@"Templates\Default\ResourceDictionary.xaml");
@@ -136,6 +142,7 @@ public sealed partial class MainPage : Page
         catch (Exception exception)
         {
             // TODO: Report Errors
+            Debug.WriteLine(exception.Message);
         }
     }
 
@@ -172,6 +179,7 @@ public sealed partial class MainPage : Page
         catch (Exception exception)
         {
             // TODO: Report Errors
+            Debug.WriteLine(exception.Message);
         }
     }
 
@@ -207,7 +215,7 @@ public sealed partial class MainPage : Page
             if (emitResult.Success is false)
             {
                 // TODO: Errors
-                //// emitResult.Diagnostics;
+                Debug.WriteLine(emitResult.Diagnostics);
                 return;
             }
 
@@ -239,10 +247,12 @@ public sealed partial class MainPage : Page
         catch (Exception exception)
         {
             // TODO: Errors
+            Debug.WriteLine(exception.Message);
         }
     }
 
-    private static ImmutableArray<MetadataReference> CreateReferences() => new[]
+#if WINDOWS
+    private static Task<ImmutableArray<MetadataReference>> CreateReferencesAsync() => Task.FromResult(new[]
         {
             // System References
             typeof(object).GetTypeInfo().Assembly.Location,
@@ -256,5 +266,38 @@ public sealed partial class MainPage : Page
             typeof(ObservablePropertyGenerator).GetTypeInfo().Assembly.Location,
         }.Select(path => MetadataReference.CreateFromFile(path))
          .Cast<MetadataReference>()
-         .ToImmutableArray();
+         .ToImmutableArray());
+#elif HAS_UNO_WASM
+    private static async Task<ImmutableArray<MetadataReference>> CreateReferencesAsync()
+    {
+        // Similar approach from https://github.com/jeromelaban/uno.skiasharpfiddle/blob/master/UnoSkiaSharpFiddle/UnoSkiaSharpFiddle.Shared/Compiler.cs
+        var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///dotnet-sdk/fileslist.txt"));
+
+        var sdkFiles = await FileIO.ReadLinesAsync(file);
+
+        var tasks = sdkFiles
+            .Select(f =>
+            {
+                static async Task<MetadataReference> LoadReference(string file)
+                {
+                    // Path.GetFileName not working as expected in WASM
+                    var targetFile = file.Split('\\').Last();
+
+                    var sdkFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///dotnet-sdk/{targetFile}"));
+
+                    using var stream = await sdkFile.OpenReadAsync();
+                    var streamCopy = new MemoryStream();
+                    stream.AsStream().CopyTo(streamCopy);
+
+                    streamCopy.Position = 0;
+                    return MetadataReference.CreateFromStream(streamCopy);
+                }
+
+                return LoadReference(f);
+            });
+
+        return (await Task.WhenAll(tasks))
+            .ToImmutableArray();
+    }
+#endif
 }
