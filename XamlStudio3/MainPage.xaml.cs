@@ -115,8 +115,8 @@ public sealed partial class MainPage : Page
                 {
                     oldFe.Resources.MergedDictionaries.Clear();
                     oldFe.Resources.Clear();
-                    oldFe.Resources = null;
 #if WINDOWS
+                    oldFe.Resources = null; // Note: This causes an exception in Uno Platform WASM for some reason...
                     VisualTreeHelper.DisconnectChildrenRecursive(oldFe);
 #endif
                     ResultRoot.Child = null;
