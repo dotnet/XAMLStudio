@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - release/**
+
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+      - release/**
+env:
+  STEP_TIMEOUT_MINUTES: 60
+
+jobs:
+  smoke_test:
+    name: Smoke Test (Debug Build of XamlStudio3)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install Dependencies
+        timeout-minutes: ${{ fromJSON(env.STEP_TIMEOUT_MINUTES) }}
+        uses: "./.github/steps/install_dependencies"
+
+      # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.4.1
+
+      - name: Build XamlStudio3 (Debug)
+        shell: pwsh
+        run: msbuild ./XamlStudio3/XamlStudio3.csproj /r

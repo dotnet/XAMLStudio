@@ -1,0 +1,10 @@
+{
+  "background_color": "#ffffff",
+  "description": "XamlStudio3",
+  "display": "standalone",
+  "name": "XamlStudio3",
+  "short_name": "XamlStudio3",
+  "start_url": "/index.html",
+  "theme_color": "#ffffff",
+  "scope": "/"
+}

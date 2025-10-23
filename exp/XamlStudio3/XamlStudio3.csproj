@@ -1,0 +1,114 @@
+﻿<Project Sdk="Uno.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net9.0-windows10.0.26100;net9.0-browserwasm</TargetFrameworks>
+
+    <OutputType>Exe</OutputType>
+    <UnoSingleProject>true</UnoSingleProject>
+    <LangVersion>preview</LangVersion>
+
+    <!-- Display name -->
+    <ApplicationTitle>XamlStudio3</ApplicationTitle>
+    <!-- App Identifier -->
+    <ApplicationId>com.companyname.XamlStudio3</ApplicationId>
+    <!-- Versions -->
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+    <!-- Package Publisher -->
+    <ApplicationPublisher>mhawker</ApplicationPublisher>
+    <!-- Package Description -->
+    <Description>XamlStudio3 powered by Uno Platform.</Description>
+    <!--
+      If you encounter this error message:
+
+        error NETSDK1148: A referenced assembly was compiled using a newer version of Microsoft.Windows.SDK.NET.dll.
+        Please update to a newer .NET SDK in order to reference this assembly.
+
+      This means that the two packages below must be aligned with the "build" version number of
+      the "Microsoft.Windows.SDK.BuildTools" package above, and the "revision" version number
+      must be the highest found in https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref.
+    -->
+    <!-- <WindowsSdkPackageVersion>10.0.22621.28</WindowsSdkPackageVersion> -->
+
+    <!--
+      UnoFeatures let's you quickly add and manage implicit package references based on the features you want to use.
+      https://aka.platform.uno/singleproject-features
+    -->
+    <UnoFeatures>
+      ThemeService;
+    </UnoFeatures>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Templates\Default\ViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Templates\Default\BlankPage.txaml" />
+    <None Remove="Templates\Default\ResourceDictionary.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Remove="Templates\Default\BlankPage.txaml" />
+    <Page Remove="Templates\Default\ResourceDictionary.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Templates\Default\BlankPage.txaml">
+      <Generator></Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Default\ResourceDictionary.xaml">
+      <Generator></Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Default\ViewModel.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'=='net9.0-browserwasm'">
+    <Content Include="dotnet-sdk\**\*.clr" Link="dotnet-sdk\%(Filename)%(Extension)">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="dotnet-sdk\fileslist.txt" Link="dotnet-sdk\%(Filename)%(Extension)">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'!='net9.0-browserwasm'">
+    <None Include="dotnet-sdk\**\*"/>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" GeneratePathProperty="true" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.HeaderedControls" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.Sizers" />
+    <PackageReference Include="CommunityToolkit.WinUI.Extensions" />
+    <PackageReference Include="CommunityToolkit.WinUI.Helpers" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+  </ItemGroup>
+  <!-- We need an explicit reference to the SourceGenerator dlls in order to references them within our app's code outside VS.
+       We get this by using GeneratePathProperty above in the CommunityToolkit.Mvvm PackageReference -->
+  <ItemGroup>
+    <Reference Include="CommunityToolkit.Mvvm.SourceGenerators">
+      <HintPath>$(PkgCommunityToolkit_Mvvm)\analyzers\dotnet\roslyn4.3\cs\CommunityToolkit.Mvvm.SourceGenerators.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <!-- We only need a reference to the .NET Runtime to load in the browser -->
+  <!-- Note: This seems to run too late the first time? Works 2nd time... need to fix... -->
+  <Target Name="BuildSDKFilesList" BeforeTargets="BeforeBuild" Condition="'$(TargetFramework)'=='net9.0-browserwasm'">
+    <ItemGroup>
+      <MyDotnetSDKFiles Include="$(MSBuildProjectDirectory)\dotnet-sdk\*.clr" />
+    </ItemGroup>
+    <WriteLinesToFile File="$(MSBuildProjectDirectory)\dotnet-sdk\fileslist.txt" Lines="@(MyDotnetSDKFiles)" Overwrite="true" />
+  </Target>  
+  <Target Name="CopySDKFiles" BeforeTargets="BuildSDKFilesList" Condition="'$(TargetFramework)'=='net9.0-browserwasm'">
+    <ItemGroup>
+      <!-- Collect platform dll files -->
+      <WasmDllFiles Include="$(WasmToolsFolder)\runtimes\browser-wasm\lib\net9.0\*.dll" />
+      <WasmDllFiles Include="$(WasmToolsFolder)\runtimes\browser-wasm\native\*.dll" />
+      <!-- Other dll files -->
+      <MvvmDllFiles Include="$(PkgCommunityToolkit_Mvvm)\lib\net8.0\CommunityToolkit.Mvvm.dll" />
+      <MvvmDllFiles Include="$(PkgCommunityToolkit_Mvvm)\analyzers\dotnet\roslyn4.3\cs\CommunityToolkit.Mvvm.SourceGenerators.dll" />
+    </ItemGroup>
+    <Message Text="WASM Files to Copy $(WasmDllFiles)" Importance="high"/>
+    <Message Text="MVVM Files to Copy $(MvvmDllFiles)" Importance="high"/>
+    <Copy SourceFiles="@(WasmDllFiles)"
+          DestinationFiles="@(WasmDllFiles->'$(MSBuildProjectDirectory)\dotnet-sdk\%(RecursiveDir)%(Filename).clr')" />
+    <Copy SourceFiles="@(MvvmDllFiles)"
+          DestinationFiles="@(MvvmDllFiles->'$(MSBuildProjectDirectory)\dotnet-sdk\%(Filename).clr')" />
+  </Target>
+</Project>

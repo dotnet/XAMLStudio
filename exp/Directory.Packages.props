@@ -1,0 +1,22 @@
+<Project ToolsVersion="15.0">
+  <!--
+    To update the version of Uno, you should instead update the Sdk version in the global.json file.
+
+    See https://aka.platform.uno/using-uno-sdk for more information.
+    See https://aka.platform.uno/using-uno-sdk#implicit-packages for more information regarding the Implicit Packages.
+  -->
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageVersion Include="CommunityToolkit.WinUI.Controls.HeaderedControls" Version="8.2.250402" />
+    <PackageVersion Include="CommunityToolkit.WinUI.Controls.Sizers" Version="8.2.250402" />
+    <PackageVersion Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250402" />
+    <PackageVersion Include="CommunityToolkit.WinUI.Helpers" Version="8.2.250402" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.13.0" />
+  </ItemGroup>
+  <PropertyGroup>
+    <!-- Install with: dotnet workload install wasm-tools -->
+    <WasmToolsFolder>C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Runtime.Mono.browser-wasm\9.0.2\</WasmToolsFolder>
+  </PropertyGroup>
+</Project>

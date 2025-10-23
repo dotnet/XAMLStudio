@@ -1,0 +1,11 @@
+﻿<Page
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <StackPanel>
+        <TextBlock Text="{Binding Number, Mode=OneWay}" />
+        <Button Content="Increment"
+                Command="{Binding IncrementCommand}" />
+    </StackPanel>
+</Page>

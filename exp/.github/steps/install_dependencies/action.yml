@@ -1,0 +1,45 @@
+name: Install Dependencies
+description: ""
+
+inputs:
+  target-platform:
+    description: 'The platform to install dependencies for. #See available values at https://platform.uno/docs/articles/external/uno.check/doc/using-uno-check.html'
+    required: false
+    default: 'all'
+  dotnet-version:
+    description: 'Installs and sets the .NET SDK Version'
+    required: false
+    default: '9.0.x'
+  sdkVersion:
+    description: 'The version of the Windows Sdk'
+    required: false
+    default: '19041'
+
+runs:
+  using: "composite"
+  steps:
+    # Install .NET
+    - name: Setup .NET ${{ inputs.dotnet-version }}
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '${{ inputs.dotnet-version }}'
+
+    # Install Windows SDK
+    - name: Install Windows SDK ${{ inputs.sdkVersion }}
+      shell: pwsh
+      if: ${{ runner.os == 'Windows' }}
+      run: .\.github\Install-WindowsSdkISO.ps1 ${{ inputs.sdkVersion }}
+
+    # Run Uno.Check
+    - name: Install ${{ inputs.target-platform }} Workloads
+      shell: pwsh
+      run: |
+        dotnet tool install -g uno.check
+        ("${{ inputs.target-platform }} ".Split(' ') | ForEach-Object {
+          $target = $_.Replace("_win", "").Replace("_macos", "")
+          if (![string]::IsNullOrEmpty($target)) {
+            echo "target: $target"
+            uno-check -v --ci --non-interactive --fix --target $target --skip vswin --skip vsmac --skip xcode --skip vswinworkloads --skip androidemulator --skip dotnetnewunotemplates
+            echo "uno-check finished for target: $target "
+          }
+        })
