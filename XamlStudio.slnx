@@ -1,0 +1,37 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="ARM64" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Config/">
+    <File Path=".gitignore" />
+    <File Path="LICENSE" />
+    <File Path="nuget.config" />
+    <File Path="README.md" />
+    <File Path="settings.xamlstyler" />
+  </Folder>
+  <Project Path="Microsoft.Toolkit.Future/Microsoft.Toolkit.Future.csproj" Id="ba818f63-02d8-4ce7-b6fb-475678144c07">
+    <Platform Solution="*|ARM64" Project="ARM64" />
+    <Platform Solution="*|x64" Project="x64" />
+    <Platform Solution="*|x86" Project="x86" />
+  </Project>
+  <Project Path="XamlStudio.Toolkit.UnitTests/XamlStudio.Toolkit.UnitTests.csproj" Id="cbc292ec-884c-4a7a-b0a5-03e6f4c5935c">
+    <Platform Solution="*|ARM64" Project="ARM64" />
+    <Platform Solution="*|x64" Project="x64" />
+    <Platform Solution="*|x86" Project="x86" />
+    <Deploy />
+  </Project>
+  <Project Path="XamlStudio.Toolkit/XamlStudio.Toolkit.csproj" Id="e8dc98c8-3bee-430b-b844-ad5b57ca859c">
+    <Platform Solution="*|ARM64" Project="ARM64" />
+    <Platform Solution="*|x64" Project="x64" />
+    <Platform Solution="*|x86" Project="x86" />
+  </Project>
+  <Project Path="XamlStudio/XamlStudio.csproj" Id="9a08e04b-13e0-49c5-a5f1-43e8e2fc1d07">
+    <Platform Solution="*|ARM64" Project="ARM64" />
+    <Platform Solution="*|x64" Project="x64" />
+    <Platform Solution="*|x86" Project="x86" />
+    <Deploy />
+  </Project>
+</Solution>

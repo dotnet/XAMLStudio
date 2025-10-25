@@ -40,7 +40,7 @@ If you're new to building apps with WinUI and the Windows App SDK, follow the [i
 **Required [Visual Studio components](https://learn.microsoft.com/windows/apps/get-started/start-here#22-required-workloads-and-components):**
 
 - Windows application development
-- Windows 17763 & 18362 SDK (or update projects to 19041 with VS wizard)
+- Windows 17763 SDK
 
 ### 2. Clone the repository
 
@@ -56,7 +56,7 @@ git checkout dev
 
 Current work is being done on the `dev` branch, not `main`.
 
-### 3. Open XAMLStudio.sln with Visual Studio!
+### 3. Open XAMLStudio.slnx with Visual Studio!
 
 Ensure that the `XAMLStudio` project is set as the startup project in Visual Studio.
 
