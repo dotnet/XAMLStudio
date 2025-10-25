@@ -7,11 +7,10 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:ex="using:CommunityToolkit.WinUI"
       xmlns:i="using:Microsoft.Xaml.Interactivity"
-      xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
-      xmlns:im="using:Microsoft.Xaml.Interactions.Media"
       xmlns:local="using:XamlStudio"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:mt="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
       xmlns:muxm="using:Microsoft.UI.Xaml.Media"
       mc:Ignorable="d">
 
@@ -23,6 +22,7 @@
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:StringFormatConverter x:Key="StringFormatConverter" />
         <controls:ConstrainedBox x:Key="ConstrainedBox" />
+        <controls:SwitchPresenter x:Key="SwitchPresenter" />
         <mt:DataGridCheckBoxColumn x:Key="DataGridCheckBoxColumn" />
         <mt:DataGridComboBoxColumn x:Key="DataGridComboBoxColumn" />
         <mt:DataGridTemplateColumn x:Key="DataGridTemplateColumn" />
@@ -32,16 +32,19 @@
         <brushes:TilesBrush x:Key="TilesBrush" />
 
         <!--  XAML Behaviors  -->
-        <ic:CallMethodAction x:Key="CallMethodAction" />
-        <ic:ChangePropertyAction x:Key="ChangePropertyAction" />
-        <ic:DataTriggerBehavior x:Key="DataTriggerBehavior" />
-        <ic:EventTriggerBehavior x:Key="EventTriggerBehavior" />
-        <ic:GoToStateAction x:Key="GoToStateAction" />
-        <ic:IncrementalUpdateBehavior x:Key="IncrementalUpdateBehavior" />
-        <ic:InvokeCommandAction x:Key="InvokeCommandAction" />
-        <ic:NavigateToPageAction x:Key="NavigateToPageAction" />
-        <im:ControlStoryboardAction x:Key="ControlStoryboardAction" />
-        <im:PlaySoundAction x:Key="PlaySoundAction" />
+        <i:CallMethodAction x:Key="CallMethodAction" />
+        <i:ChangePropertyAction x:Key="ChangePropertyAction" />
+        <i:DataTriggerBehavior x:Key="DataTriggerBehavior" />
+        <i:EventTriggerBehavior x:Key="EventTriggerBehavior" />
+        <i:GoToStateAction x:Key="GoToStateAction" />
+        <i:IncrementalUpdateBehavior x:Key="IncrementalUpdateBehavior" />
+        <i:InvokeCommandAction x:Key="InvokeCommandAction" />
+        <i:NavigateToPageAction x:Key="NavigateToPageAction" />
+        <i:ControlStoryboardAction x:Key="ControlStoryboardAction" />
+        <i:PlaySoundAction x:Key="PlaySoundAction" />
+
+        <!-- WinUI 2 -->
+        <muxc:WebView2 x:Key="WebView2"/>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">

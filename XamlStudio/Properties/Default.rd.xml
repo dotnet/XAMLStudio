@@ -30,12 +30,10 @@
     <Assembly Name="CommunityToolkit.WinUI.Media" Dynamic="Required All" />
     <Assembly Name="CommunityToolkit.WinUI" Dynamic="Required All" />
     
-    <Assembly Name="Microsoft.Xaml.Interactions" Dynamic="Required All" />
+    <Assembly Name="Microsoft.Xaml.Interactivity" Dynamic="Required All" />
 
     <Namespace Name="CommunityToolkit.WinUI.Controls" Dynamic="Required All" />
     <Namespace Name="CommunityToolkit.WinUI.Extensions" Dynamic="Required All" />
-
-    <Namespace Name="Microsoft.Xaml.Interactions.Core" Dynamic="Required All" />
 
     <Namespace Name="Telerik.UI.Xaml.Controls.Chart" Dynamic="Required All" />
     <Namespace Name="Telerik.UI.Xaml.Controls.Input" Dynamic="Required All" />

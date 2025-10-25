@@ -137,10 +137,10 @@
       <Version>6.2.14</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Converters">
-      <Version>8.0.240109</Version>
+      <Version>8.2.250402</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Extensions">
-      <Version>8.0.240109</Version>
+      <Version>8.2.250402</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

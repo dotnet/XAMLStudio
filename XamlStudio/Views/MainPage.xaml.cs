@@ -206,7 +206,7 @@ namespace XamlStudio.Views
                     typeof(CommunityToolkit.WinUI.Controls.GridSplitter).Assembly,
                     typeof(CommunityToolkit.WinUI.Controls.DockPanel).Assembly,
                     typeof(CommunityToolkit.WinUI.Converters.BoolToVisibilityConverter).Assembly,
-                    typeof(Microsoft.Xaml.Interactions.Core.DataTriggerBehavior).Assembly,
+                    typeof(Microsoft.Xaml.Interactivity.DataTriggerBehavior).Assembly,
                 });
             });
             t.Start();

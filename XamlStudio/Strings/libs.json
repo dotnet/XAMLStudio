@@ -2,21 +2,21 @@
   {
     "name": "Built-in Controls",
     "namespace": "Windows.UI.Xaml.Controls",
-    "docroot": "https://docs.microsoft.com/en-us/uwp/api/<typefull>"
+    "docroot": "https://docs.microsoft.com/uwp/api/<typefull>"
   },
   {
     "name": "Windows Community Toolkit Controls",
     "namespace": "CommunityToolkit.WinUI.Controls",
-    "docroot": "https://docs.microsoft.com/en-us/windows/communitytoolkit/controls/<type>"
+    "docroot": "https://docs.microsoft.com/dotnet/communitytoolkit/windows/<type>"
   },
   {
     "name": "Windows Community Toolkit Converters",
     "namespace": "CommunityToolkit.WinUI.Converters",
-    "docroot": "https://docs.microsoft.com/en-us/windows/communitytoolkit/helpers/converters"
+    "docroot": "https://docs.microsoft.com/dotnet/communitytoolkit/windows/converters"
   },
   {
     "name": "Xaml Behaviors",
-    "namespace": "Microsoft.Xaml.Interactions.Core",
+    "namespace": "Microsoft.Xaml.Interactivity",
     "docroot": "https://github.com/Microsoft/XamlBehaviors/wiki/<type>"
   },
   {

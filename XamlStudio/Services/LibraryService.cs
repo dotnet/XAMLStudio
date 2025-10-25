@@ -45,7 +45,7 @@ namespace XamlStudio.Services
                         typeof(CommunityToolkit.WinUI.Controls.GridSplitter).Assembly,
                         typeof(CommunityToolkit.WinUI.Controls.DockPanel).Assembly,
                         typeof(CommunityToolkit.WinUI.Converters.BoolToVisibilityConverter).Assembly,
-                        typeof(Microsoft.Xaml.Interactions.Core.DataTriggerBehavior).Assembly
+                        typeof(Microsoft.Xaml.Interactivity.DataTriggerBehavior).Assembly
                     });
 
                     var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Strings/libs.json"));

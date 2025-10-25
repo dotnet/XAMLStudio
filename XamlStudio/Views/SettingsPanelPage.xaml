@@ -7,7 +7,6 @@
       xmlns:fex="using:CommunityToolkit.WinUI.Extensions.Future"
       xmlns:helper="using:XamlStudio.Helpers"
       xmlns:i="using:Microsoft.Xaml.Interactivity"
-      xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:model="using:XamlStudio.Models"
       xmlns:mt="using:Microsoft.Toolkit.Uwp.UI.Controls"
@@ -53,9 +52,9 @@
                                       IsOn="{x:Bind ViewModel.Settings.IsAutoCompileEnabled.Value, Mode=OneWay}"
                                       Tag="IsAutoCompileEnabled">
                             <i:Interaction.Behaviors>
-                                <ic:EventTriggerBehavior EventName="Toggled">
-                                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
-                                </ic:EventTriggerBehavior>
+                                <i:EventTriggerBehavior EventName="Toggled">
+                                    <i:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
+                                </i:EventTriggerBehavior>
                             </i:Interaction.Behaviors>
                         </ToggleSwitch>
                         <controls:SettingsExpander.Items>
@@ -81,9 +80,9 @@
                                             TickPlacement="Outside"
                                             Value="{x:Bind ViewModel.Settings.AutoCompileDelay.Value, Mode=OneWay}">
                                         <i:Interaction.Behaviors>
-                                            <ic:EventTriggerBehavior EventName="ValueChanged">
-                                                <ic:InvokeCommandAction Command="{x:Bind ViewModel.DelayChangedCommand, Mode=OneWay}" />
-                                            </ic:EventTriggerBehavior>
+                                            <i:EventTriggerBehavior EventName="ValueChanged">
+                                                <i:InvokeCommandAction Command="{x:Bind ViewModel.DelayChangedCommand, Mode=OneWay}" />
+                                            </i:EventTriggerBehavior>
                                         </i:Interaction.Behaviors>
                                     </Slider>
                                     <TextBlock Grid.Column="1"
@@ -104,9 +103,9 @@
                                       IsOn="{x:Bind ViewModel.Settings.IsPowerBindingDebuggingEnabled.Value, Mode=OneWay}"
                                       Tag="IsPowerBindingDebuggingEnabled">
                             <i:Interaction.Behaviors>
-                                <ic:EventTriggerBehavior EventName="Toggled">
-                                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
-                                </ic:EventTriggerBehavior>
+                                <i:EventTriggerBehavior EventName="Toggled">
+                                    <i:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
+                                </i:EventTriggerBehavior>
                             </i:Interaction.Behaviors>
                         </ToggleSwitch>
                     </controls:SettingsCard>
@@ -119,9 +118,9 @@
                                             IsOn="{x:Bind ViewModel.Settings.IsCompileSelectionEnabled.Value, Mode=OneWay}"
                                             Tag="IsCompileSelectionEnabled">
                                 <i:Interaction.Behaviors>
-                                    <ic:EventTriggerBehavior EventName="Toggled">
-                                        <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
-                                    </ic:EventTriggerBehavior>
+                                    <i:EventTriggerBehavior EventName="Toggled">
+                                        <i:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
+                                    </i:EventTriggerBehavior>
                                 </i:Interaction.Behaviors>
                             </ToggleSwitch>
                         </StackPanel>-->
@@ -135,9 +134,9 @@
                                       IsOn="{x:Bind ViewModel.Settings.IsLiveDataContextRefreshedOnRender.Value, Mode=OneWay}"
                                       Tag="IsLiveDataContextRefreshedOnRender">
                             <i:Interaction.Behaviors>
-                                <ic:EventTriggerBehavior EventName="Toggled">
-                                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
-                                </ic:EventTriggerBehavior>
+                                <i:EventTriggerBehavior EventName="Toggled">
+                                    <i:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
+                                </i:EventTriggerBehavior>
                             </i:Interaction.Behaviors>
                         </ToggleSwitch>
                     </controls:SettingsCard>
@@ -198,9 +197,9 @@
                                               IsOn="{x:Bind ViewModel.Settings.IsContentUpdatedWithSuggested.Value, Mode=OneWay}"
                                               Tag="IsContentUpdatedWithSuggested">
                                     <i:Interaction.Behaviors>
-                                        <ic:EventTriggerBehavior EventName="Toggled">
-                                            <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
-                                        </ic:EventTriggerBehavior>
+                                        <i:EventTriggerBehavior EventName="Toggled">
+                                            <i:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
+                                        </i:EventTriggerBehavior>
                                     </i:Interaction.Behaviors>
                                 </ToggleSwitch>
                             </controls:SettingsCard>
@@ -227,9 +226,9 @@
                                       IsOn="{x:Bind ViewModel.Settings.IsPreviewClippingEnabled.Value, Mode=OneWay}"
                                       Tag="IsPreviewClippingEnabled">
                             <i:Interaction.Behaviors>
-                                <ic:EventTriggerBehavior EventName="Toggled">
-                                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
-                                </ic:EventTriggerBehavior>
+                                <i:EventTriggerBehavior EventName="Toggled">
+                                    <i:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
+                                </i:EventTriggerBehavior>
                             </i:Interaction.Behaviors>
                         </ToggleSwitch>
                     </controls:SettingsCard>
@@ -244,9 +243,9 @@
                                       IsOn="{x:Bind ViewModel.Settings.IsAlignmentGridEnabled.Value, Mode=OneWay}"
                                       Tag="IsAlignmentGridEnabled">
                             <i:Interaction.Behaviors>
-                                <ic:EventTriggerBehavior EventName="Toggled">
-                                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
-                                </ic:EventTriggerBehavior>
+                                <i:EventTriggerBehavior EventName="Toggled">
+                                    <i:InvokeCommandAction Command="{x:Bind ViewModel.SwitchToggleCommand, Mode=OneWay}" />
+                                </i:EventTriggerBehavior>
                             </i:Interaction.Behaviors>
                         </ToggleSwitch>
 

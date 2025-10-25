@@ -8,7 +8,6 @@
       xmlns:future="using:CommunityToolkit.WinUI.Controls.Future"
       xmlns:globalization="using:System.Globalization"
       xmlns:i="using:Microsoft.Xaml.Interactivity"
-      xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
       xmlns:local="using:XamlStudio.Views"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:model="using:XamlStudio.Models"
@@ -127,14 +126,14 @@
                               IsOn="{x:Bind services:SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value, Mode=OneWay}"
                               Tag="IsPowerBindingDebuggingEnabled">
                     <i:Interaction.Behaviors>
-                        <ic:EventTriggerBehavior EventName="Toggled">
-                            <ic:InvokeCommandAction Command="{x:Bind MainViewModel.SettingsViewModel.SwitchToggleCommand}" />
-                            <ic:ChangePropertyAction PropertyName="HasCompiled"
+                        <i:EventTriggerBehavior EventName="Toggled">
+                            <i:InvokeCommandAction Command="{x:Bind MainViewModel.SettingsViewModel.SwitchToggleCommand}" />
+                            <i:ChangePropertyAction PropertyName="HasCompiled"
                                                      TargetObject="{x:Bind MainViewModel.ActiveDocumentViewModel}"
                                                      Value="false" />
                             <!--  TODO: Trigger message, do I want to create an action to send a message?  -->
-                            <!--<ic:InvokeCommandAction Command="{x:Bind MainViewModel.ActiveDocumentViewModel.UpdateXamlCommand}" />-->
-                        </ic:EventTriggerBehavior>
+                            <!--<i:InvokeCommandAction Command="{x:Bind MainViewModel.ActiveDocumentViewModel.UpdateXamlCommand}" />-->
+                        </i:EventTriggerBehavior>
                     </i:Interaction.Behaviors>
                 </ToggleSwitch>
             </Grid>
