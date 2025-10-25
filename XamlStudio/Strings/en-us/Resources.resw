@@ -150,7 +150,7 @@
     <comment>About this application title for SettingsPanel</comment>
   </data>
   <data name="SettingsPanel_About_Description.Text" xml:space="preserve">
-    <value>XAML Studio, a Microsoft Garage project, is a developer tool for rapidly prototyping UWP based XAML applications.</value>
+    <value>XAML Studio is a developer tool for rapidly prototyping WinUI based XAML applications.</value>
     <comment>About this application description for SettingsPanel</comment>
   </data>
   <data name="SettingsPanel_PrivacyTermsLink.Content" xml:space="preserve">
@@ -375,12 +375,12 @@
     <comment>Button Text for opening the log location.</comment>
   </data>
   <data name="SettingsPanel_About_Copyright.Text" xml:space="preserve">
-    <value>Copyright 2022 Microsoft</value>
+    <value>Copyright 2025 .NET Foundation</value>
     <comment>Copyright Statement in About Box</comment>
   </data>
   <data name="SettingsPanel_About_Credits.Text" xml:space="preserve">
     <value>Developed By: Michael A. Hawker
-Special Thanks To: Justin Liu, Matthew Whilden, Lainie Huston, Salman Chishti, Mike Pell, the 'Partners, Analytics, and essential eXperiences' Team, and the Microsoft Garage.</value>
+Special Thanks To: Justin Liu, Matthew Whilden, Lainie Huston, Salman Chishti, Mike Pell, the 'Partners, Analytics, and essential eXperiences' Team, the Microsoft Garage, Alexandre Zollinger Chohfi, Chris Sfanos, and the .NET Foundation.</value>
     <comment>By lines for credits on the About screen</comment>
   </data>
   <data name="SettingsPanel_AnalyticsToggle.Header" xml:space="preserve">
