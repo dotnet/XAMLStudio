@@ -7,7 +7,6 @@
              xmlns:developerTools="using:CommunityToolkit.WinUI.DeveloperTools"
              xmlns:fex="using:CommunityToolkit.WinUI.Extensions.Future"
              xmlns:i="using:Microsoft.Xaml.Interactivity"
-             xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
              xmlns:labs="using:CommunityToolkit.WinUI.Controls.Future"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:models="using:XamlStudio.Toolkit.Models"

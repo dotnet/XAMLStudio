@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:ani="using:CommunityToolkit.WinUI.Animations"
       xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+      xmlns:converters="using:CommunityToolkit.WinUI.Converters"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:fex="using:CommunityToolkit.WinUI.Extensions.Future"
       xmlns:helper="using:XamlStudio.Helpers"
@@ -28,12 +29,41 @@
         <ani:ImplicitAnimationSet x:Key="SmoothOffsetAnimation">
             <ani:OffsetAnimation Duration="0:0:0.25" />
         </ani:ImplicitAnimationSet>
+        <Thickness x:Key="ExpanderPadding">24,0,24,0</Thickness>
+        <converters:SwitchConverter x:Key="PaneToGlyphConverter"
+                                    TargetType="model:PaneOrientation">
+            <controls:Case Value="HorizontalPreviewTop" Content="&#xE745;"/>
+            <controls:Case Value="VerticalPreviewRight" Content="&#xEA61;"/>
+            <controls:Case Value="HorizontalPreviewBottom" Content="&#xE745;"/>
+            <controls:Case Value="VerticalPreviewLeft" Content="&#xE746;"/>
+        </converters:SwitchConverter>
+        <converters:SwitchConverter x:Key="PaneToRenderTransformConverter"
+                                    TargetType="model:PaneOrientation">
+            <controls:Case Value="HorizontalPreviewTop">
+                <RotateTransform Angle="180" CenterX="10" CenterY="10"/>
+            </controls:Case>
+            <controls:Case IsDefault="True">
+                <RotateTransform/>
+            </controls:Case>
+        </converters:SwitchConverter>
+        <converters:SwitchConverter x:Key="PaneToLocalizedTextConverter"
+                            TargetType="model:PaneOrientation">
+            <controls:Case Value="HorizontalPreviewTop" x:Uid="SettingsPanel_PaneOrientation_TopDescription"/>
+            <controls:Case Value="VerticalPreviewRight" x:Uid="SettingsPanel_PaneOrientation_RightDescription"/>
+            <controls:Case Value="HorizontalPreviewBottom" x:Uid="SettingsPanel_PaneOrientation_BottomDescription"/>
+            <controls:Case Value="VerticalPreviewLeft" x:Uid="SettingsPanel_PaneOrientation_LeftDescription"/>
+        </converters:SwitchConverter>
+        <converters:SwitchConverter x:Key="ThemeToLocalizedTextConverter"
+                            TargetType="xaml:ElementTheme">
+            <controls:Case Value="Light" x:Uid="SettingsPanel_Theme_Light"/>
+            <controls:Case Value="Dark" x:Uid="SettingsPanel_Theme_Dark"/>
+            <controls:Case Value="Default" x:Uid="SettingsPanel_Theme_Default"/>
+        </converters:SwitchConverter>
     </Page.Resources>
 
     <ScrollViewer Background="{ThemeResource Brush-Blue-Dark-2}">
-        <StackPanel Margin="12,0,12,12"
-                    HorizontalAlignment="Stretch"
-                    Spacing="4">
+        <StackPanel Margin="12,0,0,0"
+                    HorizontalAlignment="Stretch">
 
             <!--  XAML Properties  -->
             <muxc:Expander x:Uid="SettingsPanel_XAML"
@@ -41,6 +71,7 @@
                            VerticalContentAlignment="Top"
                            Background="Transparent"
                            IsExpanded="True"
+                           Padding="{StaticResource ExpanderPadding}"
                            Style="{StaticResource SimpleExpanderStyle}">
                 <StackPanel HorizontalAlignment="Stretch" Spacing="4">
                     <controls:SettingsExpander x:Uid="SettingsPanel_AutoCompileExpander">
@@ -214,6 +245,7 @@
                            VerticalContentAlignment="Top"
                            Background="Transparent"
                            IsExpanded="True"
+                           Padding="{StaticResource ExpanderPadding}"
                            Style="{StaticResource SimpleExpanderStyle}">
                 <StackPanel Spacing="4">
                     <!--  Preview Clipping - IsEnabled  -->
@@ -361,133 +393,88 @@
                 </StackPanel>
             </muxc:Expander>
 
+            <!-- Personalization Properties -->
             <muxc:Expander x:Uid="SettingsPanel_Personalization"
                            HorizontalContentAlignment="Stretch"
                            VerticalContentAlignment="Top"
                            Background="Transparent"
                            IsExpanded="True"
+                           Padding="{StaticResource ExpanderPadding}"
                            Style="{StaticResource SimpleExpanderStyle}">
-                <StackPanel Margin="8,0,0,0">
-                    <!--  App/Editor Themes  -->
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
+                <StackPanel HorizontalAlignment="Stretch" Spacing="4">
+                    <!-- App Theme -->
+                    <controls:SettingsCard x:Uid="SettingsPanel_AppThemeCard">
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE790;" />
+                        </controls:SettingsCard.HeaderIcon>
+                        <ComboBox x:Uid="SettingsPanel_AppThemeCard_ComboBox"
+                                  HorizontalAlignment="Stretch"
+                                  SelectedItem="{x:Bind ViewModel.ElementTheme, Mode=TwoWay}">
+                            <ComboBox.Items>
+                                <xaml:ElementTheme>Light</xaml:ElementTheme>
+                                <xaml:ElementTheme>Dark</xaml:ElementTheme>
+                                <xaml:ElementTheme>Default</xaml:ElementTheme>
+                            </ComboBox.Items>
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="xaml:ElementTheme">
+                                    <TextBlock Text="{x:Bind (xaml:ElementTheme), Converter={StaticResource ThemeToLocalizedTextConverter}}"
+                                               AutomationProperties.Name="{x:Bind (xaml:ElementTheme), Converter={StaticResource ThemeToLocalizedTextConverter}}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </controls:SettingsCard>
+                    
+                    <!-- Editor Theme -->
+                    <controls:SettingsCard x:Uid="SettingsPanel_EditorThemeCard">
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xEF60;" />
+                        </controls:SettingsCard.HeaderIcon>
+                        <ComboBox x:Uid="SettingsPanel_EditorThemeCard_ComboBox"
+                                  HorizontalAlignment="Stretch"
+                                  SelectedItem="{x:Bind ViewModel.Settings.EditorTheme, Mode=TwoWay}">
+                            <ComboBox.Items>
+                                <xaml:ElementTheme>Light</xaml:ElementTheme>
+                                <xaml:ElementTheme>Dark</xaml:ElementTheme>
+                                <xaml:ElementTheme>Default</xaml:ElementTheme>
+                            </ComboBox.Items>
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="xaml:ElementTheme">
+                                    <TextBlock Text="{x:Bind (xaml:ElementTheme), Converter={StaticResource ThemeToLocalizedTextConverter}}"
+                   AutomationProperties.Name="{x:Bind (xaml:ElementTheme), Converter={StaticResource ThemeToLocalizedTextConverter}}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </controls:SettingsCard>
 
-                        <!--  TODO: Switch to ComboBox?  -->
-                        <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
-                            <TextBlock x:Uid="SettingsPanel_Theme" Style="{StaticResource BodyTextStyle}" />
-
-                            <StackPanel Margin="{StaticResource EightTopMargin}">
-                                <RadioButton x:Uid="SettingsPanel_Theme_Light"
-                                             Command="{x:Bind ViewModel.SwitchThemeCommand, Mode=OneWay}"
-                                             GroupName="AppTheme"
-                                             IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource ElementThemeToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}">
-                                    <RadioButton.CommandParameter>
-                                        <xaml:ElementTheme>Light</xaml:ElementTheme>
-                                    </RadioButton.CommandParameter>
-                                </RadioButton>
-                                <RadioButton x:Uid="SettingsPanel_Theme_Dark"
-                                             Command="{x:Bind ViewModel.SwitchThemeCommand, Mode=OneWay}"
-                                             GroupName="AppTheme"
-                                             IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource ElementThemeToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}">
-                                    <RadioButton.CommandParameter>
-                                        <xaml:ElementTheme>Dark</xaml:ElementTheme>
-                                    </RadioButton.CommandParameter>
-                                </RadioButton>
-                                <RadioButton x:Uid="SettingsPanel_Theme_Default"
-                                             Command="{x:Bind ViewModel.SwitchThemeCommand, Mode=OneWay}"
-                                             GroupName="AppTheme"
-                                             IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource ElementThemeToBooleanConverter}, ConverterParameter=Default, Mode=OneWay}">
-                                    <RadioButton.CommandParameter>
-                                        <xaml:ElementTheme>Default</xaml:ElementTheme>
-                                    </RadioButton.CommandParameter>
-                                </RadioButton>
-                            </StackPanel>
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="1" Margin="{StaticResource SettingsSubheaderMargin}">
-                            <TextBlock x:Uid="SettingsPanel_EditorTheme" Style="{StaticResource BodyTextStyle}" />
-
-                            <StackPanel Margin="{StaticResource EightTopMargin}">
-                                <RadioButton x:Uid="SettingsPanel_EditorTheme_Light"
-                                             Command="{x:Bind ViewModel.SwitchEditorThemeCommand, Mode=OneWay}"
-                                             GroupName="EditorTheme"
-                                             IsChecked="{x:Bind ViewModel.Settings.EditorTheme, Converter={StaticResource ElementThemeToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}">
-                                    <RadioButton.CommandParameter>
-                                        <xaml:ElementTheme>Light</xaml:ElementTheme>
-                                    </RadioButton.CommandParameter>
-                                </RadioButton>
-                                <RadioButton x:Uid="SettingsPanel_EditorTheme_Dark"
-                                             Command="{x:Bind ViewModel.SwitchEditorThemeCommand, Mode=OneWay}"
-                                             GroupName="EditorTheme"
-                                             IsChecked="{x:Bind ViewModel.Settings.EditorTheme, Converter={StaticResource ElementThemeToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}">
-                                    <RadioButton.CommandParameter>
-                                        <xaml:ElementTheme>Dark</xaml:ElementTheme>
-                                    </RadioButton.CommandParameter>
-                                </RadioButton>
-                                <RadioButton x:Uid="SettingsPanel_EditorTheme_Default"
-                                             Command="{x:Bind ViewModel.SwitchEditorThemeCommand, Mode=OneWay}"
-                                             GroupName="EditorTheme"
-                                             IsChecked="{x:Bind ViewModel.Settings.EditorTheme, Converter={StaticResource ElementThemeToBooleanConverter}, ConverterParameter=Default, Mode=OneWay}">
-                                    <RadioButton.CommandParameter>
-                                        <xaml:ElementTheme>Default</xaml:ElementTheme>
-                                    </RadioButton.CommandParameter>
-                                </RadioButton>
-                            </StackPanel>
-                        </StackPanel>
-                    </Grid>
-
-                    <!--  Docked Preview Panel  -->
-                    <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
-
-                        <!--  Hidden when above disabled  -->
-                        <StackPanel Visibility="{x:Bind ViewModel.Settings.IsPreviewDocked.Value, Mode=OneWay}" Spacing="8">
-                            <!--  Pane Orientation  -->
-                            <TextBlock x:Uid="SettingsPanel_PaneOrientation"
-                                       Style="{StaticResource BodyStrongTextBlockStyle}"/>
-                            
-                            <!-- TODO: If there is any future analytics, then need to log changes to this setting -->
-                            <controls:Segmented SelectionMode="Single">
-                                <controls:SegmentedItem x:Uid="SettingsPanel_PaneOrientation_TopDescription"
-                                                        IsSelected="{x:Bind ViewModel.Settings.DefaultPreviewPanePosition, Converter={StaticResource PaneOrientationToBooleanConverter}, ConverterParameter=HorizontalPreviewTop, Mode=TwoWay}">
-                                    <controls:SegmentedItem.Icon>
+                    <!-- Preview Pane Position -->
+                    <controls:SettingsCard x:Uid="SettingsPanel_PaneOrientationCard" IsEnabled="{x:Bind ViewModel.Settings.IsPreviewDocked.Value, Mode=OneWay}">
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE8B4;" />
+                        </controls:SettingsCard.HeaderIcon>
+                        <ComboBox x:Uid="SettingsPanel_PaneOrientationCard_ComboBox"
+                                  HorizontalAlignment="Stretch"
+                                  SelectedIndex="0"
+                                  SelectedItem="{x:Bind ViewModel.Settings.DefaultPreviewPanePosition, Mode=TwoWay}">
+                            <ComboBox.Items>
+                                <model:PaneOrientation>HorizontalPreviewTop</model:PaneOrientation>
+                                <model:PaneOrientation>VerticalPreviewRight</model:PaneOrientation>
+                                <model:PaneOrientation>HorizontalPreviewBottom</model:PaneOrientation>
+                                <model:PaneOrientation>VerticalPreviewLeft</model:PaneOrientation>
+                            </ComboBox.Items>
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="model:PaneOrientation">
+                                    <StackPanel Orientation="Horizontal"
+                                                AutomationProperties.Name="{x:Bind (model:PaneOrientation), Converter={StaticResource PaneToLocalizedTextConverter}}"
+                                                Spacing="8">
                                         <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                                                    Glyph="&#xE745;">
-                                            <FontIcon.RenderTransform>
-                                                <RotateTransform Angle="180" CenterX="10" CenterY="10"/>
-                                            </FontIcon.RenderTransform>
-                                        </FontIcon>
-                                    </controls:SegmentedItem.Icon>
-                                </controls:SegmentedItem>
-                                <controls:SegmentedItem x:Uid="SettingsPanel_PaneOrientation_RightDescription"
-                                                        IsSelected="{x:Bind ViewModel.Settings.DefaultPreviewPanePosition, Converter={StaticResource PaneOrientationToBooleanConverter}, ConverterParameter=VerticalPreviewRight, Mode=TwoWay}">
-                                    <controls:SegmentedItem.Icon>
-                                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                                                    Glyph="&#xEA61;">
-                                        </FontIcon>
-                                    </controls:SegmentedItem.Icon>
-                                </controls:SegmentedItem>
-                                <controls:SegmentedItem x:Uid="SettingsPanel_PaneOrientation_BottomDescription"
-                                                        IsSelected="{x:Bind ViewModel.Settings.DefaultPreviewPanePosition, Converter={StaticResource PaneOrientationToBooleanConverter}, ConverterParameter=HorizontalPreviewBottom, Mode=TwoWay}">
-                                    <controls:SegmentedItem.Icon>
-                                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                                                    Glyph="&#xE745;">
-                                        </FontIcon>
-                                    </controls:SegmentedItem.Icon>
-                                </controls:SegmentedItem>
-                                <controls:SegmentedItem x:Uid="SettingsPanel_PaneOrientation_LeftDescription"
-                                                        IsSelected="{x:Bind ViewModel.Settings.DefaultPreviewPanePosition, Converter={StaticResource PaneOrientationToBooleanConverter}, ConverterParameter=VerticalPreviewLeft, Mode=TwoWay}">
-                                    <controls:SegmentedItem.Icon>
-                                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                                                    Glyph="&#xE746;">
-                                        </FontIcon>
-                                    </controls:SegmentedItem.Icon>
-                                </controls:SegmentedItem>
-                            </controls:Segmented>
-                        </StackPanel>
-                    </StackPanel>
+                                                  Glyph="{x:Bind (model:PaneOrientation), Converter={StaticResource PaneToGlyphConverter}}"
+                                                  RenderTransform="{x:Bind (model:PaneOrientation), Converter={StaticResource PaneToRenderTransformConverter}}"/>
+                                        <TextBlock Text="{x:Bind (model:PaneOrientation), Converter={StaticResource PaneToLocalizedTextConverter}}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </controls:SettingsCard>
                 </StackPanel>
             </muxc:Expander>
 
@@ -496,6 +483,7 @@
                            VerticalContentAlignment="Top"
                            Background="Transparent"
                            IsExpanded="True"
+                           Padding="{StaticResource ExpanderPadding}"
                            Style="{StaticResource SimpleExpanderStyle}">
                 <StackPanel Margin="20,0,0,0">
                     <TextBlock x:Uid="SettingsPanel_About_Description" Style="{StaticResource BodyTextStyle}" />
@@ -537,6 +525,7 @@
 
             <controls:SettingsExpander x:Uid="SettingsPanel_ThirdParty"
                                        IsExpanded="True"
+                                       Margin="24,0,24,0"
                                        ItemsSource="{x:Bind ViewModel.ThirdPartyLibs, Mode=OneWay}">
                 <controls:SettingsExpander.ItemTemplate>
                     <DataTemplate x:DataType="model:ThirdPartyInfo">
