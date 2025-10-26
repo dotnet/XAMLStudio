@@ -29,24 +29,24 @@ public sealed partial class XamlDocument : FileBackedDocument
     /// Dummy for switching to Welcome Screen.
     /// </summary>
     [ObservableProperty]
-    private DocumentType _documentType;
+    public partial DocumentType DocumentType { get; set; }
 
     /// <summary>
     /// Is this file actively visible/engaged in the UI.
     /// </summary>
     [ObservableProperty]
-    private bool _isActive;
+    public partial bool IsActive { get; set; }
 
     [ObservableProperty]
-    private DataContext _dataContext = new DataContext();
+    public partial DataContext DataContext { get; set; } = new DataContext();
 
     // TODO: Figure out persistence strategy
-    [property: JsonIgnore]
+    [JsonIgnore]
     [ObservableProperty]
-    private StorageFolder _parentFolder;
+    public partial StorageFolder ParentFolder { get; set; }
 
     [ObservableProperty]
-    private DocumentState _state = new DocumentState();
+    public partial DocumentState State { get; set; } = new DocumentState();
 
     [JsonIgnore]
     public string DisplayName { get { return BackingFile.DisplayName; } }

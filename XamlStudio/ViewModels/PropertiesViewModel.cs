@@ -9,25 +9,25 @@ public partial class PropertiesViewModel : ObservableObject
 {
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasElement))]
-    private DependencyObject _selectedElement;
+    public partial DependencyObject SelectedElement { get; set; }
 
     public bool HasElement => SelectedElement != null;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasParent))]
-    private DependencyObject _selectedElementParent;
+    public partial DependencyObject SelectedElementParent { get; set; }
 
     public bool HasParent => SelectedElementParent != null;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasChildren))]
-    private DependencyObject[] _selectedElementChildren;
+    public partial DependencyObject[] SelectedElementChildren { get; set; }
 
     public bool HasChildren => SelectedElementChildren?.Length > 0;
 
     [ObservableProperty]
-    private ObservableGroupedCollection<string, PropertyInfo> _propertyValues;
+    public partial ObservableGroupedCollection<string, PropertyInfo> PropertyValues { get; set; }
 
     [ObservableProperty]
-    private ObservableGroupedCollection<string, PropertyInfo> _unsetPropertyValues;
+    public partial ObservableGroupedCollection<string, PropertyInfo> UnsetPropertyValues { get; set; }
 }

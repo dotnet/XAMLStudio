@@ -24,7 +24,7 @@ public partial class ToolboxViewModel : ObservableObject
     public ObservableCollection<Type> Favorites { get; } = new ObservableCollection<Type>();
 
     [ObservableProperty]
-    private string _filter = string.Empty;
+    public partial string Filter { get; set; } = string.Empty;
 
     private IEnumerable<IGrouping<string, Type>> _groupedSource;
 

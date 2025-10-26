@@ -20,10 +20,10 @@ public partial class FolderLocation : ObservableObject
     /// <summary>
     /// OS File backing this document.  Internal Needed for Defer Updates, don't use.
     /// </summary>
-    [property: JsonIgnore]
+    [JsonIgnore]
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsInitialized))]
-    private StorageFolder _backingFolder;
+    public partial StorageFolder BackingFolder { get; set; }
 
     public bool IsInitialized { get { return BackingFolder != null; } }
 

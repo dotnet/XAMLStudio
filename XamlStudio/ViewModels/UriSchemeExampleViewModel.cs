@@ -7,5 +7,5 @@ public partial class UriSchemeExampleViewModel : ObservableObject
 {
     // This property is just for displaying the passed in value
     [ObservableProperty]
-    private string _secret;
+    public partial string Secret { get; set; }
 }

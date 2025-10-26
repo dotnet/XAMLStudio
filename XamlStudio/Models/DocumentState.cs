@@ -12,13 +12,13 @@ public partial class DocumentState : ObservableObject
     /// <summary>
     /// Keeps track of the status between the document and the rendered preview.
     /// </summary>
-    [property: JsonIgnore]
+    [JsonIgnore]
     [ObservableProperty]
-    private SyncStatus _renderState;
+    public partial SyncStatus RenderState { get; set; }
 
     [ObservableProperty]
-    private PaneOrientation? _previewOrientation;
+    public partial PaneOrientation? PreviewOrientation { get; set; }
 
     [ObservableProperty]
-    private ElementTheme? _previewAreaTheme;
+    public partial ElementTheme? PreviewAreaTheme { get; set; }
 }

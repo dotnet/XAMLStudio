@@ -8,7 +8,7 @@ public partial class PropertyInfo : ObservableObject
 {
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsDefault))]
-    private object _value;
+    public partial object Value { get; set; }
 
     private bool IsDefault => Value == DependencyProperty.UnsetValue;
 

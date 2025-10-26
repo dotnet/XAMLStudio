@@ -9,15 +9,15 @@ namespace XamlStudio.Models;
 public abstract partial class WorkspaceWindow : ObservableObject
 {
     [ObservableProperty]
-    private XamlDocument _activeFile;
+    public partial XamlDocument ActiveFile { get; set; }
 
     public event EventHandler<XamlDocument> ActiveFileChanged;
 
     [ObservableProperty]
-    private string _openActivity = "EXPLORER";
+    public partial string OpenActivity { get; set; } = "EXPLORER";
 
     [ObservableProperty]
-    private bool _isWorkspaceOpen;
+    public partial bool IsWorkspaceOpen { get; set; }
 
     public ObservableCollection<FolderLocation> WorkspaceFolders { get; private set; } = new();
 

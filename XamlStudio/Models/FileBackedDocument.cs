@@ -14,16 +14,15 @@ public abstract partial class FileBackedDocument : ObservableObject
     /// File Content.
     /// </summary>
     [ObservableProperty]
-    private string _content;
+    public partial string Content { get; set; }
 
     /// <summary>
     /// File Title to Display in UI Tab.
     /// </summary>
-    private string _title;
     public string Title
     {
-        get { return (HasChanged ? "*" : "") + _title; }
-        set { SetProperty(ref _title, value.Trim('*')); }
+        get { return (HasChanged ? "*" : "") + field; }
+        set { SetProperty(ref field, value.Trim('*')); }
     }
 
     //// TODO: This is effectively private, but needs to be serialized, investigate options when switching away from Newtonsoft
@@ -32,14 +31,14 @@ public abstract partial class FileBackedDocument : ObservableObject
     /// <summary>
     /// OS File backing this document.  Internal Needed for Defer Updates, don't use.
     /// </summary>
-    [property: JsonIgnore]
+    [JsonIgnore]
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanSave))]
-    private StorageFile _backingFile;
+    public partial StorageFile BackingFile { get; set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Title))]
-    private bool _hasChanged;
+    public partial bool HasChanged { get; set; }
 
     public bool CanSave { get { return BackingFile != null; } }
 

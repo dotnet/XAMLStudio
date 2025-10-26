@@ -18,7 +18,7 @@ public partial class MainViewModel : WorkspaceWindow
     public Dictionary<XamlDocument, DocumentViewModel> DocumentViewModels { get; } = new Dictionary<XamlDocument, DocumentViewModel>();
 
     [ObservableProperty]
-    private DocumentViewModel _activeDocumentViewModel;
+    public partial DocumentViewModel ActiveDocumentViewModel { get; set; }
 
     partial void OnActiveDocumentViewModelChanged(DocumentViewModel oldValue, DocumentViewModel newValue)
     {

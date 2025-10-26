@@ -12,7 +12,7 @@ public sealed partial class DataContext : FileBackedDocument
     /// </summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsRemote))]
-    private string _uri;
+    public partial string Uri { get; set; }
 
     public bool IsRemote { get { return !string.IsNullOrWhiteSpace(Uri); } }
 

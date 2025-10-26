@@ -24,11 +24,11 @@ public partial class SettingsPanelViewModel : ObservableObject
 {
     // TODO WTS: Add other settings as necessary. For help see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/pages/settings.md
     [ObservableProperty]
-    private ElementTheme _elementTheme = ThemeSelectorService.Theme;
+    public partial ElementTheme ElementTheme { get; set; } = ThemeSelectorService.Theme;
 
 
     [ObservableProperty]
-    private string _versionDescription;
+    public partial string VersionDescription { get; set; }
 
     [RelayCommand]
     public async Task SwitchTheme(ElementTheme param)

@@ -20,31 +20,30 @@ namespace XamlStudio.ViewModels;
 public partial class DocumentViewModel : ObservableObject
 {
     [ObservableProperty]
-    private XamlDocument _document;
+    public partial XamlDocument Document { get; set; }
 
     partial void OnDocumentChanged(XamlDocument value)
     {
         HasCompiled = false; // TODO: Reset compiled flag so we can re-render, probably want to cache elements previously rendered in XamlDocument, so we can re-add on document switch
     }
 
-
     /// <summary>
     /// Selected Text in the Editor
     /// </summary>
     [ObservableProperty]
-    private string _selectedText;
+    public partial string SelectedText { get; set; }
 
     /// <summary>
     /// Visual Element that has focus for design mode elements, either through user selection or caret navigation in editor.
     /// </summary>
     [ObservableProperty]
-    private FrameworkElement _highlightedElement;
+    public partial FrameworkElement HighlightedElement { get; set; }
 
     [ObservableProperty]
-    private XamlRenderResultContext _result;
+    public partial XamlRenderResultContext Result { get; set; }
 
     [ObservableProperty]
-    private XamlXmlTreeCoordinator _xamlCoordinator = new();
+    public partial XamlXmlTreeCoordinator XamlCoordinator { get; set; } = new();
 
     private ObservableCollection<ConversionRecord> _bindingHistory = new ObservableCollection<ConversionRecord>();
     public AdvancedCollectionView BindingHistory
@@ -59,7 +58,7 @@ public partial class DocumentViewModel : ObservableObject
     }
 
     [ObservableProperty]
-    private bool _hasCompiled;
+    public partial bool HasCompiled { get; set; }
 
     public Panel XamlRoot { get; set; }
 
@@ -102,7 +101,7 @@ public partial class DocumentViewModel : ObservableObject
     /// Text for error message when refreshing from a live data source.
     /// </summary>
     [ObservableProperty]
-    private string _liveDataContextRefreshError;
+    public partial string LiveDataContextRefreshError { get; set; }
 
     public SettingsService Settings { get; } = SettingsService.Instance;
 
@@ -111,7 +110,7 @@ public partial class DocumentViewModel : ObservableObject
     public MainViewModel MainViewModel { get; internal set; }
 
     [ObservableProperty]
-    private object _dataContext;
+    public partial object DataContext { get; set; }
 
     partial void OnDataContextChanged(object value)
     {
