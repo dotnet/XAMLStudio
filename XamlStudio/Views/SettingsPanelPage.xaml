@@ -567,8 +567,8 @@
                         <controls:SettingsCard>
                             <controls:SettingsCard.Header>
                                 <HyperlinkButton Padding="2"
-                                                 Content="{Binding Name}"
-                                                 NavigateUri="{Binding Url}" />
+                                                 Content="{x:Bind Name}"
+                                                 NavigateUri="{x:Bind Url}" />
                             </controls:SettingsCard.Header>
                             <controls:SettingsCard.Description>
                                 <Grid>
@@ -577,15 +577,16 @@
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
                                     <HyperlinkButton Padding="2"
-                                                     AutomationProperties.Name="{Binding LicenseAutomationName}"
+                                                     AutomationProperties.Name="{x:Bind LicenseAutomationName}"
                                                      Content="{x:Bind License}"
-                                                     NavigateUri="{Binding LicenseUrl}" />
+                                                     NavigateUri="{x:Bind LicenseUrl}" />
                                     <TextBlock Grid.Column="1"
                                                Padding="2"
                                                Text="{x:Bind Version}" />
                                 </Grid>
                             </controls:SettingsCard.Description>
-                            <Button AutomationProperties.Name="{Binding LicenseTextAutomationName}"
+                            <Button AutomationProperties.Name="{x:Bind LicenseTextAutomationName}"
+                                    DataContext="{x:Bind (model:ThirdPartyInfo)}"
                                     Click="HyperlinkButtonLicense_Click"
                                     Content="Read License" />
                         </controls:SettingsCard>
