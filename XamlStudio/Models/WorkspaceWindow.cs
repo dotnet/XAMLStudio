@@ -6,7 +6,7 @@ using Windows.Storage;
 
 namespace XamlStudio.Models;
 
-public abstract partial class WorkspaceWindow: ObservableObject
+public abstract partial class WorkspaceWindow : ObservableObject
 {
     [ObservableProperty]
     private XamlDocument _activeFile;

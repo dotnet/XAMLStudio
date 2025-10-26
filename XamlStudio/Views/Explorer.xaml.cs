@@ -2,19 +2,10 @@
 using Microsoft.AppCenter.Analytics;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using XamlStudio.Helpers;
 using XamlStudio.Models;
 using XamlStudio.ViewModels;
@@ -61,7 +52,7 @@ namespace XamlStudio.Views
         }
 
         private void WorkspaceFolders_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {            
+        {
             WorkspaceTreeView.RootNodes.Clear();
             if (MainViewModel.WorkspaceFolders.Count > 0)
             {

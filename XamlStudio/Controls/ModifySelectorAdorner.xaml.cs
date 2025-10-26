@@ -1,7 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.WinUI;
 using System;
-using Windows.System;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

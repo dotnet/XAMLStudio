@@ -22,9 +22,9 @@ public partial class SettingsService : ObservableObject
 
     public SettingsService()
     {
-        #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         InitializeAsync();
-        #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     }
 
     public async Task InitializeAsync()
@@ -83,7 +83,7 @@ public partial class SettingsService : ObservableObject
     // Internal Cache
     private static Dictionary<string, object> _settings = new Dictionary<string, object>();
 
-    public T Get<T>([CallerMemberName]string propertyName = null)
+    public T Get<T>([CallerMemberName] string propertyName = null)
     {
         if (propertyName == null || !_settings.ContainsKey(propertyName))
         {
@@ -93,7 +93,7 @@ public partial class SettingsService : ObservableObject
         return (T)_settings[propertyName];
     }
 
-    public void Set<T>(T value, [CallerMemberName]string propertyName = null)
+    public void Set<T>(T value, [CallerMemberName] string propertyName = null)
     {
         // Check if anything's changed.
         if (propertyName == null || _settings.ContainsKey(propertyName) && Equals(_settings[propertyName], value))
@@ -104,9 +104,9 @@ public partial class SettingsService : ObservableObject
         // Store value in our cache.
         _settings[propertyName] = value;
         // Save it out to storage.
-        #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         ApplicationData.Current.LocalSettings.SaveAsync<T>(propertyName, value);
-        #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
         // Notify others of change.
         OnPropertyChanged(propertyName);

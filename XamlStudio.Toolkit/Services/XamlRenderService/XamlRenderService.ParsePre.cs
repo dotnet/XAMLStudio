@@ -1,20 +1,17 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Windows.Storage;
 using Windows.UI.Xaml;
 using XamlStudio.Toolkit.Models;
 
 namespace XamlStudio.Toolkit.Services
 {
     //// Pre-processing of content before trying to load element with XamlReader.
-    
+
     public partial class XamlRenderService
     {
         private const string RegexPattern_FirstTagAfterComment = @"(?!(<\?|<!))*<[^<!\?]*?>";
@@ -87,7 +84,7 @@ namespace XamlStudio.Toolkit.Services
                     // Add to our list of namespaces we need to add.
                     namespaces.Add(new XmlnsNamespace(XmlnsPrefix, XmlnsRequiredPath));
                 }
-                
+
                 // Look to see if we're trying to use any namespaces we know about
                 foreach (var ns in settings.KnownNamespaces)
                 {

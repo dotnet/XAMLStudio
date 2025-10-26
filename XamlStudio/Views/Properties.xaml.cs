@@ -267,6 +267,6 @@ public sealed partial class Properties : Page,
         if (sender.FindAscendant<TextBlock>()?.DataContext is DependencyObject element)
         {
             WeakReferenceMessenger.Default.Send<SelectedVisualElementMessage>(new(element));
-        } 
+        }
     }
 }

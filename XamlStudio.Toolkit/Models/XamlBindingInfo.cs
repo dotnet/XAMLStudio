@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using Windows.UI.Xaml.Data;
 using XamlStudio.Toolkit.Services;
@@ -76,8 +72,8 @@ namespace XamlStudio.Toolkit.Models
                     return null;
                 }
 
-                return (bool)BindingHistory.LastOrDefault()?.HasResult ? 
-                    BindingHistory.LastOrDefault()?.Result : 
+                return (bool)BindingHistory.LastOrDefault()?.HasResult ?
+                    BindingHistory.LastOrDefault()?.Result :
                     BindingHistory.LastOrDefault()?.Value;
             }
         }
@@ -87,7 +83,7 @@ namespace XamlStudio.Toolkit.Models
             get { return LastConvertedResultOrValue?.ToString() ?? string.Empty; }
         }
 
-        public string LastExceptionMessage { get { return BindingHistory.LastOrDefault()?.ExceptionObject.Message;  } }
+        public string LastExceptionMessage { get { return BindingHistory.LastOrDefault()?.ExceptionObject.Message; } }
 
         public XamlBindingState LastKnownBindingState
         {

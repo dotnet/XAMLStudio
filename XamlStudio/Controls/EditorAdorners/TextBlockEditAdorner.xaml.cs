@@ -2,7 +2,6 @@
 using CommunityToolkit.WinUI.Controls.Future;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using XamlStudio.Models;
 
 namespace XamlStudio.Controls;

@@ -29,7 +29,7 @@ public partial class SettingsPanelViewModel : ObservableObject
 
     [ObservableProperty]
     private string _versionDescription;
-    
+
     [RelayCommand]
     public async Task SwitchTheme(ElementTheme param)
     {

@@ -8,7 +8,7 @@ namespace XamlStudio.Toolkit.UnitTests;
 [TestClass]
 public class XamlRenderServiceTests
 {
-    #if DEBUG
+#if DEBUG
     [TestMethod]
     public void BindingInjectTest_NoPath()
     {
@@ -89,7 +89,7 @@ public class XamlRenderServiceTests
         var expected = new BindingValue()
         {
             Path = "RangeMin",
-            ElementName="RangeSelector",
+            ElementName = "RangeSelector",
             Converter = "StringFormatConverter",
             ConverterParameter = "{0:0.##}",
             ConverterParameterRaw = "\\{0:0.##\\}"
@@ -113,5 +113,5 @@ public class XamlRenderServiceTests
 
         Assert.AreEqual("{Binding DataContext, RelativeSource={RelativeSource Self},Converter={StaticResource XamlBindingWrapper},ConverterParameter=" + info.Id + "}", output);
     }
-    #endif
+#endif
 }

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Runtime.Serialization;
 using System.Xml.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -255,7 +254,7 @@ public class XamlXmlTreeCoordinator
     {
         _treeMapper.Clear();
         ////_treeMapper.Add(docRoot, visualRoot);
-        
+
         /* --- NOTES ---
          * 
          * We do make some assumptions that assume the order of children within the tree will be consistent.
@@ -272,7 +271,7 @@ public class XamlXmlTreeCoordinator
             {
                 searchRoot = element;
             }
-            
+
             // TODO: How do we want to handle Resources/Styles of things as they don't have a direct visual?
 
             var uie = FindMatchingUIElement(searchRoot, child);
@@ -313,7 +312,7 @@ public class XamlXmlTreeCoordinator
         while (queue.Count > 0)
         {
             var node = queue.Dequeue();
-            if (!_treeMapper.ContainsValue(node) 
+            if (!_treeMapper.ContainsValue(node)
                 && DoElementsMatch(node, findElement))
             {
                 return node;
@@ -323,7 +322,7 @@ public class XamlXmlTreeCoordinator
             {
                 var child = VisualTreeHelper.GetChild(node, i);
 
-                if (!explored.Contains(child) 
+                if (!explored.Contains(child)
                     && !_treeMapper.ContainsValue(child))
                 {
                     explored.Add(child);
@@ -365,7 +364,7 @@ public class XamlXmlTreeCoordinator
         foreach (var attr in xml.Attributes)
         {
             // TODO: Should we check if attr.Value is empty that there's no value/default for the element?
-            if (TryGetValueForPropertyByTypeAndString(element.GetType(), attr.Name, out var depProp) 
+            if (TryGetValueForPropertyByTypeAndString(element.GetType(), attr.Name, out var depProp)
                 && !string.IsNullOrEmpty(attr.Value)
                 && !attr.Value.StartsWith("{Binding") // TODO: Need to handle these scenarios for matching somehow...
                 && !attr.Value.StartsWith("{StaticResource")

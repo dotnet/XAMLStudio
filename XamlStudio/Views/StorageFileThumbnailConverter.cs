@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using CommunityToolkit.WinUI;
+using System;
 using System.Threading.Tasks;
-using CommunityToolkit.WinUI;
-using CommunityToolkit.WinUI;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System;

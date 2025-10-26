@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace XamlStudio.Toolkit.Controls
@@ -12,7 +7,7 @@ namespace XamlStudio.Toolkit.Controls
     /// Tries to locate a <see cref="DataTemplate"/> from the provided Resources <see cref="ResourceDictionary"/>.
     /// Uses the key of the objects Type's Name + 'Template'
     /// </summary>
-    public class TemplateSelector: DataTemplateSelector
+    public class TemplateSelector : DataTemplateSelector
     {
         private const string TemplateSuffix = "Template";
 

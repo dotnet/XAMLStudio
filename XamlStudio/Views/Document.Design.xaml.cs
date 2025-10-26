@@ -46,7 +46,7 @@ public partial class Document :
             case "Highlight":
                 _designerMode = DesignerMode.Highlight;
                 break;
-        }        
+        }
 
         if (_designerMode == DesignerMode.Modify)
         {
@@ -127,7 +127,7 @@ public partial class Document :
             else
             {
                 Debug.WriteLine("NA Original Source: " + e.OriginalSource);
-            }           
+            }
         }
         else
         {
@@ -138,7 +138,7 @@ public partial class Document :
     public void Receive(SelectedVisualElementMessage message)
     {
         RemoveAdorner();
-        
+
         AttachAdorner(message.Element as FrameworkElement);
     }
 
@@ -224,9 +224,9 @@ public partial class Document :
 
                 if (attribute != null)
                 {
-                    loc = text.GetLineColumnIndex(attribute.Span.Start);        
+                    loc = text.GetLineColumnIndex(attribute.Span.Start);
                 }
-            }            
+            }
 
             await CodeEditor.RevealPositionInCenterAsync(new Position((uint)loc.Line, (uint)loc.Column));
 
@@ -235,7 +235,7 @@ public partial class Document :
             var targetLine = lines[loc.Line - 1];
             if (targetLine.Contains(message.Property))
             {
-                var sp = targetLine.IndexOf(message.Property+"=") + message.Property.Length + 2;
+                var sp = targetLine.IndexOf(message.Property + "=") + message.Property.Length + 2;
                 lines[loc.Line - 1] = targetLine.Substring(0, sp) + $"{message.Value}" + targetLine.Substring(targetLine.IndexOf("\"", sp + 1));
             }
             else if (targetLine.Trim().EndsWith("/>"))

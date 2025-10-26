@@ -74,7 +74,7 @@ namespace XamlStudio.Toolkit.Parsers
                         text.ConverterParameterRaw = string.Empty + text.ConverterParameter;
 
                         // Need to handle escaped values.
-                        if (text.ConverterParameter.StartsWith("'") && 
+                        if (text.ConverterParameter.StartsWith("'") &&
                             text.ConverterParameter.EndsWith("'"))
                         {
                             // Trim string start/end as we already store as string.
@@ -88,10 +88,10 @@ namespace XamlStudio.Toolkit.Parsers
                             .Replace("\\\\", "\\")
                             .Replace("\\=", "-")
                             .Replace("\\,", ",");
-                        
+
                         break;
                 }
-                
+
             }
 
             return text;

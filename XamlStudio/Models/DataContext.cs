@@ -14,7 +14,7 @@ public sealed partial class DataContext : FileBackedDocument
     [NotifyPropertyChangedFor(nameof(IsRemote))]
     private string _uri;
 
-    public bool IsRemote { get { return !string.IsNullOrWhiteSpace(_uri); } }
+    public bool IsRemote { get { return !string.IsNullOrWhiteSpace(Uri); } }
 
     internal DataContext() : base() { }
 

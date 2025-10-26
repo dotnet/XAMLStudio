@@ -26,7 +26,7 @@ namespace XamlStudio.Toolkit.Services
     ///     https://blogs.msdn.microsoft.com/mcsuksoldev/2010/08/27/designdata-mvvm-support-in-blend-vs2010-and-wpfsilverlight/
     /// </summary>
     public partial class XamlRenderService
-    {        
+    {
         public XamlRenderService()
         {
             XamlBindingWrapperManager.Instance.Register(this.Id, this);
@@ -126,7 +126,7 @@ namespace XamlStudio.Toolkit.Services
                     }
 
                     // TODO: Need to do a better mapping between original and modified doc. Or See issue in GetBindings function and Xml Tree modification strategy between our two XmlParsers, need to converage on GuiLabs I think, it has merge/diff comparison support which may help here.
-                    var errorLoc = lineContent.Substring((int)column - 1,  gap - (int)column + 1);
+                    var errorLoc = lineContent.Substring((int)column - 1, gap - (int)column + 1);
                     var opos = content.IndexOf(errorLoc);
                     if (opos != -1)
                     {

@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Text.RegularExpressions;
-using Windows.Storage;
+﻿using System.Text.RegularExpressions;
 using XamlStudio.Toolkit.Models;
 using XamlStudio.Toolkit.Parsers;
 

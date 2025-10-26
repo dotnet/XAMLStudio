@@ -1,12 +1,9 @@
-﻿using System;
+﻿using Monaco.Languages;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Monaco.Languages;
 using Windows.UI.Xaml;
 using XamlStudio.Toolkit.Helpers;
 using XamlStudio.Toolkit.Models;

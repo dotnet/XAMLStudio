@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
 using XamlStudio.Models;
 
 namespace XamlStudio.ViewModels;
@@ -54,7 +53,7 @@ public partial class MainViewModel : WorkspaceWindow
 
         bool welcome = false;
 
-        foreach(var doc in docs)
+        foreach (var doc in docs)
         {
             // Reopen/make connection to backing OS file.
             await doc.RestoreFileAsync();

@@ -7,9 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
-using System.Xml.Linq;
 using Windows.Foundation;
-using Windows.UI.Xaml;
 using XamlStudio.Toolkit.Extensions;
 using XamlStudio.Toolkit.Models;
 

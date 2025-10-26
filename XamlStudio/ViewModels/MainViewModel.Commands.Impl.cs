@@ -8,10 +8,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
-using Windows.System;
-using Windows.UI.Core;
 using Windows.UI.Popups;
-using Windows.UI.Xaml;
 using XamlStudio.Helpers;
 using XamlStudio.Models;
 using XamlStudio.Services;
@@ -42,14 +39,14 @@ namespace XamlStudio.ViewModels
             OpenFiles.Add(new Models.XamlDocument("Untitled-" + _untitledCount++)
             {
                 Content = "" + ActiveFile.Content
-            });;
+            }); ;
 
             ActiveFile = OpenFiles.Last();
             Analytics.TrackEvent("Document_Duplicate");
         }
 
         [RelayCommand]
-        private async void OpenDocument()
+        private async Task OpenDocument()
         {
             var picker = new FileOpenPicker();
             picker.ViewMode = PickerViewMode.List;
@@ -199,7 +196,7 @@ namespace XamlStudio.ViewModels
                 Application.Current.Exit();
                 return;
             }*/
-            
+
             // Create a new Document if we're removing the last one (it will be selected)
             if (OpenFiles.Count == 1)
             {

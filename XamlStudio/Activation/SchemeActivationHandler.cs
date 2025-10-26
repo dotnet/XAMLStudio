@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 
 using XamlStudio.Services;
-using XamlStudio.Views;
 
 namespace XamlStudio.Activation
 {

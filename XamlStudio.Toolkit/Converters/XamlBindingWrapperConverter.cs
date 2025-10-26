@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml.Data;
 using XamlStudio.Toolkit.Services;
 
@@ -42,7 +38,8 @@ namespace XamlStudio.Toolkit.Converters
                         var result = binding.Converter.Convert(value, targetType, binding.ConverterParameter, language);
 
                         return binding.NewConversion(value, result);
-                    } catch (Exception e)
+                    }
+                    catch (Exception e)
                     {
                         return binding.NewException(value, e);
                     }

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Foundation.Diagnostics;
@@ -118,7 +117,7 @@ namespace XamlStudio.Services.Logging
 
                 await Task.WhenAll(etlTask, textTask);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 AppLoggerService.LogError("An error happened while flushing log messages", ex);
             }
@@ -131,7 +130,7 @@ namespace XamlStudio.Services.Logging
         {
             channel.LogMessage(message, level);
 
-            if(level >= logLevel)
+            if (level >= logLevel)
             {
                 plainTextMessages.Enqueue(message);
             }
@@ -197,7 +196,7 @@ namespace XamlStudio.Services.Logging
 #endif
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 AppLoggerService.LogError("An error happened while flushing the text log.", ex);
             }
@@ -242,7 +241,7 @@ namespace XamlStudio.Services.Logging
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 AppLoggerService.LogError("An error occurred while cleaning up old log files.", ex);
             }
@@ -253,7 +252,7 @@ namespace XamlStudio.Services.Logging
         /// </summary>
         private async Task EnsureLogFileCreated()
         {
-            if(textLogFile == null)
+            if (textLogFile == null)
             {
                 string filename = GenerateLogFileName(LogFileType.Text, DateTime.Now);
                 StorageFolder folder = await GetAppLogFolderAsync();
@@ -266,7 +265,7 @@ namespace XamlStudio.Services.Logging
         /// </summary>
         public async Task<StorageFolder> GetAppLogFolderAsync()
         {
-            if(logFolder == null)
+            if (logFolder == null)
             {
                 logFolder = await ApplicationData.Current.TemporaryFolder.CreateFolderAsync(logFolderName, CreationCollisionOption.OpenIfExists);
             }
@@ -312,7 +311,7 @@ namespace XamlStudio.Services.Logging
         /// </summary>
         private string GetFileExtension(LogFileType fileType)
         {
-            switch(fileType)
+            switch (fileType)
             {
                 case LogFileType.EventTraceLog:
                     return "etl";

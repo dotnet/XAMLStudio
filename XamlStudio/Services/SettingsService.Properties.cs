@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.Storage.AccessCache;
-using Windows.UI;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media;
 using XamlStudio.Models;
 using XamlStudio.Toolkit.Models;
 

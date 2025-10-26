@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace XamlStudio.Toolkit.Services
+﻿namespace XamlStudio.Toolkit.Services
 {
     /// <summary>
     /// Simple thread-safe unique integer Id Generator.
@@ -19,7 +13,7 @@ namespace XamlStudio.Toolkit.Services
         public static int Next()
         {
             int? i = null;
-            lock(lockable)
+            lock (lockable)
             {
                 i = _count++;
             }

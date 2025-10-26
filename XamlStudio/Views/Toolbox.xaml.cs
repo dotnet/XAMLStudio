@@ -1,15 +1,15 @@
-﻿using Microsoft.AppCenter.Analytics;
+﻿using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
+using Microsoft.AppCenter.Analytics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using XamlStudio.Models;
 using XamlStudio.Services;
 using XamlStudio.ViewModels;
-using CommunityToolkit.Mvvm.Messaging;
-using XamlStudio.Models;
 
 namespace XamlStudio.Views
 {
@@ -21,7 +21,7 @@ namespace XamlStudio.Views
         public ToolboxViewModel ViewModel { get; } = new ToolboxViewModel();
 
         public MainViewModel MainViewModel { get; set; }
-        
+
         public Toolbox()
         {
             this.InitializeComponent();
@@ -59,7 +59,7 @@ namespace XamlStudio.Views
                 text += t.Name + ">";
 
                 // TODO: Include MainViewModel.ActiveDocumentViewModel?
-                WeakReferenceMessenger.Default.Send<InsertTextMessage>(new(text));                
+                WeakReferenceMessenger.Default.Send<InsertTextMessage>(new(text));
 
                 Analytics.TrackEvent("InsertCode", new Dictionary<string, string> {
                     { "Location", "Toolbox" },
@@ -123,9 +123,9 @@ namespace XamlStudio.Views
                     var link = ViewModel.LibraryService.GetLinkForType(type);
                     if (!string.IsNullOrWhiteSpace(link))
                     {
-                        #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         Launcher.LaunchUriAsync(new Uri(link));
-                        #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                         Analytics.TrackEvent("Open_Docs", new Dictionary<string, string> {
                             { "Location", "Toolbox" },

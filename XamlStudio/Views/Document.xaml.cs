@@ -209,7 +209,7 @@ public sealed partial class Document : UserControl,
     public void Receive(InsertTextMessage message)
     {
         CodeEditor.SelectedText = message.Text;
-        
+
         DispatcherQueue.GetForCurrentThread().TryEnqueue(DispatcherQueuePriority.Low, () =>
         {
             ViewModel.HasCompiled = false;
@@ -442,7 +442,7 @@ public sealed partial class Document : UserControl,
             {
                 _autocompileTimer?.Cancel(); // Stop Old Timer
                                              // Create Compile Timer
-                // TODO: Clean up and use debounce method from toolkit instead?
+                                             // TODO: Clean up and use debounce method from toolkit instead?
                 var dispatcherQueue = DispatcherQueue.GetForCurrentThread();
                 _autocompileTimer = ThreadPoolTimer.CreateTimer((e) =>
                 {

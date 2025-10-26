@@ -1,6 +1,7 @@
-﻿using Microsoft.AppCenter.Analytics;
-using Microsoft.Services.Store.Engagement;
+﻿using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.Services.Store.Engagement;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.System;
+using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -21,8 +23,6 @@ using XamlStudio.Services;
 using XamlStudio.Toolkit.Helpers;
 using XamlStudio.Toolkit.Services;
 using XamlStudio.ViewModels;
-using CommunityToolkit.Mvvm.Messaging;
-using Windows.UI.Core;
 
 namespace XamlStudio.Views
 {
@@ -244,27 +244,27 @@ namespace XamlStudio.Views
 
                 if (_restoreState.OpenFiles != null && _restoreState.OpenFiles.Length > 0)
                 {
-	                if (_restoreState.FromRender)
-	                {
-	                    // We encountered an error while rendering and crashed.
-	                    SettingsService.Instance.IsAutoCompileEnabled = false;
-	                }                
+                    if (_restoreState.FromRender)
+                    {
+                        // We encountered an error while rendering and crashed.
+                        SettingsService.Instance.IsAutoCompileEnabled = false;
+                    }
 
-	                await ViewModel.RestoreWorkspaceAsync(_restoreState.OpenFiles);
+                    await ViewModel.RestoreWorkspaceAsync(_restoreState.OpenFiles);
 
-	                if (!string.IsNullOrWhiteSpace(_restoreState.LastRenderedId))
-	                {
-	                    var document = ViewModel.DocumentViewModels.Values.FirstOrDefault(doc => doc.Document.Id == _restoreState.LastRenderedId);
-	                    if (document != null)
-	                    {
-	                        ViewModel.ActiveFile = document.Document;
+                    if (!string.IsNullOrWhiteSpace(_restoreState.LastRenderedId))
+                    {
+                        var document = ViewModel.DocumentViewModels.Values.FirstOrDefault(doc => doc.Document.Id == _restoreState.LastRenderedId);
+                        if (document != null)
+                        {
+                            ViewModel.ActiveFile = document.Document;
 
-	                        // Store/Retrieve error...
-	                        var file = await ApplicationData.Current.LocalFolder.TryGetItemAsync("lastexception.json");
-	                        UnhandledException exception = null;
-	                        if (file != null)
-	                        {
-	                            var text = await FileIO.ReadTextAsync(file as StorageFile);
+                            // Store/Retrieve error...
+                            var file = await ApplicationData.Current.LocalFolder.TryGetItemAsync("lastexception.json");
+                            UnhandledException exception = null;
+                            if (file != null)
+                            {
+                                var text = await FileIO.ReadTextAsync(file as StorageFile);
                                 try
                                 {
                                     exception = JsonConvert.DeserializeObject<UnhandledException>(text);
@@ -278,15 +278,15 @@ namespace XamlStudio.Views
                                 document.Result.Errors.Add(new Toolkit.Models.XamlExceptionRange(exception?.Message, exception?.Exception, 1, 1, 1, 1));
                             }
 
-	                        var messageDialog = new MessageDialog(string.Format("MainPage_UnhandledException_Message".GetLocalized(), exception?.Message), "MainPage_UnhandledException_Title".GetLocalized());
-	                        messageDialog.Commands.Add(new UICommand("MainPage_UnhandledException_Continue".GetLocalized()));
-	                        var openfeedback = new UICommand("MainPage_UnhandledException_OpenFeedbackHub".GetLocalized());
-	                        messageDialog.Commands.Add(openfeedback);
-	                        messageDialog.DefaultCommandIndex = 1;
-	                        messageDialog.CancelCommandIndex = 0;
+                            var messageDialog = new MessageDialog(string.Format("MainPage_UnhandledException_Message".GetLocalized(), exception?.Message), "MainPage_UnhandledException_Title".GetLocalized());
+                            messageDialog.Commands.Add(new UICommand("MainPage_UnhandledException_Continue".GetLocalized()));
+                            var openfeedback = new UICommand("MainPage_UnhandledException_OpenFeedbackHub".GetLocalized());
+                            messageDialog.Commands.Add(openfeedback);
+                            messageDialog.DefaultCommandIndex = 1;
+                            messageDialog.CancelCommandIndex = 0;
 
-	                        if (openfeedback.Equals(await messageDialog.ShowAsync()))
-	                        {
+                            if (openfeedback.Equals(await messageDialog.ShowAsync()))
+                            {
                                 // This launcher is part of the Store Services SDK https://docs.microsoft.com/en-us/windows/uwp/monetize/microsoft-store-services-sdk
                                 if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 7))
                                 {
@@ -303,7 +303,7 @@ namespace XamlStudio.Views
                                         { "xaml", document.Document.Content }
                                     });
                                 }
-                                
+
                                 Analytics.TrackEvent("Open_FeedbackHub", new Dictionary<string, string>()
                                 {
                                     { "Location", "Restart" },
@@ -311,12 +311,12 @@ namespace XamlStudio.Views
                                     { "stacktrace", exception?.Exception?.StackTrace?.ToString() ?? "" }
                                 });
                             }
-	                    }
-	                }
+                        }
+                    }
 
-	                // Clean-up suspend state reference.
-	                _restoreState = null;
-				}
+                    // Clean-up suspend state reference.
+                    _restoreState = null;
+                }
             }
 
             if (_filesToLoad != null)
@@ -458,6 +458,6 @@ namespace XamlStudio.Views
             }
         }
 
-        public static Visibility IsVisibleIfDocument(DocumentType type) => type == DocumentType.Document ? Visibility.Visible : Visibility.Collapsed;        
+        public static Visibility IsVisibleIfDocument(DocumentType type) => type == DocumentType.Document ? Visibility.Visible : Visibility.Collapsed;
     }
 }

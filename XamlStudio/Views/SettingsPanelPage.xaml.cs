@@ -1,6 +1,6 @@
-﻿using Microsoft.AppCenter.Analytics;
+﻿using CommunityToolkit.WinUI.Helpers;
+using Microsoft.AppCenter.Analytics;
 using Microsoft.Services.Store.Engagement;
-using CommunityToolkit.WinUI.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

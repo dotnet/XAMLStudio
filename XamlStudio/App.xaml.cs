@@ -1,26 +1,20 @@
-﻿using Newtonsoft.Json;
-using Microsoft.AppCenter;
+﻿using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.ExtendedExecution;
 using Windows.Storage;
-using Windows.UI;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
-using XamlStudio.Helpers;
 using XamlStudio.Models;
 using XamlStudio.Services;
 using XamlStudio.Toolkit.Helpers;
-using XamlStudio.Views;
-using Windows.UI.Core;
 
 namespace XamlStudio
 {
@@ -104,7 +98,7 @@ namespace XamlStudio
 
                 await Task.WhenAll(loggerTask);
             }
-            catch(Exception)
+            catch (Exception)
             {
 
             }
@@ -145,18 +139,19 @@ namespace XamlStudio
                 AppLoggerService.FlushMessages();
 
                 // Save Exception for easier location
-                Task.Run(async () => {
+                Task.Run(async () =>
+                {
                     var file = await ApplicationData.Current.LocalFolder.CreateFileAsync("lastexception.json", CreationCollisionOption.ReplaceExisting);
                     await FileIO.WriteTextAsync(file, JsonConvert.SerializeObject(new UnhandledException(e.Message, e.Exception)));
-                }).Wait();  
-				              
+                }).Wait();
+
                 Analytics.TrackEvent("UnhandledException", new Dictionary<string, string> {
                     { "Message", e.Message },
                     { "Exception", e.Exception.ToString() },
                     { "StackTrace", e.Exception.StackTrace },
                 });
             }
-            catch(Exception)
+            catch (Exception)
             {
 
             }

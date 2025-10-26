@@ -1,6 +1,5 @@
 ﻿using Nito.AsyncEx;
 using System;
-using System.Reflection;
 using System.Threading.Tasks;
 
 using Windows.ApplicationModel.Activation;

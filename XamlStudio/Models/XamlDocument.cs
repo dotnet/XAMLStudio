@@ -15,7 +15,7 @@ public enum DocumentType
     Settings
 }
 
-public sealed partial class XamlDocument: FileBackedDocument
+public sealed partial class XamlDocument : FileBackedDocument
 {
     private readonly string _id = Guid.NewGuid().ToString();
 
@@ -41,7 +41,7 @@ public sealed partial class XamlDocument: FileBackedDocument
     private DataContext _dataContext = new DataContext();
 
     // TODO: Figure out persistence strategy
-    [property:JsonIgnore]
+    [property: JsonIgnore]
     [ObservableProperty]
     private StorageFolder _parentFolder;
 

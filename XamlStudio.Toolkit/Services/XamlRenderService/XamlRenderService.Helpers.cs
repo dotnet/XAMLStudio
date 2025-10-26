@@ -1,20 +1,13 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Xml;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Markup;
-using Windows.UI.Xaml.Media.Imaging;
-using XamlStudio.Toolkit.Models;
 
 namespace XamlStudio.Toolkit.Services
 {
@@ -30,7 +23,7 @@ namespace XamlStudio.Toolkit.Services
     ///     https://blogs.msdn.microsoft.com/mcsuksoldev/2010/08/27/designdata-mvvm-support-in-blend-vs2010-and-wpfsilverlight/
     /// </summary>
     public partial class XamlRenderService
-    {        
+    {
         /// <summary>
         /// Given a StorageFolder and path loads a Data file to load as an object.
         /// </summary>
@@ -64,7 +57,7 @@ namespace XamlStudio.Toolkit.Services
                         break;
                     case ".xml":
                         // TODO
-                        break;  
+                        break;
                 }
             }
 

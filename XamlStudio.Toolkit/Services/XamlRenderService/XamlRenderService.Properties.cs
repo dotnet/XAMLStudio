@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using Windows.Storage;
-
-namespace XamlStudio.Toolkit.Services
+﻿namespace XamlStudio.Toolkit.Services
 {
     public partial class XamlRenderService
     {

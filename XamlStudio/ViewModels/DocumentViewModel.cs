@@ -1,16 +1,11 @@
 ﻿using Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.WinUI.Collections;
 using CommunityToolkit.WinUI.Helpers;
 using Monaco.Editor;
 using Monaco.Helpers;
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Security;
-using System.Windows.Input;
-using Windows.System.Threading;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

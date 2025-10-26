@@ -296,16 +296,16 @@ public sealed partial class DataSources : Page,
             // Setup Time for Auto-Compile
             //if (SettingsService.Instance.IsAutoCompileEnabled.Value)
             //{
-                this._autocompileTimer?.Cancel(); // Stop Old Timer
-                var dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-                // Create Compile Timer
-                this._autocompileTimer = ThreadPoolTimer.CreateTimer((e) =>
+            this._autocompileTimer?.Cancel(); // Stop Old Timer
+            var dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+            // Create Compile Timer
+            this._autocompileTimer = ThreadPoolTimer.CreateTimer((e) =>
+            {
+                dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
                 {
-                    dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
-                    {
-                        MainViewModel.ActiveDocumentViewModel.ParseDataContextCommand.Execute(null);
-                    });
-                }, TimeSpan.FromSeconds(SettingsService.Instance.AutoCompileDelay.Value));
+                    MainViewModel.ActiveDocumentViewModel.ParseDataContextCommand.Execute(null);
+                });
+            }, TimeSpan.FromSeconds(SettingsService.Instance.AutoCompileDelay.Value));
             //}
         }
     }

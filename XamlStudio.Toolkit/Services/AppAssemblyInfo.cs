@@ -5,12 +5,8 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Shapes;
 using XamlStudio.Toolkit.Helpers;
 
 namespace XamlStudio.Toolkit.Services
@@ -54,7 +50,7 @@ namespace XamlStudio.Toolkit.Services
 
             // Add Windows Assembly
             assemblies.Add(typeof(FrameworkElement).GetTypeInfo().Assembly); // Windows.UI.Xaml
-            
+
             // Add Other Assemblies (Debug Only)
             var files = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFilesAsync();
             if (files == null)

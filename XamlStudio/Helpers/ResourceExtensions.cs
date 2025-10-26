@@ -1,7 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
-
-using Windows.ApplicationModel.Resources;
+﻿using Windows.ApplicationModel.Resources;
 
 namespace XamlStudio.Helpers
 {

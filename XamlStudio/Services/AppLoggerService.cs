@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Foundation.Diagnostics;
@@ -102,7 +98,7 @@ namespace XamlStudio.Services
         public static void LogInfo(string format, params object[] args)
         {
             string message = format;
-            if(args.Length != 0)
+            if (args.Length != 0)
             {
                 message = string.Format(CultureInfo.InvariantCulture, format, args);
             }

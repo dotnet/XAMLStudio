@@ -32,7 +32,7 @@ public abstract partial class FileBackedDocument : ObservableObject
     /// <summary>
     /// OS File backing this document.  Internal Needed for Defer Updates, don't use.
     /// </summary>
-    [property:JsonIgnore]
+    [property: JsonIgnore]
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanSave))]
     private StorageFile _backingFile;

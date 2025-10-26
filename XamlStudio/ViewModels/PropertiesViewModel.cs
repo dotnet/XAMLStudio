@@ -1,9 +1,7 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Collections;
+﻿using CommunityToolkit.Mvvm.Collections;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Windows.UI.Xaml;
 using XamlStudio.Models;
-using System;
-using System.Collections.ObjectModel;
 
 namespace XamlStudio.ViewModels;
 
