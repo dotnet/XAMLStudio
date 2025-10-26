@@ -54,17 +54,6 @@ public partial class SettingsPanelViewModel : ObservableObject
                         });
     }
 
-    [RelayCommand]
-    public void SwitchPaneOrientation(PaneOrientation param)
-    {
-        Settings.DefaultPreviewPanePosition = param;
-
-        Analytics.TrackEvent("Settings_ChangePaneOrientation", new Dictionary<string, string> {
-                            { "Type", "Personalization" },
-                            { "Orientation", "" + param },
-                        });
-    }
-
     public ObservableCollection<Color> Colors { get; set; }
 
     public SettingsService Settings { get; } = SettingsService.Instance;

@@ -840,35 +840,35 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>Default Preview Pane Orientation</value>
     <comment>Choose pane orientation text for SettingsPanel</comment>
   </data>
-  <data name="SettingsPanel_PaneOrientation_TopDescription.Text" xml:space="preserve">
+  <data name="SettingsPanel_PaneOrientation_TopDescription.Content" xml:space="preserve">
     <value>Above</value>
     <comment>Preview Pane Above Editor option</comment>
   </data>
-  <data name="SettingsPanel_PaneOrientation_Top.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+  <data name="SettingsPanel_PaneOrientation_TopDescription.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Above</value>
     <comment>Preview Pane Above Editor option</comment>
   </data>
-  <data name="SettingsPanel_PaneOrientation_RightDescription.Text" xml:space="preserve">
+  <data name="SettingsPanel_PaneOrientation_RightDescription.Content" xml:space="preserve">
     <value>Right</value>
     <comment>Preview Pane Right Editor option</comment>
   </data>
-  <data name="SettingsPanel_PaneOrientation_Right.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+  <data name="SettingsPanel_PaneOrientation_RightDescription.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Right</value>
     <comment>Preview Pane Right Editor option</comment>
   </data>
-  <data name="SettingsPanel_PaneOrientation_BottomDescription.Text" xml:space="preserve">
+  <data name="SettingsPanel_PaneOrientation_BottomDescription.Content" xml:space="preserve">
     <value>Below</value>
     <comment>Preview Pane Below Editor option</comment>
   </data>
-  <data name="SettingsPanel_PaneOrientation_Bottom.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+  <data name="SettingsPanel_PaneOrientation_BottomDescription.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Below</value>
     <comment>Preview Pane Below Editor option</comment>
   </data>
-  <data name="SettingsPanel_PaneOrientation_LeftDescription.Text" xml:space="preserve">
+  <data name="SettingsPanel_PaneOrientation_LeftDescription.Content" xml:space="preserve">
     <value>Left</value>
     <comment>Preview Pane Left Editor option</comment>
   </data>
-  <data name="SettingsPanel_PaneOrientation_Left.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+  <data name="SettingsPanel_PaneOrientation_LeftDescription.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Left</value>
     <comment>Preview Pane Left Editor option</comment>
   </data>

@@ -443,73 +443,49 @@
                     <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
 
                         <!--  Hidden when above disabled  -->
-                        <StackPanel Visibility="{x:Bind ViewModel.Settings.IsPreviewDocked.Value, Mode=OneWay}">
+                        <StackPanel Visibility="{x:Bind ViewModel.Settings.IsPreviewDocked.Value, Mode=OneWay}" Spacing="8">
                             <!--  Pane Orientation  -->
                             <TextBlock x:Uid="SettingsPanel_PaneOrientation"
-                                       Margin="0,12,0,0"
-                                       Style="{StaticResource BodyTextStyle}" />
-
-                            <StackPanel Margin="{StaticResource SettingsSubheaderMargin}"
-                                        Padding="0,12,0,0"
-                                        Orientation="Horizontal">
-                                <RadioButton x:Uid="SettingsPanel_PaneOrientation_Top"
-                                             Command="{x:Bind ViewModel.SwitchPaneOrientationCommand, Mode=OneWay}"
-                                             CommandParameter="{helper:EnumValue Type=model:PaneOrientation,
-                                                                                 Member=HorizontalPreviewTop}"
-                                             GroupName="PaneOrientation"
-                                             IsChecked="{x:Bind ViewModel.Settings.DefaultPreviewPanePosition, Converter={StaticResource PaneOrientationToBooleanConverter}, ConverterParameter=HorizontalPreviewTop, Mode=OneWay}">
-                                    <StackPanel Margin="4,-12,0,0">
-                                        <FontIcon Margin="4,0,0,0"
-                                                  FontFamily="Segoe MDL2 Assets"
-                                                  FontSize="32"
-                                                  Glyph="&#xE745;">
+                                       Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                            
+                            <!-- TODO: If there is any future analytics, then need to log changes to this setting -->
+                            <controls:Segmented SelectionMode="Single">
+                                <controls:SegmentedItem x:Uid="SettingsPanel_PaneOrientation_TopDescription"
+                                                        IsSelected="{x:Bind ViewModel.Settings.DefaultPreviewPanePosition, Converter={StaticResource PaneOrientationToBooleanConverter}, ConverterParameter=HorizontalPreviewTop, Mode=TwoWay}">
+                                    <controls:SegmentedItem.Icon>
+                                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                                    Glyph="&#xE745;">
                                             <FontIcon.RenderTransform>
-                                                <RotateTransform Angle="180" CenterX="16" CenterY="16" />
+                                                <RotateTransform Angle="180" CenterX="10" CenterY="10"/>
                                             </FontIcon.RenderTransform>
                                         </FontIcon>
-                                        <TextBlock x:Uid="SettingsPanel_PaneOrientation_TopDescription" Margin="0,4,0,0" />
-                                    </StackPanel>
-                                </RadioButton>
-                                <RadioButton x:Uid="SettingsPanel_PaneOrientation_Right"
-                                             Command="{x:Bind ViewModel.SwitchPaneOrientationCommand, Mode=OneWay}"
-                                             CommandParameter="{helper:EnumValue Type=model:PaneOrientation,
-                                                                                 Member=VerticalPreviewRight}"
-                                             GroupName="PaneOrientation"
-                                             IsChecked="{x:Bind ViewModel.Settings.DefaultPreviewPanePosition, Converter={StaticResource PaneOrientationToBooleanConverter}, ConverterParameter=VerticalPreviewRight, Mode=OneWay}">
-                                    <StackPanel Margin="4,-12,0,0">
-                                        <FontIcon FontFamily="Segoe MDL2 Assets"
-                                                  FontSize="32"
-                                                  Glyph="&#xEA61;" />
-                                        <TextBlock x:Uid="SettingsPanel_PaneOrientation_RightDescription" Margin="0,4,0,0" />
-                                    </StackPanel>
-                                </RadioButton>
-                                <RadioButton x:Uid="SettingsPanel_PaneOrientation_Bottom"
-                                             Command="{x:Bind ViewModel.SwitchPaneOrientationCommand, Mode=OneWay}"
-                                             CommandParameter="{helper:EnumValue Type=model:PaneOrientation,
-                                                                                 Member=HorizontalPreviewBottom}"
-                                             GroupName="PaneOrientation"
-                                             IsChecked="{x:Bind ViewModel.Settings.DefaultPreviewPanePosition, Converter={StaticResource PaneOrientationToBooleanConverter}, ConverterParameter=HorizontalPreviewBottom, Mode=OneWay}">
-                                    <StackPanel Margin="4,-12,0,0">
-                                        <FontIcon FontFamily="Segoe MDL2 Assets"
-                                                  FontSize="32"
-                                                  Glyph="&#xE745;" />
-                                        <TextBlock x:Uid="SettingsPanel_PaneOrientation_BottomDescription" Margin="0,4,0,0" />
-                                    </StackPanel>
-                                </RadioButton>
-                                <RadioButton x:Uid="SettingsPanel_PaneOrientation_Left"
-                                             Command="{x:Bind ViewModel.SwitchPaneOrientationCommand, Mode=OneWay}"
-                                             CommandParameter="{helper:EnumValue Type=model:PaneOrientation,
-                                                                                 Member=VerticalPreviewLeft}"
-                                             GroupName="PaneOrientation"
-                                             IsChecked="{x:Bind ViewModel.Settings.DefaultPreviewPanePosition, Converter={StaticResource PaneOrientationToBooleanConverter}, ConverterParameter=VerticalPreviewLeft, Mode=OneWay}">
-                                    <StackPanel Margin="4,-12,0,0">
-                                        <FontIcon FontFamily="Segoe MDL2 Assets"
-                                                  FontSize="32"
-                                                  Glyph="&#xE746;" />
-                                        <TextBlock x:Uid="SettingsPanel_PaneOrientation_LeftDescription" Margin="0,4,0,0" />
-                                    </StackPanel>
-                                </RadioButton>
-                            </StackPanel>
+                                    </controls:SegmentedItem.Icon>
+                                </controls:SegmentedItem>
+                                <controls:SegmentedItem x:Uid="SettingsPanel_PaneOrientation_RightDescription"
+                                                        IsSelected="{x:Bind ViewModel.Settings.DefaultPreviewPanePosition, Converter={StaticResource PaneOrientationToBooleanConverter}, ConverterParameter=VerticalPreviewRight, Mode=TwoWay}">
+                                    <controls:SegmentedItem.Icon>
+                                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                                    Glyph="&#xEA61;">
+                                        </FontIcon>
+                                    </controls:SegmentedItem.Icon>
+                                </controls:SegmentedItem>
+                                <controls:SegmentedItem x:Uid="SettingsPanel_PaneOrientation_BottomDescription"
+                                                        IsSelected="{x:Bind ViewModel.Settings.DefaultPreviewPanePosition, Converter={StaticResource PaneOrientationToBooleanConverter}, ConverterParameter=HorizontalPreviewBottom, Mode=TwoWay}">
+                                    <controls:SegmentedItem.Icon>
+                                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                                    Glyph="&#xE745;">
+                                        </FontIcon>
+                                    </controls:SegmentedItem.Icon>
+                                </controls:SegmentedItem>
+                                <controls:SegmentedItem x:Uid="SettingsPanel_PaneOrientation_LeftDescription"
+                                                        IsSelected="{x:Bind ViewModel.Settings.DefaultPreviewPanePosition, Converter={StaticResource PaneOrientationToBooleanConverter}, ConverterParameter=VerticalPreviewLeft, Mode=TwoWay}">
+                                    <controls:SegmentedItem.Icon>
+                                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                                    Glyph="&#xE746;">
+                                        </FontIcon>
+                                    </controls:SegmentedItem.Icon>
+                                </controls:SegmentedItem>
+                            </controls:Segmented>
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
