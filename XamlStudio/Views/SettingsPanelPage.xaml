@@ -425,6 +425,7 @@
                     </controls:SettingsCard>
                     
                     <!-- Editor Theme -->
+                    <!-- TODO: Bug where open editors won't change... (Monaco) Maybe TabView? Not sure, will just note in description -->
                     <controls:SettingsCard x:Uid="SettingsPanel_EditorThemeCard">
                         <controls:SettingsCard.HeaderIcon>
                             <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xEF60;" />

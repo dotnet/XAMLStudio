@@ -889,4 +889,8 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>Default Preview Pane Orientation</value>
     <comment>Accessibility Name for ComboBox changing Default Pane Orientation</comment>
   </data>
+  <data name="SettingsPanel_EditorThemeCard.Description" xml:space="preserve">
+    <value>Requires Restart</value>
+    <comment>Editor Theme Description to remind user the new theme applies to newly opened documents (or restart, this is a bug...)</comment>
+  </data>
 </root>

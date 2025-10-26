@@ -26,33 +26,18 @@ public partial class SettingsPanelViewModel : ObservableObject
     [ObservableProperty]
     public partial ElementTheme ElementTheme { get; set; } = ThemeSelectorService.Theme;
 
-
-    [ObservableProperty]
-    public partial string VersionDescription { get; set; }
-
-    [RelayCommand]
-    public async Task SwitchTheme(ElementTheme param)
+    partial void OnElementThemeChanged(ElementTheme value)
     {
-        ElementTheme = param;
-
-        await ThemeSelectorService.SetThemeAsync(param);
+        _ = ThemeSelectorService.SetThemeAsync(value);
 
         Analytics.TrackEvent("Settings_ChangeTheme", new Dictionary<string, string> {
                             { "Type", "App" },
-                            { "Theme", "" + param },
+                            { "Theme", "" + value },
                         });
     }
 
-    [RelayCommand]
-    public void SwitchEditorTheme(ElementTheme param)
-    {
-        Settings.EditorTheme = param;
-
-        Analytics.TrackEvent("Settings_ChangeTheme", new Dictionary<string, string> {
-                            { "Type", "Editor" },
-                            { "Theme", "" + param },
-                        });
-    }
+    [ObservableProperty]
+    public partial string VersionDescription { get; set; }
 
     public ObservableCollection<Color> Colors { get; set; }
 
