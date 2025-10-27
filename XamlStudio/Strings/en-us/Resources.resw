@@ -149,16 +149,12 @@
     <value>About</value>
     <comment>About this application title for SettingsPanel</comment>
   </data>
-  <data name="SettingsPanel_About_Description.Text" xml:space="preserve">
-    <value>XAML Studio is a developer tool for rapidly prototyping WinUI based XAML applications.</value>
-    <comment>About this application description for SettingsPanel</comment>
-  </data>
   <data name="SettingsPanel_PrivacyTermsLink.Content" xml:space="preserve">
     <value>Privacy Statement</value>
     <comment>Privacy Statement link content for SettingsPanel</comment>
   </data>
   <data name="SettingsPanel_PrivacyTermsLink.NavigateUri" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=521839</value>
+    <value>https://aka.ms/privacy</value>
     <comment>Here is your Privacy Statement url for SettingsPanel</comment>
   </data>
   <data name="SettingsPanel_Personalization.Header" xml:space="preserve">
@@ -373,19 +369,6 @@
   <data name="SettingsPanel_About_OpenLogFolderButton.Content" xml:space="preserve">
     <value>Open Log Location</value>
     <comment>Button Text for opening the log location.</comment>
-  </data>
-  <data name="SettingsPanel_About_Copyright.Text" xml:space="preserve">
-    <value>Copyright 2025 .NET Foundation</value>
-    <comment>Copyright Statement in About Box</comment>
-  </data>
-  <data name="SettingsPanel_About_Credits.Text" xml:space="preserve">
-    <value>Developed By: Michael A. Hawker
-Special Thanks To: Justin Liu, Matthew Whilden, Lainie Huston, Salman Chishti, Mike Pell, the 'Partners, Analytics, and essential eXperiences' Team, the Microsoft Garage, Alexandre Zollinger Chohfi, Chris Sfanos, and the .NET Foundation.</value>
-    <comment>By lines for credits on the About screen</comment>
-  </data>
-  <data name="SettingsPanel_AnalyticsToggle.Header" xml:space="preserve">
-    <value>Send Anonymous Usage Data to Improve XAML Studio</value>
-    <comment>Toggle for Analytics</comment>
   </data>
   <data name="SettingsPanel_AnalyticsToggle.OffContent" xml:space="preserve">
     <value>No</value>
@@ -888,6 +871,38 @@ Please help us by reporting this issue in Feedback Hub.</value>
   <data name="SettingsPanel_PaneOrientationCard_ComboBox.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Default Preview Pane Orientation</value>
     <comment>Accessibility Name for ComboBox changing Default Pane Orientation</comment>
+  </data>
+  <data name="SettingsPanel_About_Developer.Content" xml:space="preserve">
+    <value>Michael A. Hawker</value>
+    <comment>Developed By Developer Name</comment>
+  </data>
+  <data name="SettingsPanel_About_Developer.Header" xml:space="preserve">
+    <value>Developed By</value>
+    <comment>Developed By Header Text</comment>
+  </data>
+  <data name="SettingsPanel_About_HeaderCard.Description" xml:space="preserve">
+    <value>© 2025 .NET Foundation. All rights reserved.</value>
+    <comment>Copyright Statement for About Settings Card</comment>
+  </data>
+  <data name="SettingsPanel_About_HeaderCard.Header" xml:space="preserve">
+    <value>XAML Studio</value>
+    <comment>App Title for About Settings Card</comment>
+  </data>
+  <data name="SettingsPanel_About_SpecialThanks.Header" xml:space="preserve">
+    <value>Special Thanks To</value>
+    <comment>Special Thanks To Header Text</comment>
+  </data>
+  <data name="SettingsPanel_About_SpecialThanksContent.Text" xml:space="preserve">
+    <value>Justin Liu, Matthew Whilden, Lainie Huston, Salman Chishti, Mike Pell, the 'Partners, Analytics, and essential eXperiences' Team, the Microsoft Garage, Alexandre Zollinger Chohfi, Chris Sfanos, and the .NET Foundation.</value>
+    <comment>Special Thanks To List of Names</comment>
+  </data>
+  <data name="SettingsPanel_AnalyticsToggleCard.Description" xml:space="preserve">
+    <value>Helps us improve XAML Studio and fix problems more quickly.</value>
+    <comment>Analytics Card Description</comment>
+  </data>
+  <data name="SettingsPanel_AnalyticsToggleCard.Header" xml:space="preserve">
+    <value>Diagnostic Data</value>
+    <comment>Analytics Card Header</comment>
   </data>
   <data name="SettingsPanel_EditorThemeCard.Description" xml:space="preserve">
     <value>Requires Restart</value>

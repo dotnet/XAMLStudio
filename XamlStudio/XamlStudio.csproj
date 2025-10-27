@@ -382,6 +382,11 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="Assets\AppTitleBar.scale-100.png" />
+    <Content Include="Assets\AppTitleBar.scale-125.png" />
+    <Content Include="Assets\AppTitleBar.scale-150.png" />
+    <Content Include="Assets\AppTitleBar.scale-200.png" />
+    <Content Include="Assets\AppTitleBar.scale-400.png" />
     <Content Include="Assets\XamlStudio.AppList.scale-100.png" />
     <Content Include="Assets\XamlStudio.AppList.scale-100_contrast-black.png" />
     <Content Include="Assets\XamlStudio.AppList.scale-100_contrast-white.png" />

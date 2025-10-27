@@ -479,6 +479,9 @@
                 </StackPanel>
             </muxc:Expander>
 
+            <!-- TODO: Feedback -->
+
+            <!-- About -->
             <muxc:Expander x:Uid="SettingsPanel_About"
                            HorizontalContentAlignment="Stretch"
                            VerticalContentAlignment="Top"
@@ -486,25 +489,47 @@
                            IsExpanded="True"
                            Padding="{StaticResource ExpanderPadding}"
                            Style="{StaticResource SimpleExpanderStyle}">
-                <StackPanel Margin="20,0,0,0">
-                    <TextBlock x:Uid="SettingsPanel_About_Description" Style="{StaticResource BodyTextStyle}" />
+                <StackPanel HorizontalAlignment="Stretch" Spacing="4">
+                    <controls:SettingsExpander x:Uid="SettingsPanel_About_HeaderCard"
+                                               Description="© 2025 .NET Foundation. All rights reserved."
+                                               IsExpanded="True">
+                        <controls:SettingsExpander.HeaderIcon>
+                            <BitmapIcon ShowAsMonochrome="False"
+                                        UriSource="ms-appx:///Assets/AppTitleBar.png" />
+                        </controls:SettingsExpander.HeaderIcon>
+                        <TextBlock IsTextSelectionEnabled="True"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   Text="{x:Bind ViewModel.VersionDescription, Mode=OneWay}" />
+                        <controls:SettingsExpander.Items>
+                            <controls:SettingsCard x:Uid="SettingsPanel_About_Developer" />
 
-                    <TextBlock Style="{StaticResource BodyTextStyle}" Text="{x:Bind ViewModel.VersionDescription, Mode=OneWay}" />
+                            <controls:SettingsCard x:Uid="SettingsPanel_About_SpecialThanks">
+                                <TextBlock x:Uid="SettingsPanel_About_SpecialThanksContent"
+                                           TextWrapping="WrapWholeWords"
+                                           TextAlignment="Justify"
+                                           MaxWidth="300"/>
+                            </controls:SettingsCard>
 
-                    <TextBlock x:Uid="SettingsPanel_About_Credits"
-                               Margin="0,8,0,0"
-                               Style="{StaticResource BodyTextStyle}" />
+                            <controls:SettingsCard HorizontalContentAlignment="Left"
+                                                   ContentAlignment="Left">
+                                <StackPanel Margin="-12,0,0,0"
+                                            Orientation="Vertical">
+                                    <HyperlinkButton x:Uid="SettingsPanel_PrivacyTermsLink" />
+                                </StackPanel>
+                            </controls:SettingsCard>
+                            <!--<controls:SettingsCard HorizontalContentAlignment="Left"
+                                                   ContentAlignment="Vertical"
+                                                   Header="Useful links">
+                                <StackPanel Margin="-12,0,0,0"
+                                            Orientation="Vertical">
+                                    <HyperlinkButton Content="GitHub repository"
+                                                     NavigateUri="https://github.com/dotnet/XAMLStudio" />
+                                </StackPanel>
+                            </controls:SettingsCard>-->
+                        </controls:SettingsExpander.Items>
+                    </controls:SettingsExpander>
 
-                    <HyperlinkButton x:Uid="SettingsPanel_PrivacyTermsLink" Margin="0,8,0,0" />
-
-                    <StackPanel Margin="{StaticResource SettingsSubheaderMargin}">
-                        <ToggleSwitch x:Name="AnalyticsToggle"
-                                      x:Uid="SettingsPanel_AnalyticsToggle"
-                                      Margin="0,-2,0,0"
-                                      HeaderTemplate="{StaticResource ToggleHeaderTemplate}"
-                                      IsOn="{x:Bind IsAnalyticsOn, Mode=TwoWay}" />
-                    </StackPanel>
-
+                    <!--
                     <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
                         <Button x:Uid="SettingsPanel_About_OpenFeedbackHub"
                                 Margin="0,0,12,0"
@@ -516,49 +541,57 @@
                                 Click="ButtonOpenUserVoice_Click" />
 
                         <Button x:Uid="SettingsPanel_About_OpenLogFolderButton" Click="ButtonOpenLogFolder_Click" />
-                    </StackPanel>
+                    </StackPanel>-->
+                    
+                    <controls:SettingsCard x:Uid="SettingsPanel_AnalyticsToggleCard">
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE9D9;" />
+                        </controls:SettingsCard.HeaderIcon>
+                        <ToggleSwitch x:Name="AnalyticsToggle"
+                                      x:Uid="SettingsPanel_AnalyticsToggle"
+                                      IsOn="{x:Bind IsAnalyticsOn, Mode=TwoWay}" />
+                    </controls:SettingsCard>
 
-                    <TextBlock x:Uid="SettingsPanel_About_Copyright"
-                               Margin="0,12,0,12"
-                               Style="{StaticResource BodyTextStyle}" />
-                </StackPanel>
-            </muxc:Expander>
-
-            <controls:SettingsExpander x:Uid="SettingsPanel_ThirdParty"
+                    <controls:SettingsExpander x:Uid="SettingsPanel_ThirdParty"
                                        IsExpanded="True"
-                                       Margin="24,0,24,0"
                                        ItemsSource="{x:Bind ViewModel.ThirdPartyLibs, Mode=OneWay}">
-                <controls:SettingsExpander.ItemTemplate>
-                    <DataTemplate x:DataType="model:ThirdPartyInfo">
-                        <controls:SettingsCard>
-                            <controls:SettingsCard.Header>
-                                <HyperlinkButton Padding="2"
+                        <controls:SettingsExpander.HeaderIcon>
+                            <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE74C;" />
+                        </controls:SettingsExpander.HeaderIcon>
+                        <controls:SettingsExpander.ItemTemplate>
+                            <DataTemplate x:DataType="model:ThirdPartyInfo">
+                                <controls:SettingsCard Padding="46,4,32,4">
+                                    <controls:SettingsCard.Header>
+                                        <HyperlinkButton
                                                  Content="{x:Bind Name}"
                                                  NavigateUri="{x:Bind Url}" />
-                            </controls:SettingsCard.Header>
-                            <controls:SettingsCard.Description>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="100" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <HyperlinkButton Padding="2"
-                                                     AutomationProperties.Name="{x:Bind LicenseAutomationName}"
+                                    </controls:SettingsCard.Header>
+                                    <controls:SettingsCard.Description>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="128" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <HyperlinkButton AutomationProperties.Name="{x:Bind LicenseAutomationName}"
+                                                     Margin="6,0,0,0"
+                                                     Padding="4,2,4,2"
                                                      Content="{x:Bind License}"
                                                      NavigateUri="{x:Bind LicenseUrl}" />
-                                    <TextBlock Grid.Column="1"
-                                               Padding="2"
-                                               Text="{x:Bind Version}" />
-                                </Grid>
-                            </controls:SettingsCard.Description>
-                            <Button AutomationProperties.Name="{x:Bind LicenseTextAutomationName}"
-                                    DataContext="{x:Bind (model:ThirdPartyInfo)}"
-                                    Click="HyperlinkButtonLicense_Click"
-                                    Content="Read License" />
-                        </controls:SettingsCard>
-                    </DataTemplate>
-                </controls:SettingsExpander.ItemTemplate>
-            </controls:SettingsExpander>
+                                            <TextBlock Grid.Column="1"
+                                                       Padding="2"
+                                                       Text="{x:Bind Version}" />
+                                        </Grid>
+                                    </controls:SettingsCard.Description>
+                                    <Button AutomationProperties.Name="{x:Bind LicenseTextAutomationName}"
+                                            DataContext="{x:Bind (model:ThirdPartyInfo)}"
+                                            Click="HyperlinkButtonLicense_Click"
+                                            Content="Read License" />
+                                </controls:SettingsCard>
+                            </DataTemplate>
+                        </controls:SettingsExpander.ItemTemplate>
+                    </controls:SettingsExpander>
+                </StackPanel>
+            </muxc:Expander>
         </StackPanel>
     </ScrollViewer>
 </Page>
