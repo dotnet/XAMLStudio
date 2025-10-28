@@ -406,10 +406,6 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>Unexpected Error</value>
     <comment>Title of message dialog displayed when the app starts and was closed due to an issue.</comment>
   </data>
-  <data name="SettingsPanel_About_OpenFeedbackHub.Content" xml:space="preserve">
-    <value>Open Feedback Hub</value>
-    <comment>Button label for opening feedback hub from about in settings page.</comment>
-  </data>
   <data name="MainPage_NavMenu_DataSources.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Data Source</value>
     <comment>Accessibility Name for Data Source Activity</comment>
@@ -620,21 +616,9 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>About XAML Studio</value>
     <comment>Accessibility Name for about section expander in settings panel.</comment>
   </data>
-  <data name="SettingsPanel_About_OpenFeedbackHub.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Use Feedback Hub to report any issues you encounter while using XAML Studio.</value>
-    <comment>Tooltip for Open Feedback Hub in about section of Settings Panel.</comment>
-  </data>
   <data name="SettingsPanel_About_OpenLogFolderButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>The log location contains files which may be helpful when reporting issues in the case of an unexpected exception.</value>
     <comment>Tooltip for Open Log Location in about section of Settings Panel.</comment>
-  </data>
-  <data name="SettingsPanel_About_OpenUserVoice.Content" xml:space="preserve">
-    <value>Open UserVoice</value>
-    <comment>Button label to open UserVoice in the Settings Panel about section.</comment>
-  </data>
-  <data name="SettingsPanel_About_OpenUserVoice.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Use UserVoice to vote on and submit new feature requests for XAML Studio.</value>
-    <comment>Tooltip for Open UserVoice button in about section of Settings Panel.</comment>
   </data>
   <data name="SettingsPanel_About_UserVoice_Uri" xml:space="preserve">
     <value>https://aka.ms/XAMLStudio_Feedback</value>
@@ -932,6 +916,22 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>Feedback</value>
     <comment>Accessibility name for Feedback section of settings page</comment>
   </data>
+  <data name="SettingsPanel_GitHub.Content" xml:space="preserve">
+    <value>Open GitHub Issue</value>
+    <comment>Open GitHub Issue Button content in feedback card in settings</comment>
+  </data>
+  <data name="SettingsPanel_GitHub.NavigateUri" xml:space="preserve">
+    <value>https://github.com/dotnet/XAMLStudio/issues/new</value>
+    <comment>Link to new issue on GitHub for GitHub card in settings feedback section</comment>
+  </data>
+  <data name="SettingsPanel_GitHubCard.Description" xml:space="preserve">
+    <value>Find an issue? Have a suggestion? Come let us know or build it yourself on GitHub!</value>
+    <comment>GitHub Card descrption for feedback card in settings</comment>
+  </data>
+  <data name="SettingsPanel_GitHubCard.Header" xml:space="preserve">
+    <value>Contribute on GitHub</value>
+    <comment>GitHub Card Header for Feedback Card in Settings</comment>
+  </data>
   <data name="SettingsPanel_Store.Content" xml:space="preserve">
     <value>Open Store</value>
     <comment>Button Content for Open Store button in Feedback</comment>
@@ -947,5 +947,13 @@ Please help us by reporting this issue in Feedback Hub.</value>
   <data name="SettingsPanel_StoreCard.Header" xml:space="preserve">
     <value>Ratings and Reviews</value>
     <comment>Header for Store Feedback Card in Settings</comment>
+  </data>
+  <data name="SettingsPanel_UsefulLinks_GitHub.Content" xml:space="preserve">
+    <value>GitHub Repository</value>
+    <comment>Useful Link content for GitHub Repository</comment>
+  </data>
+  <data name="SettingsPanel_UsefulLinks_GitHub.NavigateUri" xml:space="preserve">
+    <value>https://github.com/dotnet/XAMLStudio</value>
+    <comment>Url for GitHub repository as shown in Useful Links in About</comment>
   </data>
 </root>

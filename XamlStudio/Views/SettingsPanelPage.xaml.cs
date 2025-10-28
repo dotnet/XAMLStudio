@@ -184,36 +184,6 @@ namespace XamlStudio.Views
 
         public Visibility FeedbackVisibility => StoreServicesFeedbackLauncher.IsSupported() ? Visibility.Visible : Visibility.Collapsed;
 
-        private async void ButtonOpenFeedbackHub_Click(object sender, RoutedEventArgs e)
-        {
-            // This launcher is part of the Store Services SDK https://docs.microsoft.com/en-us/windows/uwp/monetize/microsoft-store-services-sdk
-            if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 7))
-            {
-                // 1809 'workaround' for now. BUG 19698552
-                await Launcher.LaunchUriAsync(new Uri("windows-feedback:?contextid=143"));
-            }
-            else
-            {
-                var launcher = StoreServicesFeedbackLauncher.GetDefault();
-                await launcher.LaunchAsync();
-            }
-
-            Analytics.TrackEvent("Open_FeedbackHub", new Dictionary<string, string>()
-            {
-                { "Location", "About" }
-            });
-        }
-
-        private async void ButtonOpenUserVoice_Click(object sender, RoutedEventArgs e)
-        {
-            await Launcher.LaunchUriAsync(new Uri("SettingsPanel_About_UserVoice_Uri".GetLocalized()));
-
-            Analytics.TrackEvent("Open_UserVoice", new Dictionary<string, string>()
-            {
-                { "Location", "About" }
-            });
-        }
-
         private async void HyperlinkButtonLicense_Click(object sender, RoutedEventArgs e)
         {
             var item = (sender as FrameworkElement).DataContext as ThirdPartyInfo;

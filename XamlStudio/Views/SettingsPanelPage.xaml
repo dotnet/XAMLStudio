@@ -478,7 +478,8 @@
 
                     <controls:SettingsCard x:Uid="SettingsPanel_DiscordCard">
                         <controls:SettingsCard.HeaderIcon>
-                            <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE8F2;" />
+                            <PathIcon Data="{StaticResource DiscordIcon}"
+                                      Foreground="#5865F2" />
                         </controls:SettingsCard.HeaderIcon>
                         <HyperlinkButton x:Uid="SettingsPanel_Discord" />
                     </controls:SettingsCard>
@@ -488,6 +489,17 @@
                             <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE735;" />
                         </controls:SettingsCard.HeaderIcon>
                         <HyperlinkButton x:Uid="SettingsPanel_Store" />
+                    </controls:SettingsCard>
+
+                    <controls:SettingsCard x:Uid="SettingsPanel_GitHubCard">
+                        <controls:SettingsCard.HeaderIcon>
+                            <PathIcon Data="{StaticResource GitHubIcon}"
+                                      Foreground="{ThemeResource TextFillColorPrimaryBrush}" />
+                        </controls:SettingsCard.HeaderIcon>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Button x:Uid="SettingsPanel_About_OpenLogFolderButton" Click="ButtonOpenLogFolder_Click" />
+                            <HyperlinkButton x:Uid="SettingsPanel_GitHub" />
+                        </StackPanel>
                     </controls:SettingsCard>
                 </StackPanel>
             </muxc:Expander>
@@ -523,31 +535,16 @@
                                     <HyperlinkButton x:Uid="SettingsPanel_PrivacyTermsLink" />
                                 </StackPanel>
                             </controls:SettingsCard>
-                            <!--<controls:SettingsCard HorizontalContentAlignment="Left"
+                            <controls:SettingsCard HorizontalContentAlignment="Left"
                                                    ContentAlignment="Vertical"
                                                    Header="Useful links">
                                 <StackPanel Margin="-12,0,0,0"
                                             Orientation="Vertical">
-                                    <HyperlinkButton Content="GitHub repository"
-                                                     NavigateUri="https://github.com/dotnet/XAMLStudio" />
+                                    <HyperlinkButton x:Uid="SettingsPanel_UsefulLinks_GitHub" />
                                 </StackPanel>
-                            </controls:SettingsCard>-->
+                            </controls:SettingsCard>
                         </controls:SettingsExpander.Items>
                     </controls:SettingsExpander>
-
-                    <!--
-                    <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
-                        <Button x:Uid="SettingsPanel_About_OpenFeedbackHub"
-                                Margin="0,0,12,0"
-                                Click="ButtonOpenFeedbackHub_Click"
-                                Visibility="{x:Bind FeedbackVisibility}" />
-
-                        <Button x:Uid="SettingsPanel_About_OpenUserVoice"
-                                Margin="0,0,12,0"
-                                Click="ButtonOpenUserVoice_Click" />
-
-                        <Button x:Uid="SettingsPanel_About_OpenLogFolderButton" Click="ButtonOpenLogFolder_Click" />
-                    </StackPanel>-->
 
                     <controls:SettingsExpander x:Uid="SettingsPanel_ThirdParty"
                                        IsExpanded="True"
