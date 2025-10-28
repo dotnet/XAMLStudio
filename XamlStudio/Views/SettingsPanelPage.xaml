@@ -482,6 +482,13 @@
                         </controls:SettingsCard.HeaderIcon>
                         <HyperlinkButton x:Uid="SettingsPanel_Discord" />
                     </controls:SettingsCard>
+
+                    <controls:SettingsCard x:Uid="SettingsPanel_StoreCard">
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE735;" />
+                        </controls:SettingsCard.HeaderIcon>
+                        <HyperlinkButton x:Uid="SettingsPanel_Store" />
+                    </controls:SettingsCard>
                 </StackPanel>
             </muxc:Expander>
 
@@ -572,10 +579,10 @@
                                                        Text="{x:Bind Version}" />
                                         </Grid>
                                     </controls:SettingsCard.Description>
-                                    <Button AutomationProperties.Name="{x:Bind LicenseTextAutomationName}"
-                                            DataContext="{x:Bind (model:ThirdPartyInfo)}"
-                                            Click="HyperlinkButtonLicense_Click"
-                                            Content="Read License" />
+                                    <HyperlinkButton AutomationProperties.Name="{x:Bind LicenseTextAutomationName}"
+                                                     DataContext="{x:Bind (model:ThirdPartyInfo)}"
+                                                     Click="HyperlinkButtonLicense_Click"
+                                                     Content="Read License" />
                                 </controls:SettingsCard>
                             </DataTemplate>
                         </controls:SettingsExpander.ItemTemplate>

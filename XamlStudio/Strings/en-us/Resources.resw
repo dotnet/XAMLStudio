@@ -932,4 +932,20 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>Feedback</value>
     <comment>Accessibility name for Feedback section of settings page</comment>
   </data>
+  <data name="SettingsPanel_Store.Content" xml:space="preserve">
+    <value>Open Store</value>
+    <comment>Button Content for Open Store button in Feedback</comment>
+  </data>
+  <data name="SettingsPanel_Store.NavigateUri" xml:space="preserve">
+    <value>ms-windows-store://review/?ProductId=9ntls214tkmq</value>
+    <comment>XAML Studio Store Page navigate url for Open Store button in Feedback Settings Page</comment>
+  </data>
+  <data name="SettingsPanel_StoreCard.Description" xml:space="preserve">
+    <value>Visit our store page, perhaps leave us a rating and a review?</value>
+    <comment>Description of the Store Feedback card in Settings</comment>
+  </data>
+  <data name="SettingsPanel_StoreCard.Header" xml:space="preserve">
+    <value>Ratings and Reviews</value>
+    <comment>Header for Store Feedback Card in Settings</comment>
+  </data>
 </root>
