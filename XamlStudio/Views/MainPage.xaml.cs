@@ -2,17 +2,21 @@
 using CommunityToolkit.WinUI;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.Services.Store.Engagement;
+using Microsoft.UI.Xaml.Controls;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.System;
+using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Popups;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -44,6 +48,16 @@ namespace XamlStudio.Views
             ViewModel = new MainViewModel();
 
             InitializeComponent();
+
+            // Hide default title bar.
+            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitleBar.ExtendViewIntoTitleBar = true;
+
+            var appTitleBar = ApplicationView.GetForCurrentView().TitleBar;
+            appTitleBar.ButtonBackgroundColor = Colors.Transparent;
+            appTitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+
+            BackdropMaterial.SetApplyToRootOrPageBackground(this, true);
 
             Loaded += MainPage_Loaded;
 
