@@ -956,4 +956,28 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>https://github.com/dotnet/XAMLStudio</value>
     <comment>Url for GitHub repository as shown in Useful Links in About</comment>
   </data>
+  <data name="MainPage_NavMenu_DataSources.Content" xml:space="preserve">
+    <value>Data</value>
+    <comment>Data Source Activity Button Label in Navigation View</comment>
+  </data>
+  <data name="MainPage_NavMenu_Debug.Content" xml:space="preserve">
+    <value>Debug</value>
+    <comment>Debug Activity Button Label in Navigation View</comment>
+  </data>
+  <data name="MainPage_NavMenu_Explorer.Content" xml:space="preserve">
+    <value>Explorer</value>
+    <comment>Explorer Activity Button Label in Navigation View</comment>
+  </data>
+  <data name="MainPage_NavMenu_Properties.Content" xml:space="preserve">
+    <value>Properties</value>
+    <comment>Properties Activity Button Label in Navigation View</comment>
+  </data>
+  <data name="MainPage_NavMenu_Settings.Content" xml:space="preserve">
+    <value>Settings</value>
+    <comment>Settings Button Label in Navigation View</comment>
+  </data>
+  <data name="MainPage_NavMenu_Toolbox.Content" xml:space="preserve">
+    <value>Toolbox</value>
+    <comment>Toolbox Activity Button Label in Navigation View</comment>
+  </data>
 </root>

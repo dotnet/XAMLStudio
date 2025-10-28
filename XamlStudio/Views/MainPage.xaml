@@ -13,6 +13,7 @@
       xmlns:models="using:XamlStudio.Models"
       xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
       xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
+      xmlns:ui="using:CommunityToolkit.WinUI"
       Style="{StaticResource PageStyle}"
       mc:Ignorable="d">
 
@@ -50,57 +51,88 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <!--  Main VSCode Style Navbar on Left  -->
-        <ListBox x:Name="NavMenu"
-                 exf:ListBoxExtensions.AllowDeselection="True"
-                 AutomationProperties.LandmarkType="Navigation"
-                 ItemContainerStyle="{StaticResource Style-ListBoxItem-CompactMenu}"
-                 SelectedIndex="0"
-                 SelectionChanged="NavMenu_SelectionChanged"
-                 Style="{StaticResource Style-ListBox-CompactMenu}">
-            <ListBoxItem x:Uid="MainPage_NavMenu_Explorer" Tag="EXPLORER">
-                <lcontrols:AppFontIcon IconName="Copy" />
-            </ListBoxItem>
-            <!--<ListBoxItem x:Uid="MainPage_NavMenu_ImageSources" Tag="IMAGES">
-                <lcontrols:AppFontIcon IconName="Photo2" />
-            </ListBoxItem>-->
-            <ListBoxItem x:Uid="MainPage_NavMenu_DataSources"
-                         IsEnabled="{x:Bind models:DocumentType.Document.Equals(ViewModel.ActiveFile.DocumentType), Mode=OneWay}"
-                         Tag="DATASOURCES">
-                <lcontrols:AppFontIcon IconName="Wheel" />
-            </ListBoxItem>
-            <ListBoxItem x:Uid="MainPage_NavMenu_Debug"
-                         IsEnabled="{x:Bind models:DocumentType.Document.Equals(ViewModel.ActiveFile.DocumentType), Mode=OneWay}"
-                         Tag="DEBUG">
-                <lcontrols:AppFontIcon IconName="Bug" />
-            </ListBoxItem>
-            <ListBoxItem x:Uid="MainPage_NavMenu_Properties"
-                         IsEnabled="{x:Bind models:DocumentType.Document.Equals(ViewModel.ActiveFile.DocumentType), Mode=OneWay}"
-                         Tag="PROPERTIES">
-                <lcontrols:AppFontIcon IconName="Properties" />
-            </ListBoxItem>
-            <ListBoxItem x:Uid="MainPage_NavMenu_Toolbox" Tag="TOOLBOX">
-                <lcontrols:AppFontIcon IconName="Work" />
-            </ListBoxItem>
-            <!--<ListBoxItem x:Uid="MainPage_NavMenu_Search" Tag="SEARCH">
-                <lcontrols:AppFontIcon IconName="Search" />
-            </ListBoxItem>-->
-        </ListBox>
+        <!--  Modern Navigation View on Left  -->
+        <muxc:NavigationView x:Name="NavMenu"
+                             Grid.Row="1"
+                             AutomationProperties.LandmarkType="Navigation"
+                             HighContrastAdjustment="None"
+                             IsBackButtonVisible="Collapsed"
+                             IsPaneToggleButtonVisible="False"
+                             IsSettingsVisible="False"
+                             Style="{StaticResource MainNavigationViewStyle}">
+            <muxc:NavigationView.MenuItems>
+                <muxc:NavigationViewItem x:Uid="MainPage_NavMenu_Explorer" Tag="EXPLORER">
+                    <muxc:NavigationViewItem.Icon>
+                        <lcontrols:AppFontIcon IconName="Copy" />
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+                <muxc:NavigationViewItem x:Uid="MainPage_NavMenu_DataSources"
+                                         IsEnabled="{x:Bind models:DocumentType.Document.Equals(ViewModel.ActiveFile.DocumentType), Mode=OneWay}"
+                                         Tag="DATASOURCES">
+                    <muxc:NavigationViewItem.Icon>
+                        <lcontrols:AppFontIcon IconName="Wheel" />
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+                <muxc:NavigationViewItem x:Uid="MainPage_NavMenu_Debug"
+                                         IsEnabled="{x:Bind models:DocumentType.Document.Equals(ViewModel.ActiveFile.DocumentType), Mode=OneWay}"
+                                         Tag="DEBUG">
+                    <muxc:NavigationViewItem.Icon>
+                        <lcontrols:AppFontIcon IconName="Bug" />
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+                <muxc:NavigationViewItem x:Uid="MainPage_NavMenu_Properties"
+                                         IsEnabled="{x:Bind models:DocumentType.Document.Equals(ViewModel.ActiveFile.DocumentType), Mode=OneWay}"
+                                         Tag="PROPERTIES">
+                    <muxc:NavigationViewItem.Icon>
+                        <lcontrols:AppFontIcon IconName="Properties" />
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+                <muxc:NavigationViewItem x:Uid="MainPage_NavMenu_Toolbox"
+                                         IsEnabled="{x:Bind models:DocumentType.Document.Equals(ViewModel.ActiveFile.DocumentType), Mode=OneWay}"
+                                         Tag="TOOLBOX">
+                    <muxc:NavigationViewItem.Icon>
+                        <lcontrols:AppFontIcon IconName="Work" />
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+            </muxc:NavigationView.MenuItems>
+            <muxc:NavigationView.FooterMenuItems>
+                <muxc:NavigationViewItem Content="Contribute"
+                                         SelectsOnInvoked="False"
+                                         Tag="Contribute">
+                    <muxc:NavigationViewItem.Icon>
+                        <PathIcon HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"
+                                  Data="{StaticResource GitHubIcon}"
+                                  Opacity="0.6">
+                            <PathIcon.RenderTransform>
+                                <ScaleTransform CenterX="8" CenterY="20" ScaleX="1.5" ScaleY="1.5" />
+                            </PathIcon.RenderTransform>
+                        </PathIcon>
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+                <!--  Command="{x:Bind ViewModel.OpenSettingsPageCommand}"  -->
+                <muxc:NavigationViewItem x:Name="SettingsButton"
+                                         x:Uid="MainPage_NavMenu_Settings"
+                                         Tag="SETTINGS">
+                    <muxc:NavigationViewItem.Icon>
+                        <lcontrols:AppFontIcon IconName="Settings" />
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
 
-        <Button x:Name="SettingsButton"
-                x:Uid="MainPage_NavMenu_Settings"
-                VerticalAlignment="Bottom"
-                Command="{x:Bind ViewModel.OpenSettingsPageCommand}"
-                Style="{StaticResource Style-Button-CompactMenu}">
-            <lcontrols:AppFontIcon IconName="Settings" />
-        </Button>
+            </muxc:NavigationView.FooterMenuItems>
+            <!--<muxc:NavigationView.Content>
+                <Frame x:Name="NavFrame"
+                       Navigated="NavFrame_Navigated"
+                       Navigating="NavFrame_Navigating" />
+            </muxc:NavigationView.Content>-->
+        </muxc:NavigationView>
 
         <!--  Toolbox Content  -->
         <Grid x:Name="ContentGrid"
               Grid.Column="1"
               Width="320"
               MinWidth="200"
-              Visibility="{x:Bind exf:Bind.GreaterThanOrEqualToV(NavMenu.SelectedIndex, 0), Mode=OneWay, FallbackValue=Visible}">
+              Visibility="{x:Bind exf:Bind.EqualToV(NavMenu.SelectedItem, x:Null), Mode=OneWay, FallbackValue=Visible}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -110,7 +142,7 @@
                                    VerticalAlignment="Stretch"
                                    Background="{ThemeResource Brush-Blue-Dark-1}" />
 
-            <controls:SwitchPresenter x:Name="ToolboxPresenter" Value="{x:Bind ((ListBoxItem)NavMenu.SelectedItem).Tag, Mode=OneWay}">
+            <controls:SwitchPresenter x:Name="ToolboxPresenter" Value="{x:Bind ((muxc:NavigationViewItem)NavMenu.SelectedItem).Tag, Mode=OneWay}">
                 <controls:Case Value="EXPLORER">
                     <local:Explorer MainViewModel="{x:Bind ViewModel}" />
                 </controls:Case>
@@ -157,29 +189,30 @@
             </muxc:TabView.Resources>
             <muxc:TabView.TabItemTemplate>
                 <DataTemplate x:DataType="models:XamlDocument">
-                    <muxc:TabViewItem ContextFlyout="{StaticResource TabItemFlyout}" HorizontalContentAlignment="Stretch">
+                    <muxc:TabViewItem HorizontalContentAlignment="Stretch" ContextFlyout="{StaticResource TabItemFlyout}">
                         <muxc:TabViewItem.Header>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="{x:Bind Title, Mode=OneWay}"/>
-                                <controls:SwitchPresenter Grid.Column="1" Value="{x:Bind State.RenderState, Mode=OneWay}"
+                                <TextBlock Text="{x:Bind Title, Mode=OneWay}" />
+                                <controls:SwitchPresenter Grid.Column="1"
                                                           TargetType="models:SyncStatus"
-                                                          Visibility="{x:Bind local:MainPage.IsVisibleIfDocument(DocumentType), Mode=OneWay}">
-                                    <!-- TODO: Placeholders, should have Tooltips too -->
+                                                          Visibility="{x:Bind local:MainPage.IsVisibleIfDocument(DocumentType), Mode=OneWay}"
+                                                          Value="{x:Bind State.RenderState, Mode=OneWay}">
+                                    <!--  TODO: Placeholders, should have Tooltips too  -->
                                     <controls:Case Value="Unrendered">
-                                        <TextBlock Text="⚫"/>
+                                        <TextBlock Text="⚫" />
                                     </controls:Case>
                                     <controls:Case Value="Error">
-                                        <TextBlock Text="🛑"/>
+                                        <TextBlock Text="🛑" />
                                     </controls:Case>
                                     <controls:Case Value="OutOfSync">
-                                        <TextBlock Text="🟡"/>
+                                        <TextBlock Text="🟡" />
                                     </controls:Case>
                                     <controls:Case Value="Synced">
-                                        <TextBlock Text="✅"/>
+                                        <TextBlock Text="✅" />
                                     </controls:Case>
                                 </controls:SwitchPresenter>
                             </Grid>

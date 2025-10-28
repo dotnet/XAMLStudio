@@ -8,14 +8,15 @@
             <muxc:XamlControlsResources.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/_Colors.xaml" />
                 <ResourceDictionary Source="/Styles/_FontSizes.xaml" />
-                <ResourceDictionary Source="/Styles/_Thickness.xaml" />
                 <ResourceDictionary Source="/Styles/_Icons.xaml" />
+                <ResourceDictionary Source="/Styles/_Thickness.xaml" />
 
-                <ResourceDictionary Source="/Styles/TextBlock.xaml" />
-                <ResourceDictionary Source="/Styles/Page.xaml" />
-                <ResourceDictionary Source="/Styles/VSCode.xaml" />
-                <ResourceDictionary Source="/Styles/ListBox.xaml" />
                 <ResourceDictionary Source="/Styles/Expander.xaml" />
+                <ResourceDictionary Source="/Styles/ListBox.xaml" />
+                <ResourceDictionary Source="/Styles/NavigationView.xaml" />
+                <ResourceDictionary Source="/Styles/Page.xaml" />
+                <ResourceDictionary Source="/Styles/TextBlock.xaml" />
+                <ResourceDictionary Source="/Styles/VSCode.xaml" />
 
                 <ResourceDictionary Source="ms-appx:///Microsoft.Toolkit.Future/Extensions/Pivot/Styles/MSEdgeTabStyle.xaml" />
                 <ResourceDictionary Source="ms-appx:///Microsoft.Toolkit.Future/Extensions/Pivot/Styles/MSEdgePivotStyle.xaml" />

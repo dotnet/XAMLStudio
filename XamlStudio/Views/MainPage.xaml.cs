@@ -28,6 +28,8 @@ using XamlStudio.Toolkit.Helpers;
 using XamlStudio.Toolkit.Services;
 using XamlStudio.ViewModels;
 
+using MUXC = Microsoft.UI.Xaml.Controls;
+
 namespace XamlStudio.Views
 {
     public sealed partial class MainPage : Page, IFileOpener,
@@ -75,7 +77,7 @@ namespace XamlStudio.Views
             e.SuspensionState.OpenWorkspaces = ViewModel.WorkspaceFolders.ToArray();
 
             // Save Open Drawer, null = closed.
-            e.SuspensionState.OpenActivity = (NavMenu.SelectedItems.FirstOrDefault() as ListBoxItem)?.Tag?.ToString();
+            e.SuspensionState.OpenActivity = (NavMenu.SelectedItem as MUXC.NavigationViewItem)?.Tag?.ToString();
 
             if (_loaded && !e.IsOutsideSuspend)
             {
@@ -239,7 +241,7 @@ namespace XamlStudio.Views
             {
                 if (!string.IsNullOrWhiteSpace(_restoreState.OpenActivity))
                 {
-                    NavMenu.SelectedItem = NavMenu.Items.FirstOrDefault(item => (item as ListBoxItem).Tag.ToString() == _restoreState.OpenActivity);
+                    NavMenu.SelectedItem = NavMenu.MenuItems.FirstOrDefault(item => (item as MUXC.NavigationViewItem).Tag.ToString() == _restoreState.OpenActivity);
                 }
                 else
                 {
@@ -387,17 +389,17 @@ namespace XamlStudio.Views
                     dict.Add("TimeOpenSec", Math.Round((DateTime.UtcNow.Ticks - _activityTime.Value) / 10000000d, 2).ToString());
                 }
 
-                if (NavMenu.SelectedItems.Count == 0)
+                if (NavMenu.SelectedItem == null)
                 {
                     dict.Add("Name", "Closed");
                     _activityTime = null;
                 }
                 else
                 {
-                    dict.Add("Name", (e.AddedItems.FirstOrDefault() as ListBoxItem)?.Tag.ToString());
+                    dict.Add("Name", (e.AddedItems.FirstOrDefault() as MUXC.NavigationViewItem)?.Tag.ToString());
                     _activityTime = DateTime.UtcNow.Ticks;
                 }
-                dict.Add("Previous", (e.RemovedItems.FirstOrDefault() as ListBoxItem)?.Tag.ToString());
+                dict.Add("Previous", (e.RemovedItems.FirstOrDefault() as MUXC.NavigationViewItem)?.Tag.ToString());
                 Analytics.TrackEvent("Activity", dict);
             }
             else
@@ -431,14 +433,14 @@ namespace XamlStudio.Views
             if (string.IsNullOrWhiteSpace(message.NewActivity))
             {
                 // Deselect
-                NavMenu.SelectedIndex = -1;
+                NavMenu.SelectedItem = null;
                 return;
             }
 
             // Sync from ViewModel to UI
-            foreach (var item in NavMenu.Items)
+            foreach (var item in NavMenu.MenuItems)
             {
-                if (item is ListBoxItem lbi && lbi.Tag.ToString() == message.NewActivity)
+                if (item is MUXC.NavigationViewItem lbi && lbi.Tag.ToString() == message.NewActivity)
                 {
                     NavMenu.SelectedItem = item;
 
