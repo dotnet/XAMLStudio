@@ -904,8 +904,32 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>Diagnostic Data</value>
     <comment>Analytics Card Header</comment>
   </data>
+  <data name="SettingsPanel_Discord.Content" xml:space="preserve">
+    <value>Open Discord</value>
+    <comment>Button Content for Open Discord button on Discord Feedback Settings Card</comment>
+  </data>
+  <data name="SettingsPanel_Discord.NavigateUri" xml:space="preserve">
+    <value>https://discord.gg/ZexeU23dDr</value>
+    <comment>Invite link to Discord #XAMLStudio channel as part of the Windows App Community Discord</comment>
+  </data>
+  <data name="SettingsPanel_DiscordCard.Description" xml:space="preserve">
+    <value>Join the Windows App Community and chat with us in the #xaml-studio channel!</value>
+    <comment>Description of the Discord Feedback Card in Settings</comment>
+  </data>
+  <data name="SettingsPanel_DiscordCard.Header" xml:space="preserve">
+    <value>Chat on Discord</value>
+    <comment>Header for Discord Feedback Card in Settings</comment>
+  </data>
   <data name="SettingsPanel_EditorThemeCard.Description" xml:space="preserve">
     <value>Requires Restart</value>
     <comment>Editor Theme Description to remind user the new theme applies to newly opened documents (or restart, this is a bug...)</comment>
+  </data>
+  <data name="SettingsPanel_Feedback.Header" xml:space="preserve">
+    <value>Feedback</value>
+    <comment>Feedback section of Settings page</comment>
+  </data>
+  <data name="SettingsPanel_Feedback.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Feedback</value>
+    <comment>Accessibility name for Feedback section of settings page</comment>
   </data>
 </root>
