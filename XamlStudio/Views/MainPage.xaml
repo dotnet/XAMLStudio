@@ -216,6 +216,7 @@
                                 </controls:SwitchPresenter>
                             </Grid>
                         </muxc:TabViewItem.Header>
+                        <!--  TODO: Just remove this complication and make Document, make Welcome/Settings modal of whole app above...  -->
                         <controls:SwitchPresenter x:Name="Parent"
                                                   HorizontalAlignment="Stretch"
                                                   VerticalAlignment="Stretch"
@@ -238,6 +239,32 @@
                     </muxc:TabViewItem>
                 </DataTemplate>
             </muxc:TabView.TabItemTemplate>
+            <muxc:TabView.TabStripFooter>
+                <Grid x:Name="AppTitleBarSection" Background="Transparent">
+                    <!--  Width of the padding columns is set in LayoutMetricsChanged handler.  -->
+                    <!--
+                        Using padding columns instead of Margin ensures that the background
+                        paints the area under the caption control buttons (for transparent buttons).
+                    -->
+                    <Grid.ColumnDefinitions>
+                        <!--<ColumnDefinition x:Name="LeftPaddingColumn" Width="0"/>-->
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
+                    </Grid.ColumnDefinitions>
+                    <Image Grid.Column="1"
+                           Width="16"
+                           Height="16"
+                           Margin="8,2,0,0"
+                           Source="ms-appx:///Assets/AppTitleBar.png" />
+                    <TextBlock x:Name="AppTitleTextBlock"
+                               Grid.Column="2"
+                               Margin="8,2,0,0"
+                               VerticalAlignment="Center"
+                               Style="{StaticResource CaptionTextBlockStyle}" />
+                </Grid>
+            </muxc:TabView.TabStripFooter>
         </muxc:TabView>
     </Grid>
 </Page>

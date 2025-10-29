@@ -54,6 +54,7 @@ namespace XamlStudio.Views
             // Hide default title bar.
             var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             coreTitleBar.ExtendViewIntoTitleBar = true;
+            coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
 
             var appTitleBar = ApplicationView.GetForCurrentView().TitleBar;
             appTitleBar.ButtonBackgroundColor = Colors.Transparent;
@@ -68,6 +69,17 @@ namespace XamlStudio.Views
             Singleton<SuspendAndResumeService>.Instance.OnBackgroundEntering += Instance_OnBackgroundEntering;
 
             WeakReferenceMessenger.Default.RegisterAll(this);
+
+            // Set XAML element as a drag region.
+            Window.Current.SetTitleBar(AppTitleBarSection);
+            AppTitleTextBlock.Text = "AppPackageDisplayName".GetLocalized();
+        }
+
+        private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
+        {
+            // Get the size of the caption controls and set padding.
+            ////LeftPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayLeftInset);
+            RightPaddingColumn.Width = new GridLength(sender.SystemOverlayRightInset);
         }
 
         private void Instance_OnBackgroundEntering(object sender, OnBackgroundEnteringEventArgs e)
