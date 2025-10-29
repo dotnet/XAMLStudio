@@ -402,11 +402,10 @@ namespace XamlStudio.Views
                 {
                     _ = Launcher.LaunchUriAsync(new Uri("SettingsPanel_UsefulLinks_GitHub/NavigateUri".GetLocalized()));
                 }
-                // Deselect if select the same item.
-                else if (args.InvokedItemContainer == sender.SelectedItem)
+                // Close panel if we invoke the currently open activity (Note: NavigationView.SelectedItem is already set here, so compare against VM)
+                else if (navitem.Tag?.ToString() == ViewModel.OpenActivity)
                 {
-                    // TODO: There's some weird double-invoke happening, and if we interrupt that, it's collapsing/setting when we don't want to.
-                    ////sender.SelectedItem = null;
+                    sender.SelectedItem = null;
                 }
             }
         }

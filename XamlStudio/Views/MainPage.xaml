@@ -130,7 +130,7 @@
               Grid.Column="1"
               Width="320"
               MinWidth="200"
-              Visibility="{x:Bind exf:Bind.NotEqualToV(ViewModel.OpenActivity, x:Null), Mode=OneWay, FallbackValue=Visible}">
+              Visibility="{x:Bind exf:Bind.NotEqualToV(ViewModel.OpenActivity, x:Null), Mode=OneWay, FallbackValue=Collapsed}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
