@@ -75,6 +75,11 @@ public static partial class Bind
         return Math.Abs(lhs - rhs) <= tolerance ? Visibility.Visible : Visibility.Collapsed;
     }
 
+    public static Visibility NotEqualToV(object lhs, object rhs)
+    {
+        return lhs != rhs ? Visibility.Visible : Visibility.Collapsed;
+    }
+
     public static Visibility NotEqualToV(int lhs, int rhs)
     {
         return lhs != rhs ? Visibility.Visible : Visibility.Collapsed;

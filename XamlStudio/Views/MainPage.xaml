@@ -59,6 +59,8 @@
                              IsBackButtonVisible="Collapsed"
                              IsPaneToggleButtonVisible="False"
                              IsSettingsVisible="False"
+                             ItemInvoked="NavMenu_ItemInvoked"
+                             SelectionChanged="NavMenu_SelectionChanged"
                              Style="{StaticResource MainNavigationViewStyle}">
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem x:Uid="MainPage_NavMenu_Explorer" Tag="EXPLORER">
@@ -98,7 +100,7 @@
             <muxc:NavigationView.FooterMenuItems>
                 <muxc:NavigationViewItem Content="Contribute"
                                          SelectsOnInvoked="False"
-                                         Tag="Contribute">
+                                         Tag="CONTRIBUTE">
                     <muxc:NavigationViewItem.Icon>
                         <PathIcon HorizontalAlignment="Center"
                                   VerticalAlignment="Center"
@@ -113,6 +115,7 @@
                 <!--  Command="{x:Bind ViewModel.OpenSettingsPageCommand}"  -->
                 <muxc:NavigationViewItem x:Name="SettingsButton"
                                          x:Uid="MainPage_NavMenu_Settings"
+                                         SelectsOnInvoked="False"
                                          Tag="SETTINGS">
                     <muxc:NavigationViewItem.Icon>
                         <lcontrols:AppFontIcon IconName="Settings" />
@@ -120,11 +123,6 @@
                 </muxc:NavigationViewItem>
 
             </muxc:NavigationView.FooterMenuItems>
-            <!--<muxc:NavigationView.Content>
-                <Frame x:Name="NavFrame"
-                       Navigated="NavFrame_Navigated"
-                       Navigating="NavFrame_Navigating" />
-            </muxc:NavigationView.Content>-->
         </muxc:NavigationView>
 
         <!--  Toolbox Content  -->
@@ -132,7 +130,7 @@
               Grid.Column="1"
               Width="320"
               MinWidth="200"
-              Visibility="{x:Bind exf:Bind.EqualToV(NavMenu.SelectedItem, x:Null), Mode=OneWay, FallbackValue=Visible}">
+              Visibility="{x:Bind exf:Bind.NotEqualToV(ViewModel.OpenActivity, x:Null), Mode=OneWay, FallbackValue=Visible}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -142,7 +140,7 @@
                                    VerticalAlignment="Stretch"
                                    Background="{ThemeResource Brush-Blue-Dark-1}" />
 
-            <controls:SwitchPresenter x:Name="ToolboxPresenter" Value="{x:Bind ((muxc:NavigationViewItem)NavMenu.SelectedItem).Tag, Mode=OneWay}">
+            <controls:SwitchPresenter x:Name="ToolboxPresenter" Value="{x:Bind ViewModel.OpenActivity, Mode=OneWay}">
                 <controls:Case Value="EXPLORER">
                     <local:Explorer MainViewModel="{x:Bind ViewModel}" />
                 </controls:Case>
@@ -158,13 +156,14 @@
                 <controls:Case Value="TOOLBOX">
                     <local:Toolbox MainViewModel="{x:Bind ViewModel}" />
                 </controls:Case>
+                <!--  Debug: Should never see  -->
                 <controls:Case IsDefault="True">
                     <Border Background="DarkGray">
                         <TextBlock Margin="16,0,0,0"
                                    HorizontalAlignment="Left"
                                    VerticalAlignment="Center"
                                    Foreground="Black"
-                                   Text="{Binding ElementName=NavMenu, Path=SelectedItem.Tag}" />
+                                   Text="{x:Bind ViewModel.OpenActivity}" />
                     </Border>
                 </controls:Case>
             </controls:SwitchPresenter>

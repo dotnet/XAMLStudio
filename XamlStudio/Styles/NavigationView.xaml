@@ -4,6 +4,7 @@
                     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
                     xmlns:helpers="using:XamlStudio.Helpers"
                     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+                    xmlns:muxcp="using:Microsoft.UI.Xaml.Controls.Primitives"
                     xmlns:ui="using:CommunityToolkit.WinUI">
 
     <ResourceDictionary.ThemeDictionaries>
@@ -669,28 +670,28 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <NavigationViewItemPresenter x:Name="NavigationViewItemPresenter"
-                                                     Padding="{TemplateBinding Padding}"
-                                                     HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                                                     VerticalAlignment="{TemplateBinding VerticalAlignment}"
-                                                     HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                     VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                     helpers:NavItemIconHelper.SelectedIcon="{TemplateBinding helpers:NavItemIconHelper.SelectedIcon}"
-                                                     helpers:NavItemIconHelper.StaticIconVisibility="{TemplateBinding helpers:NavItemIconHelper.StaticIconVisibility}"
-                                                     helpers:NavItemIconHelper.UnselectedIcon="{TemplateBinding helpers:NavItemIconHelper.UnselectedIcon}"
-                                                     Background="{TemplateBinding Background}"
-                                                     BorderBrush="{TemplateBinding BorderBrush}"
-                                                     BorderThickness="{TemplateBinding BorderThickness}"
-                                                     Content="{TemplateBinding Content}"
-                                                     ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                     ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
-                                                     ContentTransitions="{TemplateBinding ContentTransitions}"
-                                                     Control.IsTemplateFocusTarget="True"
-                                                     CornerRadius="{TemplateBinding CornerRadius}"
-                                                     Foreground="{TemplateBinding Foreground}"
-                                                     Icon="{TemplateBinding Icon}"
-                                                     IsTabStop="false"
-                                                     UseSystemFocusVisuals="{TemplateBinding UseSystemFocusVisuals}" />
+                        <muxcp:NavigationViewItemPresenter x:Name="NavigationViewItemPresenter"
+                                                           Padding="{TemplateBinding Padding}"
+                                                           HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                                           VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                                                           HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                           VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                           helpers:NavItemIconHelper.SelectedIcon="{TemplateBinding helpers:NavItemIconHelper.SelectedIcon}"
+                                                           helpers:NavItemIconHelper.StaticIconVisibility="{TemplateBinding helpers:NavItemIconHelper.StaticIconVisibility}"
+                                                           helpers:NavItemIconHelper.UnselectedIcon="{TemplateBinding helpers:NavItemIconHelper.UnselectedIcon}"
+                                                           Background="{TemplateBinding Background}"
+                                                           BorderBrush="{TemplateBinding BorderBrush}"
+                                                           BorderThickness="{TemplateBinding BorderThickness}"
+                                                           Content="{TemplateBinding Content}"
+                                                           ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                           ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+                                                           ContentTransitions="{TemplateBinding ContentTransitions}"
+                                                           Control.IsTemplateFocusTarget="True"
+                                                           CornerRadius="{TemplateBinding CornerRadius}"
+                                                           Foreground="{TemplateBinding Foreground}"
+                                                           Icon="{TemplateBinding Icon}"
+                                                           IsTabStop="false"
+                                                           UseSystemFocusVisuals="{TemplateBinding UseSystemFocusVisuals}" />
 
                         <Ellipse x:Name="NotificationDot"
                                  Height="8"
@@ -717,7 +718,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="MUX_NavigationViewItemPresenterStyleWhenOnLeftPane_Main" TargetType="NavigationViewItemPresenter">
+    <Style x:Key="MUX_NavigationViewItemPresenterStyleWhenOnLeftPane_Main" TargetType="muxcp:NavigationViewItemPresenter">
         <Setter Property="Foreground" Value="{ThemeResource RailNavigationViewItemForeground}" />
         <Setter Property="Background" Value="{ThemeResource RailNavigationViewItemBackground}" />
         <Setter Property="BorderBrush" Value="{ThemeResource RailNavigationViewItemBorderBrush}" />
@@ -727,7 +728,7 @@
         <Setter Property="FontSize" Value="10" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="NavigationViewItemPresenter">
+                <ControlTemplate TargetType="muxcp:NavigationViewItemPresenter">
                     <Grid x:Name="LayoutRoot"
                           MinHeight="{ThemeResource RailNavigationViewItemOnLeftMinHeight}"
                           Padding="4,0,4,4"
@@ -762,7 +763,7 @@
                                         <Setter Target="Backplate.Background" Value="{ThemeResource RailNavigationViewItemBackgroundPointerOver}" />
                                         <Setter Target="Icon.Foreground" Value="{ThemeResource RailNavigationViewItemForegroundPointerOver}" />
                                         <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource RailNavigationViewItemForegroundPointerOver}" />
-                                        <Setter Target="Icon.(AnimatedIcon.State)" Value="PointerOverOff" />
+                                        <Setter Target="Icon.(muxc:AnimatedIcon.State)" Value="PointerOverOff" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
@@ -770,7 +771,7 @@
                                         <Setter Target="Backplate.Background" Value="{ThemeResource RailNavigationViewItemBackgroundPressed}" />
                                         <Setter Target="Icon.Foreground" Value="{ThemeResource RailNavigationViewItemForegroundPressed}" />
                                         <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource RailNavigationViewItemForegroundPressed}" />
-                                        <Setter Target="Icon.(AnimatedIcon.State)" Value="PressedOff" />
+                                        <Setter Target="Icon.(muxc:AnimatedIcon.State)" Value="PressedOff" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Selected">
@@ -779,7 +780,7 @@
                                         <Setter Target="Icon.Foreground" Value="{ThemeResource RailNavigationViewItemForegroundSelected}" />
                                         <!--  Store: Customized  -->
                                         <!--<Setter Target="ContentPresenter.Foreground" Value="{ThemeResource RailNavigationViewItemForegroundSelected}" />-->
-                                        <Setter Target="Icon.(AnimatedIcon.State)" Value="NormalOn" />
+                                        <Setter Target="Icon.(muxc:AnimatedIcon.State)" Value="NormalOn" />
                                         <Setter Target="Icon.Foreground" Value="{ThemeResource NavigationViewSelectionIndicatorForeground}" />
                                         <Setter Target="ContentPresenter.Visibility" Value="Collapsed" />
                                         <Setter Target="UnselectedIconBox.Opacity" Value="0" />
@@ -792,7 +793,7 @@
                                         <Setter Target="Icon.Foreground" Value="{ThemeResource RailNavigationViewItemForegroundSelectedPointerOver}" />
                                         <!--  Store: Customized  -->
                                         <!--<Setter Target="ContentPresenter.Foreground" Value="{ThemeResource RailNavigationViewItemForegroundSelectedPointerOver}" />-->
-                                        <Setter Target="Icon.(AnimatedIcon.State)" Value="PointerOverOn" />
+                                        <Setter Target="Icon.(muxc:AnimatedIcon.State)" Value="PointerOverOn" />
                                         <Setter Target="Icon.Foreground" Value="{ThemeResource NavigationViewSelectionIndicatorForeground}" />
                                         <Setter Target="ContentPresenter.Visibility" Value="Collapsed" />
                                         <Setter Target="UnselectedIconBox.Opacity" Value="0" />
@@ -805,7 +806,7 @@
                                         <Setter Target="Icon.Foreground" Value="{ThemeResource RailNavigationViewItemForegroundSelectedPressed}" />
                                         <!--  Store: Customized  -->
                                         <!--<Setter Target="ContentPresenter.Foreground" Value="{ThemeResource RailNavigationViewItemForegroundSelectedPressed}" />-->
-                                        <Setter Target="Icon.(AnimatedIcon.State)" Value="PressedOn" />
+                                        <Setter Target="Icon.(muxc:AnimatedIcon.State)" Value="PressedOn" />
                                         <Setter Target="Icon.Foreground" Value="{ThemeResource NavigationViewSelectionIndicatorForeground}" />
                                         <Setter Target="ContentPresenter.Visibility" Value="Collapsed" />
                                         <Setter Target="UnselectedIconBox.Opacity" Value="0" />

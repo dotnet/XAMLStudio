@@ -378,7 +378,28 @@ namespace XamlStudio.Views
             ViewModel.CloseActiveDocumentCommand.Execute(args.Item);
         }
 
-        private void NavMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void NavMenu_ItemInvoked(MUXC.NavigationView sender, MUXC.NavigationViewItemInvokedEventArgs args)
+        {
+            if (args.InvokedItemContainer is MUXC.NavigationViewItem navitem)
+            {
+                if (navitem.Tag?.ToString() == "SETTINGS")
+                {
+                    ViewModel.OpenSettingsPageCommand.Execute(null);
+                }
+                else if (navitem.Tag?.ToString() == "CONTRIBUTE")
+                {
+                    _ = Launcher.LaunchUriAsync(new Uri("SettingsPanel_UsefulLinks_GitHub/NavigateUri".GetLocalized()));
+                }
+                // Deselect if select the same item.
+                else if (args.InvokedItemContainer == sender.SelectedItem)
+                {
+                    // TODO: There's some weird double-invoke happening, and if we interrupt that, it's collapsing/setting when we don't want to.
+                    ////sender.SelectedItem = null;
+                }
+            }
+        }
+
+        private void NavMenu_SelectionChanged(MUXC.NavigationView sender, MUXC.NavigationViewSelectionChangedEventArgs args)
         {
             if (_loaded)
             {
@@ -396,15 +417,15 @@ namespace XamlStudio.Views
                 }
                 else
                 {
-                    dict.Add("Name", (e.AddedItems.FirstOrDefault() as MUXC.NavigationViewItem)?.Tag.ToString());
+                    dict.Add("Name", (args.SelectedItem as MUXC.NavigationViewItem)?.Tag.ToString());
                     _activityTime = DateTime.UtcNow.Ticks;
                 }
-                dict.Add("Previous", (e.RemovedItems.FirstOrDefault() as MUXC.NavigationViewItem)?.Tag.ToString());
+                dict.Add("Previous", ViewModel.OpenActivity);
                 Analytics.TrackEvent("Activity", dict);
             }
             else
             {
-                if (e.AddedItems.Count > 0)
+                if (args.SelectedItem != null)
                 {
                     _activityTime = DateTime.UtcNow.Ticks;
                 }
@@ -423,7 +444,7 @@ namespace XamlStudio.Views
                 }
                 else
                 {
-                    ViewModel.OpenActivity = (NavMenu.SelectedItem as ListBoxItem).Tag.ToString();
+                    ViewModel.OpenActivity = (NavMenu.SelectedItem as MUXC.NavigationViewItem).Tag.ToString();
                 }
             }
         }
