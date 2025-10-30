@@ -19,19 +19,6 @@
 
     <Page.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Light">
-                    <StaticResource x:Key="TabViewSelectionIndicatorForeground" ResourceKey="Brush-Blue-Light-3" />
-                    <StaticResource x:Key="TabViewItemHeaderBackgroundSelected" ResourceKey="Brush-Blue-Dark-2" />
-                    <StaticResource x:Key="TabViewItemHeaderBackgroundPointerOver" ResourceKey="Brush-Blue-Light-1" />
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="Dark">
-                    <StaticResource x:Key="TabViewSelectionIndicatorForeground" ResourceKey="Brush-Blue-Light-2" />
-                    <StaticResource x:Key="TabViewItemHeaderBackgroundSelected" ResourceKey="Brush-Blue-Dark-2" />
-                    <StaticResource x:Key="TabViewItemHeaderBackgroundPointerOver" ResourceKey="Brush-Blue-Light-1" />
-                </ResourceDictionary>
-            </ResourceDictionary.ThemeDictionaries>
-
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <local:DocumentToViewModelConverter x:Key="DocumentToViewModelConverter" MainViewModel="{x:Bind ViewModel}" />
 
@@ -51,7 +38,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="48" />
+            <RowDefinition Height="32" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -226,6 +213,8 @@
                 <!--  Default case showing document  -->
                 <controls:Case IsDefault="True">
                     <muxc:TabView x:Name="DocumentTabs"
+                                  Margin="0"
+                                  Padding="0"
                                   HorizontalAlignment="Stretch"
                                   VerticalAlignment="Stretch"
                                   AddTabButtonCommand="{x:Bind ViewModel.NewDocumentCommand}"
