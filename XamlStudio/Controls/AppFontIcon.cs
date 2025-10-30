@@ -162,6 +162,7 @@ namespace XamlStudio.Controls
             {IconGlyphNames.Wheel,      "\uEE94"},
             {IconGlyphNames.Settings,   "\uE713"},
             {IconGlyphNames.Properties, "\uE90F"},
+            {IconGlyphNames.Home,       "\uE80F"},
         };
     }
 
@@ -178,6 +179,7 @@ namespace XamlStudio.Controls
         Wheel,
         Settings,
         Properties,
+        Home,
     }
 
     #endregion

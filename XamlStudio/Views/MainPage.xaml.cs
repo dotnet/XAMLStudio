@@ -96,8 +96,6 @@ namespace XamlStudio.Views
                 var props = new Dictionary<string, string> {
                     { "NumberFiles", ViewModel.OpenFiles.Count.ToString() },
                     { "UnsavedFiles", ViewModel.OpenFiles.Count(file => file.HasChanged).ToString() },
-                    { "WelcomeOpen", ViewModel.OpenFiles.Any(file => file.DocumentType == DocumentType.Welcome).ToString() },
-                    { "SettingsOpen", ViewModel.OpenFiles.Any(file => file.DocumentType == DocumentType.Settings).ToString() },
                     { "Activity", e.SuspensionState.OpenActivity ?? "Closed" },
                     { "SessionTimeMin", ((TimeSpan)(DateTime.Now - _sessionStart)).TotalMinutes.ToString() }
                 };
@@ -251,9 +249,17 @@ namespace XamlStudio.Views
 
             if (_restoreState != null)
             {
-                if (!string.IsNullOrWhiteSpace(_restoreState.OpenActivity))
+                ViewModel.OpenActivity = _restoreState.OpenActivity;
+
+                // Handle Welcome and Settings
+                if (!ViewModel.IsEditingDocument)
                 {
-                    NavMenu.SelectedItem = NavMenu.MenuItems.FirstOrDefault(item => (item as MUXC.NavigationViewItem).Tag.ToString() == _restoreState.OpenActivity);
+                    NavMenu.SelectedItem = NavMenu.FooterMenuItems.FirstOrDefault(item => (item as MUXC.NavigationViewItem).Tag.ToString() == ViewModel.OpenActivity);
+                }
+                // Others
+                else if (!string.IsNullOrWhiteSpace(ViewModel.OpenActivity))
+                {
+                    NavMenu.SelectedItem = NavMenu.MenuItems.FirstOrDefault(item => (item as MUXC.NavigationViewItem).Tag.ToString() == ViewModel.OpenActivity);
                 }
                 else
                 {
@@ -394,11 +400,7 @@ namespace XamlStudio.Views
         {
             if (args.InvokedItemContainer is MUXC.NavigationViewItem navitem)
             {
-                if (navitem.Tag?.ToString() == "SETTINGS")
-                {
-                    ViewModel.OpenSettingsPageCommand.Execute(null);
-                }
-                else if (navitem.Tag?.ToString() == "CONTRIBUTE")
+                if (navitem.Tag?.ToString() == "CONTRIBUTE")
                 {
                     _ = Launcher.LaunchUriAsync(new Uri("SettingsPanel_UsefulLinks_GitHub/NavigateUri".GetLocalized()));
                 }
@@ -506,6 +508,14 @@ namespace XamlStudio.Views
             }
         }
 
-        public static Visibility IsVisibleIfDocument(DocumentType type) => type == DocumentType.Document ? Visibility.Visible : Visibility.Collapsed;
+        private static Visibility IsSideBarVisible(string? openActivity, bool isEditingDocument) =>
+            (openActivity, isEditingDocument) switch
+            {
+                // Hide when no activity
+                (null, _) => Visibility.Collapsed,
+                // Hide when in a full-app page
+                (_, false) => Visibility.Collapsed,
+                (_, true) => Visibility.Visible,
+            };
     }
 }

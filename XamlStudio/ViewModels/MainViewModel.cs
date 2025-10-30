@@ -37,22 +37,10 @@ public partial class MainViewModel : WorkspaceWindow
                 ActiveDocumentViewModel = DocumentViewModels[file];
             }
         };
-
-        var welcome = XamlDocument.WelcomeDocument();
-
-        OpenFiles.Add(welcome);
-        ActiveFile = welcome;
     }
 
     public async Task RestoreWorkspaceAsync(XamlDocument[] docs)
     {
-        if (OpenFiles.Count == 1 && OpenFiles.First().DocumentType != DocumentType.Document)
-        {
-            OpenFiles.Clear();
-        }
-
-        bool welcome = false;
-
         foreach (var doc in docs)
         {
             // Reopen/make connection to backing OS file.
@@ -61,23 +49,22 @@ public partial class MainViewModel : WorkspaceWindow
             // Restore Data Context File (if one).
             await doc.DataContext.RestoreFileAsync();
 
-            OpenFiles.Add(doc);
-
-            if (doc.DocumentType == DocumentType.Welcome)
+            // Basically a check for old Settings/Welcome pages to not rehydrate them across version upgrade
+            if (!string.IsNullOrEmpty(doc.Content))
             {
-                welcome = true;
-            }
+                OpenFiles.Add(doc);
 
-            if (doc.IsActive)
-            {
-                ActiveFile = doc;
+                if (doc.IsActive)
+                {
+                    ActiveFile = doc;
+                }
             }
         }
 
-        // Add our welcome screen back at the end for convenience.
-        if (!welcome)
+        // If no active file was set, set it to the last one. (Rehydrate if on settings/welcome from old version).
+        if (ActiveFile == null)
         {
-            OpenFiles.Add(XamlDocument.WelcomeDocument());
+            ActiveFile = OpenFiles.Last();
         }
     }
 

@@ -6,7 +6,7 @@
       xmlns:model="using:XamlStudio.Models"
       xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
       xmlns:views="using:XamlStudio.Views"
-      IsEnabled="{x:Bind model:DocumentType.Document.Equals(MainViewModel.ActiveFile.DocumentType), Mode=OneWay}"
+      IsEnabled="{x:Bind MainViewModel.IsEditingDocument, Mode=OneWay}"
       mc:Ignorable="d">
 
     <Page.Resources>

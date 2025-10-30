@@ -13,8 +13,12 @@ public abstract partial class WorkspaceWindow : ObservableObject
 
     public event EventHandler<XamlDocument> ActiveFileChanged;
 
+    // TODO: Make enum?
     [ObservableProperty]
-    public partial string OpenActivity { get; set; } = "EXPLORER";
+    [NotifyPropertyChangedFor(nameof(IsEditingDocument))]
+    public partial string OpenActivity { get; set; } = "WELCOME";
+
+    public bool IsEditingDocument => OpenActivity != "SETTINGS" && OpenActivity != "WELCOME";
 
     [ObservableProperty]
     public partial bool IsWorkspaceOpen { get; set; }

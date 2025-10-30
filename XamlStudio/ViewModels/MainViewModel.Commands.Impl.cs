@@ -200,7 +200,8 @@ namespace XamlStudio.ViewModels
             // Create a new Document if we're removing the last one (it will be selected)
             if (OpenFiles.Count == 1)
             {
-                OpenFiles.Add(XamlDocument.WelcomeDocument());
+                // TODO: We should probably disable other ActivityBar buttons in XAML if there's no active document?
+                OpenActivity = "WELCOME";
             }
 
             // Remove what we had as active (otherwise, the active would be null and we'd hit an error)
@@ -340,16 +341,8 @@ namespace XamlStudio.ViewModels
         [RelayCommand]
         private void OpenSettingsPage()
         {
-            XamlDocument settings = OpenFiles.FirstOrDefault(f => f.DocumentType == DocumentType.Settings);
-            if (settings != null)
-            {
-                ActiveFile = settings;
-            }
-            else
-            {
-                OpenFiles.Add(XamlDocument.SettingsDocument());
-                ActiveFile = OpenFiles.Last();
-            }
+            // TODO: Feels like enum to use? Switch SwitchPresenters?
+            OpenActivity = "SETTINGS";
 
             Analytics.TrackEvent("Open_Settings");
         }

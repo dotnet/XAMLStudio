@@ -9,7 +9,6 @@
       xmlns:futureConverters="using:Microsoft.Toolkit.Future.Converters"
       xmlns:globalization="using:System.Globalization"
       xmlns:i="using:Microsoft.Xaml.Interactivity"
-      xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
       xmlns:local="using:XamlStudio.Views"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:model="using:XamlStudio.Models"

@@ -50,10 +50,14 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <!--  Modern Navigation View on Left  -->
+        <!--  Activity Bar w/ Modern Navigation View on Left  -->
         <muxc:NavigationView x:Name="NavMenu"
-                             Grid.Row="1"
+                             Grid.RowSpan="2"
                              AutomationProperties.LandmarkType="Navigation"
                              HighContrastAdjustment="None"
                              IsBackButtonVisible="Collapsed"
@@ -69,28 +73,28 @@
                     </muxc:NavigationViewItem.Icon>
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem x:Uid="MainPage_NavMenu_DataSources"
-                                         IsEnabled="{x:Bind models:DocumentType.Document.Equals(ViewModel.ActiveFile.DocumentType), Mode=OneWay}"
+                                         IsEnabled="{x:Bind ViewModel.IsEditingDocument, Mode=OneWay}"
                                          Tag="DATASOURCES">
                     <muxc:NavigationViewItem.Icon>
                         <lcontrols:AppFontIcon IconName="Wheel" />
                     </muxc:NavigationViewItem.Icon>
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem x:Uid="MainPage_NavMenu_Debug"
-                                         IsEnabled="{x:Bind models:DocumentType.Document.Equals(ViewModel.ActiveFile.DocumentType), Mode=OneWay}"
+                                         IsEnabled="{x:Bind ViewModel.IsEditingDocument, Mode=OneWay}"
                                          Tag="DEBUG">
                     <muxc:NavigationViewItem.Icon>
                         <lcontrols:AppFontIcon IconName="Bug" />
                     </muxc:NavigationViewItem.Icon>
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem x:Uid="MainPage_NavMenu_Properties"
-                                         IsEnabled="{x:Bind models:DocumentType.Document.Equals(ViewModel.ActiveFile.DocumentType), Mode=OneWay}"
+                                         IsEnabled="{x:Bind ViewModel.IsEditingDocument, Mode=OneWay}"
                                          Tag="PROPERTIES">
                     <muxc:NavigationViewItem.Icon>
                         <lcontrols:AppFontIcon IconName="Properties" />
                     </muxc:NavigationViewItem.Icon>
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem x:Uid="MainPage_NavMenu_Toolbox"
-                                         IsEnabled="{x:Bind models:DocumentType.Document.Equals(ViewModel.ActiveFile.DocumentType), Mode=OneWay}"
+                                         IsEnabled="{x:Bind ViewModel.IsEditingDocument, Mode=OneWay}"
                                          Tag="TOOLBOX">
                     <muxc:NavigationViewItem.Icon>
                         <lcontrols:AppFontIcon IconName="Work" />
@@ -98,6 +102,13 @@
                 </muxc:NavigationViewItem>
             </muxc:NavigationView.MenuItems>
             <muxc:NavigationView.FooterMenuItems>
+                <muxc:NavigationViewItem x:Name="WelcomeButton"
+                                         x:Uid="MainPage_NavMenu_Welcome"
+                                         Tag="WELCOME">
+                    <muxc:NavigationViewItem.Icon>
+                        <lcontrols:AppFontIcon IconName="Home" />
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem Content="Contribute"
                                          SelectsOnInvoked="False"
                                          Tag="CONTRIBUTE">
@@ -112,10 +123,8 @@
                         </PathIcon>
                     </muxc:NavigationViewItem.Icon>
                 </muxc:NavigationViewItem>
-                <!--  Command="{x:Bind ViewModel.OpenSettingsPageCommand}"  -->
                 <muxc:NavigationViewItem x:Name="SettingsButton"
                                          x:Uid="MainPage_NavMenu_Settings"
-                                         SelectsOnInvoked="False"
                                          Tag="SETTINGS">
                     <muxc:NavigationViewItem.Icon>
                         <lcontrols:AppFontIcon IconName="Settings" />
@@ -125,12 +134,13 @@
             </muxc:NavigationView.FooterMenuItems>
         </muxc:NavigationView>
 
-        <!--  Toolbox Content  -->
+        <!--  Primary Side Bar Content, optionally on left besides Activity Bar  -->
         <Grid x:Name="ContentGrid"
+              Grid.RowSpan="2"
               Grid.Column="1"
               Width="320"
               MinWidth="200"
-              Visibility="{x:Bind exf:Bind.NotEqualToV(ViewModel.OpenActivity, x:Null), Mode=OneWay, FallbackValue=Collapsed}">
+              Visibility="{x:Bind local:MainPage.IsSideBarVisible(ViewModel.OpenActivity, ViewModel.IsEditingDocument), Mode=OneWay, FallbackValue=Collapsed}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -169,102 +179,137 @@
             </controls:SwitchPresenter>
         </Grid>
 
-        <!--  Main Document Tabs  -->
-        <muxc:TabView x:Name="DocumentTabs"
-                      Grid.Column="2"
-                      VerticalAlignment="Stretch"
-                      AddTabButtonCommand="{x:Bind ViewModel.NewDocumentCommand}"
-                      CloseButtonOverlayMode="OnPointerOver"
-                      DataContext="{x:Bind}"
-                      IsAddTabButtonVisible="True"
-                      SelectedItem="{x:Bind ViewModel.ActiveFile, Mode=TwoWay}"
-                      SelectionChanged="DocumentTabs_SelectionChanged"
-                      TabCloseRequested="DocumentTabs_TabClosing"
-                      TabItemsSource="{x:Bind ViewModel.OpenFiles, Mode=OneWay}"
-                      TabWidthMode="Equal">
-            <muxc:TabView.Resources>
-                <x:Double x:Key="TabViewItemHeaderMinHeight">32</x:Double>
-                <x:Double x:Key="TabViewItemHeaderMinWidth">90</x:Double>
-            </muxc:TabView.Resources>
-            <muxc:TabView.TabItemTemplate>
-                <DataTemplate x:DataType="models:XamlDocument">
-                    <muxc:TabViewItem HorizontalContentAlignment="Stretch" ContextFlyout="{StaticResource TabItemFlyout}">
-                        <muxc:TabViewItem.Header>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="{x:Bind Title, Mode=OneWay}" />
-                                <controls:SwitchPresenter Grid.Column="1"
-                                                          TargetType="models:SyncStatus"
-                                                          Visibility="{x:Bind local:MainPage.IsVisibleIfDocument(DocumentType), Mode=OneWay}"
-                                                          Value="{x:Bind State.RenderState, Mode=OneWay}">
-                                    <!--  TODO: Placeholders, should have Tooltips too  -->
-                                    <controls:Case Value="Unrendered">
-                                        <TextBlock Text="⚫" />
-                                    </controls:Case>
-                                    <controls:Case Value="Error">
-                                        <TextBlock Text="🛑" />
-                                    </controls:Case>
-                                    <controls:Case Value="OutOfSync">
-                                        <TextBlock Text="🟡" />
-                                    </controls:Case>
-                                    <controls:Case Value="Synced">
-                                        <TextBlock Text="✅" />
-                                    </controls:Case>
-                                </controls:SwitchPresenter>
-                            </Grid>
-                        </muxc:TabViewItem.Header>
-                        <!--  TODO: Just remove this complication and make Document, make Welcome/Settings modal of whole app above...  -->
-                        <controls:SwitchPresenter x:Name="Parent"
-                                                  HorizontalAlignment="Stretch"
-                                                  VerticalAlignment="Stretch"
-                                                  ex:FrameworkElementExtensions.AncestorType="muxc:TabView"
-                                                  Tag="{Binding (ex:FrameworkElementExtensions.Ancestor).DataContext, RelativeSource={RelativeSource Self}}"
-                                                  TargetType="x:String"
-                                                  Value="{x:Bind DocumentType}">
-                            <controls:Case Value="Welcome">
-                                <local:WelcomePage HorizontalAlignment="Stretch" MainViewModel="{Binding Tag.ViewModel, ElementName=Parent}" />
-                            </controls:Case>
-                            <controls:Case Value="Document">
-                                <local:Document x:Name="Document"
-                                                HorizontalAlignment="Stretch"
-                                                ViewModel="{Binding Converter={StaticResource DocumentToViewModelConverter}}" />
-                            </controls:Case>
-                            <controls:Case Value="Settings">
-                                <local:SettingsPanelPage HorizontalAlignment="Stretch" MainViewModel="{Binding Tag.ViewModel, ElementName=Parent}" />
-                            </controls:Case>
-                        </controls:SwitchPresenter>
-                    </muxc:TabViewItem>
-                </DataTemplate>
-            </muxc:TabView.TabItemTemplate>
-            <muxc:TabView.TabStripFooter>
-                <Grid x:Name="AppTitleBarSection" Background="Transparent">
-                    <!--  Width of the padding columns is set in LayoutMetricsChanged handler.  -->
-                    <!--
-                        Using padding columns instead of Margin ensures that the background
-                        paints the area under the caption control buttons (for transparent buttons).
-                    -->
-                    <Grid.ColumnDefinitions>
-                        <!--<ColumnDefinition x:Name="LeftPaddingColumn" Width="0"/>-->
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
-                    </Grid.ColumnDefinitions>
-                    <Image Grid.Column="1"
-                           Width="16"
-                           Height="16"
+        <!--  Rest of Main App Area + TitleBar Content  -->
+        <Grid x:Name="TitleBarArea"
+              Grid.Column="2"
+              Background="Transparent">
+            <Grid.ColumnDefinitions>
+                <!--<ColumnDefinition x:Name="LeftPaddingColumn" Width="0"/>-->
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <!--  Width of the padding columns is set in LayoutMetricsChanged handler.  -->
+                <!--
+                    Using padding columns instead of Margin ensures that the background
+                    paints the area under the caption control buttons (for transparent buttons).
+                -->
+                <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
+            </Grid.ColumnDefinitions>
+
+            <!--  Grippable bit of TitleBar  -->
+            <StackPanel x:Name="AppTitleBarSection"
+                        Grid.Column="1"
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Stretch"
+                        Background="Transparent"
+                        Orientation="Horizontal">
+                <Image Width="16"
+                       Height="16"
+                       Margin="0,2,0,0"
+                       Source="ms-appx:///Assets/AppTitleBar.png" />
+                <TextBlock x:Name="AppTitleTextBlock"
+                           Grid.Column="2"
                            Margin="8,2,0,0"
-                           Source="ms-appx:///Assets/AppTitleBar.png" />
-                    <TextBlock x:Name="AppTitleTextBlock"
-                               Grid.Column="2"
-                               Margin="8,2,0,0"
-                               VerticalAlignment="Center"
-                               Style="{StaticResource CaptionTextBlockStyle}" />
-                </Grid>
-            </muxc:TabView.TabStripFooter>
-        </muxc:TabView>
+                           VerticalAlignment="Center"
+                           Style="{StaticResource CaptionTextBlockStyle}" />
+            </StackPanel>
+
+            <!--  TitleBar Content  -->
+            <controls:SwitchPresenter Value="{x:Bind ViewModel.OpenActivity, Mode=OneWay}">
+                <controls:Case Value="WELCOME">
+                    <!--  TODO: File/Folder Search?  -->
+                    <Border />
+                </controls:Case>
+                <controls:Case Value="SETTINGS">
+                    <!--  TODO: Settings Search?  -->
+                    <Border />
+                </controls:Case>
+                <!--  Default case showing document  -->
+                <controls:Case IsDefault="True">
+                    <muxc:TabView x:Name="DocumentTabs"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch"
+                                  AddTabButtonCommand="{x:Bind ViewModel.NewDocumentCommand}"
+                                  CloseButtonOverlayMode="OnPointerOver"
+                                  DataContext="{x:Bind}"
+                                  IsAddTabButtonVisible="True"
+                                  SelectedItem="{x:Bind ViewModel.ActiveFile, Mode=TwoWay}"
+                                  SelectionChanged="DocumentTabs_SelectionChanged"
+                                  TabCloseRequested="DocumentTabs_TabClosing"
+                                  TabItemsSource="{x:Bind ViewModel.OpenFiles, Mode=OneWay}"
+                                  TabWidthMode="Equal">
+                        <muxc:TabView.Resources>
+                            <x:Double x:Key="TabViewItemHeaderMinHeight">32</x:Double>
+                            <x:Double x:Key="TabViewItemHeaderMinWidth">90</x:Double>
+                        </muxc:TabView.Resources>
+                        <muxc:TabView.TabItemTemplate>
+                            <DataTemplate x:DataType="models:XamlDocument">
+                                <muxc:TabViewItem HorizontalContentAlignment="Stretch" ContextFlyout="{StaticResource TabItemFlyout}">
+                                    <muxc:TabViewItem.Header>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{x:Bind Title, Mode=OneWay}" />
+                                            <controls:SwitchPresenter Grid.Column="1"
+                                                                      TargetType="models:SyncStatus"
+                                                                      Value="{x:Bind State.RenderState, Mode=OneWay}">
+                                                <!--  TODO: Placeholders, should have Tooltips too, add to resw  -->
+                                                <controls:Case Value="Unrendered">
+                                                    <TextBlock Text="⚫" />
+                                                </controls:Case>
+                                                <controls:Case Value="Error">
+                                                    <TextBlock Text="🛑" />
+                                                </controls:Case>
+                                                <controls:Case Value="OutOfSync">
+                                                    <TextBlock Text="🟡" />
+                                                </controls:Case>
+                                                <controls:Case Value="Synced">
+                                                    <TextBlock Text="✅" />
+                                                </controls:Case>
+                                            </controls:SwitchPresenter>
+                                        </Grid>
+                                    </muxc:TabViewItem.Header>
+                                </muxc:TabViewItem>
+                            </DataTemplate>
+                        </muxc:TabView.TabItemTemplate>
+                    </muxc:TabView>
+                </controls:Case>
+            </controls:SwitchPresenter>
+        </Grid>
+
+
+        <!--  Main Window Content  -->
+        <controls:SwitchPresenter x:Name="Parent"
+                                  Grid.Row="1"
+                                  Grid.Column="2"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch"
+                                  ex:FrameworkElementExtensions.AncestorType="muxc:TabView"
+                                  Tag="{Binding (ex:FrameworkElementExtensions.Ancestor).DataContext, RelativeSource={RelativeSource Self}}"
+                                  TargetType="x:String"
+                                  Value="{x:Bind ViewModel.OpenActivity, Mode=OneWay}">
+            <controls:Case Value="WELCOME">
+                <local:WelcomePage HorizontalAlignment="Stretch" MainViewModel="{Binding Tag.ViewModel, ElementName=Parent}" />
+            </controls:Case>
+            <controls:Case Value="SETTINGS">
+                <local:SettingsPanelPage HorizontalAlignment="Stretch" MainViewModel="{Binding Tag.ViewModel, ElementName=Parent}" />
+            </controls:Case>
+            <!--  Document  -->
+            <controls:Case IsDefault="True">
+                <FlipView HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
+                          ItemsSource="{x:Bind ViewModel.OpenFiles, Mode=OneWay}"
+                          SelectedItem="{x:Bind ViewModel.ActiveFile, Mode=TwoWay}">
+                    <FlipView.ItemTemplate>
+                        <DataTemplate x:DataType="models:XamlDocument">
+                            <local:Document x:Name="Document"
+                                            HorizontalAlignment="Stretch"
+                                            ViewModel="{Binding Converter={StaticResource DocumentToViewModelConverter}}" />
+                        </DataTemplate>
+                    </FlipView.ItemTemplate>
+                </FlipView>
+            </controls:Case>
+        </controls:SwitchPresenter>
     </Grid>
 </Page>

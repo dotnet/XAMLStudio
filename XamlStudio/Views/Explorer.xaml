@@ -160,16 +160,14 @@
                                         Padding="1"
                                         Command="{Binding DataContext.MainViewModel.SaveDocumentCommand, ElementName=OpenEditorList}"
                                         CommandParameter="{Binding}"
-                                        Style="{StaticResource VSCodeAppBarHeaderButtonStyle}"
-                                        Visibility="{Binding DocumentType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Document, Mode=OneWay}">
+                                        Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
                                     <SymbolIcon fex:SymbolIconExtensions.FontSize="16" Symbol="Save" />
                                 </Button>
                                 <Button x:Uid="Explorer_Button_SaveAs"
                                         Padding="1"
                                         Command="{Binding DataContext.MainViewModel.SaveDocumentAsCommand, ElementName=OpenEditorList}"
                                         CommandParameter="{Binding}"
-                                        Style="{StaticResource VSCodeAppBarHeaderButtonStyle}"
-                                        Visibility="{Binding DocumentType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Document, Mode=OneWay}">
+                                        Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
                                     <FontIcon FontFamily="Segoe MDL2 Assets"
                                               FontSize="16"
                                               Glyph="&#xEA35;" />

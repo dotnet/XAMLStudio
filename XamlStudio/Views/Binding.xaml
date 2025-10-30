@@ -13,7 +13,7 @@
       xmlns:model="using:XamlStudio.Models"
       xmlns:models="using:XamlStudio.Toolkit.Models"
       xmlns:services="using:XamlStudio.Services"
-      IsEnabled="{x:Bind model:DocumentType.Document.Equals(MainViewModel.ActiveFile.DocumentType), Mode=OneWay}"
+      IsEnabled="{x:Bind MainViewModel.IsEditingDocument, Mode=OneWay}"
       mc:Ignorable="d">
 
     <Page.Resources>
@@ -129,8 +129,8 @@
                         <i:EventTriggerBehavior EventName="Toggled">
                             <i:InvokeCommandAction Command="{x:Bind MainViewModel.SettingsViewModel.SwitchToggleCommand}" />
                             <i:ChangePropertyAction PropertyName="HasCompiled"
-                                                     TargetObject="{x:Bind MainViewModel.ActiveDocumentViewModel}"
-                                                     Value="false" />
+                                                    TargetObject="{x:Bind MainViewModel.ActiveDocumentViewModel}"
+                                                    Value="false" />
                             <!--  TODO: Trigger message, do I want to create an action to send a message?  -->
                             <!--<i:InvokeCommandAction Command="{x:Bind MainViewModel.ActiveDocumentViewModel.UpdateXamlCommand}" />-->
                         </i:EventTriggerBehavior>

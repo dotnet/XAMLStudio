@@ -28,13 +28,7 @@ namespace XamlStudio.Views
 
         public Explorer()
         {
-            // Need to add this here as XAML can't load custom Enum
-            this.Resources.Add("EnumToBooleanConverter", new EnumToBooleanConverter()
-            {
-                EnumType = typeof(DocumentType)
-            });
-
-            this.InitializeComponent();
+            InitializeComponent();
 
             Loaded += Explorer_Loaded;
         }

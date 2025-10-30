@@ -7,14 +7,6 @@ using Windows.Storage;
 
 namespace XamlStudio.Models;
 
-[Bindable(true)]
-public enum DocumentType
-{
-    Document,
-    Welcome,
-    Settings
-}
-
 public sealed partial class XamlDocument : FileBackedDocument
 {
     private readonly string _id = Guid.NewGuid().ToString();
@@ -24,12 +16,6 @@ public sealed partial class XamlDocument : FileBackedDocument
     /// </summary>
     [JsonProperty]
     public string Id { get; private set; }
-
-    /// <summary>
-    /// Dummy for switching to Welcome Screen.
-    /// </summary>
-    [ObservableProperty]
-    public partial DocumentType DocumentType { get; set; }
 
     /// <summary>
     /// Is this file actively visible/engaged in the UI.
@@ -91,21 +77,5 @@ public sealed partial class XamlDocument : FileBackedDocument
         document.Content = content;
 
         return document;
-    }
-
-    public static XamlDocument WelcomeDocument()
-    {
-        return new XamlDocument("Welcome")
-        {
-            DocumentType = DocumentType.Welcome
-        };
-    }
-
-    public static XamlDocument SettingsDocument()
-    {
-        return new XamlDocument("Settings")
-        {
-            DocumentType = DocumentType.Settings
-        };
     }
 }

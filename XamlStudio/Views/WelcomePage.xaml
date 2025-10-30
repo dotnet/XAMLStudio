@@ -4,10 +4,11 @@
       xmlns:animations="using:CommunityToolkit.WinUI.Animations"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:i="using:Microsoft.Xaml.Interactivity"
-      xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
       xmlns:local="using:XamlStudio.Views"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:storage="using:Windows.Storage"
+      xmlns:ui="using:CommunityToolkit.WinUI"
+      x:Name="ThisPage"
       mc:Ignorable="d">
 
     <Page.Resources>
@@ -46,8 +47,7 @@
                 </VisualState>
                 <VisualState x:Name="WideState">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="640" />
-                        <!--  TODO: Need Parent Size not Window  -->
+                        <ui:ControlSizeTrigger MinWidth="640" TargetElement="{x:Bind ThisPage}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="FeatureList.(Grid.Row)" Value="1" />

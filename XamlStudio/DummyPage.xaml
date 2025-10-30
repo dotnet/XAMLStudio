@@ -43,8 +43,8 @@
         <i:ControlStoryboardAction x:Key="ControlStoryboardAction" />
         <i:PlaySoundAction x:Key="PlaySoundAction" />
 
-        <!-- WinUI 2 -->
-        <muxc:WebView2 x:Key="WebView2"/>
+        <!--  WinUI 2  -->
+        <muxc:WebView2 x:Key="WebView2" />
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">

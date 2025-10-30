@@ -980,4 +980,16 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>Toolbox</value>
     <comment>Toolbox Activity Button Label in Navigation View</comment>
   </data>
+  <data name="MainPage_NavMenu_Welcome.Content" xml:space="preserve">
+    <value>Home</value>
+    <comment>Home (Welcome Page) Button Label in Navigation View</comment>
+  </data>
+  <data name="MainPage_NavMenu_Welcome.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Home</value>
+    <comment>Accessibility Name for Home (Welcome Page) Button in Navigation View</comment>
+  </data>
+  <data name="MainPage_NavMenu_Welcome.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>View Welcome Page</value>
+    <comment>Tooltip for Home (Welcome Page) Button in Navigation View</comment>
+  </data>
 </root>
