@@ -169,11 +169,14 @@
         <!--  Rest of Main App Area + TitleBar Content  -->
         <Grid x:Name="TitleBarArea"
               Grid.Column="2"
+              ui:FrameworkElementExtensions.EnableActualSizeBinding="true"
               Background="Transparent">
             <Grid.ColumnDefinitions>
                 <!--<ColumnDefinition x:Name="LeftPaddingColumn" Width="0"/>-->
-                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition x:Name="DragBarColumn"
+                                  Width="*"
+                                  MinWidth="148" />
                 <!--  Width of the padding columns is set in LayoutMetricsChanged handler.  -->
                 <!--
                     Using padding columns instead of Margin ensures that the background
@@ -183,13 +186,19 @@
             </Grid.ColumnDefinitions>
 
             <!--  Grippable bit of TitleBar  -->
-            <StackPanel x:Name="AppTitleBarSection"
-                        Grid.Column="1"
-                        Margin="8,0,0,0"
-                        VerticalAlignment="Stretch"
-                        Background="Transparent"
-                        Orientation="Horizontal">
-                <Image Width="16"
+            <Grid x:Name="AppTitleBarSection"
+                  Grid.Column="1"
+                  Margin="8,0,0,0"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  Background="Transparent">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Image Grid.Column="1"
+                       Width="16"
                        Height="16"
                        Margin="0,2,0,0"
                        Source="ms-appx:///Assets/AppTitleBar.png" />
@@ -198,7 +207,7 @@
                            Margin="8,2,0,0"
                            VerticalAlignment="Center"
                            Style="{StaticResource CaptionTextBlockStyle}" />
-            </StackPanel>
+            </Grid>
 
             <!--  TitleBar Content  -->
             <controls:SwitchPresenter Value="{x:Bind ViewModel.OpenActivity, Mode=OneWay}">
@@ -213,9 +222,10 @@
                 <!--  Default case showing document  -->
                 <controls:Case IsDefault="True">
                     <muxc:TabView x:Name="DocumentTabs"
+                                  MaxWidth="{x:Bind local:MainPage.CalculateTabHeaderMaxWidth(TitleBarArea.(ui:FrameworkElementExtensions.ActualWidth), DragBarColumn.MinWidth, RightPaddingColumn.Width.Value), Mode=OneWay}"
                                   Margin="0"
                                   Padding="0"
-                                  HorizontalAlignment="Stretch"
+                                  HorizontalAlignment="Left"
                                   VerticalAlignment="Stretch"
                                   AddTabButtonCommand="{x:Bind ViewModel.NewDocumentCommand}"
                                   CloseButtonOverlayMode="OnPointerOver"

@@ -517,5 +517,9 @@ namespace XamlStudio.Views
                 (_, false) => Visibility.Collapsed,
                 (_, true) => Visibility.Visible,
             };
+
+        // We calculate the max width so that it doesn't push the drag bar/title off to the right.
+        // This allows us to expand the drag bar when the tab headers don't take up much space (1-2 tabs) and make it easier to use the window.
+        private static double CalculateTabHeaderMaxWidth(double titleBarAreaWidth, double dragBarMinWidth, double rightPaddingWidth) => Math.Max(titleBarAreaWidth - dragBarMinWidth - rightPaddingWidth - 24, 200);
     }
 }
