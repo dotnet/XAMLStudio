@@ -19,7 +19,7 @@
                               Source="{x:Bind ViewModel.UnsetPropertyValues, Mode=OneWay}" />
     </Page.Resources>
 
-    <Grid Background="{ThemeResource Brush-Blue-Dark-1}">
+    <Grid Background="{ThemeResource LayerFillColorDefaultBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="54" />
             <RowDefinition Height="Auto" />
@@ -29,9 +29,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <!--  TODO: Should make this a grid style and collapse?  -->
-        <Border Margin="0,0,-12,0"
-                Padding="0,12,0,0"
-                Style="{StaticResource VSCodeAppBarHeaderStyle}">
+        <Border Style="{StaticResource VSCodeAppBarHeaderStyle}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />

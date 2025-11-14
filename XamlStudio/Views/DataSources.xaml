@@ -18,16 +18,14 @@
         <converters:StringVisibilityConverter x:Key="StringVisibilityConverter" />
     </Page.Resources>
 
-    <Grid Background="{ThemeResource Brush-Blue-Dark-1}">
+    <Grid Background="{ThemeResource LayerFillColorDefaultBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="54" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <!--  Header  -->
-        <Border Margin="0,0,-12,0"
-                Padding="0,12,0,0"
-                Style="{StaticResource VSCodeAppBarHeaderStyle}">
+        <Border Style="{StaticResource VSCodeAppBarHeaderStyle}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -46,8 +44,8 @@
                 <future:ManualToggleButton x:Uid="DataSource_Button_Open"
                                            Grid.Column="2"
                                            Padding="12"
-                                           Background="{ThemeResource Brush-Blue-Dark-1}"
                                            Click="Open_DataSource"
+                                           CornerRadius="{StaticResource ControlCornerRadius}"
                                            FontSize="12"
                                            IsChecked="{x:Bind ActiveDataContext.CanSave, Mode=OneWay}"
                                            IsEnabled="{x:Bind IsRenderedDataContext.Equals(x:False), Mode=OneWay}">
@@ -65,7 +63,7 @@
                               Grid.Column="4"
                               Margin="0,0,12,0"
                               Padding="12"
-                              Background="{ThemeResource Brush-Blue-Dark-1}"
+                              CornerRadius="{StaticResource ControlCornerRadius}"
                               FontSize="12"
                               IsEnabled="{x:Bind IsRenderedDataContext.Equals(x:False), Mode=OneWay}"
                               Unchecked="RemoteDataSourceButton_Unchecked">

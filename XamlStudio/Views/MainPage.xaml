@@ -134,8 +134,7 @@
             </Grid.ColumnDefinitions>
             <controls:ContentSizer Grid.Column="1"
                                    HorizontalAlignment="Right"
-                                   VerticalAlignment="Stretch"
-                                   Background="{ThemeResource Brush-Blue-Dark-1}" />
+                                   VerticalAlignment="Stretch" />
 
             <controls:SwitchPresenter x:Name="ToolboxPresenter" Value="{x:Bind ViewModel.OpenActivity, Mode=OneWay}">
                 <controls:Case Value="EXPLORER">

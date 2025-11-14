@@ -25,7 +25,7 @@
 
         <DataTemplate x:Key="DefaultFileDataTemplate" x:DataType="muxc:TreeViewNode">
             <StackPanel Height="44" Orientation="Horizontal">
-                <FontIcon Margin="0,0,4,0"
+                <FontIcon Margin="-12,0,8,0"
                           FontFamily="{ThemeResource SymbolThemeFontFamily}"
                           Glyph="&#xE160;" />
                 <TextBlock HorizontalAlignment="Left"
@@ -37,7 +37,7 @@
 
         <DataTemplate x:Key="DataFileDataTemplate" x:DataType="muxc:TreeViewNode">
             <StackPanel Height="44" Orientation="Horizontal">
-                <FontIcon Margin="0,0,4,0"
+                <FontIcon Margin="-12,0,8,0"
                           FontFamily="{ThemeResource SymbolThemeFontFamily}"
                           Glyph="&#xEE94;" />
                 <TextBlock HorizontalAlignment="Left"
@@ -49,7 +49,7 @@
 
         <DataTemplate x:Key="ImageFileDataTemplate" x:DataType="muxc:TreeViewNode">
             <StackPanel Height="44" Orientation="Horizontal">
-                <FontIcon Margin="0,0,4,0"
+                <FontIcon Margin="-12,0,8,0"
                           FontFamily="{ThemeResource SymbolThemeFontFamily}"
                           Glyph="&#xEB9F;" />
                 <TextBlock HorizontalAlignment="Left"
@@ -69,7 +69,7 @@
             <StackPanel Height="44" Orientation="Horizontal">
                 <Image Width="16"
                        Height="16"
-                       Margin="0,0,4,0"
+                       Margin="-12,0,8,0"
                        Source="/Assets/XamlStudio.Icon.png" />
                 <TextBlock HorizontalAlignment="Left"
                            VerticalAlignment="Center"
@@ -80,7 +80,7 @@
 
         <DataTemplate x:Key="FolderDataTemplate" x:DataType="muxc:TreeViewNode">
             <StackPanel Height="44" Orientation="Horizontal">
-                <SymbolIcon Margin="0,0,4,0" Symbol="Folder" />
+                <SymbolIcon Margin="-12,0,8,0" Symbol="Folder" />
                 <TextBlock HorizontalAlignment="Left"
                            VerticalAlignment="Center"
                            Style="{ThemeResource BodyTextBlockStyle}"
@@ -96,15 +96,13 @@
                                             XamlFileTemplate="{StaticResource XamlFileDataTemplate}" />
     </Page.Resources>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{ThemeResource LayerFillColorDefaultBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="54" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Border Margin="0,0,-12,0"
-                Padding="0,12,0,0"
-                Style="{StaticResource VSCodeAppBarHeaderStyle}">
+        <Border Style="{StaticResource VSCodeAppBarHeaderStyle}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -129,19 +127,19 @@
         </Border>
         <muxc:Expander x:Name="OpenEditorsExpander"
                        Grid.Row="1"
+                       Padding="0"
+                       HorizontalAlignment="Stretch"
+                       HorizontalContentAlignment="Stretch"
                        VerticalContentAlignment="Top"
                        Header="OPEN EDITORS"
-                       IsExpanded="True"
-                       Style="{StaticResource VSCodeExpanderStyle}">
-            <ListBox x:Name="OpenEditorList"
-                     Grid.Row="1"
-                     Background="{ThemeResource Brush-Blue-Dark-1}"
-                     ContextFlyout="{StaticResource TabItemFlyout}"
-                     DataContext="{x:Bind}"
-                     ItemContainerStyle="{StaticResource Style-ListBoxItem-Expolorer}"
-                     ItemsSource="{x:Bind MainViewModel.OpenFiles}"
-                     SelectedItem="{x:Bind MainViewModel.ActiveFile, Mode=TwoWay}">
-                <ListBox.ItemTemplate>
+                       IsExpanded="True">
+            <ListView x:Name="OpenEditorList"
+                      Grid.Row="1"
+                      ContextFlyout="{StaticResource TabItemFlyout}"
+                      DataContext="{x:Bind}"
+                      ItemsSource="{x:Bind MainViewModel.OpenFiles}"
+                      SelectedItem="{x:Bind MainViewModel.ActiveFile, Mode=TwoWay}">
+                <ListView.ItemTemplate>
                     <DataTemplate x:DataType="model:XamlDocument">
                         <Grid AutomationProperties.Name="{Binding Title}">
                             <Grid.ColumnDefinitions>
@@ -153,7 +151,7 @@
                                        FontWeight="SemiBold"
                                        Text="{Binding Title}" />
                             <StackPanel Grid.Column="1"
-                                        ex:FrameworkElementExtensions.AncestorType="ListBoxItem"
+                                        ex:FrameworkElementExtensions.AncestorType="ListViewItem"
                                         Orientation="Horizontal"
                                         Visibility="{Binding (ex:FrameworkElementExtensions.Ancestor).IsSelected, RelativeSource={RelativeSource Self}}">
                                 <Button x:Uid="Explorer_Button_Save"
@@ -175,14 +173,16 @@
                             </StackPanel>
                         </Grid>
                     </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+                </ListView.ItemTemplate>
+            </ListView>
         </muxc:Expander>
         <muxc:Expander Grid.Row="2"
+                       Padding="0"
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Top"
                        HorizontalContentAlignment="Stretch"
                        VerticalContentAlignment="Top"
-                       IsExpanded="True"
-                       Style="{StaticResource VSCodeExpanderStyle}">
+                       IsExpanded="True">
             <muxc:Expander.Header>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -213,6 +213,7 @@
                 </controls:Case>
                 <controls:Case Value="True">
                     <muxc:TreeView x:Name="WorkspaceTreeView"
+                                   HorizontalAlignment="Stretch"
                                    Collapsed="WorkspaceTreeView_Collapsed"
                                    Expanding="WorkspaceTreeView_Expanding"
                                    ItemInvoked="WorkspaceTreeView_ItemInvoked"
