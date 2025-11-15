@@ -96,7 +96,7 @@
 
     <SolidColorBrush x:Key="SystemControlBackgroundChromeLowBrush" Color="{StaticResource SystemChromeLowColor}" />
 
-    <!-- Used in Settings Page -->
+    <!--  Used in Settings Page  -->
     <Style x:Key="SimpleExpanderStyle" TargetType="muxc:Expander">
         <!--
             We won't make this control tab stoppable, since the tab focus should go

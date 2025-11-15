@@ -51,6 +51,13 @@ namespace XamlStudio.Services
             set { Set(value); }
         }
 
+        [DefaultValue("#00000000")] // Transparent
+        public string PreviewAreaBackgroundColor
+        {
+            get { return Get<string>(); }
+            set { Set(value); }
+        }
+
         [DefaultValue(true)]
         public bool? IsPreviewClippingEnabled
         {

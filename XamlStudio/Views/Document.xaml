@@ -140,14 +140,13 @@
             <controls:Case Value="True">
                 <ScrollViewer HorizontalContentAlignment="Stretch"
                               VerticalContentAlignment="Stretch"
-                              Background="{ThemeResource Brush-Blue-Dark-2}"
                               HorizontalScrollBarVisibility="Auto"
                               HorizontalScrollMode="Auto"
                               VerticalScrollMode="Auto">
                     <labs:AdornerDecorator>
                         <Grid x:Name="PreviewRootSpecific"
                               ui:UIElementExtensions.ClipToBounds="{x:Bind ViewModel.Settings.IsPreviewClippingEnabled.Value, Mode=OneWay}"
-                              Background="{ThemeResource Brush-Blue-Dark-1}">
+                              Background="{x:Bind ViewModel.Settings.PreviewAreaBackgroundColor, Mode=OneWay}">
                             <Grid x:Name="XamlRootSpecific" />
 
                             <developerTools:AlignmentGrid HorizontalStep="{x:Bind ViewModel.Settings.AlignmentGridHorizontalStep, Mode=OneWay, FallbackValue=8}"
@@ -166,7 +165,7 @@
                 <labs:AdornerDecorator>
                     <Grid x:Name="PreviewRoot"
                           ui:UIElementExtensions.ClipToBounds="{x:Bind ViewModel.Settings.IsPreviewClippingEnabled.Value, Mode=OneWay}"
-                          Background="{ThemeResource Brush-Blue-Dark-1}">
+                          Background="{x:Bind ViewModel.Settings.PreviewAreaBackgroundColor, Mode=OneWay}">
                         <Grid x:Name="XamlRoot" />
 
                         <developerTools:AlignmentGrid HorizontalStep="{x:Bind ViewModel.Settings.AlignmentGridHorizontalStep, Mode=OneWay, FallbackValue=8}"
@@ -224,7 +223,6 @@
                                Grid.ColumnSpan="3"
                                HorizontalAlignment="Stretch"
                                VerticalAlignment="Stretch"
-                               Background="{ThemeResource Brush-Blue-Dark-2}"
                                ResizeDirection="Rows" />
 
         <StackPanel x:Name="SplitterCommandBarLeft"
@@ -373,7 +371,6 @@
             </monaco:CodeEditor>
         </Grid>
 
-        <!--  TODO: SwitchPresenter  -->
         <controls:SwitchPresenter x:Name="LoadingControl"
                                   Grid.Row="0"
                                   Grid.RowSpan="3"
@@ -383,11 +380,10 @@
             <controls:Case IsDefault="True" Value="False">
                 <Border HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
-                        Background="{ThemeResource Brush-Blue-Dark-0}"
+                        Background="{ThemeResource SmokeFillColorDefaultBrush}"
                         Opacity="0.6">
                     <ProgressRing Width="64"
                                   Height="64"
-                                  Foreground="{ThemeResource Brush-Red-Light-2}"
                                   IsActive="True" />
                 </Border>
             </controls:Case>

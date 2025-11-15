@@ -29,44 +29,38 @@
         <ani:ImplicitAnimationSet x:Key="SmoothOffsetAnimation">
             <ani:OffsetAnimation Duration="0:0:0.25" />
         </ani:ImplicitAnimationSet>
-        <converters:SwitchConverter x:Key="PaneToGlyphConverter"
-                                    TargetType="model:PaneOrientation">
-            <controls:Case Value="HorizontalPreviewTop" Content="&#xE745;"/>
-            <controls:Case Value="VerticalPreviewRight" Content="&#xEA61;"/>
-            <controls:Case Value="HorizontalPreviewBottom" Content="&#xE745;"/>
-            <controls:Case Value="VerticalPreviewLeft" Content="&#xE746;"/>
+        <converters:SwitchConverter x:Key="PaneToGlyphConverter" TargetType="model:PaneOrientation">
+            <controls:Case Content="&#xE745;" Value="HorizontalPreviewTop" />
+            <controls:Case Content="&#xEA61;" Value="VerticalPreviewRight" />
+            <controls:Case Content="&#xE745;" Value="HorizontalPreviewBottom" />
+            <controls:Case Content="&#xE746;" Value="VerticalPreviewLeft" />
         </converters:SwitchConverter>
-        <converters:SwitchConverter x:Key="PaneToRenderTransformConverter"
-                                    TargetType="model:PaneOrientation">
+        <converters:SwitchConverter x:Key="PaneToRenderTransformConverter" TargetType="model:PaneOrientation">
             <controls:Case Value="HorizontalPreviewTop">
-                <RotateTransform Angle="180" CenterX="10" CenterY="10"/>
+                <RotateTransform Angle="180" CenterX="10" CenterY="10" />
             </controls:Case>
             <controls:Case IsDefault="True">
-                <RotateTransform/>
+                <RotateTransform />
             </controls:Case>
         </converters:SwitchConverter>
-        <converters:SwitchConverter x:Key="PaneToLocalizedTextConverter"
-                            TargetType="model:PaneOrientation">
-            <controls:Case Value="HorizontalPreviewTop" x:Uid="SettingsPanel_PaneOrientation_TopDescription"/>
-            <controls:Case Value="VerticalPreviewRight" x:Uid="SettingsPanel_PaneOrientation_RightDescription"/>
-            <controls:Case Value="HorizontalPreviewBottom" x:Uid="SettingsPanel_PaneOrientation_BottomDescription"/>
-            <controls:Case Value="VerticalPreviewLeft" x:Uid="SettingsPanel_PaneOrientation_LeftDescription"/>
+        <converters:SwitchConverter x:Key="PaneToLocalizedTextConverter" TargetType="model:PaneOrientation">
+            <controls:Case x:Uid="SettingsPanel_PaneOrientation_TopDescription" Value="HorizontalPreviewTop" />
+            <controls:Case x:Uid="SettingsPanel_PaneOrientation_RightDescription" Value="VerticalPreviewRight" />
+            <controls:Case x:Uid="SettingsPanel_PaneOrientation_BottomDescription" Value="HorizontalPreviewBottom" />
+            <controls:Case x:Uid="SettingsPanel_PaneOrientation_LeftDescription" Value="VerticalPreviewLeft" />
         </converters:SwitchConverter>
-        <converters:SwitchConverter x:Key="ThemeToLocalizedTextConverter"
-                            TargetType="xaml:ElementTheme">
-            <controls:Case Value="Light" x:Uid="SettingsPanel_Theme_Light"/>
-            <controls:Case Value="Dark" x:Uid="SettingsPanel_Theme_Dark"/>
-            <controls:Case Value="Default" x:Uid="SettingsPanel_Theme_Default"/>
+        <converters:SwitchConverter x:Key="ThemeToLocalizedTextConverter" TargetType="xaml:ElementTheme">
+            <controls:Case x:Uid="SettingsPanel_Theme_Light" Value="Light" />
+            <controls:Case x:Uid="SettingsPanel_Theme_Dark" Value="Dark" />
+            <controls:Case x:Uid="SettingsPanel_Theme_Default" Value="Default" />
         </converters:SwitchConverter>
     </Page.Resources>
 
-    <ScrollViewer Background="{ThemeResource Brush-Blue-Dark-2}">
-        <StackPanel Margin="12,0,0,0"
-                    HorizontalAlignment="Stretch">
+    <ScrollViewer>
+        <StackPanel Margin="12,0,0,0" HorizontalAlignment="Stretch">
 
             <!--  XAML Properties  -->
-            <muxc:Expander x:Uid="SettingsPanel_XAML"
-                           Style="{StaticResource SimpleExpanderStyle}">
+            <muxc:Expander x:Uid="SettingsPanel_XAML" Style="{StaticResource SimpleExpanderStyle}">
                 <StackPanel HorizontalAlignment="Stretch" Spacing="4">
                     <controls:SettingsExpander x:Uid="SettingsPanel_AutoCompileExpander">
                         <controls:SettingsExpander.HeaderIcon>
@@ -233,10 +227,35 @@
                 </StackPanel>
             </muxc:Expander>
 
-            <!--  AlignmentGrid Properties  -->
-            <muxc:Expander x:Uid="SettingsPanel_AlignmentGrid"
-                           Style="{StaticResource SimpleExpanderStyle}">
+            <!--  Preview Area Properties  -->
+            <muxc:Expander x:Uid="SettingsPanel_PreviewArea" Style="{StaticResource SimpleExpanderStyle}">
                 <StackPanel Spacing="4">
+                    <!--  Preview Area Background  -->
+                    <controls:SettingsCard x:Uid="SettingsPanel_PreviewBackgroundCard">
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xF354;" />
+                        </controls:SettingsCard.HeaderIcon>
+                        <ComboBox x:Uid="SettingsPanel_PreviewBackgroundColor"
+                                  HorizontalAlignment="Stretch"
+                                  ItemsSource="{x:Bind ViewModel.Colors, Mode=OneWay}"
+                                  SelectedItem="{x:Bind ViewModel.Settings.PreviewAreaBackgroundColor, Mode=TwoWay, Converter={StaticResource HexToColorConverter}}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Grid Width="12"
+                                              Height="12"
+                                              Margin="0,0,4,0">
+                                            <Grid.Background>
+                                                <SolidColorBrush Color="{Binding}" />
+                                            </Grid.Background>
+                                        </Grid>
+                                        <TextBlock Text="{Binding Converter={StaticResource ColorToNameConverter}}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </controls:SettingsCard>
+
                     <!--  Preview Clipping - IsEnabled  -->
                     <controls:SettingsCard x:Uid="SettingsPanel_PreviewClippingToggleCard">
                         <controls:SettingsCard.HeaderIcon>
@@ -382,11 +401,10 @@
                 </StackPanel>
             </muxc:Expander>
 
-            <!-- Personalization Properties -->
-            <muxc:Expander x:Uid="SettingsPanel_Personalization"
-                           Style="{StaticResource SimpleExpanderStyle}">
+            <!--  Personalization Properties  -->
+            <muxc:Expander x:Uid="SettingsPanel_Personalization" Style="{StaticResource SimpleExpanderStyle}">
                 <StackPanel HorizontalAlignment="Stretch" Spacing="4">
-                    <!-- App Theme -->
+                    <!--  App Theme  -->
                     <controls:SettingsCard x:Uid="SettingsPanel_AppThemeCard">
                         <controls:SettingsCard.HeaderIcon>
                             <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE790;" />
@@ -401,15 +419,14 @@
                             </ComboBox.Items>
                             <ComboBox.ItemTemplate>
                                 <DataTemplate x:DataType="xaml:ElementTheme">
-                                    <TextBlock Text="{x:Bind (xaml:ElementTheme), Converter={StaticResource ThemeToLocalizedTextConverter}}"
-                                               AutomationProperties.Name="{x:Bind (xaml:ElementTheme), Converter={StaticResource ThemeToLocalizedTextConverter}}"/>
+                                    <TextBlock AutomationProperties.Name="{x:Bind (xaml:ElementTheme), Converter={StaticResource ThemeToLocalizedTextConverter}}" Text="{x:Bind (xaml:ElementTheme), Converter={StaticResource ThemeToLocalizedTextConverter}}" />
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>
                     </controls:SettingsCard>
-                    
-                    <!-- Editor Theme -->
-                    <!-- TODO: Bug where open editors won't change... (Monaco) Maybe TabView? Not sure, will just note in description -->
+
+                    <!--  Editor Theme  -->
+                    <!--  TODO: Bug where open editors won't change... (Monaco) Maybe TabView? Not sure, will just note in description  -->
                     <controls:SettingsCard x:Uid="SettingsPanel_EditorThemeCard">
                         <controls:SettingsCard.HeaderIcon>
                             <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xEF60;" />
@@ -424,14 +441,13 @@
                             </ComboBox.Items>
                             <ComboBox.ItemTemplate>
                                 <DataTemplate x:DataType="xaml:ElementTheme">
-                                    <TextBlock Text="{x:Bind (xaml:ElementTheme), Converter={StaticResource ThemeToLocalizedTextConverter}}"
-                   AutomationProperties.Name="{x:Bind (xaml:ElementTheme), Converter={StaticResource ThemeToLocalizedTextConverter}}"/>
+                                    <TextBlock AutomationProperties.Name="{x:Bind (xaml:ElementTheme), Converter={StaticResource ThemeToLocalizedTextConverter}}" Text="{x:Bind (xaml:ElementTheme), Converter={StaticResource ThemeToLocalizedTextConverter}}" />
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>
                     </controls:SettingsCard>
 
-                    <!-- Preview Pane Position -->
+                    <!--  Preview Pane Position  -->
                     <controls:SettingsCard x:Uid="SettingsPanel_PaneOrientationCard" IsEnabled="{x:Bind ViewModel.Settings.IsPreviewDocked.Value, Mode=OneWay}">
                         <controls:SettingsCard.HeaderIcon>
                             <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE8B4;" />
@@ -448,12 +464,12 @@
                             </ComboBox.Items>
                             <ComboBox.ItemTemplate>
                                 <DataTemplate x:DataType="model:PaneOrientation">
-                                    <StackPanel Orientation="Horizontal"
-                                                AutomationProperties.Name="{x:Bind (model:PaneOrientation), Converter={StaticResource PaneToLocalizedTextConverter}}"
+                                    <StackPanel AutomationProperties.Name="{x:Bind (model:PaneOrientation), Converter={StaticResource PaneToLocalizedTextConverter}}"
+                                                Orientation="Horizontal"
                                                 Spacing="8">
                                         <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
                                                   Glyph="{x:Bind (model:PaneOrientation), Converter={StaticResource PaneToGlyphConverter}}"
-                                                  RenderTransform="{x:Bind (model:PaneOrientation), Converter={StaticResource PaneToRenderTransformConverter}}"/>
+                                                  RenderTransform="{x:Bind (model:PaneOrientation), Converter={StaticResource PaneToRenderTransformConverter}}" />
                                         <TextBlock Text="{x:Bind (model:PaneOrientation), Converter={StaticResource PaneToLocalizedTextConverter}}" />
                                     </StackPanel>
                                 </DataTemplate>
@@ -463,9 +479,8 @@
                 </StackPanel>
             </muxc:Expander>
 
-            <!-- Feedback -->
-            <muxc:Expander x:Uid="SettingsPanel_Feedback"
-                           Style="{StaticResource SimpleExpanderStyle}">
+            <!--  Feedback  -->
+            <muxc:Expander x:Uid="SettingsPanel_Feedback" Style="{StaticResource SimpleExpanderStyle}">
                 <StackPanel HorizontalAlignment="Stretch" Spacing="4">
                     <controls:SettingsCard x:Uid="SettingsPanel_AnalyticsToggleCard">
                         <controls:SettingsCard.HeaderIcon>
@@ -478,8 +493,7 @@
 
                     <controls:SettingsCard x:Uid="SettingsPanel_DiscordCard">
                         <controls:SettingsCard.HeaderIcon>
-                            <PathIcon Data="{StaticResource DiscordIcon}"
-                                      Foreground="#5865F2" />
+                            <PathIcon Data="{StaticResource DiscordIcon}" Foreground="#5865F2" />
                         </controls:SettingsCard.HeaderIcon>
                         <HyperlinkButton x:Uid="SettingsPanel_Discord" />
                     </controls:SettingsCard>
@@ -493,8 +507,7 @@
 
                     <controls:SettingsCard x:Uid="SettingsPanel_GitHubCard">
                         <controls:SettingsCard.HeaderIcon>
-                            <PathIcon Data="{StaticResource GitHubIcon}"
-                                      Foreground="{ThemeResource TextFillColorPrimaryBrush}" />
+                            <PathIcon Data="{StaticResource GitHubIcon}" Foreground="{ThemeResource TextFillColorPrimaryBrush}" />
                         </controls:SettingsCard.HeaderIcon>
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <Button x:Uid="SettingsPanel_About_OpenLogFolderButton" Click="ButtonOpenLogFolder_Click" />
@@ -504,42 +517,37 @@
                 </StackPanel>
             </muxc:Expander>
 
-            <!-- About -->
-            <muxc:Expander x:Uid="SettingsPanel_About"
-                           Style="{StaticResource SimpleExpanderStyle}">
+            <!--  About  -->
+            <muxc:Expander x:Uid="SettingsPanel_About" Style="{StaticResource SimpleExpanderStyle}">
                 <StackPanel HorizontalAlignment="Stretch" Spacing="4">
                     <controls:SettingsExpander x:Uid="SettingsPanel_About_HeaderCard"
                                                Description="© 2025 .NET Foundation. All rights reserved."
                                                IsExpanded="True">
                         <controls:SettingsExpander.HeaderIcon>
-                            <BitmapIcon ShowAsMonochrome="False"
-                                        UriSource="ms-appx:///Assets/AppTitleBar.png" />
+                            <BitmapIcon ShowAsMonochrome="False" UriSource="ms-appx:///Assets/AppTitleBar.png" />
                         </controls:SettingsExpander.HeaderIcon>
-                        <TextBlock IsTextSelectionEnabled="True"
-                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   IsTextSelectionEnabled="True"
                                    Text="{x:Bind ViewModel.VersionDescription, Mode=OneWay}" />
                         <controls:SettingsExpander.Items>
                             <controls:SettingsCard x:Uid="SettingsPanel_About_Developer" />
 
                             <controls:SettingsCard x:Uid="SettingsPanel_About_SpecialThanks">
                                 <TextBlock x:Uid="SettingsPanel_About_SpecialThanksContent"
-                                           TextWrapping="WrapWholeWords"
+                                           MaxWidth="300"
                                            TextAlignment="Justify"
-                                           MaxWidth="300"/>
+                                           TextWrapping="WrapWholeWords" />
                             </controls:SettingsCard>
 
-                            <controls:SettingsCard HorizontalContentAlignment="Left"
-                                                   ContentAlignment="Left">
-                                <StackPanel Margin="-12,0,0,0"
-                                            Orientation="Vertical">
+                            <controls:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Left">
+                                <StackPanel Margin="-12,0,0,0" Orientation="Vertical">
                                     <HyperlinkButton x:Uid="SettingsPanel_PrivacyTermsLink" />
                                 </StackPanel>
                             </controls:SettingsCard>
                             <controls:SettingsCard HorizontalContentAlignment="Left"
                                                    ContentAlignment="Vertical"
                                                    Header="Useful links">
-                                <StackPanel Margin="-12,0,0,0"
-                                            Orientation="Vertical">
+                                <StackPanel Margin="-12,0,0,0" Orientation="Vertical">
                                     <HyperlinkButton x:Uid="SettingsPanel_UsefulLinks_GitHub" />
                                 </StackPanel>
                             </controls:SettingsCard>
@@ -547,8 +555,8 @@
                     </controls:SettingsExpander>
 
                     <controls:SettingsExpander x:Uid="SettingsPanel_ThirdParty"
-                                       IsExpanded="True"
-                                       ItemsSource="{x:Bind ViewModel.ThirdPartyLibs, Mode=OneWay}">
+                                               IsExpanded="True"
+                                               ItemsSource="{x:Bind ViewModel.ThirdPartyLibs, Mode=OneWay}">
                         <controls:SettingsExpander.HeaderIcon>
                             <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE74C;" />
                         </controls:SettingsExpander.HeaderIcon>
@@ -556,9 +564,7 @@
                             <DataTemplate x:DataType="model:ThirdPartyInfo">
                                 <controls:SettingsCard Padding="46,4,32,4">
                                     <controls:SettingsCard.Header>
-                                        <HyperlinkButton
-                                                 Content="{x:Bind Name}"
-                                                 NavigateUri="{x:Bind Url}" />
+                                        <HyperlinkButton Content="{x:Bind Name}" NavigateUri="{x:Bind Url}" />
                                     </controls:SettingsCard.Header>
                                     <controls:SettingsCard.Description>
                                         <Grid>
@@ -566,20 +572,20 @@
                                                 <ColumnDefinition Width="128" />
                                                 <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
-                                            <HyperlinkButton AutomationProperties.Name="{x:Bind LicenseAutomationName}"
-                                                     Margin="6,0,0,0"
-                                                     Padding="4,2,4,2"
-                                                     Content="{x:Bind License}"
-                                                     NavigateUri="{x:Bind LicenseUrl}" />
+                                            <HyperlinkButton Margin="6,0,0,0"
+                                                             Padding="4,2,4,2"
+                                                             AutomationProperties.Name="{x:Bind LicenseAutomationName}"
+                                                             Content="{x:Bind License}"
+                                                             NavigateUri="{x:Bind LicenseUrl}" />
                                             <TextBlock Grid.Column="1"
                                                        Padding="2"
                                                        Text="{x:Bind Version}" />
                                         </Grid>
                                     </controls:SettingsCard.Description>
                                     <HyperlinkButton AutomationProperties.Name="{x:Bind LicenseTextAutomationName}"
-                                                     DataContext="{x:Bind (model:ThirdPartyInfo)}"
                                                      Click="HyperlinkButtonLicense_Click"
-                                                     Content="Read License" />
+                                                     Content="Read License"
+                                                     DataContext="{x:Bind (model:ThirdPartyInfo)}" />
                                 </controls:SettingsCard>
                             </DataTemplate>
                         </controls:SettingsExpander.ItemTemplate>

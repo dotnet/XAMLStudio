@@ -317,9 +317,9 @@
     <value>On</value>
     <comment>Alignment Grid on option</comment>
   </data>
-  <data name="SettingsPanel_AlignmentGrid.Header" xml:space="preserve">
-    <value>Alignment Grid</value>
-    <comment>Header for the Alignment Grid options section in the Settings Panel</comment>
+  <data name="SettingsPanel_PreviewArea.Header" xml:space="preserve">
+    <value>Preview Area</value>
+    <comment>Header for the Preview Area options section in the Settings Panel</comment>
   </data>
   <data name="SettingsPanel_AlignmentGridHorizontalStep.Header" xml:space="preserve">
     <value>Horizontal Step</value>
@@ -624,9 +624,9 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <value>https://aka.ms/XAMLStudio_Feedback</value>
     <comment>Uri used to navigate to UserVoice feedback site.</comment>
   </data>
-  <data name="SettingsPanel_AlignmentGrid.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Alignment Grid Settings</value>
-    <comment>Accessibility Name for Alignment Grid expander section in Settings Panel</comment>
+  <data name="SettingsPanel_PreviewArea.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Preview Area Settings</value>
+    <comment>Accessibility Name for Preview Area expander section in Settings Panel</comment>
   </data>
   <data name="SettingsPanel_AlignmentGridHorizontalStepSlider.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Horizontal Step</value>
@@ -857,7 +857,8 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <comment>Accessibility Name for ComboBox changing Default Pane Orientation</comment>
   </data>
   <data name="SettingsPanel_About_Developer.Content" xml:space="preserve">
-    <value>Michael A. Hawker</value>
+    <value>Michael A. Hawker
+a.k.a. XAML Llama 🦙</value>
     <comment>Developed By Developer Name</comment>
   </data>
   <data name="SettingsPanel_About_Developer.Header" xml:space="preserve">
@@ -991,5 +992,13 @@ Please help us by reporting this issue in Feedback Hub.</value>
   <data name="MainPage_NavMenu_Welcome.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>View Welcome Page</value>
     <comment>Tooltip for Home (Welcome Page) Button in Navigation View</comment>
+  </data>
+  <data name="SettingsPanel_PreviewBackgroundCard.Description" xml:space="preserve">
+    <value>Sets the background color of the preview area when none is set by a XAML control.</value>
+    <comment>Description for the Settings Card for the Preview Area Background Color</comment>
+  </data>
+  <data name="SettingsPanel_PreviewBackgroundCard.Header" xml:space="preserve">
+    <value>Preview Area Backgroud Color</value>
+    <comment>Header for Settings Card for Preview Area Background Color</comment>
   </data>
 </root>

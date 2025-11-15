@@ -15,12 +15,19 @@
         <animations:ImplicitAnimationSet x:Key="ImplicitOffset">
             <animations:OffsetAnimation Duration="0:0:0.3" />
         </animations:ImplicitAnimationSet>
+
+        <DataTemplate x:Key="FeatureListItemTemplate" x:DataType="x:String">
+            <TextBlock Padding="12,8"
+                       Foreground="{ThemeResource Brush-Grey-Light-1}"
+                       Text="{x:Bind (x:String)}"
+                       TextWrapping="WrapWholeWords" />
+        </DataTemplate>
     </Page.Resources>
 
-    <Grid Padding="24" Background="{ThemeResource Brush-Blue-Dark-2}">
+    <Grid Padding="24">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" MinWidth="236" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
             <!--<ColumnDefinition />-->
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -142,83 +149,35 @@
             <TextBlock FontSize="22"
                        FontWeight="Bold"
                        Foreground="{ThemeResource Brush-Grey-Light-1}"
-                       Text="New in v1.2" />
-            <TextBlock Padding="12,8"
-                       Foreground="{ThemeResource Brush-Grey-Light-1}"
-                       TextWrapping="WrapWholeWords">
-                - Folder Support: Image Loading, Design Data Loading, and More!
-            </TextBlock>
-            <TextBlock Padding="12,8"
-                       Foreground="{ThemeResource Brush-Grey-Light-1}"
-                       TextWrapping="WrapWholeWords">
-                - Live Property Panel: Edit, Inspect, and Experiment
-            </TextBlock>
-            <TextBlock Padding="12,8"
-                       Foreground="{ThemeResource Brush-Grey-Light-1}"
-                       TextWrapping="WrapWholeWords">
-                - More Quick Access Preview Options like Refresh, Alignment Grid, Clipping, and Theme Toggle
-            </TextBlock>
-            <TextBlock Padding="12,8"
-                       Foreground="{ThemeResource Brush-Grey-Light-1}"
-                       TextWrapping="WrapWholeWords">
-                - Breadcrumb XAML Navigation Bar
-            </TextBlock>
-            <TextBlock Padding="12,8"
-                       Foreground="{ThemeResource Brush-Grey-Light-1}"
-                       TextWrapping="WrapWholeWords">
-                - Right-Click Menu to Duplicate the Open Tab
-            </TextBlock>
-            <TextBlock Padding="12,8"
-                       Foreground="{ThemeResource Brush-Grey-Light-1}"
-                       TextWrapping="WrapWholeWords">
-                - Updated Libraries &amp; Bug Fixes
-            </TextBlock>
+                       Text="New in v2.0" />
+
+            <ItemsControl ItemTemplate="{StaticResource FeatureListItemTemplate}">
+                <x:String>- New Fluent UI Design</x:String>
+                <x:String>- Folder Support: Image Loading, Design Data Loading, and More!</x:String>
+                <x:String>- Live Property Panel: Edit, Inspect, and Experiment</x:String>
+                <x:String>- More Quick Access Preview Options like Refresh, Alignment Grid, Clipping, and Theme Toggle</x:String>
+                <x:String>- Breadcrumb XAML Navigation Bar</x:String>
+                <x:String>- Right-Click Menu to Duplicate the Open Tab</x:String>
+                <x:String>- Updated Libraries &amp; Bug Fixes</x:String>
+            </ItemsControl>
+
 
             <TextBlock Padding="0,48,0,0"
                        FontSize="22"
                        FontWeight="Bold"
                        Foreground="{ThemeResource Brush-Grey-Light-1}"
                        Text="Features" />
-            <TextBlock Padding="12,8"
-                       Foreground="{ThemeResource Brush-Grey-Light-1}"
-                       TextWrapping="WrapWholeWords">
-                - Live and Interactable Preview
-            </TextBlock>
-            <TextBlock Padding="12,8"
-                       Foreground="{ThemeResource Brush-Grey-Light-1}"
-                       TextWrapping="WrapWholeWords">
-                - Live Binding Debugging
-            </TextBlock>
-            <TextBlock Padding="12,8"
-                       Foreground="{ThemeResource Brush-Grey-Light-1}"
-                       TextWrapping="WrapWholeWords">
-                - Data Context Editor
-            </TextBlock>
-            <TextBlock Padding="12,8"
-                       Foreground="{ThemeResource Brush-Grey-Light-1}"
-                       TextWrapping="WrapWholeWords">
-                - Auto-Save and Restore Documents
-            </TextBlock>
-            <TextBlock Padding="12,8"
-                       Foreground="{ThemeResource Brush-Grey-Light-1}"
-                       TextWrapping="WrapWholeWords">
-                - IntelliSense
-            </TextBlock>
-            <TextBlock Padding="12,8"
-                       Foreground="{ThemeResource Brush-Grey-Light-1}"
-                       TextWrapping="WrapWholeWords">
-                - Documentation Toolbox
-            </TextBlock>
-            <TextBlock Padding="12,8"
-                       Foreground="{ThemeResource Brush-Grey-Light-1}"
-                       TextWrapping="WrapWholeWords">
-                - Alignment Guides
-            </TextBlock>
-            <TextBlock Padding="12,8"
-                       Foreground="{ThemeResource Brush-Grey-Light-1}"
-                       TextWrapping="WrapWholeWords">
-                - Namespace Helpers
-            </TextBlock>
+
+            <ItemsControl ItemTemplate="{StaticResource FeatureListItemTemplate}">
+                <x:String>- Live and Interactable Preview</x:String>
+                <x:String>- Live Binding Debugging</x:String>
+                <x:String>- Data Context Editor</x:String>
+                <x:String>- Auto-Save and Restore Documents</x:String>
+                <x:String>- IntelliSense</x:String>
+                <x:String>- Documentation Toolbox</x:String>
+                <x:String>- Alignment Guides</x:String>
+                <x:String>- Namespace Helpers</x:String>
+            </ItemsControl>
         </StackPanel>
     </Grid>
 </Page>
