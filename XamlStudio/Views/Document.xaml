@@ -32,6 +32,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -180,42 +181,6 @@
                 </labs:AdornerDecorator>
             </controls:Case>
         </controls:SwitchPresenter>
-
-
-        <!--  Error Overlay  -->
-        <!--<Grid x:Name="ErrorOverlay"
-              Grid.Row="0"
-              Grid.ColumnSpan="3"
-              fex:FrameworkElementExtensions.UpdateLiveRegionChangedOnVisible="True"
-              Background="#66000000"
-              Visibility="{x:Bind ViewModel.Result.Errors, Mode=OneWay, Converter={StaticResource CollectionVisibilityConverter}, FallbackValue=Collapsed}">
-            <controls:DropShadowPanel Margin="16"
-                                      HorizontalAlignment="Center"
-                                      VerticalAlignment="Center"
-                                      BlurRadius="8.0"
-                                      OffsetX="8"
-                                      OffsetY="8"
-                                      ShadowOpacity="0.6"
-                                      Color="Black"> TODO: Switch to AttachedCardShadow
-            <StackPanel Padding="24" Background="{ThemeResource Brush-Red-Light-2}">
-                <TextBlock x:Uid="Document_ErrorsHeader"
-                               Margin="0,0,0,8"
-                               AutomationProperties.LiveSetting="Assertive"
-                               FontWeight="SemiBold"
-                               Foreground="White" />
-                <ItemsControl ItemsSource="{x:Bind ViewModel.Result.Errors, Mode=OneWay}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate x:DataType="models:XamlExceptionRange">
-                            <TextBlock fex:FrameworkElementExtensions.UpdateLiveRegionChangedOnLoad="True"
-                                           AutomationProperties.LiveSetting="Assertive"
-                                           Foreground="White"
-                                           Text="{x:Bind Message}" />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </StackPanel>
-            </controls:DropShadowPanel>
-        </Grid>-->
 
         <!--  Row Grid Splitter  -->
         <controls:GridSplitter x:Name="SplitterBar"
@@ -370,6 +335,23 @@
                 </i:Interaction.Behaviors>
             </monaco:CodeEditor>
         </Grid>
+
+        <!--  Error Overlay  -->
+        <ItemsControl Grid.Row="3"
+                      Grid.ColumnSpan="3"
+                      fex:FrameworkElementExtensions.UpdateLiveRegionChangedOnVisible="True"
+                      ItemsSource="{x:Bind ViewModel.Result.Errors, Mode=OneWay}"
+                      Visibility="{x:Bind ViewModel.Result.Errors, Mode=OneWay, Converter={StaticResource CollectionVisibilityConverter}, FallbackValue=Collapsed}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="models:XamlExceptionRange">
+                    <muxc:InfoBar Title="XAML Parse Error"
+                                  fex:FrameworkElementExtensions.UpdateLiveRegionChangedOnLoad="True"
+                                  IsOpen="True"
+                                  Message="{x:Bind Message}"
+                                  Severity="Error" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
 
         <controls:SwitchPresenter x:Name="LoadingControl"
                                   Grid.Row="0"
