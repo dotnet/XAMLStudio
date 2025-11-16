@@ -51,7 +51,7 @@ namespace XamlStudio.Services
             set { Set(value); }
         }
 
-        [DefaultValue("#00000000")] // Transparent
+        [DefaultValue("#00FFFFFF")] // Transparent
         public string PreviewAreaBackgroundColor
         {
             get { return Get<string>(); }

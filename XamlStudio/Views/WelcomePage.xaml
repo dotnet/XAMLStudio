@@ -24,19 +24,7 @@
         </DataTemplate>
     </Page.Resources>
 
-    <Grid Padding="24">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" MinWidth="236" />
-            <ColumnDefinition Width="*" />
-            <!--<ColumnDefinition />-->
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-
+    <ScrollViewer>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="WindowStates">
                 <VisualState x:Name="NarrowState">
@@ -67,117 +55,137 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <StackPanel x:Name="LogoStack"
-                    Grid.ColumnSpan="2"
-                    Margin="-12,-16,0,8"
-                    Orientation="Horizontal">
-            <Image Width="300"
-                   Source="ms-appx:///Assets/XamlStudio.SplashScreen.png"
-                   Stretch="UniformToFill">
-                <Image.Projection>
-                    <PlaneProjection LocalOffsetX="-0" />
-                </Image.Projection>
-            </Image>
-            <StackPanel x:Name="LogoText"
-                        Margin="-30,0,0,0"
-                        Padding="16"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        Opacity="0.8">
-                <TextBlock FontSize="16"
-                           FontWeight="SemiBold"
-                           Foreground="{ThemeResource Brush-Grey-Light-1}">
-                    a Microsoft Garage project
-                </TextBlock>
-                <TextBlock FontSize="16"
-                           FontWeight="SemiBold"
-                           Foreground="{ThemeResource Brush-Grey-Light-1}">
-                    for Rapid Prototyping
-                </TextBlock>
+        <Grid Padding="24">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" MinWidth="236" />
+                <ColumnDefinition Width="*" />
+                <!--<ColumnDefinition />-->
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <StackPanel x:Name="LogoStack"
+                        Grid.ColumnSpan="2"
+                        Margin="-12,-16,0,8"
+                        Orientation="Horizontal">
+                <Image Width="300"
+                       Source="ms-appx:///Assets/XamlStudio.SplashScreen.png"
+                       Stretch="UniformToFill">
+                    <Image.Projection>
+                        <PlaneProjection LocalOffsetX="-0" />
+                    </Image.Projection>
+                </Image>
+                <StackPanel x:Name="LogoText"
+                            Margin="-30,0,0,0"
+                            Padding="16"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Opacity="0.8">
+                    <TextBlock FontSize="16"
+                               FontWeight="SemiBold"
+                               Foreground="{ThemeResource Brush-Grey-Light-1}">
+                        a Microsoft Garage project
+                    </TextBlock>
+                    <TextBlock FontSize="16"
+                               FontWeight="SemiBold"
+                               Foreground="{ThemeResource Brush-Grey-Light-1}">
+                        for Rapid Prototyping
+                    </TextBlock>
+                </StackPanel>
             </StackPanel>
-        </StackPanel>
-        <StackPanel Grid.Row="1" Margin="40">
-            <TextBlock FontSize="22"
-                       FontWeight="Bold"
-                       Foreground="{ThemeResource Brush-Grey-Light-1}"
-                       Text="Get Started" />
-            <StackPanel Margin="12,12,0,0">
-                <HyperlinkButton Command="{x:Bind MainViewModel.NewDocumentCommand, Mode=OneWay}"
-                                 FontWeight="SemiBold"
-                                 Foreground="{ThemeResource Brush-Red-Light-2}">
-                    New file
-                </HyperlinkButton>
-                <HyperlinkButton Command="{x:Bind MainViewModel.OpenDocumentCommand, Mode=OneWay}"
-                                 FontWeight="SemiBold"
-                                 Foreground="{ThemeResource Brush-Red-Light-2}">
-                    Open file...
-                </HyperlinkButton>
-                <HyperlinkButton Command="{x:Bind MainViewModel.OpenSettingsPageCommand, Mode=OneWay}"
-                                 FontWeight="SemiBold"
-                                 Foreground="{ThemeResource Brush-Red-Light-2}">
-                    Settings
-                </HyperlinkButton>
+            <StackPanel Grid.Row="1" Margin="40">
+                <TextBlock FontSize="22"
+                           FontWeight="Bold"
+                           Foreground="{ThemeResource Brush-Grey-Light-1}"
+                           Text="Get Started" />
+                <StackPanel Margin="12,12,0,0">
+                    <!--  TODO: Localize  -->
+                    <HyperlinkButton Command="{x:Bind MainViewModel.NewDocumentCommand, Mode=OneWay}"
+                                     FontWeight="SemiBold"
+                                     Foreground="{ThemeResource Brush-Red-Light-2}">
+                        New file
+                    </HyperlinkButton>
+                    <HyperlinkButton Command="{x:Bind MainViewModel.OpenDocumentCommand, Mode=OneWay}"
+                                     FontWeight="SemiBold"
+                                     Foreground="{ThemeResource Brush-Red-Light-2}">
+                        Open file...
+                    </HyperlinkButton>
+                    <HyperlinkButton Command="{x:Bind MainViewModel.OpenFolderPickerCommand, Mode=OneWay}"
+                                     FontWeight="SemiBold"
+                                     Foreground="{ThemeResource Brush-Red-Light-2}">
+                        Open folder...
+                    </HyperlinkButton>
+                    <HyperlinkButton Command="{x:Bind MainViewModel.OpenSettingsPageCommand, Mode=OneWay}"
+                                     FontWeight="SemiBold"
+                                     Foreground="{ThemeResource Brush-Red-Light-2}">
+                        Settings
+                    </HyperlinkButton>
+                </StackPanel>
             </StackPanel>
-        </StackPanel>
-        <StackPanel Grid.Row="2" Margin="40">
-            <TextBlock FontSize="22"
-                       FontWeight="Bold"
-                       Foreground="{ThemeResource Brush-Grey-Light-1}"
-                       Text="Recent Files" />
-            <ItemsControl x:Name="RecentFileList"
-                          Margin="12,12,0,0"
-                          DataContext="{x:Bind}"
-                          ItemsSource="{x:Bind RecentFiles}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="storage:StorageFile">
-                        <HyperlinkButton Command="{Binding DataContext.MainViewModel.OpenFileCommand, ElementName=RecentFileList}"
-                                         CommandParameter="{x:Bind}"
-                                         Content="{x:Bind DisplayName}"
-                                         FontWeight="SemiBold"
-                                         Foreground="{ThemeResource Brush-Red-Light-2}"
-                                         ToolTipService.ToolTip="{x:Bind Path}" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </StackPanel>
-        <StackPanel x:Name="FeatureList"
-                    Grid.Row="1"
-                    Grid.RowSpan="3"
-                    Grid.Column="1"
-                    Margin="40"
-                    animations:Implicit.Animations="{StaticResource ImplicitOffset}">
-            <TextBlock FontSize="22"
-                       FontWeight="Bold"
-                       Foreground="{ThemeResource Brush-Grey-Light-1}"
-                       Text="New in v2.0" />
+            <StackPanel Grid.Row="2" Margin="40">
+                <TextBlock FontSize="22"
+                           FontWeight="Bold"
+                           Foreground="{ThemeResource Brush-Grey-Light-1}"
+                           Text="Recent Files" />
+                <ItemsControl x:Name="RecentFileList"
+                              Margin="12,12,0,0"
+                              DataContext="{x:Bind}"
+                              ItemsSource="{x:Bind RecentFiles}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="storage:StorageFile">
+                            <HyperlinkButton Command="{Binding DataContext.MainViewModel.OpenFileCommand, ElementName=RecentFileList}"
+                                             CommandParameter="{x:Bind}"
+                                             Content="{x:Bind DisplayName}"
+                                             FontWeight="SemiBold"
+                                             Foreground="{ThemeResource Brush-Red-Light-2}"
+                                             ToolTipService.ToolTip="{x:Bind Path}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+            <StackPanel x:Name="FeatureList"
+                        Grid.Row="1"
+                        Grid.RowSpan="3"
+                        Grid.Column="1"
+                        Margin="40"
+                        animations:Implicit.Animations="{StaticResource ImplicitOffset}">
+                <TextBlock FontSize="22"
+                           FontWeight="Bold"
+                           Foreground="{ThemeResource Brush-Grey-Light-1}"
+                           Text="New in v2.0" />
 
-            <ItemsControl ItemTemplate="{StaticResource FeatureListItemTemplate}">
-                <x:String>- New Fluent UI Design</x:String>
-                <x:String>- Folder Support: Image Loading, Design Data Loading, and More!</x:String>
-                <x:String>- Live Property Panel: Edit, Inspect, and Experiment</x:String>
-                <x:String>- More Quick Access Preview Options like Refresh, Alignment Grid, Clipping, and Theme Toggle</x:String>
-                <x:String>- Breadcrumb XAML Navigation Bar</x:String>
-                <x:String>- Right-Click Menu to Duplicate the Open Tab</x:String>
-                <x:String>- Updated Libraries &amp; Bug Fixes</x:String>
-            </ItemsControl>
+                <ItemsControl ItemTemplate="{StaticResource FeatureListItemTemplate}">
+                    <x:String>- New Fluent UI Design</x:String>
+                    <x:String>- Folder Support: Image Loading, Design Data Loading, and More!</x:String>
+                    <x:String>- Live Property Panel: Edit, Inspect, and Experiment</x:String>
+                    <x:String>- More Quick Access Preview Options like Refresh, Alignment Grid, Clipping, and Theme Toggle</x:String>
+                    <x:String>- Breadcrumb XAML Navigation Bar</x:String>
+                    <x:String>- Right-Click Menu to Duplicate the Open Tab</x:String>
+                    <x:String>- Updated Libraries &amp; Bug Fixes</x:String>
+                </ItemsControl>
 
 
-            <TextBlock Padding="0,48,0,0"
-                       FontSize="22"
-                       FontWeight="Bold"
-                       Foreground="{ThemeResource Brush-Grey-Light-1}"
-                       Text="Features" />
+                <TextBlock Padding="0,48,0,0"
+                           FontSize="22"
+                           FontWeight="Bold"
+                           Foreground="{ThemeResource Brush-Grey-Light-1}"
+                           Text="Features" />
 
-            <ItemsControl ItemTemplate="{StaticResource FeatureListItemTemplate}">
-                <x:String>- Live and Interactable Preview</x:String>
-                <x:String>- Live Binding Debugging</x:String>
-                <x:String>- Data Context Editor</x:String>
-                <x:String>- Auto-Save and Restore Documents</x:String>
-                <x:String>- IntelliSense</x:String>
-                <x:String>- Documentation Toolbox</x:String>
-                <x:String>- Alignment Guides</x:String>
-                <x:String>- Namespace Helpers</x:String>
-            </ItemsControl>
-        </StackPanel>
-    </Grid>
+                <ItemsControl ItemTemplate="{StaticResource FeatureListItemTemplate}">
+                    <x:String>- Live and Interactable Preview</x:String>
+                    <x:String>- Live Binding Debugging</x:String>
+                    <x:String>- Data Context Editor</x:String>
+                    <x:String>- Auto-Save and Restore Documents</x:String>
+                    <x:String>- IntelliSense</x:String>
+                    <x:String>- Documentation Toolbox</x:String>
+                    <x:String>- Alignment Guides</x:String>
+                    <x:String>- Namespace Helpers</x:String>
+                </ItemsControl>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
 </Page>

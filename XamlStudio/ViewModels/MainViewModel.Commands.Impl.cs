@@ -19,6 +19,16 @@ namespace XamlStudio.ViewModels
     {
         private readonly AsyncLock _openMutex = new AsyncLock();
 
+        private void CloseWelcomeScreen()
+        {
+            // If on Welcome screen, we should close it...
+            if (OpenActivity == "WELCOME")
+            {
+                // TODO: Should maybe have the last open one tracked?
+                OpenActivity = null;
+            }
+        }
+
         [RelayCommand]
         private void NewDocument()
         {
@@ -29,6 +39,8 @@ namespace XamlStudio.ViewModels
             });
 
             ActiveFile = OpenFiles.Last();
+
+            CloseWelcomeScreen();
 
             Analytics.TrackEvent("Document_New");
         }
@@ -67,6 +79,8 @@ namespace XamlStudio.ViewModels
 
                 OpenFile(file);
 
+                CloseWelcomeScreen();
+
                 Analytics.TrackEvent("Document_Open");
             }
         }
@@ -84,6 +98,8 @@ namespace XamlStudio.ViewModels
                 SettingsService.Instance.RememberFileOrFolder(file);
 
                 ActiveFile = doc;
+
+                CloseWelcomeScreen();
             }
         }
 
@@ -129,6 +145,9 @@ namespace XamlStudio.ViewModels
             if (folder != null)
             {
                 OpenFolder(folder);
+
+                // Ensure can see new folder opened in Explorer after opening (if was on Welcome Page)
+                OpenActivity = "EXPLORER";
 
                 Analytics.TrackEvent("Folder_Open");
             }

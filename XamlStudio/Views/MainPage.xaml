@@ -278,20 +278,18 @@
 
 
         <!--  Main Window Content  -->
-        <controls:SwitchPresenter x:Name="Parent"
-                                  Grid.Row="1"
+        <controls:SwitchPresenter Grid.Row="1"
                                   Grid.Column="2"
                                   HorizontalAlignment="Stretch"
                                   VerticalAlignment="Stretch"
                                   ex:FrameworkElementExtensions.AncestorType="muxc:TabView"
-                                  Tag="{Binding (ex:FrameworkElementExtensions.Ancestor).DataContext, RelativeSource={RelativeSource Self}}"
                                   TargetType="x:String"
                                   Value="{x:Bind ViewModel.OpenActivity, Mode=OneWay}">
             <controls:Case Value="WELCOME">
-                <local:WelcomePage HorizontalAlignment="Stretch" MainViewModel="{Binding Tag.ViewModel, ElementName=Parent}" />
+                <local:WelcomePage HorizontalAlignment="Stretch" MainViewModel="{x:Bind ViewModel}" />
             </controls:Case>
             <controls:Case Value="SETTINGS">
-                <local:SettingsPanelPage HorizontalAlignment="Stretch" MainViewModel="{Binding Tag.ViewModel, ElementName=Parent}" />
+                <local:SettingsPanelPage HorizontalAlignment="Stretch" MainViewModel="{x:Bind ViewModel}" />
             </controls:Case>
             <!--  Document  -->
             <controls:Case IsDefault="True">
