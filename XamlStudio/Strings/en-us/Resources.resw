@@ -689,7 +689,7 @@ Please help us by reporting this issue in Feedback Hub.</value>
     <comment>Accessibility name for expander in SettingsPanel for Third-Party Notices</comment>
   </data>
   <data name="Debug_Binding_Disabled_Message.Text" xml:space="preserve">
-    <value>Turn on Binding Debugging to see information here.</value>
+    <value>Turn on Binding Debugging and create a Binding to see information here.</value>
     <comment>Text which appears in Debug panel when Binding Debugging is turned off.</comment>
   </data>
   <data name="Debug_Button_ClearHistoryFilter.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">

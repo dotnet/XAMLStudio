@@ -17,101 +17,105 @@
       mc:Ignorable="d">
 
     <Page.Resources>
-        <Style x:Key="ListViewItemContainerWideStyle" TargetType="ListViewItem">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-        </Style>
-        <DataTemplate x:Key="XamlBindingInfoTemplate" x:DataType="models:XamlBindingInfo">
-            <StackPanel Margin="0,8,0,8"
-                        BorderBrush="Gray"
-                        BorderThickness="0,0,0,1">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock FontFamily="Segoe UI"
-                               FontSize="12"
-                               FontWeight="SemiBold"
-                               Text="{x:Bind}" />
-                    <TextBlock Grid.Column="1">
-                        x<Run Text="{x:Bind BindingCount, Mode=OneWay}" /></TextBlock>
-                </Grid>
-                <TextBlock HorizontalAlignment="Right" Text="{x:Bind LastKnownBindingState, Mode=OneWay}" />
-                <controls:SwitchPresenter TargetType="x:Boolean" Value="{x:Bind HasConverter}">
-                    <controls:Case Value="True">
-                        <StackPanel>
-                            <TextBlock Text="{x:Bind LastConvertedValue.ToString(), Mode=OneWay}" />
-                            <TextBlock HorizontalAlignment="Center" Text="=&gt;" />
-                            <TextBlock HorizontalAlignment="Right" Text="{x:Bind LastConvertedResult.ToString(), Mode=OneWay}" />
-                        </StackPanel>
-                    </controls:Case>
-                    <controls:Case Value="False">
-                        <TextBlock HorizontalAlignment="Right" Text="{x:Bind LastConvertedResultOrValue.ToString(), Mode=OneWay}" />
-                    </controls:Case>
-                </controls:SwitchPresenter>
-                <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Text="{x:Bind LastConvertedTime.ToString('HH:mm:ss.fffffff', globalization:CultureInfo.CurrentCulture), Mode=OneWay}" />
-            </StackPanel>
-        </DataTemplate>
-        <DataTemplate x:Key="ConversionRecordTemplate" x:DataType="models:ConversionRecord">
-            <StackPanel>
-                <controls:SwitchPresenter TargetType="x:Boolean" Value="{x:Bind Parent.HasConverter}">
-                    <controls:Case Value="True">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Bind Value.ToString(), Mode=OneWay}" />
-                            <TextBlock Grid.Column="1" Text="=&gt;" />
-                            <TextBlock Grid.Column="2"
-                                       HorizontalAlignment="Right"
-                                       Text="{x:Bind Result.ToString(), Mode=OneWay}" />
-                        </Grid>
-                    </controls:Case>
-                    <controls:Case Value="False">
-                        <TextBlock HorizontalAlignment="Right" Text="{x:Bind ResultOrValue.ToString(), Mode=OneWay}" />
-                    </controls:Case>
-                </controls:SwitchPresenter>
-                <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Text="{x:Bind TimeStamp.ToString('HH:mm:ss.fffffff', globalization:CultureInfo.CurrentCulture)}" />
-            </StackPanel>
-        </DataTemplate>
-        <DataTemplate x:Key="ConversionRecordWithParentTemplate" x:DataType="models:ConversionRecord">
-            <StackPanel Margin="0,0,8,0" HorizontalAlignment="Stretch">
-                <TextBlock Text="{x:Bind Parent.ToString()}" />
-                <controls:SwitchPresenter TargetType="x:Boolean" Value="{x:Bind Parent.HasConverter}">
-                    <controls:Case Value="True">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Bind Value.ToString(), Mode=OneWay}" />
-                            <TextBlock Grid.Column="1" Text="=&gt;" />
-                            <TextBlock Grid.Column="2"
-                                       HorizontalAlignment="Right"
-                                       Text="{x:Bind Result.ToString(), Mode=OneWay}" />
-                        </Grid>
-                    </controls:Case>
-                    <controls:Case Value="False">
-                        <TextBlock HorizontalAlignment="Right" Text="{x:Bind ResultOrValue.ToString(), Mode=OneWay}" />
-                    </controls:Case>
-                </controls:SwitchPresenter>
-                <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Text="{x:Bind TimeStamp.ToString('HH:mm:ss.fffffff', globalization:CultureInfo.CurrentCulture)}" />
-            </StackPanel>
-        </DataTemplate>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///CommunityToolkit.WinUI.Controls.Segmented/Segmented/Segmented.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="ListViewItemContainerWideStyle" TargetType="ListViewItem" BasedOn="{StaticResource ListViewItemExpanded}">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            </Style>
+            <DataTemplate x:Key="XamlBindingInfoTemplate" x:DataType="models:XamlBindingInfo">
+                <StackPanel Margin="0,8,0,8"
+                            BorderBrush="Gray"
+                            BorderThickness="0,0,0,1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock FontFamily="Segoe UI"
+                                   FontSize="12"
+                                   FontWeight="SemiBold"
+                                   Text="{x:Bind}" />
+                        <TextBlock Grid.Column="1">
+                            x<Run Text="{x:Bind BindingCount, Mode=OneWay}" /></TextBlock>
+                    </Grid>
+                    <TextBlock HorizontalAlignment="Right" Text="{x:Bind LastKnownBindingState, Mode=OneWay}" />
+                    <controls:SwitchPresenter TargetType="x:Boolean" Value="{x:Bind HasConverter}">
+                        <controls:Case Value="True">
+                            <StackPanel>
+                                <TextBlock Text="{x:Bind LastConvertedValue.ToString(), Mode=OneWay}" />
+                                <TextBlock HorizontalAlignment="Center" Text="=&gt;" />
+                                <TextBlock HorizontalAlignment="Right" Text="{x:Bind LastConvertedResult.ToString(), Mode=OneWay}" />
+                            </StackPanel>
+                        </controls:Case>
+                        <controls:Case Value="False">
+                            <TextBlock HorizontalAlignment="Right" Text="{x:Bind LastConvertedResultOrValue.ToString(), Mode=OneWay}" />
+                        </controls:Case>
+                    </controls:SwitchPresenter>
+                    <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Text="{x:Bind LastConvertedTime.ToString('HH:mm:ss.fffffff', globalization:CultureInfo.CurrentCulture), Mode=OneWay}" />
+                </StackPanel>
+            </DataTemplate>
+            <DataTemplate x:Key="ConversionRecordTemplate" x:DataType="models:ConversionRecord">
+                <StackPanel>
+                    <controls:SwitchPresenter TargetType="x:Boolean" Value="{x:Bind Parent.HasConverter}">
+                        <controls:Case Value="True">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{x:Bind Value.ToString(), Mode=OneWay}" />
+                                <TextBlock Grid.Column="1" Text="=&gt;" />
+                                <TextBlock Grid.Column="2"
+                                           HorizontalAlignment="Right"
+                                           Text="{x:Bind Result.ToString(), Mode=OneWay}" />
+                            </Grid>
+                        </controls:Case>
+                        <controls:Case Value="False">
+                            <TextBlock HorizontalAlignment="Right" Text="{x:Bind ResultOrValue.ToString(), Mode=OneWay}" />
+                        </controls:Case>
+                    </controls:SwitchPresenter>
+                    <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Text="{x:Bind TimeStamp.ToString('HH:mm:ss.fffffff', globalization:CultureInfo.CurrentCulture)}" />
+                </StackPanel>
+            </DataTemplate>
+            <DataTemplate x:Key="ConversionRecordWithParentTemplate" x:DataType="models:ConversionRecord">
+                <StackPanel Margin="0,0,8,0" HorizontalAlignment="Stretch">
+                    <TextBlock Text="{x:Bind Parent.ToString()}" />
+                    <controls:SwitchPresenter TargetType="x:Boolean" Value="{x:Bind Parent.HasConverter}">
+                        <controls:Case Value="True">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{x:Bind Value.ToString(), Mode=OneWay}" />
+                                <TextBlock Grid.Column="1" Text="=&gt;" />
+                                <TextBlock Grid.Column="2"
+                                           HorizontalAlignment="Right"
+                                           Text="{x:Bind Result.ToString(), Mode=OneWay}" />
+                            </Grid>
+                        </controls:Case>
+                        <controls:Case Value="False">
+                            <TextBlock HorizontalAlignment="Right" Text="{x:Bind ResultOrValue.ToString(), Mode=OneWay}" />
+                        </controls:Case>
+                    </controls:SwitchPresenter>
+                    <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Text="{x:Bind TimeStamp.ToString('HH:mm:ss.fffffff', globalization:CultureInfo.CurrentCulture)}" />
+                </StackPanel>
+            </DataTemplate>
+        </ResourceDictionary>
     </Page.Resources>
 
-    <Grid Background="{ThemeResource Brush-Blue-Dark-1}">
+    <Grid Background="{ThemeResource LayerFillColorDefaultBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="54" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Border Margin="0,0,-12,0"
-                Padding="0,12,0,0"
-                Style="{StaticResource VSCodeAppBarHeaderStyle}">
+        <Border Style="{StaticResource VSCodeAppBarHeaderStyle}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -121,8 +125,7 @@
                 <ToggleSwitch x:Name="PowerBindingToggle"
                               x:Uid="Debug_PowerBindingToggle"
                               Grid.Column="1"
-                              Width="92"
-                              Height="32"
+                              MinWidth="104"
                               IsOn="{x:Bind services:SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value, Mode=OneWay}"
                               Tag="IsPowerBindingDebuggingEnabled">
                     <i:Interaction.Behaviors>
@@ -139,26 +142,26 @@
             </Grid>
         </Border>
 
-        <ComboBox x:Name="BindingViewMode"
-                  x:Uid="Debug_ViewMode"
-                  Grid.Row="1"
-                  Margin="24,4,0,12"
-                  HorizontalAlignment="Stretch"
-                  SelectedIndex="0">
-            <!--  TODO: Figure out how to localize options here.  -->
-            <x:String>Bindings</x:String>
-            <x:String>History</x:String>
-        </ComboBox>
+        <controls:Segmented x:Name="BindingViewMode"
+                            Margin="0,-8,0,8"
+                            Grid.Row="1"
+                            HorizontalAlignment="Center"
+                            SelectedValuePath="Tag"
+                            SelectedIndex="0"
+                            Style="{StaticResource PivotSegmentedStyle}">
+            <!--  TODO: Replace content with x:Uid from resources.  -->
+            <controls:SegmentedItem Content="Bindings" Tag="Bindings" />
+            <controls:SegmentedItem Content="History" Tag="History" />
+        </controls:Segmented>
 
         <controls:SwitchPresenter Grid.Row="2"
-                                  Margin="20,0,0,0"
+                                  Margin="8,0,8,0"
                                   Visibility="{x:Bind services:SettingsService.Instance.IsPowerBindingDebuggingEnabled.Value, Mode=OneWay}"
-                                  Value="{x:Bind BindingViewMode.SelectedValue, Mode=OneWay}">
+                                  Value="{x:Bind ((controls:SegmentedItem)BindingViewMode.SelectedItem).Tag, Mode=OneWay}">
             <controls:Case Value="Bindings">
                 <ListView HorizontalContentAlignment="Stretch"
                           IsItemClickEnabled="True"
                           ItemClick="ListView_ItemClick"
-                          ItemContainerStyle="{StaticResource ListViewItemContainerWideStyle}"
                           ItemTemplate="{StaticResource XamlBindingInfoTemplate}"
                           ItemsSource="{x:Bind MainViewModel.ActiveDocumentViewModel.Result.Bindings, Mode=OneWay}"
                           SelectionMode="None" />
@@ -169,7 +172,6 @@
                         <ListView HorizontalContentAlignment="Stretch"
                                   IsItemClickEnabled="True"
                                   ItemClick="ListView_ItemClick"
-                                  ItemContainerStyle="{StaticResource ListViewItemContainerWideStyle}"
                                   ItemTemplate="{StaticResource ConversionRecordWithParentTemplate}"
                                   ItemsSource="{x:Bind MainViewModel.ActiveDocumentViewModel.BindingHistory, Mode=OneWay}"
                                   SelectionMode="None" />
@@ -184,7 +186,8 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <ContentPresenter Content="{x:Bind HistoryFilter, Mode=OneWay}" ContentTemplate="{StaticResource XamlBindingInfoTemplate}" />
+                            <ContentPresenter Content="{x:Bind HistoryFilter, Mode=OneWay}" ContentTemplate="{StaticResource XamlBindingInfoTemplate}"
+                                              Margin="8,0,0,0"/>
                             <Button x:Uid="Debug_Button_ClearHistoryFilter"
                                     Grid.Column="1"
                                     Height="40"
@@ -197,7 +200,6 @@
                                       HorizontalContentAlignment="Stretch"
                                       IsItemClickEnabled="True"
                                       ItemClick="ListView_ItemClick"
-                                      ItemContainerStyle="{StaticResource ListViewItemContainerWideStyle}"
                                       ItemTemplate="{StaticResource ConversionRecordTemplate}"
                                       ItemsSource="{x:Bind HistoryFilter.BindingHistory, Mode=OneWay}"
                                       SelectionMode="None" />

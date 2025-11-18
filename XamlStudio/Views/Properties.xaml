@@ -77,12 +77,13 @@
                    Visibility="{x:Bind ViewModel.HasElement, Mode=OneWay}" />
 
         <Border Grid.Row="3"
-                Margin="24,0,4,4"
+                Margin="12,0,12,4"
                 Padding="0,0,0,8"
-                BorderBrush="{ThemeResource Brush-Blue-Dark-2}"
+                BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
                 BorderThickness="0,0,0,1">
             <!--  TODO: Do we want a 'Children' label here?  -->
-            <muxc:ItemsRepeater ItemsSource="{x:Bind ViewModel.SelectedElementChildren, Mode=OneWay}" Visibility="{x:Bind ViewModel.HasChildren, Mode=OneWay}">
+            <muxc:ItemsRepeater ItemsSource="{x:Bind ViewModel.SelectedElementChildren, Mode=OneWay}" Visibility="{x:Bind ViewModel.HasChildren, Mode=OneWay}"
+                                Margin="12,0,0,0">
                 <muxc:ItemsRepeater.ItemTemplate>
                     <DataTemplate x:DataType="DependencyObject">
                         <TextBlock Padding="36,4,12,4" DataContext="{x:Bind (DependencyObject)}">
@@ -152,12 +153,12 @@
         </HyperlinkButton>
 
         <ScrollViewer Grid.Row="5" Margin="24,8,0,0">
-            <ItemsControl Margin="0,0,8,0" ItemsSource="{x:Bind PropertyViewSource.View, Mode=OneWay}">
+            <ItemsControl Margin="0,-4,8,0" ItemsSource="{x:Bind PropertyViewSource.View, Mode=OneWay}">
                 <ItemsControl.GroupStyle>
                     <GroupStyle HidesIfEmpty="True">
                         <GroupStyle.HeaderTemplate>
                             <DataTemplate>
-                                <TextBlock FontWeight="Bold" Text="{Binding Key}" />
+                                <TextBlock FontWeight="Bold" Text="{Binding Key}" Margin="0,8,0,-4"/>
                             </DataTemplate>
                         </GroupStyle.HeaderTemplate>
                     </GroupStyle>
@@ -165,8 +166,9 @@
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="model:PropertyInfo">
-                        <Grid Padding="12,6,8,6"
-                              BorderBrush="{ThemeResource Brush-Blue-Dark-2}"
+                        <Grid Padding="0,6,0,6"
+                              Margin="12,0,4,0"
+                              BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
                               BorderThickness="0,0,0,1">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
