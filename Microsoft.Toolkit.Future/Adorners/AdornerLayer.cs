@@ -21,13 +21,43 @@ public partial class AdornerLayer : Canvas
         return (UIElement)obj.GetValue(XamlProperty);
     }
 
+    /// <summary>
+    /// Sets the <see cref="XamlProperty"/> of a <see cref="FrameworkElement"/>. Use this to attach any <see cref="UIElement"/> as an adorner to another <see cref="FrameworkElement"/>. Requires that an <see cref="AdornerLayer"/> is available in the visual tree above the adorned element.
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <param name="value"></param>
     public static void SetXaml(FrameworkElement obj, UIElement value)
     {
         obj.SetValue(XamlProperty, value);
     }
 
+    /// <summary>
+    /// Identifies the Xaml Attached Property.
+    /// </summary>
     public static readonly DependencyProperty XamlProperty =
         DependencyProperty.RegisterAttached("Xaml", typeof(UIElement), typeof(AdornerLayer), new PropertyMetadata(null, OnXamlPropertyChanged));
+
+    public AdornerLayer()
+    {
+        SizeChanged += AdornerLayer_SizeChanged;
+    }
+
+    private void AdornerLayer_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        foreach (var adorner in Children)
+        {
+            if (adorner is Border border && border.Tag is FrameworkElement adornedElement)
+            {
+                border.Width = adornedElement.ActualWidth;
+                border.Height = adornedElement.ActualHeight;
+
+                var coord = this.CoordinatesTo(adornedElement);
+
+                Canvas.SetLeft(border, coord.X);
+                Canvas.SetTop(border, coord.Y);
+            }
+        }
+    }
 
     private static async void OnXamlPropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
     {
@@ -203,7 +233,8 @@ public partial class AdornerLayer : Canvas
             Width = adornedElement.ActualWidth, // TODO: Register/tie to size of element better for changes.
             Height = adornedElement.ActualHeight,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch
+            VerticalAlignment = VerticalAlignment.Stretch,
+            Tag = adornedElement,
         };
 
         var coord = layer.CoordinatesTo(adornedElement);
