@@ -26,7 +26,7 @@ public partial class Document :
 {
     private DesignerMode _designerMode = DesignerMode.View;
 
-    private void Segmented_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void DesignerModeSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         RemoveAdorner();
 

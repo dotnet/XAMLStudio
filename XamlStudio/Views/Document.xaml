@@ -60,13 +60,15 @@
                         <Setter Target="SplitterBar.(Grid.RowSpan)" Value="3" />
                         <Setter Target="SplitterBar.(Grid.ColumnSpan)" Value="1" />
                         <Setter Target="SplitterBar.ResizeDirection" Value="Columns" />
+                        <!-- Workaround for https://github.com/CommunityToolkit/Windows/issues/748 -->
+                        <Setter Target="SplitterBar.Orientation" Value="Vertical" />
 
                         <Setter Target="SplitterCommandBarLeft.(Grid.Row)" Value="0" />
                         <Setter Target="SplitterCommandBarLeft.(Grid.Column)" Value="1" />
                         <Setter Target="SplitterCommandBarLeft.(Grid.RowSpan)" Value="3" />
                         <Setter Target="SplitterCommandBarLeft.(Grid.ColumnSpan)" Value="1" />
                         <Setter Target="SplitterCommandBarLeft.Orientation" Value="Vertical" />
-                        <Setter Target="SplitterCommandBarLeft.Margin" Value="0,0,0,200" />
+                        <Setter Target="SplitterCommandBarLeft.Margin" Value="0,0,0,260" />
 
                         <Setter Target="SplitterCommandBarRight.(Grid.Row)" Value="0" />
                         <Setter Target="SplitterCommandBarRight.(Grid.Column)" Value="1" />
@@ -107,13 +109,15 @@
                         <Setter Target="SplitterBar.(Grid.RowSpan)" Value="3" />
                         <Setter Target="SplitterBar.(Grid.ColumnSpan)" Value="1" />
                         <Setter Target="SplitterBar.ResizeDirection" Value="Columns" />
+                        <!-- Workaround for https://github.com/CommunityToolkit/Windows/issues/748 -->
+                        <Setter Target="SplitterBar.Orientation" Value="Vertical" />
 
                         <Setter Target="SplitterCommandBarLeft.(Grid.Row)" Value="0" />
                         <Setter Target="SplitterCommandBarLeft.(Grid.Column)" Value="1" />
                         <Setter Target="SplitterCommandBarLeft.(Grid.RowSpan)" Value="3" />
                         <Setter Target="SplitterCommandBarLeft.(Grid.ColumnSpan)" Value="1" />
                         <Setter Target="SplitterCommandBarLeft.Orientation" Value="Vertical" />
-                        <Setter Target="SplitterCommandBarLeft.Margin" Value="0,0,0,200" />
+                        <Setter Target="SplitterCommandBarLeft.Margin" Value="0,0,0,260" />
 
                         <Setter Target="SplitterCommandBarRight.(Grid.Row)" Value="0" />
                         <Setter Target="SplitterCommandBarRight.(Grid.Column)" Value="1" />
@@ -193,7 +197,7 @@
         <StackPanel x:Name="SplitterCommandBarLeft"
                     Grid.Row="1"
                     Grid.ColumnSpan="3"
-                    Margin="0,2,300,2"
+                    Margin="0,2,308,2"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Background="Transparent"
@@ -205,8 +209,9 @@
                     Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
                 <SymbolIcon fex:SymbolIconExtensions.FontSize="16" Symbol="Refresh" />
             </Button>
-            <controls:Segmented SelectedIndex="0"
-                                SelectionChanged="Segmented_SelectionChanged"
+            <controls:Segmented x:Name="DesignerModeSelector"
+                                SelectedIndex="0"
+                                SelectionChanged="DesignerModeSelector_SelectionChanged"
                                 SelectionMode="Single">
                 <!--  TODO: Move Tooltip to Resources...  -->
                 <controls:SegmentedItem Icon="{ui:FontIcon Glyph=&#xE890;}"
