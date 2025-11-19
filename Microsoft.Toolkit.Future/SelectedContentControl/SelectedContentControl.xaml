@@ -1,0 +1,65 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="using:CommunityToolkit.WinUI.Controls.Future">
+
+    <!--  Item container style  -->
+    <Style x:Key="DefaultSelectedContentItemStyle" TargetType="controls:SelectedContentItem">
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="IsHoldingEnabled" Value="False" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:SelectedContentItem">
+                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style BasedOn="{StaticResource DefaultSelectedContentItemStyle}" TargetType="controls:SelectedContentItem" />
+
+    <!--  Control style  -->
+    <Style x:Key="DefaultSelectedContentControlStyle" TargetType="controls:SelectedContentControl">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="IsSwipeEnabled" Value="False" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="SelectionMode" Value="Single" />
+        <Setter Property="TabNavigation" Value="Once" />
+        <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <Grid />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:SelectedContentControl">
+                    <ScrollViewer x:Name="ScrollViewer"
+                                  Background="{TemplateBinding Background}"
+                                  BorderBrush="{TemplateBinding BorderBrush}"
+                                  BorderThickness="{TemplateBinding BorderThickness}"
+                                  CornerRadius="{TemplateBinding CornerRadius}"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  HorizontalScrollMode="Disabled"
+                                  IsTabStop="False"
+                                  VerticalScrollBarVisibility="Disabled"
+                                  VerticalScrollMode="Disabled"
+                                  ZoomMode="Disabled">
+                        <ItemsPresenter />
+                    </ScrollViewer>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style BasedOn="{StaticResource DefaultSelectedContentControlStyle}" TargetType="controls:SelectedContentControl" />
+</ResourceDictionary>

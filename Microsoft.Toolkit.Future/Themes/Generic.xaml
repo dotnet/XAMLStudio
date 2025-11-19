@@ -2,5 +2,6 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///Microsoft.Toolkit.Future/Adorners/AdornerDecorator.xaml" />
         <ResourceDictionary Source="ms-appx:///Microsoft.Toolkit.Future/Extensions/Pivot/Pivot.xaml" />
+        <ResourceDictionary Source="ms-appx:///Microsoft.Toolkit.Future/SelectedContentControl/SelectedContentControl.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

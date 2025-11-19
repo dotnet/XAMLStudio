@@ -293,18 +293,18 @@
             </controls:Case>
             <!--  Document  -->
             <controls:Case IsDefault="True">
-                <FlipView HorizontalAlignment="Stretch"
-                          VerticalAlignment="Stretch"
-                          ItemsSource="{x:Bind ViewModel.OpenFiles, Mode=OneWay}"
-                          SelectedItem="{x:Bind ViewModel.ActiveFile, Mode=TwoWay}">
-                    <FlipView.ItemTemplate>
+                <future:SelectedContentControl HorizontalAlignment="Stretch"
+                                               VerticalAlignment="Stretch"
+                                               ItemsSource="{x:Bind ViewModel.OpenFiles, Mode=OneWay}"
+                                               SelectedItem="{x:Bind ViewModel.ActiveFile, Mode=OneWay}">
+                    <future:SelectedContentControl.ItemTemplate>
                         <DataTemplate x:DataType="models:XamlDocument">
                             <local:Document x:Name="Document"
                                             HorizontalAlignment="Stretch"
                                             ViewModel="{Binding Converter={StaticResource DocumentToViewModelConverter}}" />
                         </DataTemplate>
-                    </FlipView.ItemTemplate>
-                </FlipView>
+                    </future:SelectedContentControl.ItemTemplate>
+                </future:SelectedContentControl>
             </controls:Case>
         </controls:SwitchPresenter>
     </Grid>

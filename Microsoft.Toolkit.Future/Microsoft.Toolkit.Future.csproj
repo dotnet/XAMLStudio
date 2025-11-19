@@ -129,6 +129,8 @@
     <Compile Include="Extensions\SymbolIcon\SymbolIconExtensions.cs" />
     <Compile Include="Extensions\FrameworkElement\FrameworkElementExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SelectedContentControl\SelectedContentControl.cs" />
+    <Compile Include="SelectedContentControl\SelectedContentItem.cs" />
     <EmbeddedResource Include="Properties\Microsoft.Toolkit.Future.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -162,6 +164,10 @@
     <Page Include="Extensions\Pivot\Styles\SystemTabStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SelectedContentControl\SelectedContentControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
