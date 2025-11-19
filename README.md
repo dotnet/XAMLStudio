@@ -1,11 +1,11 @@
 ![XAML Studio Header Image](docs/images/header.png)
 
 <h1 align="center">
-    XAML Studio v1
+    XAML Studio v2
 </h1>
 
 > [!IMPORTANT]  
-> The `main` branch of XAML Studio is of the v1.1 Microsoft Store release. The most recent developments are in the `dev` branch. Outside of PRs to docs, any contributions should pertain to the `dev` branch.
+> The `main` branch of XAML Studio is of the v1.1 Microsoft Store release. The most recent developments are currently in the `dev` branch for v2. Outside of PRs to docs, any contributions should pertain to the `dev` branch.
 
 Created for WinUI XAML developers, XAML Studio helps you rapidly prototype ideas before integrating them into your app within Visual Studio. It provides:
 
@@ -19,13 +19,23 @@ Created for WinUI XAML developers, XAML Studio helps you rapidly prototype ideas
 - Namespace Helpers 🌎 
 
 <p align="center">
-<img src="docs/images/hero-image-1.png" alt="AI Dev Gallery" width="600"/>
+<img src="docs/images/hero-image-1.png" alt="XAML Studio" width="600"/>
 </p>
 <p align="center">
 <a href="http://aka.ms/GetXAMLStudio">
 	<img alt="Store badge" src="docs/images/store-badge.png" width="200"/>
 </a>
 </p>
+
+## New Features in V2
+
+- **New Fluent UI Design**
+- **Folder Support**: Image Loading, Design Data Loading, and More!
+- **Live Property Panel**: Edit, Inspect, and Experiment
+- More Quick Access Preview Options like Refresh, Alignment Grid, Clipping, and Theme Toggle
+- Breadcrumb XAML Navigation Bar
+- Right-Click Menu to Duplicate the Open Tab
+- Updated Libraries & Bug Fixes
 
 ## 🚀 Getting started
 
