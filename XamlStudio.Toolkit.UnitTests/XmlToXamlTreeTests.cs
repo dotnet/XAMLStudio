@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Tests;
 using CommunityToolkit.WinUI;
 using Microsoft.Language.Xml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
 using Windows.UI;
@@ -289,6 +290,72 @@ public class XmlToXamlTreeTests : VisualUITestBase
             }
 
             Assert.AreEqual(6, coordinator.Count, "Expected 5 elements to be mapped.");
+
+            await UnloadTestContentAsync(fwe);
+        });
+    }
+
+    [TestMethod]
+    public async Task NamespacedControl_XmlToXamlTest()
+    {
+        await EnqueueAsync(async () =>
+        {
+            var xaml =
+                """
+                <Page xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+                      x:Name="ToolboxPage">
+
+                    <muxc:TabView x:Name="MyTabView">
+                        <muxc:TabViewItem Header="Tab 1">
+                            <TextBlock Text="Content for Tab 1"/>
+                        </muxc:TabViewItem>
+                        <muxc:TabViewItem Header="Tab 2">
+                            <TextBlock Text="Content for Tab 2"/>
+                        </muxc:TabViewItem>
+                    </muxc:TabView>
+                </Page>
+                """;
+
+            var fwe = XamlReader.Load(xaml) as FrameworkElement;
+            var xml = Parser.ParseText(xaml);
+
+            await LoadTestContentAsync(fwe);
+
+            XamlXmlTreeCoordinator coordinator = new();
+            coordinator.Initialize(xml, fwe);
+
+            var tabview = fwe.FindChild("MyTabView");
+            Assert.IsTrue(coordinator.TryGetXmlElement(tabview, out var tabviewNode));
+            if (tabviewNode is IXmlElementSyntax tabviewElement)
+            {
+                Assert.AreEqual("MyTabView", tabviewElement.GetAttributeValue("Name", "x"));
+            }
+            else
+            {
+                Assert.Fail("Xml Node not an Element for TabView");
+            }
+
+            var tabviewitemNode = xml.FindNode(xaml.IndexOf("<muxc:TabViewItem") + 1).ParentElement;
+            if (tabviewitemNode is IXmlElementSyntax tabviewitemElement)
+            {
+                Assert.IsTrue(coordinator.TryGetVisualElement(tabviewitemElement, out var dotbe));
+                if (dotbe is TabViewItem tabViewItem)
+                {
+                    Assert.AreEqual("Tab 1", tabViewItem.Header);
+                }
+                else
+                {
+                    Assert.Fail("Failed to retrieve TabViewItem from Xml Element");
+                }
+            }
+            else
+            {
+                Assert.Fail("Xml Node not an Element for TabViewItem");
+            }
+
+            Assert.AreEqual(6, coordinator.Count, "Expected 6 elements to be mapped.");
 
             await UnloadTestContentAsync(fwe);
         });
