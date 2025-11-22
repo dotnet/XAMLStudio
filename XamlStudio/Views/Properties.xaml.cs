@@ -132,6 +132,7 @@ public sealed partial class Properties : Page,
     // Method used to update state based on a given Visual element.
     private void UpdateProperties(DependencyObject element, IXmlElementSyntax xmlHint = null)
     {
+        // TODO: We should figure out where we align ViewModel logic vs. View logic, harder to distinguish as a lot of our model objects are UI elements...
         if (element != ViewModel.SelectedElement)
         {
             ViewModel.SelectedElement = element;
@@ -244,6 +245,46 @@ public sealed partial class Properties : Page,
             ViewModel.UnsetPropertyValues = new(unsetProperties
                                                 .GroupBy(static pi => pi.Group)
                                                 .OrderBy(g => groupOrder.IndexOf(g.Key)));
+
+            // Check for Visual States
+            ViewModel.VisualStates = new();
+            if (element is FrameworkElement fe)
+            {
+                Dictionary<string, VisualStateInfo[]> visualStateGroups = new();
+
+                // Get child of the control in visual tree as that'll contain the VSM
+                // and will be more expected when manipulating a control itself (as that's the element we manipulate).
+                var child = fe.FindDescendant<FrameworkElement>();
+                if (child is not null)
+                {
+                    int gindex = 0;
+                    var groups = VisualStateManager.GetVisualStateGroups(child);
+                    foreach (var group in groups)
+                    {
+                        var gname = group.Name;
+                        if (string.IsNullOrEmpty(gname))
+                        {
+                            gname = $"- Unnamed {gindex++} -";
+                        }
+
+                        List<VisualStateInfo> visualStates = new();
+                        foreach (var state in group.States)
+                        {
+                            visualStates.Add(new VisualStateInfo(state.Name, gname, state == group.CurrentState));
+                        }
+                        if (!visualStateGroups.ContainsKey(gname))
+                        {
+                            visualStateGroups.Add(gname, visualStates.ToArray());
+                        }
+                        else
+                        {
+                            // TODO: Warning of duplicate group name?
+                        }
+                    }
+
+                    ViewModel.VisualStates = visualStateGroups;
+                }
+            }
         }
     }
 
@@ -276,6 +317,17 @@ public sealed partial class Properties : Page,
         if (sender.FindAscendant<TextBlock>()?.DataContext is DependencyObject element)
         {
             WeakReferenceMessenger.Default.Send<SelectedVisualElementMessage>(new(element));
+        }
+    }
+
+    private void ListView_VisualStates_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (e.AddedItems.Count > 0
+            && e.AddedItems[0] is VisualStateInfo vsi
+            && ViewModel.SelectedElement is Control ctl)
+        {
+            // TODO: Do we want an option for transitions or not?
+            VisualStateManager.GoToState(ctl, vsi.Name, true);    
         }
     }
 }

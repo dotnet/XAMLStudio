@@ -1005,4 +1005,8 @@ a.k.a. XAML Llama 🦙</value>
     <value>Select a XAML element to see information here.</value>
     <comment>Text which appears in Properties panel when no element is selected.</comment>
   </data>
+  <data name="Properties_VisualStates.Header" xml:space="preserve">
+    <value>Visual States</value>
+    <comment>Header label for Visual State section of Properties Activity Panel</comment>
+  </data>
 </root>

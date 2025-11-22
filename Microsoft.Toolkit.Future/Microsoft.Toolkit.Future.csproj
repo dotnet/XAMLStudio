@@ -108,6 +108,7 @@
   <ItemGroup>
     <Compile Include="Adorners\AdornerDecorator.cs" />
     <Compile Include="Adorners\AdornerLayer.cs" />
+    <Compile Include="Behaviors\ListViewItemSelectedBehavior.cs" />
     <Compile Include="Controls\ManualToggleButton.cs" />
     <Compile Include="Converters\CollectionContainsConverter.cs" />
     <Compile Include="Data\Grouping.cs" />
@@ -134,6 +135,12 @@
     <EmbeddedResource Include="Properties\Microsoft.Toolkit.Future.rd.xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Uwp.Behaviors">
+      <Version>8.2.250402</Version>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Uwp.Helpers">
+      <Version>8.2.250402</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
     </PackageReference>

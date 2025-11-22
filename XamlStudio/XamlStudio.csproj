@@ -23,6 +23,7 @@
     <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
     <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -201,6 +202,7 @@
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
     <Compile Include="Models\FolderLocation.cs" />
     <Compile Include="Models\Messages.cs" />
+    <Compile Include="Models\VisualStateInfo.cs" />
     <Compile Include="Models\PropertyInfo.cs" />
     <Compile Include="Models\SyncStatus.cs" />
     <Compile Include="ViewModels\PropertiesViewModel.cs" />

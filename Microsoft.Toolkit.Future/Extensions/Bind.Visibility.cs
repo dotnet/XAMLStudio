@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Windows.UI.Xaml;
 
 namespace CommunityToolkit.WinUI.Extensions.Future;
@@ -89,4 +90,6 @@ public static partial class Bind
     {
         return !EqualTo(lhs, rhs, tolerance) ? Visibility.Visible : Visibility.Collapsed;
     }
+
+    public static Visibility AnyV(ICollection? collection) => collection?.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
 }

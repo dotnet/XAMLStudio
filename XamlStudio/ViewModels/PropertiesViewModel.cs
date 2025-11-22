@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.Generic;
 using Windows.UI.Xaml;
 using XamlStudio.Models;
 
@@ -30,4 +31,7 @@ public partial class PropertiesViewModel : ObservableObject
 
     [ObservableProperty]
     public partial ObservableGroupedCollection<string, PropertyInfo> UnsetPropertyValues { get; set; }
+
+    [ObservableProperty]
+    public partial Dictionary<string, VisualStateInfo[]> VisualStates { get; set; }
 }
