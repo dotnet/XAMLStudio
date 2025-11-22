@@ -1001,4 +1001,8 @@ a.k.a. XAML Llama 🦙</value>
     <value>Preview Area Backgroud Color</value>
     <comment>Header for Settings Card for Preview Area Background Color</comment>
   </data>
+  <data name="Properties_NoElement_Message.Text" xml:space="preserve">
+    <value>Select a XAML element to see information here.</value>
+    <comment>Text which appears in Properties panel when no element is selected.</comment>
+  </data>
 </root>
