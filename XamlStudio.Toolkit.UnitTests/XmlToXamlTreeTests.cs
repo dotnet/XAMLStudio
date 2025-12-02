@@ -360,4 +360,124 @@ public class XmlToXamlTreeTests : VisualUITestBase
             await UnloadTestContentAsync(fwe);
         });
     }
+
+    [TestMethod]
+    public async Task ListViewSimple_XmlToXamlTest()
+    {
+        await EnqueueAsync(async () =>
+        {
+            var xaml =
+                """
+                <Page xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+                      x:Name="ToolboxPage">
+
+                    <ListView x:Name="MyListView">
+                        <ListViewItem>
+                            <TextBlock Text="Content for Item 1"/>
+                        </ListViewItem>
+                    </ListView>
+                </Page>
+                """;
+
+            var fwe = XamlReader.Load(xaml) as FrameworkElement;
+            var xml = Parser.ParseText(xaml);
+
+            await LoadTestContentAsync(fwe);
+
+            XamlXmlTreeCoordinator coordinator = new();
+            coordinator.Initialize(xml, fwe);
+
+            var listview = fwe.FindChild("MyListView");
+            Assert.IsTrue(coordinator.TryGetXmlElement(listview, out var listviewNode));
+            if (listviewNode is IXmlElementSyntax listviewElement)
+            {
+                Assert.AreEqual("MyListView", listviewElement.GetAttributeValue("Name", "x"));
+            }
+            else
+            {
+                Assert.Fail("Xml Node not an Element for ListView");
+            }
+
+            Assert.AreEqual(4, coordinator.Count, "Expected 4 elements to be mapped.");
+
+            await UnloadTestContentAsync(fwe);
+        });
+    }
+
+    [TestMethod]
+    public async Task ListViewComplex_XmlToXamlTest()
+    {
+        await EnqueueAsync(async () =>
+        {
+            var xaml =
+                """
+                <Page
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
+                    mc:Ignorable="d"
+                    d:DesignWidth="400"
+                    d:DesignHeight="420">
+
+                    <Page.Resources>
+                        <converters:StringFormatConverter x:Key="StringFormatConverter"/>
+                        <DataTemplate x:Key="PhotoTemplate">
+                            <Grid Background="{Binding Color}"
+                                  Margin="0">
+                                <TextBlock Text="{Binding Word}" FontSize="{Binding Size}" Foreground="Black"/>
+                            </Grid>
+                        </DataTemplate>
+                        <Style TargetType="ListViewItem">
+                            <!--  Change those values to change the WrapPanel's children alignment  -->
+                            <Setter Property="VerticalContentAlignment" Value="Center" />
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                            <Setter Property="Margin" Value="0" />
+                            <Setter Property="Padding" Value="0" />
+                            <Setter Property="MinWidth" Value="0" />
+                            <Setter Property="MinHeight" Value="0" />
+                        </Style>
+                    </Page.Resources>
+
+                    <ListView x:Name="MyListView"
+                              ItemTemplate="{StaticResource PhotoTemplate}"
+                              ItemsSource="{Binding WrapPanelCollection, Mode=OneWay}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel x:Name="sampleStackPanel"
+                                            Padding="12"
+                                            Spacing="4" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ListView>
+                </Page>
+                """;
+
+            var fwe = XamlReader.Load(xaml) as FrameworkElement;
+            var xml = Parser.ParseText(xaml);
+
+            await LoadTestContentAsync(fwe);
+
+            XamlXmlTreeCoordinator coordinator = new();
+            coordinator.Initialize(xml, fwe);
+
+            var listview = fwe.FindChild("MyListView");
+            Assert.IsTrue(coordinator.TryGetXmlElement(listview, out var listviewNode));
+            if (listviewNode is IXmlElementSyntax listviewElement)
+            {
+                Assert.AreEqual("MyListView", listviewElement.GetAttributeValue("Name", "x"));
+            }
+            else
+            {
+                Assert.Fail("Xml Node not an Element for ListView");
+            }
+
+            Assert.AreEqual(2, coordinator.Count, "Expected 2 elements to be mapped.");
+
+            await UnloadTestContentAsync(fwe);
+        });
+    }
 }
