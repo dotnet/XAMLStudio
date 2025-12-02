@@ -65,13 +65,22 @@ public sealed partial class Properties : Page,
         {
             try
             {
-                ViewModel.SelectedElement.SetValue(pi.Property, XamlBindingHelper.ConvertValue(pi.Type, tb.Text));
+                var value = XamlBindingHelper.ConvertValue(pi.Type, tb.Text);
+                pi.Value = value;
+                ViewModel.SelectedElement.SetValue(pi.Property, value);
                 // TODO: Localize these group names
-                var group = ViewModel.PropertyValues.FirstGroupByKey("- Set In XAML -");
-                if (group.Contains(pi))
+                var inXamlGroup = ViewModel.PropertyValues.FirstGroupByKeyOrDefault("- Set In XAML -");
+                if (inXamlGroup?.Contains(pi) == true)
                 {
-                    group.Remove(pi);
-                    // TODO: pi.Group = "- Modified -";
+                    inXamlGroup.Remove(pi);
+                }
+
+                // Add to modified group (if it's not already there)
+                var modifiedGroup = ViewModel.PropertyValues.FirstGroupByKeyOrDefault("- Modified -");
+                if (modifiedGroup == null
+                    || !modifiedGroup.Contains(pi))
+                {
+                    pi.Group = "- Modified -";
                     ViewModel.PropertyValues.AddItem("- Modified -", pi);
                 }
             }

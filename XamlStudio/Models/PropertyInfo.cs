@@ -12,7 +12,8 @@ public partial class PropertyInfo : ObservableObject
 
     private bool IsDefault => Value == DependencyProperty.UnsetValue;
 
-    public string Group { get; private set; }
+    [ObservableProperty]
+    public partial string Group { get; set; }
 
     public Type ElementType { get; private set; }
 
