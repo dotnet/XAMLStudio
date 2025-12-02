@@ -127,7 +127,7 @@ public sealed partial class Properties : Page,
         {
             ViewModel.SelectedElement = element;
             if (element.FindAscendant<DependencyObject>() is DependencyObject parent
-                && parent != MainViewModel.ActiveDocumentViewModel.XamlRoot) // Important: Prevent looking into XAML Studio itself!
+                && parent != MainViewModel.ActiveDocumentViewModel.PreviewerXamlRoot) // Important: Prevent looking into XAML Studio itself!
             {
                 ViewModel.SelectedElementParent = parent;
             }

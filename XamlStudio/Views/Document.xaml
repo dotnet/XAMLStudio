@@ -152,7 +152,7 @@
                         <Grid x:Name="PreviewRootSpecific"
                               ui:UIElementExtensions.ClipToBounds="{x:Bind ViewModel.Settings.IsPreviewClippingEnabled.Value, Mode=OneWay}"
                               Background="{x:Bind ViewModel.Settings.PreviewAreaBackgroundColor, Mode=OneWay}">
-                            <Grid x:Name="XamlRootSpecific" />
+                            <Grid x:Name="PreviewXamlRootSpecific" />
 
                             <developerTools:AlignmentGrid HorizontalStep="{x:Bind ViewModel.Settings.AlignmentGridHorizontalStep, Mode=OneWay, FallbackValue=8}"
                                                           Opacity="{x:Bind ViewModel.Settings.AlignmentGridOpacity, Mode=OneWay}"
@@ -171,7 +171,7 @@
                     <Grid x:Name="PreviewRoot"
                           ui:UIElementExtensions.ClipToBounds="{x:Bind ViewModel.Settings.IsPreviewClippingEnabled.Value, Mode=OneWay}"
                           Background="{x:Bind ViewModel.Settings.PreviewAreaBackgroundColor, Mode=OneWay}">
-                        <Grid x:Name="XamlRoot" />
+                        <Grid x:Name="PreviewXamlRoot" />
 
                         <developerTools:AlignmentGrid HorizontalStep="{x:Bind ViewModel.Settings.AlignmentGridHorizontalStep, Mode=OneWay, FallbackValue=8}"
                                                       Opacity="{x:Bind ViewModel.Settings.AlignmentGridOpacity, Mode=OneWay}"

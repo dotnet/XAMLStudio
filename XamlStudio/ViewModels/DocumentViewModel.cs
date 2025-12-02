@@ -60,7 +60,7 @@ public partial class DocumentViewModel : ObservableObject
     [ObservableProperty]
     public partial bool HasCompiled { get; set; }
 
-    public Panel XamlRoot { get; set; }
+    public Panel PreviewerXamlRoot { get; set; }
 
     public ElementTheme ActualTheme { get; set; }
 
@@ -114,7 +114,7 @@ public partial class DocumentViewModel : ObservableObject
 
     partial void OnDataContextChanged(object value)
     {
-        if (XamlRoot != null && XamlRoot.Children.FirstOrDefault() is FrameworkElement fwe)
+        if (PreviewerXamlRoot != null && PreviewerXamlRoot.Children.FirstOrDefault() is FrameworkElement fwe)
         {
             fwe.DataContext = value;
         }

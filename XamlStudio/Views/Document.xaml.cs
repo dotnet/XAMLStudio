@@ -125,7 +125,7 @@ public sealed partial class Document : UserControl,
 
     private void UnloadViewModel(DocumentViewModel model)
     {
-        ViewModel.XamlRoot = null;
+        ViewModel.PreviewerXamlRoot = null;
 
         WeakReferenceMessenger.Default.UnregisterAll(this);
 
@@ -134,11 +134,9 @@ public sealed partial class Document : UserControl,
 
     private void InitializeViewModel(DocumentViewModel model)
     {
-        LoadedDocument = model.Document;
+        var previewerRoot = IsSpecificPreviewSize ? PreviewRootSpecific : PreviewXamlRoot;
 
-        // Pass Reference to our Control so we can 'render' to it.
-        ViewModel.XamlRoot = XamlRoot; // TODO: this probably a bug as we have two xaml roots now...
-        ViewModel.ActualTheme = ActualTheme;
+        LoadedDocument = model.Document;
 
         CodeEditor.Options.Folding = true;
 
@@ -157,7 +155,7 @@ public sealed partial class Document : UserControl,
         }
         else
         {
-            XamlRoot.Children.Add(new TextBlock()
+            previewerRoot.Children.Add(new TextBlock()
             {
                 Text = "Document_Compile".GetLocalized(),
                 HorizontalAlignment = HorizontalAlignment.Center,
@@ -268,7 +266,7 @@ public sealed partial class Document : UserControl,
             // Remove any existing Adorner before we re-render
             RemoveAdorner();
 
-            var cleanPanel = IsSpecificPreviewSize ? XamlRootSpecific : XamlRoot;
+            var cleanPanel = IsSpecificPreviewSize ? PreviewXamlRootSpecific : PreviewXamlRoot;
 
             // Clean-up existing XAML content
             if (cleanPanel.Children.Count > 0)
@@ -291,24 +289,24 @@ public sealed partial class Document : UserControl,
                 PreviewRootSpecific.Width = result.RequestedWidth.Value;
                 if (fe != null && fe.ReadLocalValue(WidthProperty) != DependencyProperty.UnsetValue)
                 {
-                    XamlRootSpecific.HorizontalAlignment = HorizontalAlignment.Center;
+                    PreviewXamlRootSpecific.HorizontalAlignment = HorizontalAlignment.Center;
                 }
                 else
                 {
-                    XamlRootSpecific.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    PreviewXamlRootSpecific.HorizontalAlignment = HorizontalAlignment.Stretch;
                 }
                 specificSize = true;
             }
             else if (fe != null && fe.ReadLocalValue(WidthProperty) != DependencyProperty.UnsetValue)
             {
                 PreviewRootSpecific.Width = fe.Width;
-                XamlRootSpecific.HorizontalAlignment = HorizontalAlignment.Center;
+                PreviewXamlRootSpecific.HorizontalAlignment = HorizontalAlignment.Center;
                 specificSize = true;
             }
             else
             {
                 PreviewRootSpecific.ClearValue(WidthProperty);
-                XamlRootSpecific.HorizontalAlignment = HorizontalAlignment.Stretch;
+                PreviewXamlRootSpecific.HorizontalAlignment = HorizontalAlignment.Stretch;
             }
 
             if (result.RequestedHeight != null)
@@ -316,30 +314,30 @@ public sealed partial class Document : UserControl,
                 PreviewRootSpecific.Height = result.RequestedHeight.Value;
                 if (fe != null && fe.ReadLocalValue(HeightProperty) != DependencyProperty.UnsetValue)
                 {
-                    XamlRootSpecific.VerticalAlignment = VerticalAlignment.Center;
+                    PreviewXamlRootSpecific.VerticalAlignment = VerticalAlignment.Center;
                 }
                 else
                 {
-                    XamlRootSpecific.VerticalAlignment = VerticalAlignment.Stretch;
+                    PreviewXamlRootSpecific.VerticalAlignment = VerticalAlignment.Stretch;
                 }
                 specificSize = true;
             }
             else if (fe != null && fe.ReadLocalValue(HeightProperty) != DependencyProperty.UnsetValue)
             {
                 PreviewRootSpecific.Height = fe.Height;
-                XamlRootSpecific.VerticalAlignment = VerticalAlignment.Center;
+                PreviewXamlRootSpecific.VerticalAlignment = VerticalAlignment.Center;
                 specificSize = true;
             }
             else
             {
                 PreviewRootSpecific.ClearValue(HeightProperty);
-                XamlRootSpecific.VerticalAlignment = VerticalAlignment.Stretch;
+                PreviewXamlRootSpecific.VerticalAlignment = VerticalAlignment.Stretch;
             }
 
             // TODO: Have a set of specific device/resolution sizes for testing, HD, etc...
             IsSpecificPreviewSize = specificSize;
 
-            var targetPanel = IsSpecificPreviewSize ? XamlRootSpecific : XamlRoot;
+            var targetPanel = IsSpecificPreviewSize ? PreviewXamlRootSpecific : PreviewXamlRoot;
 
             var element = result.Element;
             if (result.IsResourceDictionary)
@@ -357,6 +355,10 @@ public sealed partial class Document : UserControl,
                 // Add element to main panel
                 targetPanel.Children.Add(element as UIElement);
             }
+
+            // Pass Reference to our Control so we can 'render' to it.
+            ViewModel.PreviewerXamlRoot = targetPanel;
+            ViewModel.ActualTheme = ActualTheme;
 
             ViewModel.HasCompiled = true;
             ViewModel.Document.State.RenderState = SyncStatus.Synced;
@@ -577,12 +579,14 @@ public sealed partial class Document : UserControl,
 
     private async Task<CanvasBitmap> GetPreviewScreenshot()
     {
+        var targetPanel = IsSpecificPreviewSize ? PreviewXamlRootSpecific : PreviewXamlRoot;
+
         var renderTarget = new RenderTargetBitmap();
         var displayInfo = DisplayInformation.GetForCurrentView();
         var scale = displayInfo.RawPixelsPerViewPixel;
-        var scaleWidth = (int)Math.Ceiling(XamlRoot.ActualWidth / scale);
-        var scaleHeight = (int)Math.Ceiling(XamlRoot.ActualHeight / scale);
-        await renderTarget.RenderAsync(XamlRoot, scaleWidth, scaleHeight); // TODO: Bug need to get specific for specific size ones...
+        var scaleWidth = (int)Math.Ceiling(targetPanel.ActualWidth / scale);
+        var scaleHeight = (int)Math.Ceiling(targetPanel.ActualHeight / scale);
+        await renderTarget.RenderAsync(targetPanel, scaleWidth, scaleHeight); // TODO: Bug need to get specific for specific size ones...
         var pixels = await renderTarget.GetPixelsAsync();
         return CanvasBitmap.CreateFromBytes(_device.Value, pixels, renderTarget.PixelWidth, renderTarget.PixelHeight, DirectXPixelFormat.B8G8R8A8UIntNormalized);
     }

@@ -76,7 +76,7 @@ public partial class Document :
         {
             // Detect if Source in document...
             // TODO: Need to figure out differences if our Custom ResourceViewer root...
-            var root = IsSpecificPreviewSize ? XamlRootSpecific : XamlRoot;
+            var root = IsSpecificPreviewSize ? PreviewXamlRootSpecific : PreviewXamlRoot;
 
             // Question: Do we want to prioritize the Elements in Position or walking the ascendents of the visual tree?
             UIElement attachElement = source;
