@@ -184,6 +184,48 @@ public class XamlXmlTreeCoordinator
             { nameof(ToggleButton.IsChecked), ToggleButton.IsCheckedProperty },
             { nameof(ToggleButton.IsThreeState), ToggleButton.IsThreeStateProperty },
         })},
+        { typeof(ItemsControl), new(new Dictionary<string, DependencyProperty>()
+        {
+            { nameof(ItemsControl.DisplayMemberPath), ItemsControl.DisplayMemberPathProperty },
+            { nameof(ItemsControl.GroupStyleSelector), ItemsControl.GroupStyleSelectorProperty },
+            { nameof(ItemsControl.IsGrouping), ItemsControl.IsGroupingProperty },
+            { nameof(ItemsControl.ItemContainerStyle), ItemsControl.ItemContainerStyleProperty },
+            { nameof(ItemsControl.ItemContainerStyleSelector), ItemsControl.ItemContainerStyleSelectorProperty },
+            { nameof(ItemsControl.ItemsPanel), ItemsControl.ItemsPanelProperty },
+            { nameof(ItemsControl.ItemsSource), ItemsControl.ItemsSourceProperty },
+            { nameof(ItemsControl.ItemTemplate), ItemsControl.ItemTemplateProperty },
+            { nameof(ItemsControl.ItemTemplateSelector), ItemsControl.ItemTemplateSelectorProperty },
+        })},
+        { typeof(Selector), new(new Dictionary<string, DependencyProperty>()
+        {
+            { nameof(Selector.IsSynchronizedWithCurrentItem), Selector.IsSynchronizedWithCurrentItemProperty },
+            { nameof(Selector.SelectedIndex), Selector.SelectedIndexProperty },
+            { nameof(Selector.SelectedItem), Selector.SelectedItemProperty },
+            { nameof(Selector.SelectedValue), Selector.SelectedValueProperty },
+            { nameof(Selector.SelectedValuePath), Selector.SelectedValuePathProperty },
+        })},
+        { typeof(ListViewBase), new(new Dictionary<string, DependencyProperty>()
+        {
+            { nameof(ListViewBase.CanDragItems), ListViewBase.CanDragItemsProperty },
+            { nameof(ListViewBase.CanReorderItems), ListViewBase.CanReorderItemsProperty },
+            { nameof(ListViewBase.DataFetchSize), ListViewBase.DataFetchSizeProperty },
+            { nameof(ListViewBase.Footer), ListViewBase.FooterProperty },
+            { nameof(ListViewBase.FooterTemplate), ListViewBase.FooterTemplateProperty },
+            { nameof(ListViewBase.FooterTransitions), ListViewBase.FooterTransitionsProperty },
+            { nameof(ListViewBase.Header), ListViewBase.HeaderProperty },
+            { nameof(ListViewBase.HeaderTemplate), ListViewBase.HeaderTemplateProperty },
+            { nameof(ListViewBase.HeaderTransitions), ListViewBase.HeaderTransitionsProperty },
+            { nameof(ListViewBase.IsActiveView), ListViewBase.IsActiveViewProperty },
+            { nameof(ListViewBase.IsItemClickEnabled), ListViewBase.IsItemClickEnabledProperty },
+            { nameof(ListViewBase.IsMultiSelectCheckBoxEnabled), ListViewBase.IsMultiSelectCheckBoxEnabledProperty },
+            { nameof(ListViewBase.IsSwipeEnabled), ListViewBase.IsSwipeEnabledProperty },
+            { nameof(ListViewBase.IsZoomedInView), ListViewBase.IsZoomedInViewProperty },
+            { nameof(ListViewBase.ReorderMode), ListViewBase.ReorderModeProperty },
+            { nameof(ListViewBase.SelectionMode), ListViewBase.SelectionModeProperty },
+            { nameof(ListViewBase.SemanticZoomOwner), ListViewBase.SemanticZoomOwnerProperty },
+            { nameof(ListViewBase.ShowsScrollingPlaceholders), ListViewBase.ShowsScrollingPlaceholdersProperty },
+            { nameof(ListViewBase.SingleSelectionFollowsFocus), ListViewBase.SingleSelectionFollowsFocusProperty },
+        })},
     });
 
     /// <summary>

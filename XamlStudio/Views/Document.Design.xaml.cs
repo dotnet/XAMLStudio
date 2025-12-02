@@ -135,11 +135,20 @@ public partial class Document :
         }
     }
 
-    public void Receive(SelectedVisualElementMessage message)
+    public async void Receive(SelectedVisualElementMessage message)
     {
         RemoveAdorner();
 
         AttachAdorner(message.Element as FrameworkElement);
+
+        // Reveal in the editor
+        if (ViewModel.XamlCoordinator.TryGetXmlElement(message.Element, out var node)
+            && node is XmlNodeSyntax xmlNode)
+        {
+            var loc = CodeEditor.Text.GetLineColumnIndex(xmlNode.Span.Start);
+            
+            await CodeEditor.RevealPositionInCenterAsync(new Position((uint)loc.Line, (uint)loc.Column));
+        }
     }
 
     public void Receive(EditorSelectedElementMessage message)
