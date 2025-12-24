@@ -361,11 +361,12 @@ public partial class DocumentViewModel
                 { "Value", "" + theme },
             });
 
+        // Note: I don't remember why we used to do this, but I think it works better if we don't do this...
         // If we're now set to default, set to null so we stay aligned if default changes
-        if (theme == ThemeSelectorService.Theme)
+        /*if (theme == ThemeSelectorService.Theme)
         {
             theme = null;
-        }
+        }*/
 
         Document.State.PreviewAreaTheme = theme;
     }

@@ -241,33 +241,9 @@
                     Padding="1"
                     Command="{x:Bind ViewModel.TogglePreviewThemeCommand, Mode=OneWay}"
                     Style="{StaticResource VSCodeAppBarHeaderButtonStyle}">
-                <!--  TODO: Maybe use a Glyph converter if there's no other differences?  -->
-                <controls:SwitchPresenter TargetType="xaml:ElementTheme" Value="{x:Bind ViewModel.Document.State.PreviewAreaTheme, Mode=OneWay}">
-                    <controls:Case Value="Dark">
-                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                                  FontSize="16"
-                                  Glyph="&#xE708;" />
-                    </controls:Case>
-                    <controls:Case Value="Light">
-                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                                  FontSize="16"
-                                  Glyph="&#xE793;" />
-                    </controls:Case>
-                    <controls:Case IsDefault="True">
-                        <controls:SwitchPresenter TargetType="xaml:ElementTheme" Value="{Binding ActualTheme, ElementName=XamlRoot, Mode=OneWay}">
-                            <controls:Case Value="Dark">
-                                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                                          FontSize="16"
-                                          Glyph="&#xE708;" />
-                            </controls:Case>
-                            <controls:Case Value="Light">
-                                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                                          FontSize="16"
-                                          Glyph="&#xE793;" />
-                            </controls:Case>
-                        </controls:SwitchPresenter>
-                    </controls:Case>
-                </controls:SwitchPresenter>
+                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                          FontSize="16"
+                          Glyph="{x:Bind GetAppliedThemeGlyph(ViewModel.Document.State.PreviewAreaTheme, PreviewArea.ActualTheme), Mode=OneWay}" />
             </Button>
         </StackPanel>
 

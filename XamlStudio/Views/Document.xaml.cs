@@ -650,6 +650,29 @@ public sealed partial class Document : UserControl,
         });
     }
     #endregion
+
+    /// <summary>
+    /// Converts the requested (setting) and actual theme into a glyph for display.
+    /// </summary>
+    /// <param name="requestedTheme">Settings Value of the default requested theme</param>
+    /// <param name="actualTheme">ActualTheme from a root element for the app</param>
+    /// <returns></returns>
+    public string GetAppliedThemeGlyph(ElementTheme? requestedTheme, ElementTheme actualTheme)
+    {
+        var theme = actualTheme;
+
+        if (requestedTheme != null && requestedTheme != ElementTheme.Default)
+        {
+            theme = requestedTheme.Value;
+        }
+
+        return theme switch
+        {
+            ElementTheme.Dark => "\uE708",
+            ElementTheme.Light => "\uE793",
+            _ => "\uE706;",
+        };
+    }
 }
 
 public class BreadcrumbInfo
