@@ -360,6 +360,10 @@ public class XamlXmlTreeCoordinator
                 return node;
             }
 
+            // Note: ResourceDictionary's don't have a visual tree so the VisualTreeHelper call fails below
+            // TODO: Investigate if we can better integrate into ResourceViewer control in the future.
+            if (node is ResourceDictionary) continue;
+
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(node); i++)
             {
                 var child = VisualTreeHelper.GetChild(node, i);
