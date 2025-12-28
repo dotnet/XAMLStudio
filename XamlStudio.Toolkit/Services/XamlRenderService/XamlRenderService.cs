@@ -211,6 +211,36 @@ namespace XamlStudio.Toolkit.Services
                                 }
                             }
                         });
+
+                        // Check if we have an "App.xaml" to load general resources from
+                        // TODO: Should see if have modified content in XAML Studio itself vs. on-disk... hmm
+                        var appXamlFile = await settings.ResourceRoot.TryGetItemAsync("App.xaml") as IStorageFile;
+                        if (appXamlFile != null)
+                        {
+                            var xamlText = await FileIO.ReadTextAsync(appXamlFile);
+                            var resourceDictionaryXaml = UnwrapApplicationResourceDictionary(xamlText);
+                            try
+                            {
+                                var appResources = XamlReader.Load(resourceDictionaryXaml) as ResourceDictionary;
+                                if (appResources != null)
+                                {
+                                    // Merge App.xaml resources into our root element's resources.
+                                    if (result.Element is FrameworkElement rootFwe)
+                                    {
+                                        if (rootFwe.Resources == null)
+                                        {
+                                            rootFwe.Resources = new ResourceDictionary();
+                                        }
+                                        // Note: This needs to happen before element is added to the Visual Tree!
+                                        rootFwe.Resources.MergedDictionaries.Add(appResources);
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                                // TODO: Raise that issue in app.xaml?
+                            }
+                        }
                     }
 
                     result.Bindings = XamlBindingWrapperManager.Instance.GetBindings(Id);

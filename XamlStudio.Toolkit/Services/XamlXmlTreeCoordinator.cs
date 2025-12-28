@@ -239,16 +239,17 @@ public class XamlXmlTreeCoordinator
             if (v1 is BitmapImage b1
                 && v2 is BitmapImage b2)
             {
-                if (b1.UriSource.AbsoluteUri == b2.UriSource.AbsoluteUri)
+                // TODO: Added null check, but feel like stale object is getting passed in here sometimes on 2nd render?
+                if (b1.UriSource?.AbsoluteUri == b2.UriSource?.AbsoluteUri)
                 {
                     return true;
                 }
                 // With the XamlBindingHelper.ConvertValue we see it convert differently than the XamlReader.Load, so use this in case the resource scheme was picked differently.
-                else if ((b1.UriSource.Scheme == "ms-appx" && b2.UriSource.Scheme == "ms-resource") ||
-                         (b1.UriSource.Scheme == "ms-resource" && b2.UriSource.Scheme == "ms-appx"))
+                else if ((b1.UriSource?.Scheme == "ms-appx" && b2.UriSource?.Scheme == "ms-resource") ||
+                         (b1.UriSource?.Scheme == "ms-resource" && b2.UriSource?.Scheme == "ms-appx"))
                 {
-                    var path1 = b1.UriSource.AbsoluteUri.Replace("ms-appx:///", "").Replace("ms-resource:///Files/", "");
-                    var path2 = b2.UriSource.AbsoluteUri.Replace("ms-appx:///", "").Replace("ms-resource:///Files/", "");
+                    var path1 = b1.UriSource?.AbsoluteUri.Replace("ms-appx:///", "").Replace("ms-resource:///Files/", "");
+                    var path2 = b2.UriSource?.AbsoluteUri.Replace("ms-appx:///", "").Replace("ms-resource:///Files/", "");
                     return path1 == path2;
                 }
             }
