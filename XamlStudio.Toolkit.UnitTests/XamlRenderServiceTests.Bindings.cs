@@ -6,7 +6,7 @@ using XamlStudio.Toolkit.Services;
 namespace XamlStudio.Toolkit.UnitTests;
 
 [TestClass]
-public class XamlRenderServiceTests
+public partial class XamlRenderServiceTests
 {
 #if DEBUG
     [TestMethod]

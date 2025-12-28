@@ -125,6 +125,7 @@
     <Compile Include="UnitTestApp.xaml.cs">
       <DependentUpon>UnitTestApp.xaml</DependentUpon>
     </Compile>
+    <Compile Include="XamlRenderServiceTests.Resources.cs" />
     <Compile Include="XamlRenderServiceTests.Bindings.cs" />
     <Compile Include="XmlToXamlTreeTests.cs" />
   </ItemGroup>

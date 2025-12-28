@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -60,6 +59,12 @@ namespace XamlStudio.Toolkit.Services
                 var type = _elementNameSearcher.Match(value);
                 if (type.Success)
                 {
+                    if (type.Groups["Type"].Value == "Application")
+                    {
+                        // Replace content with ResourceDictionary posing as 'Application'
+                        content = UnwrapApplicationResourceDictionary(content);
+                    }
+
                     ////var prefix = type.Groups["Prefix"]?.Value;
                     var typename = type.Groups["Type"]?.Value;
 
@@ -152,6 +157,47 @@ namespace XamlStudio.Toolkit.Services
             }
 
             return typeof(FrameworkElement).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo());
+        }
+
+        private static string UnwrapApplicationResourceDictionary(string xaml)
+        {
+            /// Naive implementation to test concept
+            /// TODO: Investigate doing with proper XML Tree
+            /// Need to preserve spacing/indentation as much as possible for line number matching
+            var lines = xaml.Split(["\r\n", "\n"], StringSplitOptions.None);
+            StringBuilder result = new();
+
+            foreach (var line in lines)
+            {
+                var trimmedLine = line.TrimStart();
+
+                // Skip x:Class line
+                // Skip Application.Resources opening tag
+                if (trimmedLine.Contains("x:Class=")
+                    || trimmedLine.StartsWith("<Application.Resources>") 
+                    || trimmedLine.StartsWith("</Application.Resources>"))
+                {
+                    // Add blank line as replacement to preserve line numbers
+                    result.AppendLine();
+                    continue;
+                }
+                // Replace Application opening tag with ResourceDictionary
+                else if (trimmedLine.StartsWith("<Application"))
+                {
+                    result.AppendLine(line.Replace("<Application", "<ResourceDictionary"));
+                    continue;
+                }
+                // Replace Application closing tag with ResourceDictionary
+                else if (trimmedLine.StartsWith("</Application>"))
+                {
+                    result.AppendLine(line.Replace("</Application>", "</ResourceDictionary>"));
+                    continue;
+                }
+
+                result.AppendLine(line);
+            }
+
+            return result.ToString().TrimEnd();
         }
     }
 }
