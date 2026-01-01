@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Controls;
-using CommunityToolkit.WinUI.Controls.Future;
 using Microsoft.Language.Xml;
 using Monaco;
 using System;
@@ -15,6 +14,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using XamlStudio.Controls;
 using XamlStudio.Models;
+using XamlStudio.Toolkit.Controls.Adorners;
 using XamlStudio.Toolkit.Extensions;
 
 namespace XamlStudio.Views;
@@ -52,13 +52,26 @@ public partial class Document :
         {
             foreach (FrameworkElement element in ViewModel.XamlCoordinator.GetVisualElements().Where((e) => e is FrameworkElement))
             {
-                AdornerLayer.SetXaml(element, new ModifySelectorAdorner(element, ViewModel.MainViewModel));
+                var adorner = new ModifySelectorAdorner();
+                // TODO: Do we just want to weak reference these to not worry about it later?
+                adorner.SelectedElementClicked += Adorner_SelectedElementClicked;
+                AdornerLayer.SetXaml(element, adorner);
             }
         }
         else if (_designerMode != DesignerMode.View)
         {
             AttachAdorner(ViewModel.HighlightedElement);
         }
+    }
+
+    private void Adorner_SelectedElementClicked(ModifySelectorAdorner sender, UIElement adornedElement)
+    {
+        if (ViewModel.MainViewModel.OpenActivity != "PROPERTIES")
+        {
+            ViewModel.MainViewModel.OpenActivityPanelCommand.Execute("PROPERTIES");
+        }
+
+        WeakReferenceMessenger.Default.Send<SelectedVisualElementMessage>(new(adornedElement));
     }
 
     protected override void OnPointerMoved(PointerRoutedEventArgs e)
@@ -179,25 +192,27 @@ public partial class Document :
 
         if (_designerMode == DesignerMode.Highlight)
         {
-            AdornerLayer.SetXaml(ViewModel.HighlightedElement, new SurroundingAdorner(ViewModel.HighlightedElement, ViewModel.HighlightedElement.CoordinatesFrom((UIElement)ViewModel.Result.Element)));
+            AdornerLayer.SetXaml(ViewModel.HighlightedElement, new SurroundingAdorner(ViewModel.Result.Element as UIElement));
         }
         else if (_designerMode == DesignerMode.Modify)
         {
-            // TODO: This is the case where we'll have selected something, so we probably want to have a more specific 'editing' adorener here for the specific types of controls
+            // TODO: This is the case where we'll have selected something, so we probably want to have a more specific 'editing' adorner here for the specific types of controls
             // e.g for an image it could have a button which opens a file picker for the workspace (or can detect dragged image from there or something)
-            // for a textblock it can have a textbox for the contents
+            // for a TextBlock it can have a textbox for the contents
             // for a button it can have the behavior for navigation, etc...
 
             if (_editorAdornerTypeMap.TryGetValue(ViewModel.HighlightedElement.GetType(), out var adornerType))
             {
                 // All editor adorners just accept a FrameworkElement
-                ConstructorInfo constructor = adornerType.GetConstructor(new[] { typeof(FrameworkElement) });
+                ConstructorInfo constructor = adornerType.GetConstructor(Type.EmptyTypes);
 
-                AdornerLayer.SetXaml(ViewModel.HighlightedElement, constructor.Invoke(new[] { ViewModel.HighlightedElement }) as FrameworkElement);
+                AdornerLayer.SetXaml(ViewModel.HighlightedElement, constructor.Invoke([]) as FrameworkElement);
             }
             else
             {
-                AdornerLayer.SetXaml(ViewModel.HighlightedElement, new ModifySelectorAdorner(ViewModel.HighlightedElement, ViewModel.MainViewModel));
+                var adorner = new ModifySelectorAdorner();
+                adorner.SelectedElementClicked += Adorner_SelectedElementClicked;
+                AdornerLayer.SetXaml(ViewModel.HighlightedElement, adorner);
             }
         }
     }
@@ -209,7 +224,12 @@ public partial class Document :
             // Remove all adorners from other elements we had added above for selection
             foreach (FrameworkElement element in ViewModel.XamlCoordinator.GetVisualElements().Where((e) => e is FrameworkElement))
             {
-                AdornerLayer.SetXaml(element, null);
+                var adorner = AdornerLayer.GetXaml(element) as ModifySelectorAdorner;
+                if (adorner is not null)
+                {
+                    adorner.SelectedElementClicked -= Adorner_SelectedElementClicked;
+                    AdornerLayer.SetXaml(element, null);
+                }
             }
         }
 

@@ -1,18 +1,19 @@
-﻿<UserControl x:Class="XamlStudio.Controls.TextBlockEditAdorner"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:Windows11="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 14)"
-             xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-             xmlns:local="using:XamlStudio.Controls"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             d:DesignHeight="300"
-             d:DesignWidth="400"
-             mc:Ignorable="d">
+﻿<ui:Adorner x:Class="XamlStudio.Controls.TextBlockEditAdorner"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:Windows11="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 14)"
+            xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+            xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+            xmlns:local="using:XamlStudio.Controls"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            xmlns:ui="using:CommunityToolkit.WinUI"
+            d:DesignHeight="300"
+            d:DesignWidth="400"
+            mc:Ignorable="d">
 
     <Popup Windows11:DesiredPlacement="BottomEdgeAlignedLeft"
-           Windows11:PlacementTarget="{x:Bind AttachedElement}"
+           Windows11:PlacementTarget="{x:Bind AdornedTextBlock}"
            IsLightDismissEnabled="False"
            IsOpen="True">
         <Grid Margin="-4"
@@ -26,7 +27,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBox Text="{x:Bind AttachedElement.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <TextBox Text="{x:Bind AdornedTextBlock.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:AutoSelectBehavior />
                 </interactivity:Interaction.Behaviors>
@@ -39,4 +40,4 @@
             </Button>
         </Grid>
     </Popup>
-</UserControl>
+</ui:Adorner>

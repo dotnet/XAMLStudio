@@ -106,8 +106,6 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Adorners\AdornerDecorator.cs" />
-    <Compile Include="Adorners\AdornerLayer.cs" />
     <Compile Include="Controls\ManualToggleButton.cs" />
     <Compile Include="Converters\CollectionContainsConverter.cs" />
     <Compile Include="Data\Grouping.cs" />
@@ -145,10 +143,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Adorners\AdornerDecorator.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Extensions\Pivot\Pivot.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

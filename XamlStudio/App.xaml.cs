@@ -126,7 +126,7 @@ namespace XamlStudio
         }
 
         /// <summary>
-        /// Handles the event of an unhandles exception bubbling up all the way to the App instance.
+        /// Handles the event of an unhandled exception bubbling up all the way to the App instance.
         /// </summary>
         private void App_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {

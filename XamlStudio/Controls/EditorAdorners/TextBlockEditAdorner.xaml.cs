@@ -1,37 +1,56 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.WinUI.Controls.Future;
+using CommunityToolkit.WinUI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using XamlStudio.Models;
 
 namespace XamlStudio.Controls;
 
-public sealed partial class TextBlockEditAdorner : UserControl
+public sealed partial class TextBlockEditAdorner : Adorner
 {
-    public TextBlock AttachedElement { get; }
-
     private string _originalText;
 
-    public TextBlockEditAdorner(FrameworkElement attachedElement)
+    public TextBlock AdornedTextBlock
     {
-        AttachedElement = attachedElement as TextBlock;
-        _originalText = AttachedElement.Text;
+        get { return (TextBlock)GetValue(AdornedTextBlockProperty); }
+        set { SetValue(AdornedTextBlockProperty, value); }
+    }
 
-        InitializeComponent();
+    public static readonly DependencyProperty AdornedTextBlockProperty =
+        DependencyProperty.Register(nameof(AdornedTextBlock), typeof(TextBlock), typeof(TextBlockEditAdorner), new PropertyMetadata(null));
+
+    public TextBlockEditAdorner()
+    {
+        this.InitializeComponent();
+    }
+
+    protected override void OnAttached()
+    {
+        base.OnAttached();
+
+        AdornedTextBlock = AdornedElement as TextBlock;
+        _originalText = AdornedTextBlock.Text;
+    }
+
+    protected override void OnDetaching()
+    {
+        base.OnDetaching();
+
+        AdornedTextBlock = null;
     }
 
     private void AcceptButton_Click(object sender, RoutedEventArgs e)
     {
-        WeakReferenceMessenger.Default.Send<AddToXamlMessage>(new(AttachedElement, "Text", AttachedElement.Text.Replace("\"", "&quot;")));
+        WeakReferenceMessenger.Default.Send<AddToXamlMessage>(new(AdornedTextBlock, "Text", AdornedTextBlock.Text.Replace("\"", "&quot;")));
 
-        AdornerLayer.SetXaml(AttachedElement, null);
+        AdornerLayer.SetXaml(AdornedTextBlock, null);
     }
 
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
-        AdornerLayer.SetXaml(AttachedElement, null);
+        AdornerLayer.SetXaml(AdornedTextBlock, null);
 
         // TODO: We may want to do our trick to check if there's a binding here?
-        AttachedElement.Text = _originalText;
+        AdornedTextBlock.Text = _originalText;
     }
 }

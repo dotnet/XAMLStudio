@@ -148,7 +148,7 @@
                               HorizontalScrollBarVisibility="Auto"
                               HorizontalScrollMode="Auto"
                               VerticalScrollMode="Auto">
-                    <labs:AdornerDecorator>
+                    <ui:AdornerDecorator>
                         <Grid x:Name="PreviewRootSpecific"
                               ui:UIElementExtensions.ClipToBounds="{x:Bind ViewModel.Settings.IsPreviewClippingEnabled.Value, Mode=OneWay}"
                               Background="{x:Bind ViewModel.Settings.PreviewAreaBackgroundColor, Mode=OneWay}">
@@ -163,11 +163,11 @@
                                 </developerTools:AlignmentGrid.LineBrush>
                             </developerTools:AlignmentGrid>
                         </Grid>
-                    </labs:AdornerDecorator>
+                    </ui:AdornerDecorator>
                 </ScrollViewer>
             </controls:Case>
             <controls:Case IsDefault="True">
-                <labs:AdornerDecorator>
+                <ui:AdornerDecorator>
                     <Grid x:Name="PreviewRoot"
                           ui:UIElementExtensions.ClipToBounds="{x:Bind ViewModel.Settings.IsPreviewClippingEnabled.Value, Mode=OneWay}"
                           Background="{x:Bind ViewModel.Settings.PreviewAreaBackgroundColor, Mode=OneWay}">
@@ -182,7 +182,7 @@
                             </developerTools:AlignmentGrid.LineBrush>
                         </developerTools:AlignmentGrid>
                     </Grid>
-                </labs:AdornerDecorator>
+                </ui:AdornerDecorator>
             </controls:Case>
         </controls:SwitchPresenter>
 

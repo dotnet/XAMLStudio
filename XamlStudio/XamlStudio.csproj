@@ -185,12 +185,6 @@
     <Compile Include="Controls\EditorAdorners\TextBlockEditAdorner.xaml.cs">
       <DependentUpon>TextBlockEditAdorner.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ModifySelectorAdorner.xaml.cs">
-      <DependentUpon>ModifySelectorAdorner.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\SurroundingAdorner.xaml.cs">
-      <DependentUpon>SurroundingAdorner.xaml</DependentUpon>
-    </Compile>
     <Compile Include="DummyPage.xaml.cs">
       <DependentUpon>DummyPage.xaml</DependentUpon>
     </Compile>
@@ -280,16 +274,8 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Controls\EditorAdorners\TextBlockEditAdorner.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\ModifySelectorAdorner.xaml">
       <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\SurroundingAdorner.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DummyPage.xaml">
       <SubType>Designer</SubType>

@@ -1,20 +1,19 @@
-﻿using System;
+﻿using CommunityToolkit.WinUI;
+using System;
 using System.Reflection;
 using Windows.Foundation;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
-namespace XamlStudio.Controls;
+namespace XamlStudio.Toolkit.Controls.Adorners;
 
-public sealed partial class SurroundingAdorner : UserControl
+public sealed partial class SurroundingAdorner : Adorner
 {
-    public FrameworkElement AttachedElement { get; }
+    // TODO: DP?
+    public Type AdornedElementType { get; private set; }
 
-    public Type AttachedElementType;
+    public Point Position { get; private set; }
 
-    public Point Position { get; }
-
-    public Size Size;
+    public Size Size { get; private set; }
 
     public Thickness AttachedBorder = new();
 
@@ -24,10 +23,45 @@ public sealed partial class SurroundingAdorner : UserControl
 
     public Thickness NegativeMargin;
 
-    public SurroundingAdorner(FrameworkElement attachedElement, Point position)
+    private UIElement _parentElement;
+
+    public SurroundingAdorner(UIElement rootElement)
     {
-        AttachedElement = attachedElement;
-        AttachedElementType = AttachedElement.GetType();
+        InitializeComponent();
+
+        _parentElement = rootElement;
+
+        // TODO: Could be nice for Adorner in Toolkit to have a callback event for us for when metrics change...
+        SizeChanged += SurroundingAdorner_SizeChanged;
+        LayoutUpdated += SurroundingAdorner_LayoutUpdated;
+    }
+
+    private void SurroundingAdorner_LayoutUpdated(object sender, object e)
+    {
+        if (AdornedElement is null) return;
+
+        CalculateMetrics();
+    }
+
+    private void SurroundingAdorner_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        if (AdornedElement is null) return;
+
+        CalculateMetrics();
+    }
+
+    protected override void OnAttached()
+    {
+        base.OnAttached();
+
+        CalculateMetrics();
+    }
+
+    private void CalculateMetrics()
+    {
+        AdornedElementType = AdornedElement.GetType();
+
+        var AttachedElement = AdornedElement as FrameworkElement;
 
         // TODO: We want to listen to any changes to these properties to update our calculations and/or use direct Binding/Converters (remember OneWay)
 
@@ -41,20 +75,22 @@ public sealed partial class SurroundingAdorner : UserControl
         NegativeMargin = new(-mLeft, -mTop, -mRight, -mBottom); // Used to compensate for the auto-applied margin with our adorner.
 
         Size = new(AttachedElement.ActualSize.X + mLeft + mRight, AttachedElement.ActualSize.Y + mTop + mBottom);
+
+        var position = AdornedElement.CoordinatesFrom(_parentElement);
         Position = new(position.X - mLeft, position.Y - mTop);
 
         // Then we'll see if we have Borders or Padding as they're specific to certain types of elements
-        if (AttachedElementType.GetProperty("BorderThickness") is PropertyInfo border)
+        if (AdornedElementType.GetProperty("BorderThickness") is PropertyInfo border)
         {
             AttachedBorder = (Thickness)(border.GetValue(AttachedElement) ?? new());
         }
 
-        if (AttachedElementType.GetProperty("Padding") is PropertyInfo padding)
+        if (AdornedElementType.GetProperty("Padding") is PropertyInfo padding)
         {
             AttachedPadding = (Thickness)(padding.GetValue(AttachedElement) ?? new());
         }
 
-        // Calculate inner size (margin is already factord into size by framework)
+        // Calculate inner size (margin is already factored into size by framework)
         InnerSize = new Size(AttachedElement.ActualSize.X -
                              AttachedBorder.Left -
                              AttachedBorder.Right -
@@ -65,18 +101,5 @@ public sealed partial class SurroundingAdorner : UserControl
                              AttachedBorder.Bottom -
                              AttachedPadding.Top -
                              AttachedPadding.Bottom);
-
-        InitializeComponent();
-    }
-
-    // TODO: Centralize with one from Properties somewhere?
-    public static string GetElementInfo(DependencyObject element)
-    {
-        if (element == null) return "null";
-
-        var name = element.ReadLocalValue(FrameworkElement.NameProperty);
-
-        return ((name != DependencyProperty.UnsetValue) ? $"\"{name}\" " : "") +
-            "<" + element.GetType().Name + ">";
     }
 }
