@@ -232,6 +232,7 @@ namespace XamlStudio.Toolkit.Services
                                             rootFwe.Resources = new ResourceDictionary();
                                         }
                                         // Note: This needs to happen before element is added to the Visual Tree!
+                                        // IMPORTANT!!! This doesn't work for all styling (weirdly) while under a debugger... need to file a WinUI bug...
                                         rootFwe.Resources.MergedDictionaries.Add(appResources);
                                     }
                                 }
