@@ -10,6 +10,7 @@
       xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
       xmlns:tkbehavior="using:CommunityToolkit.WinUI.Behaviors.Future"
       xmlns:views="using:XamlStudio.Views"
+      xmlns:xtmodel="using:XamlStudio.Toolkit.Models"
       IsEnabled="{x:Bind MainViewModel.IsEditingDocument, Mode=OneWay}"
       mc:Ignorable="d">
 
@@ -221,7 +222,7 @@
                                       ItemsSource="{Binding Value}"
                                       SelectionChanged="ListView_VisualStates_SelectionChanged">
                                 <ListView.ItemTemplate>
-                                    <DataTemplate x:DataType="model:VisualStateInfo">
+                                    <DataTemplate x:DataType="xtmodel:VisualStateInfo">
                                         <TextBlock VerticalAlignment="Center" Text="{x:Bind Name}">
                                             <interactivity:Interaction.Behaviors>
                                                 <tkbehavior:ListViewItemSelectedBehavior IsSelected="{x:Bind IsCurrent, Mode=TwoWay}" />

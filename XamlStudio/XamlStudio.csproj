@@ -202,7 +202,6 @@
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
     <Compile Include="Models\FolderLocation.cs" />
     <Compile Include="Models\Messages.cs" />
-    <Compile Include="Models\VisualStateInfo.cs" />
     <Compile Include="Models\PropertyInfo.cs" />
     <Compile Include="Models\SyncStatus.cs" />
     <Compile Include="ViewModels\PropertiesViewModel.cs" />

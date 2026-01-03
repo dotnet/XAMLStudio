@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
 using Windows.UI.Xaml;
 using XamlStudio.Models;
+using XamlStudio.Toolkit.Models;
 
 namespace XamlStudio.ViewModels;
 

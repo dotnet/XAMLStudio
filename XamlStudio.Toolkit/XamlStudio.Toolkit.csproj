@@ -118,7 +118,9 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\XmlExtensions.cs" />
     <Compile Include="Helpers\Singleton.cs" />
+    <Compile Include="Helpers\VisualStateWatcher.cs" />
     <Compile Include="Models\ConversionRecord.cs" />
+    <Compile Include="Models\VisualStateInfo.cs" />
     <Compile Include="Models\XamlBindingInfo.cs" />
     <Compile Include="Models\XamlExceptionRange.cs" />
     <Compile Include="Models\XamlRenderResultContext.cs" />

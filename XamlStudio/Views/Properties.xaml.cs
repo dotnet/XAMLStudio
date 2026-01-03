@@ -12,6 +12,8 @@ using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
 using XamlStudio.Models;
+using XamlStudio.Toolkit.Helpers;
+using XamlStudio.Toolkit.Models;
 using XamlStudio.Toolkit.Services;
 using XamlStudio.ViewModels;
 
@@ -28,6 +30,8 @@ public sealed partial class Properties : Page,
     public MainViewModel MainViewModel { get; set; }
 
     public PropertiesViewModel ViewModel { get; private set; } = new();
+
+    private VisualStateWatcher _visualStateWatcher;
 
     public Properties()
     {
@@ -250,40 +254,8 @@ public sealed partial class Properties : Page,
             ViewModel.VisualStates = new();
             if (element is FrameworkElement fe)
             {
-                Dictionary<string, VisualStateInfo[]> visualStateGroups = new();
-
-                // Get child of the control in visual tree as that'll contain the VSM
-                // and will be more expected when manipulating a control itself (as that's the element we manipulate).
-                var child = fe.FindDescendant<FrameworkElement>();
-                if (child is not null)
-                {
-                    int gindex = 0;
-                    var groups = VisualStateManager.GetVisualStateGroups(child);
-                    foreach (var group in groups)
-                    {
-                        var gname = group.Name;
-                        if (string.IsNullOrEmpty(gname))
-                        {
-                            gname = $"- Unnamed {gindex++} -";
-                        }
-
-                        List<VisualStateInfo> visualStates = new();
-                        foreach (var state in group.States)
-                        {
-                            visualStates.Add(new VisualStateInfo(state.Name, gname, state == group.CurrentState));
-                        }
-                        if (!visualStateGroups.ContainsKey(gname))
-                        {
-                            visualStateGroups.Add(gname, visualStates.ToArray());
-                        }
-                        else
-                        {
-                            // TODO: Warning of duplicate group name?
-                        }
-                    }
-
-                    ViewModel.VisualStates = visualStateGroups;
-                }
+                _visualStateWatcher = new(fe);
+                ViewModel.VisualStates = _visualStateWatcher.VisualStates;
             }
         }
     }
