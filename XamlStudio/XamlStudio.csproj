@@ -91,55 +91,55 @@
       <Version>6.2.14</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Animations">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Behaviors">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Collections">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Converters">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.DeveloperTools">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Extensions">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Helpers">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Triggers">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Controls.HeaderedControls">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Controls.LayoutTransformControl">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Controls.RangeSelector">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Controls.Segmented">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Controls.SettingsControls">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Controls.Sizers">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.DataGrid">
       <Version>7.1.3</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Media">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.8.7</Version>

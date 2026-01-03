@@ -2,7 +2,7 @@
   {
     "name": "Windows Community Toolkit",
     "url": "https://github.com/windows-toolkit/WindowsCommunityToolkit/",
-    "version": "8.2.250402",
+    "version": "8.2.251219",
     "license": "MIT",
     "license_url": "https://github.com/windows-toolkit/WindowsCommunityToolkit/blob/master/license.md",
     "license_text": [
@@ -23,7 +23,7 @@
   {
     "name": "Windows UI Library",
     "url": "https://github.com/Microsoft/microsoft-ui-xaml",
-    "version": "2.7.3",
+    "version": "2.8.7",
     "license": "MIT",
     "license_url": "https://github.com/Microsoft/microsoft-ui-xaml/blob/master/LICENSE",
     "license_text": [

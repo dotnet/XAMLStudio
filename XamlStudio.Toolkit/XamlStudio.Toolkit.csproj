@@ -153,10 +153,10 @@
       <Version>6.2.14</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Extensions">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Helpers">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="Monaco.Editor">
       <Version>0.8.1-alpha</Version>
