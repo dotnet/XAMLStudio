@@ -20,156 +20,155 @@ using XamlStudio.Models;
 using XamlStudio.Services;
 using XamlStudio.Toolkit.Helpers;
 
-namespace XamlStudio
+namespace XamlStudio;
+
+public sealed partial class App : Application
 {
-    public sealed partial class App : Application
+    private Lazy<ActivationService> _activationService;
+    private ActivationService ActivationService
     {
-        private Lazy<ActivationService> _activationService;
-        private ActivationService ActivationService
+        get { return _activationService.Value; }
+    }
+
+    public App()
+    {
+        AppLoggerService.Initialize();
+
+        InitializeComponent();
+
+        UnhandledException += App_UnhandledException;
+        EnteredBackground += App_EnteredBackground;
+        Suspending += App_Suspending;
+        Resuming += App_Resuming;
+
+        // Deferred execution until used. Check https://msdn.microsoft.com/library/dd642331(v=vs.110).aspx for further info on Lazy<T> class.
+        _activationService = new Lazy<ActivationService>(CreateActivationService);
+
+        try
         {
-            get { return _activationService.Value; }
+            AppCenter.SetCountryCode(new Windows.Globalization.GeographicRegion().CodeTwoLetter);
         }
-
-        public App()
+        catch (Exception)
         {
-            AppLoggerService.Initialize();
-
-            InitializeComponent();
-
-            UnhandledException += App_UnhandledException;
-            EnteredBackground += App_EnteredBackground;
-            Suspending += App_Suspending;
-            Resuming += App_Resuming;
-
-            // Deferred execution until used. Check https://msdn.microsoft.com/library/dd642331(v=vs.110).aspx for further info on Lazy<T> class.
-            _activationService = new Lazy<ActivationService>(CreateActivationService);
-
-            try
-            {
-                AppCenter.SetCountryCode(new Windows.Globalization.GeographicRegion().CodeTwoLetter);
-            }
-            catch (Exception)
-            {
-                // Ignore and don't bother setting code on failure.
-            }
-            AppCenter.Start("", typeof(Analytics));
-            AppCenter.Start("", typeof(Crashes));
+            // Ignore and don't bother setting code on failure.
         }
+        AppCenter.Start("", typeof(Analytics));
+        AppCenter.Start("", typeof(Crashes));
+    }
 
-        protected override async void OnLaunched(LaunchActivatedEventArgs args)
-        {
-            if (!args.PrelaunchActivated)
-            {
-                AppLoggerService.LogInfo($"[AppActivation] Application activated by {args.Kind}");
-                await ActivationService.ActivateAsync(args);
-            }
-        }
-
-        protected override async void OnActivated(IActivatedEventArgs args)
+    protected override async void OnLaunched(LaunchActivatedEventArgs args)
+    {
+        if (!args.PrelaunchActivated)
         {
             AppLoggerService.LogInfo($"[AppActivation] Application activated by {args.Kind}");
             await ActivationService.ActivateAsync(args);
         }
+    }
 
-        protected override async void OnFileActivated(FileActivatedEventArgs args)
+    protected override async void OnActivated(IActivatedEventArgs args)
+    {
+        AppLoggerService.LogInfo($"[AppActivation] Application activated by {args.Kind}");
+        await ActivationService.ActivateAsync(args);
+    }
+
+    protected override async void OnFileActivated(FileActivatedEventArgs args)
+    {
+        AppLoggerService.LogInfo($"[AppActivation] Application activated by {args.Kind}");
+        await ActivationService.ActivateAsync(args);
+    }
+
+    private ActivationService CreateActivationService()
+    {
+        return new ActivationService(this, typeof(Views.MainPage));
+    }
+
+    private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
+    {
+        var deferral = e.GetDeferral();
+        await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
+        deferral.Complete();
+    }
+
+    /// <summary>
+    /// Invoked when application execution is being suspended.
+    /// </summary>
+    private async void App_Suspending(object sender, SuspendingEventArgs e)
+    {
+        var deferral = e.SuspendingOperation.GetDeferral();
+
+        try
         {
-            AppLoggerService.LogInfo($"[AppActivation] Application activated by {args.Kind}");
-            await ActivationService.ActivateAsync(args);
+            Task loggerTask = AppLoggerService.OnSuspending();
+
+            await Task.WhenAll(loggerTask);
         }
-
-        private ActivationService CreateActivationService()
+        catch (Exception)
         {
-            return new ActivationService(this, typeof(Views.MainPage));
+
         }
-
-        private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
+        finally
         {
-            var deferral = e.GetDeferral();
-            await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
             deferral.Complete();
         }
+    }
 
-        /// <summary>
-        /// Invoked when application execution is being suspended.
-        /// </summary>
-        private async void App_Suspending(object sender, SuspendingEventArgs e)
+    /// <summary>
+    /// Handles the event of extended execution being revoked.
+    /// </summary>
+    private void App_ExtendedExecutionRevoked(object sender, ExtendedExecutionRevokedEventArgs args)
+    {
+        AppLoggerService.LogInfo($"The request to ExtendedExecutionSession was revoked with reason {args.Reason}");
+    }
+
+    /// <summary>
+    /// Invoked when application execution is being resummed.
+    /// </summary>
+    private void App_Resuming(object sender, object e)
+    {
+        AppLoggerService.OnResuming();
+        AppLoggerService.LogInfo($"[AppResumming] Resuming application.");
+    }
+
+    /// <summary>
+    /// Handles the event of an unhandles exception bubbling up all the way to the App instance.
+    /// </summary>
+    private void App_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+    {
+        // TODO: Check if these are coming from a Render call and just ignore then.# (this is usually the case, but doesn't save us)
+        e.Handled = true;
+
+        try
         {
-            var deferral = e.SuspendingOperation.GetDeferral();
+            AppLoggerService.LogCrash(e.Exception, sender);
+            AppLoggerService.FlushMessages();
 
-            try
+            // Save Exception for easier location
+            Task.Run(async () =>
             {
-                Task loggerTask = AppLoggerService.OnSuspending();
+                var file = await ApplicationData.Current.LocalFolder.CreateFileAsync("lastexception.json", CreationCollisionOption.ReplaceExisting);
+                await FileIO.WriteTextAsync(file, JsonConvert.SerializeObject(new UnhandledException(e.Message, e.Exception)));
+            }).Wait();
 
-                await Task.WhenAll(loggerTask);
-            }
-            catch (Exception)
-            {
-
-            }
-            finally
-            {
-                deferral.Complete();
-            }
+            Analytics.TrackEvent("UnhandledException", new Dictionary<string, string> {
+                { "Message", e.Message },
+                { "Exception", e.Exception.ToString() },
+                { "StackTrace", e.Exception.StackTrace },
+            });
         }
-
-        /// <summary>
-        /// Handles the event of extended execution being revoked.
-        /// </summary>
-        private void App_ExtendedExecutionRevoked(object sender, ExtendedExecutionRevokedEventArgs args)
+        catch (Exception)
         {
-            AppLoggerService.LogInfo($"The request to ExtendedExecutionSession was revoked with reason {args.Reason}");
+
         }
-
-        /// <summary>
-        /// Invoked when application execution is being resummed.
-        /// </summary>
-        private void App_Resuming(object sender, object e)
+        finally
         {
-            AppLoggerService.OnResuming();
-            AppLoggerService.LogInfo($"[AppResumming] Resuming application.");
+            UnhandledException -= App_UnhandledException;
         }
-
-        /// <summary>
-        /// Handles the event of an unhandles exception bubbling up all the way to the App instance.
-        /// </summary>
-        private void App_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
-        {
-            // TODO: Check if these are coming from a Render call and just ignore then.# (this is usually the case, but doesn't save us)
-            e.Handled = true;
-
-            try
-            {
-                AppLoggerService.LogCrash(e.Exception, sender);
-                AppLoggerService.FlushMessages();
-
-                // Save Exception for easier location
-                Task.Run(async () =>
-                {
-                    var file = await ApplicationData.Current.LocalFolder.CreateFileAsync("lastexception.json", CreationCollisionOption.ReplaceExisting);
-                    await FileIO.WriteTextAsync(file, JsonConvert.SerializeObject(new UnhandledException(e.Message, e.Exception)));
-                }).Wait();
-
-                Analytics.TrackEvent("UnhandledException", new Dictionary<string, string> {
-                    { "Message", e.Message },
-                    { "Exception", e.Exception.ToString() },
-                    { "StackTrace", e.Exception.StackTrace },
-                });
-            }
-            catch (Exception)
-            {
-
-            }
-            finally
-            {
-                UnhandledException -= App_UnhandledException;
-            }
 
 #if DEBUG
-            Debugger.Break();
+        Debugger.Break();
 #endif
 
-            // Restart app for stability, except on RS5 19329065/19654150
-            var t = CoreApplication.RequestRestartAsync(string.Empty);
-        }
+        // Restart app for stability, except on RS5 19329065/19654150
+        var t = CoreApplication.RequestRestartAsync(string.Empty);
     }
 }

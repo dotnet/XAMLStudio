@@ -6,52 +6,51 @@ using System.Collections.Generic;
 using XamlStudio.Toolkit.Helpers;
 using XamlStudio.Toolkit.Models;
 
-namespace XamlStudio.Toolkit.Services
+namespace XamlStudio.Toolkit.Services;
+
+// TODO: Feel like this could have better data typing to serve it's purpose... should think about this more.
+/// <summary>
+/// Manages connections between <see cref="XamlRenderService"/> and <see cref="XamlBindingWrapperConverter"/>.
+/// </summary>
+public class XamlBindingWrapperManager : Dictionary<int, XamlBindingInfo>
 {
-    // TODO: Feel like this could have better data typing to serve it's purpose... should think about this more.
-    /// <summary>
-    /// Manages connections between <see cref="XamlRenderService"/> and <see cref="XamlBindingWrapperConverter"/>.
-    /// </summary>
-    public class XamlBindingWrapperManager : Dictionary<int, XamlBindingInfo>
+    private readonly Dictionary<int, XamlRenderService> _renderers = new Dictionary<int, XamlRenderService>();
+    private readonly Dictionary<int, List<int>> _tracker = new Dictionary<int, List<int>>();
+
+    public static XamlBindingWrapperManager Instance => Singleton<XamlBindingWrapperManager>.Instance;
+
+    public void Register(int id, XamlRenderService service)
     {
-        private readonly Dictionary<int, XamlRenderService> _renderers = new Dictionary<int, XamlRenderService>();
-        private readonly Dictionary<int, List<int>> _tracker = new Dictionary<int, List<int>>();
+        this._renderers.Add(id, service);
+        this._tracker[id] = new List<int>();
+    }
 
-        public static XamlBindingWrapperManager Instance => Singleton<XamlBindingWrapperManager>.Instance;
+    public void AddNewBinding(int serviceId, XamlBindingInfo binding)
+    {
+        binding.Service = this._renderers[serviceId];
+        this.Add(binding.Id, binding);
+        this._tracker[serviceId].Add(binding.Id);
+    }
 
-        public void Register(int id, XamlRenderService service)
+    public IEnumerable<XamlBindingInfo> GetBindings(int serviceId)
+    {
+        foreach (var binding in this._tracker[serviceId])
         {
-            this._renderers.Add(id, service);
-            this._tracker[id] = new List<int>();
+            yield return this[binding];
+        }
+    }
+
+    /// <summary>
+    /// Removes all previous bindings related to a XamlRenderService reference.
+    /// </summary>
+    /// <param name="serviceId"></param>
+    public void Clear(int serviceId)
+    {
+        foreach (var binding in this._tracker[serviceId])
+        {
+            this.Remove(binding);
         }
 
-        public void AddNewBinding(int serviceId, XamlBindingInfo binding)
-        {
-            binding.Service = this._renderers[serviceId];
-            this.Add(binding.Id, binding);
-            this._tracker[serviceId].Add(binding.Id);
-        }
-
-        public IEnumerable<XamlBindingInfo> GetBindings(int serviceId)
-        {
-            foreach (var binding in this._tracker[serviceId])
-            {
-                yield return this[binding];
-            }
-        }
-
-        /// <summary>
-        /// Removes all previous bindings related to a XamlRenderService reference.
-        /// </summary>
-        /// <param name="serviceId"></param>
-        public void Clear(int serviceId)
-        {
-            foreach (var binding in this._tracker[serviceId])
-            {
-                this.Remove(binding);
-            }
-
-            this._tracker[serviceId] = new List<int>();
-        }
+        this._tracker[serviceId] = new List<int>();
     }
 }

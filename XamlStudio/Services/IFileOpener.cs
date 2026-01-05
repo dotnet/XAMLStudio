@@ -4,10 +4,9 @@
 
 using Windows.Storage;
 
-namespace XamlStudio.Services
+namespace XamlStudio.Services;
+
+public interface IFileOpener
 {
-    public interface IFileOpener
-    {
-        void OpenFileItems(IStorageItem[] file);
-    }
+    void OpenFileItems(IStorageItem[] file);
 }

@@ -16,110 +16,109 @@ using Windows.UI.Xaml.Navigation;
 using XamlStudio.Activation;
 using XamlStudio.Toolkit.Helpers;
 
-namespace XamlStudio.Services
+namespace XamlStudio.Services;
+
+// For more information on application activation see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/activation.md
+internal class ActivationService
 {
-    // For more information on application activation see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/activation.md
-    internal class ActivationService
+    private readonly App _app;
+    private readonly Lazy<UIElement> _shell;
+    private readonly Type _defaultNavItem;
+
+    public ActivationService(App app, Type defaultNavItem, Lazy<UIElement> shell = null)
     {
-        private readonly App _app;
-        private readonly Lazy<UIElement> _shell;
-        private readonly Type _defaultNavItem;
+        _app = app;
+        _shell = shell;
+        _defaultNavItem = defaultNavItem;
+    }
 
-        public ActivationService(App app, Type defaultNavItem, Lazy<UIElement> shell = null)
+    public async Task ActivateAsync(object activationArgs)
+    {
+        if (IsInteractive(activationArgs))
         {
-            _app = app;
-            _shell = shell;
-            _defaultNavItem = defaultNavItem;
-        }
+            // Initialize things like registering background task before the app is loaded
+            await InitializeAsync();
 
-        public async Task ActivateAsync(object activationArgs)
-        {
-            if (IsInteractive(activationArgs))
+            // Do not repeat app initialization when the Window already has content,
+            // just ensure that the window is active
+            if (Window.Current.Content == null)
             {
-                // Initialize things like registering background task before the app is loaded
-                await InitializeAsync();
-
-                // Do not repeat app initialization when the Window already has content,
-                // just ensure that the window is active
-                if (Window.Current.Content == null)
+                // Create a Frame to act as the navigation context and navigate to the first page
+                Window.Current.Content = _shell?.Value ?? new Frame();
+                NavigationService.NavigationFailed += (sender, e) =>
                 {
-                    // Create a Frame to act as the navigation context and navigate to the first page
-                    Window.Current.Content = _shell?.Value ?? new Frame();
-                    NavigationService.NavigationFailed += (sender, e) =>
-                    {
-                        throw e.Exception;
-                    };
-                    NavigationService.Navigated += Frame_Navigated;
-                    if (SystemNavigationManager.GetForCurrentView() != null)
-                    {
-                        SystemNavigationManager.GetForCurrentView().BackRequested += ActivationService_BackRequested;
-                    }
+                    throw e.Exception;
+                };
+                NavigationService.Navigated += Frame_Navigated;
+                if (SystemNavigationManager.GetForCurrentView() != null)
+                {
+                    SystemNavigationManager.GetForCurrentView().BackRequested += ActivationService_BackRequested;
                 }
             }
+        }
 
-            // TODO: Need to loop here and then have an extra interface on navigated page for extra parameters?
-            var activationHandler = GetActivationHandlers()
-                                                .FirstOrDefault(h => h.CanHandle(activationArgs));
+        // TODO: Need to loop here and then have an extra interface on navigated page for extra parameters?
+        var activationHandler = GetActivationHandlers()
+                                            .FirstOrDefault(h => h.CanHandle(activationArgs));
 
-            if (activationHandler != null)
+        if (activationHandler != null)
+        {
+            await activationHandler.HandleAsync(activationArgs);
+        }
+
+        if (IsInteractive(activationArgs))
+        {
+            var defaultHandler = new DefaultLaunchActivationHandler(_defaultNavItem);
+            if (defaultHandler.CanHandle(activationArgs))
             {
-                await activationHandler.HandleAsync(activationArgs);
+                await defaultHandler.HandleAsync(activationArgs);
             }
 
-            if (IsInteractive(activationArgs))
-            {
-                var defaultHandler = new DefaultLaunchActivationHandler(_defaultNavItem);
-                if (defaultHandler.CanHandle(activationArgs))
-                {
-                    await defaultHandler.HandleAsync(activationArgs);
-                }
+            // Ensure the current window is active
+            Window.Current.Activate();
 
-                // Ensure the current window is active
-                Window.Current.Activate();
-
-                // Tasks after activation
-                await StartupAsync();
-            }
+            // Tasks after activation
+            await StartupAsync();
         }
+    }
 
-        private async Task InitializeAsync()
-        {
-            await ThemeSelectorService.InitializeAsync();
-            await Task.CompletedTask;
-        }
+    private async Task InitializeAsync()
+    {
+        await ThemeSelectorService.InitializeAsync();
+        await Task.CompletedTask;
+    }
 
-        private async Task StartupAsync()
-        {
-            ThemeSelectorService.SetRequestedTheme();
-            await Task.CompletedTask;
-        }
+    private async Task StartupAsync()
+    {
+        ThemeSelectorService.SetRequestedTheme();
+        await Task.CompletedTask;
+    }
 
-        private IEnumerable<ActivationHandler> GetActivationHandlers()
-        {
-            yield return Singleton<SuspendAndResumeService>.Instance;
-            yield return Singleton<WebToAppLinkActivationHandler>.Instance;
-            yield return Singleton<SchemeActivationHandler>.Instance;
-            yield return Singleton<FileActivationHandler>.Instance;
-        }
+    private IEnumerable<ActivationHandler> GetActivationHandlers()
+    {
+        yield return Singleton<SuspendAndResumeService>.Instance;
+        yield return Singleton<WebToAppLinkActivationHandler>.Instance;
+        yield return Singleton<SchemeActivationHandler>.Instance;
+        yield return Singleton<FileActivationHandler>.Instance;
+    }
 
-        private bool IsInteractive(object args)
-        {
-            return args is IActivatedEventArgs;
-        }
+    private bool IsInteractive(object args)
+    {
+        return args is IActivatedEventArgs;
+    }
 
-        private void Frame_Navigated(object sender, NavigationEventArgs e)
-        {
-            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = NavigationService.CanGoBack ?
-                AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
-        }
+    private void Frame_Navigated(object sender, NavigationEventArgs e)
+    {
+        SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = NavigationService.CanGoBack ?
+            AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
+    }
 
-        private void ActivationService_BackRequested(object sender, BackRequestedEventArgs e)
+    private void ActivationService_BackRequested(object sender, BackRequestedEventArgs e)
+    {
+        if (NavigationService.CanGoBack)
         {
-            if (NavigationService.CanGoBack)
-            {
-                NavigationService.GoBack();
-                e.Handled = true;
-            }
+            NavigationService.GoBack();
+            e.Handled = true;
         }
     }
 }

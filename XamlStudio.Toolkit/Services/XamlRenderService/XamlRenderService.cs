@@ -16,267 +16,266 @@ using Windows.UI.Xaml.Media.Imaging;
 using XamlStudio.Toolkit.Extensions;
 using XamlStudio.Toolkit.Models;
 
-namespace XamlStudio.Toolkit.Services
+namespace XamlStudio.Toolkit.Services;
+
+/// <summary>
+/// Class to assist in parsing a Xaml string and returning an UIElement.
+/// 
+/// Wrapper around XamlReader.Load* with extra pre/post processing to support more features like loading images from an external source.
+/// 
+/// References:
+///     https://docs.microsoft.com/en-us/uwp/api/windows.ui.xaml.markup.xamlreader
+///     https://docs.microsoft.com/en-us/windows/uwp/xaml-platform/xaml-namespaces-and-namespace-mapping
+///     https://docs.microsoft.com/en-us/windows/uwp/data-binding/data-binding-in-depth
+///     https://blogs.msdn.microsoft.com/mcsuksoldev/2010/08/27/designdata-mvvm-support-in-blend-vs2010-and-wpfsilverlight/
+/// </summary>
+public partial class XamlRenderService
 {
-    /// <summary>
-    /// Class to assist in parsing a Xaml string and returning an UIElement.
-    /// 
-    /// Wrapper around XamlReader.Load* with extra pre/post processing to support more features like loading images from an external source.
-    /// 
-    /// References:
-    ///     https://docs.microsoft.com/en-us/uwp/api/windows.ui.xaml.markup.xamlreader
-    ///     https://docs.microsoft.com/en-us/windows/uwp/xaml-platform/xaml-namespaces-and-namespace-mapping
-    ///     https://docs.microsoft.com/en-us/windows/uwp/data-binding/data-binding-in-depth
-    ///     https://blogs.msdn.microsoft.com/mcsuksoldev/2010/08/27/designdata-mvvm-support-in-blend-vs2010-and-wpfsilverlight/
-    /// </summary>
-    public partial class XamlRenderService
+    public XamlRenderService()
     {
-        public XamlRenderService()
+        XamlBindingWrapperManager.Instance.Register(this.Id, this);
+    }
+
+    public async Task<XamlRenderResultContext> RenderAsync(string content, XamlRenderSettings settings = null)
+    {
+        // Use default settings if none provided.
+        if (settings == null)
         {
-            XamlBindingWrapperManager.Instance.Register(this.Id, this);
+            settings = new XamlRenderSettings();
         }
 
-        public async Task<XamlRenderResultContext> RenderAsync(string content, XamlRenderSettings settings = null)
+        // Remove previous Binding Tracking
+        XamlBindingWrapperManager.Instance.Clear(this.Id);
+
+        // Hold all outcomes of this process in an object we'll return when done.
+        var result = new XamlRenderResultContext(content);
+        result.Bindings = Enumerable.Empty<XamlBindingInfo>();
+
+        // Load extra Metadata about other available types.
+        if (!AppAssemblyInfo.Instance.IsLoaded)
         {
-            // Use default settings if none provided.
-            if (settings == null)
-            {
-                settings = new XamlRenderSettings();
-            }
+            await AppAssemblyInfo.Instance.InitializeAsync();
+        }
 
-            // Remove previous Binding Tracking
-            XamlBindingWrapperManager.Instance.Clear(this.Id);
+        // If we're doing Binding Debugging, we have some required prefixes, so make sure we have them.
+        if (settings.IsBindingDebuggingEnabled)
+        {
+            // TODO: Feel like this should be in PreProcessXmlns
+            // also should be added to RenderedContent but not Suggested...
+            settings.KnownNamespaces.Add(new XmlnsNamespace("x", XmlnsPathX));
+            settings.KnownNamespaces.Add(new XmlnsNamespace(XmlnsPrefixXstc, XmlnsPathXstc));
+        }
 
-            // Hold all outcomes of this process in an object we'll return when done.
-            var result = new XamlRenderResultContext(content);
-            result.Bindings = Enumerable.Empty<XamlBindingInfo>();
+        // Start by pre-processing raw string to add any missing namespaces.
+        PreProcessXmlns(ref result, ref settings);
 
-            // Load extra Metadata about other available types.
-            if (!AppAssemblyInfo.Instance.IsLoaded)
-            {
-                await AppAssemblyInfo.Instance.InitializeAsync();
-            }
+        if (ReadXmlTree(ref result)) // TODO: Pass in pre-parsed XmlDocumentSyntax
+        {
 
-            // If we're doing Binding Debugging, we have some required prefixes, so make sure we have them.
+            // Note: This function is called regardless as it also currently removes the x:Class attribute...
+            // TODO: Figure out best way to split this into binding part and non-binding parts.
+            GetBindings(result, settings.IsBindingDebuggingEnabled);
+
             if (settings.IsBindingDebuggingEnabled)
             {
-                // TODO: Feel like this should be in PreProcessXmlns
-                // also should be added to RenderedContent but not Suggested...
-                settings.KnownNamespaces.Add(new XmlnsNamespace("x", XmlnsPathX));
-                settings.KnownNamespaces.Add(new XmlnsNamespace(XmlnsPrefixXstc, XmlnsPathXstc));
+                // TODO: Record Line, Start, and Length of Changes to re-adjust error messages back to original positions.
+                // TODO: Do this in XML (add required resources)
+                InterceptBindings(ref result);
             }
 
-            // Start by pre-processing raw string to add any missing namespaces.
-            PreProcessXmlns(ref result, ref settings);
-
-            if (ReadXmlTree(ref result)) // TODO: Pass in pre-parsed XmlDocumentSyntax
+            // Attempt RenderAsync
+            try
             {
+                if (settings.IsInitialTemplateValidated)
+                {
+                    result.Element = XamlReader.LoadWithInitialTemplateValidation(result.RenderedContent);
+                }
+                else
+                {
+                    result.Element = XamlReader.Load(result.RenderedContent);
+                }
+            }
+            catch (Exception e)
+            {
+                // Highlight Error (we'll only get one at a time).
+                string msg = e.Message;
 
-                // Note: This function is called regardless as it also currently removes the x:Class attribute...
-                // TODO: Figure out best way to split this into binding part and non-binding parts.
-                GetBindings(result, settings.IsBindingDebuggingEnabled);
+                msg = msg.Replace("The text associated with this error code could not be found.", "").Trim();
 
+                uint line = 1;
+                uint column = 1;
+
+                //No default namespace has been declared. [Line: 1 Position: 2]
+                int il = msg.IndexOf("Line: ");
+                if (il >= 0)
+                {
+                    line = uint.Parse(msg.Substring(il + 6, msg.IndexOf("P", il) - il - 7));
+                }
+
+                int pl = msg.IndexOf("Position: ");
+                if (pl >= 0)
+                {
+                    column = uint.Parse(msg.Substring(pl + 9, msg.IndexOf("]", pl) - pl - 9));
+                }
+
+                var lineContent = GetLine(result.RenderedContent, line);
+                var gap = lineContent.IndexOf(' ', (int)column - 1);
+                if (gap == -1)
+                {
+                    gap = lineContent.IndexOf('>', (int)column - 1);
+                }
+                if (gap == -1)
+                {
+                    gap = lineContent.Length;
+                }
+
+                // TODO: Need to do a better mapping between original and modified doc. Or See issue in GetBindings function and Xml Tree modification strategy between our two XmlParsers, need to converage on GuiLabs I think, it has merge/diff comparison support which may help here.
+                var errorLoc = lineContent.Substring((int)column - 1, gap - (int)column + 1);
+                var opos = content.IndexOf(errorLoc);
+                if (opos != -1)
+                {
+                    (line, column) = ((uint, uint))content.GetLineColumnIndex(opos);
+                    lineContent = GetLine(content, line); // Get original full line, as the XamlExceptionRange does scoping for us to highlight the area
+                }
+
+                result.Errors.Add(new XamlExceptionRange(msg, e, line, column, lineContent));
+            }
+
+            // Need to look for Design-Time 'd:' properties and link to object somehow for modification afterwards as they're ignored by parser usually with mc:Ignorable="d"
+            await ProcessDesignDataAsync(result, settings);
+
+            // Load Binding Converters
+            if (result.Element is FrameworkElement fwe)
+            {
                 if (settings.IsBindingDebuggingEnabled)
                 {
-                    // TODO: Record Line, Start, and Length of Changes to re-adjust error messages back to original positions.
-                    // TODO: Do this in XML (add required resources)
-                    InterceptBindings(ref result);
-                }
-
-                // Attempt RenderAsync
-                try
-                {
-                    if (settings.IsInitialTemplateValidated)
+                    foreach (var binding in XamlBindingWrapperManager.Instance.GetBindings(this.Id))
                     {
-                        result.Element = XamlReader.LoadWithInitialTemplateValidation(result.RenderedContent);
-                    }
-                    else
-                    {
-                        result.Element = XamlReader.Load(result.RenderedContent);
-                    }
-                }
-                catch (Exception e)
-                {
-                    // Highlight Error (we'll only get one at a time).
-                    string msg = e.Message;
-
-                    msg = msg.Replace("The text associated with this error code could not be found.", "").Trim();
-
-                    uint line = 1;
-                    uint column = 1;
-
-                    //No default namespace has been declared. [Line: 1 Position: 2]
-                    int il = msg.IndexOf("Line: ");
-                    if (il >= 0)
-                    {
-                        line = uint.Parse(msg.Substring(il + 6, msg.IndexOf("P", il) - il - 7));
-                    }
-
-                    int pl = msg.IndexOf("Position: ");
-                    if (pl >= 0)
-                    {
-                        column = uint.Parse(msg.Substring(pl + 9, msg.IndexOf("]", pl) - pl - 9));
-                    }
-
-                    var lineContent = GetLine(result.RenderedContent, line);
-                    var gap = lineContent.IndexOf(' ', (int)column - 1);
-                    if (gap == -1)
-                    {
-                        gap = lineContent.IndexOf('>', (int)column - 1);
-                    }
-                    if (gap == -1)
-                    {
-                        gap = lineContent.Length;
-                    }
-
-                    // TODO: Need to do a better mapping between original and modified doc. Or See issue in GetBindings function and Xml Tree modification strategy between our two XmlParsers, need to converage on GuiLabs I think, it has merge/diff comparison support which may help here.
-                    var errorLoc = lineContent.Substring((int)column - 1, gap - (int)column + 1);
-                    var opos = content.IndexOf(errorLoc);
-                    if (opos != -1)
-                    {
-                        (line, column) = ((uint, uint))content.GetLineColumnIndex(opos);
-                        lineContent = GetLine(content, line); // Get original full line, as the XamlExceptionRange does scoping for us to highlight the area
-                    }
-
-                    result.Errors.Add(new XamlExceptionRange(msg, e, line, column, lineContent));
-                }
-
-                // Need to look for Design-Time 'd:' properties and link to object somehow for modification afterwards as they're ignored by parser usually with mc:Ignorable="d"
-                await ProcessDesignDataAsync(result, settings);
-
-                // Load Binding Converters
-                if (result.Element is FrameworkElement fwe)
-                {
-                    if (settings.IsBindingDebuggingEnabled)
-                    {
-                        foreach (var binding in XamlBindingWrapperManager.Instance.GetBindings(this.Id))
+                        if (!string.IsNullOrWhiteSpace(binding.ConverterKey) && fwe.Resources.ContainsKey(binding.ConverterKey))
                         {
-                            if (!string.IsNullOrWhiteSpace(binding.ConverterKey) && fwe.Resources.ContainsKey(binding.ConverterKey))
-                            {
-                                binding.Converter = fwe.Resources[binding.ConverterKey] as IValueConverter;
-                            }
-                            // If Key not found, should already be Xaml Compiler Error and not get here.
+                            binding.Converter = fwe.Resources[binding.ConverterKey] as IValueConverter;
                         }
+                        // If Key not found, should already be Xaml Compiler Error and not get here.
                     }
-                }
-
-                if (result.Element != null && result.IsUIElement)
-                {
-                    if (settings.ResourceRoot != null)
-                    {
-                        // Look for Image Objects in order to replace their Sources with our Images Loaded from Disk.
-                        VisitUIElements(result.Element as UIElement, async (child) =>
-                        {
-                            // TODO: Generalize to support toolkit:ImageEx, toolkit:RoundImageEx, Converters?
-                            if (child is Image img && img.Source is BitmapImage bmp &&
-                                bmp.UriSource?.AbsoluteUri is string uri)
-                            {
-                                // TODO: Extract into private method
-                                // TODO: Support ms-appdata? protocol //local/, etc...
-                                if (uri.StartsWith("ms-appx:///", StringComparison.OrdinalIgnoreCase) == true)
-                                {
-                                    uri = uri.Substring(11);
-                                }
-                                else if (uri.StartsWith("ms-resource:///Files/", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    uri = uri.Substring(21);
-                                }
-
-                                var imagefile = await GetFileFromPath(settings.ResourceRoot, uri);
-                                var bitmapImage = new BitmapImage();
-                                if (imagefile != null)
-                                {
-                                    using (var stream = await (imagefile as StorageFile).OpenAsync(FileAccessMode.Read))
-                                    {
-                                        await bitmapImage.SetSourceAsync(stream);
-                                    }
-
-                                    // Replace Image Source with our now injected image.
-                                    img.Source = bitmapImage;
-                                }
-                            }
-                            else if (child is MediaPlayerElement mpe && mpe.Source is MediaPlaybackItem mpi
-                                    && mpi.Source?.Uri?.AbsoluteUri is string uri2)
-                            {
-                                if (uri2.StartsWith("ms-appx:///", StringComparison.OrdinalIgnoreCase) == true)
-                                {
-                                    uri2 = uri2.Substring(11);
-                                }
-                                else if (uri2.StartsWith("ms-resource:///Files/", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    uri2 = uri2.Substring(21);
-                                }
-
-                                var mediafile = await GetFileFromPath(settings.ResourceRoot, uri2);
-                                var source = MediaSource.CreateFromStorageFile(mediafile);
-                                if (source != null)
-                                {
-                                    mpe.Source = source;
-                                }
-                            }
-                        });
-
-                        // Check if we have an "App.xaml" to load general resources from
-                        // TODO: Should see if have modified content in XAML Studio itself vs. on-disk... hmm
-                        var appXamlFile = await settings.ResourceRoot.TryGetItemAsync("App.xaml") as IStorageFile;
-                        if (appXamlFile != null)
-                        {
-                            var xamlText = await FileIO.ReadTextAsync(appXamlFile);
-                            var resourceDictionaryXaml = UnwrapApplicationResourceDictionary(xamlText);
-                            try
-                            {
-                                var appResources = XamlReader.Load(resourceDictionaryXaml) as ResourceDictionary;
-                                if (appResources != null)
-                                {
-                                    // Merge App.xaml resources into our root element's resources.
-                                    if (result.Element is FrameworkElement rootFwe)
-                                    {
-                                        if (rootFwe.Resources == null)
-                                        {
-                                            rootFwe.Resources = new ResourceDictionary();
-                                        }
-                                        // Note: This needs to happen before element is added to the Visual Tree!
-                                        // IMPORTANT!!! This doesn't work for all styling (weirdly) while under a debugger... need to file a WinUI bug...
-                                        rootFwe.Resources.MergedDictionaries.Add(appResources);
-                                    }
-                                }
-                            }
-                            catch
-                            {
-                                // TODO: Raise that issue in app.xaml?
-                            }
-                        }
-                    }
-
-                    result.Bindings = XamlBindingWrapperManager.Instance.GetBindings(Id);
                 }
             }
 
-            return result;
+            if (result.Element != null && result.IsUIElement)
+            {
+                if (settings.ResourceRoot != null)
+                {
+                    // Look for Image Objects in order to replace their Sources with our Images Loaded from Disk.
+                    VisitUIElements(result.Element as UIElement, async (child) =>
+                    {
+                        // TODO: Generalize to support toolkit:ImageEx, toolkit:RoundImageEx, Converters?
+                        if (child is Image img && img.Source is BitmapImage bmp &&
+                            bmp.UriSource?.AbsoluteUri is string uri)
+                        {
+                            // TODO: Extract into private method
+                            // TODO: Support ms-appdata? protocol //local/, etc...
+                            if (uri.StartsWith("ms-appx:///", StringComparison.OrdinalIgnoreCase) == true)
+                            {
+                                uri = uri.Substring(11);
+                            }
+                            else if (uri.StartsWith("ms-resource:///Files/", StringComparison.OrdinalIgnoreCase))
+                            {
+                                uri = uri.Substring(21);
+                            }
+
+                            var imagefile = await GetFileFromPath(settings.ResourceRoot, uri);
+                            var bitmapImage = new BitmapImage();
+                            if (imagefile != null)
+                            {
+                                using (var stream = await (imagefile as StorageFile).OpenAsync(FileAccessMode.Read))
+                                {
+                                    await bitmapImage.SetSourceAsync(stream);
+                                }
+
+                                // Replace Image Source with our now injected image.
+                                img.Source = bitmapImage;
+                            }
+                        }
+                        else if (child is MediaPlayerElement mpe && mpe.Source is MediaPlaybackItem mpi
+                                && mpi.Source?.Uri?.AbsoluteUri is string uri2)
+                        {
+                            if (uri2.StartsWith("ms-appx:///", StringComparison.OrdinalIgnoreCase) == true)
+                            {
+                                uri2 = uri2.Substring(11);
+                            }
+                            else if (uri2.StartsWith("ms-resource:///Files/", StringComparison.OrdinalIgnoreCase))
+                            {
+                                uri2 = uri2.Substring(21);
+                            }
+
+                            var mediafile = await GetFileFromPath(settings.ResourceRoot, uri2);
+                            var source = MediaSource.CreateFromStorageFile(mediafile);
+                            if (source != null)
+                            {
+                                mpe.Source = source;
+                            }
+                        }
+                    });
+
+                    // Check if we have an "App.xaml" to load general resources from
+                    // TODO: Should see if have modified content in XAML Studio itself vs. on-disk... hmm
+                    var appXamlFile = await settings.ResourceRoot.TryGetItemAsync("App.xaml") as IStorageFile;
+                    if (appXamlFile != null)
+                    {
+                        var xamlText = await FileIO.ReadTextAsync(appXamlFile);
+                        var resourceDictionaryXaml = UnwrapApplicationResourceDictionary(xamlText);
+                        try
+                        {
+                            var appResources = XamlReader.Load(resourceDictionaryXaml) as ResourceDictionary;
+                            if (appResources != null)
+                            {
+                                // Merge App.xaml resources into our root element's resources.
+                                if (result.Element is FrameworkElement rootFwe)
+                                {
+                                    if (rootFwe.Resources == null)
+                                    {
+                                        rootFwe.Resources = new ResourceDictionary();
+                                    }
+                                    // Note: This needs to happen before element is added to the Visual Tree!
+                                    // IMPORTANT!!! This doesn't work for all styling (weirdly) while under a debugger... need to file a WinUI bug...
+                                    rootFwe.Resources.MergedDictionaries.Add(appResources);
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            // TODO: Raise that issue in app.xaml?
+                        }
+                    }
+                }
+
+                result.Bindings = XamlBindingWrapperManager.Instance.GetBindings(Id);
+            }
         }
 
-        /// <summary>
-        /// Get the text at a specific line.
-        /// Returns an Empty string if the lineNumber is out of range.
-        /// </summary>
-        /// <param name="content">The content to inspect</param>
-        /// <param name="lineNumber">Target line number</param>
-        /// <returns></returns>
-        private string GetLine(string content, uint lineNumber)
+        return result;
+    }
+
+    /// <summary>
+    /// Get the text at a specific line.
+    /// Returns an Empty string if the lineNumber is out of range.
+    /// </summary>
+    /// <param name="content">The content to inspect</param>
+    /// <param name="lineNumber">Target line number</param>
+    /// <returns></returns>
+    private string GetLine(string content, uint lineNumber)
+    {
+        if (lineNumber < 1 || string.IsNullOrEmpty(content))
         {
-            if (lineNumber < 1 || string.IsNullOrEmpty(content))
-            {
-                return string.Empty;
-            }
-
-            var lines = content.Split("\n");
-
-            if (lineNumber > lines.Count() + 1)
-            {
-                return string.Empty;
-            }
-
-            return lines[lineNumber - 1];
+            return string.Empty;
         }
+
+        var lines = content.Split("\n");
+
+        if (lineNumber > lines.Count() + 1)
+        {
+            return string.Empty;
+        }
+
+        return lines[lineNumber - 1];
     }
 }

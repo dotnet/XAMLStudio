@@ -7,29 +7,28 @@ using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
-namespace CommunityToolkit.WinUI.Extensions.Pivot.Future
+namespace CommunityToolkit.WinUI.Extensions.Pivot.Future;
+
+/// <summary>
+/// Helper to retrieve the CloseCommandButton Attached Property from a Pivot for the PivotHeaderItem Style Templates.
+/// </summary>
+[Bindable]
+public class GetPivotCloseButtonCommandConverter : IValueConverter
 {
-    /// <summary>
-    /// Helper to retrieve the CloseCommandButton Attached Property from a Pivot for the PivotHeaderItem Style Templates.
-    /// </summary>
-    [Bindable]
-    public class GetPivotCloseButtonCommandConverter : IValueConverter
+    public object Convert(object value, Type targetType, object parameter, string language)
     {
-        public object Convert(object value, Type targetType, object parameter, string language)
+        var pivot = (value as DependencyObject)?.FindAscendant<Windows.UI.Xaml.Controls.Pivot>();
+
+        if (pivot != null)
         {
-            var pivot = (value as DependencyObject)?.FindAscendant<Windows.UI.Xaml.Controls.Pivot>();
-
-            if (pivot != null)
-            {
-                return PivotExtensions.GetCloseButtonCommand(pivot);
-            }
-
-            return null;
+            return PivotExtensions.GetCloseButtonCommand(pivot);
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            throw new NotImplementedException();
-        }
+        return null;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        throw new NotImplementedException();
     }
 }

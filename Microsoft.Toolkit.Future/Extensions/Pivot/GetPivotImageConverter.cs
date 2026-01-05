@@ -7,29 +7,28 @@ using System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 
-namespace CommunityToolkit.WinUI.Extensions.Pivot.Future
+namespace CommunityToolkit.WinUI.Extensions.Pivot.Future;
+
+/// <summary>
+/// Helper to retrieve the Image Attached Property from a PivotItem for the PivotHeaderItem Style Templates.
+/// </summary>
+[Bindable]
+public class GetPivotImageConverter : GetPivotItemConverter
 {
-    /// <summary>
-    /// Helper to retrieve the Image Attached Property from a PivotItem for the PivotHeaderItem Style Templates.
-    /// </summary>
-    [Bindable]
-    public class GetPivotImageConverter : GetPivotItemConverter
+    public override object Convert(object value, Type targetType, object parameter, string language)
     {
-        public override object Convert(object value, Type targetType, object parameter, string language)
+        if (base.Convert(value, targetType, parameter, language) is PivotItem pivotitem)
         {
-            if (base.Convert(value, targetType, parameter, language) is PivotItem pivotitem)
-            {
-                var source = PivotExtensions.GetImageSource(pivotitem);
+            var source = PivotExtensions.GetImageSource(pivotitem);
 
-                return source;
-            }
-
-            return null;
+            return source;
         }
 
-        public override object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            throw new NotImplementedException();
-        }
+        return null;
+    }
+
+    public override object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        throw new NotImplementedException();
     }
 }

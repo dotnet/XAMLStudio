@@ -4,71 +4,70 @@
 
 using System;
 
-namespace XamlStudio.Toolkit.Models
+namespace XamlStudio.Toolkit.Models;
+
+/// <summary>
+/// Record of a Binding/Conversion Occuring
+/// </summary>
+public class ConversionRecord
 {
+    public DateTime TimeStamp { get; } = DateTime.Now;
+
+    public object Value { get; private set; }
+
+    public object Result { get; private set; }
+
+    public object ResultOrValue { get { return Result ?? Value; } }
+
+    public bool HasResult { get; private set; }
+
+    public bool IsSuccessful { get; private set; }
+
+    public Exception ExceptionObject { get; private set; }
+
+    public XamlBindingInfo Parent { get; private set; }
+
     /// <summary>
-    /// Record of a Binding/Conversion Occuring
+    /// If there was no converter, then it's just a value that was passed thru.
     /// </summary>
-    public class ConversionRecord
+    /// <param name="value"></param>
+    public ConversionRecord(XamlBindingInfo parent, object value)
     {
-        public DateTime TimeStamp { get; } = DateTime.Now;
+        Parent = parent;
+        Value = value;
+        IsSuccessful = true;
+    }
 
-        public object Value { get; private set; }
+    /// <summary>
+    /// Value was successfully converted to the specified Result.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="result"></param>
+    public ConversionRecord(XamlBindingInfo parent, object value, object result)
+    {
+        Parent = parent;
+        Value = value;
+        Result = result;
+        HasResult = true;
+        IsSuccessful = true;
+    }
 
-        public object Result { get; private set; }
+    /// <summary>
+    /// There was an error converting the given value.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="error"></param>
+    public ConversionRecord(XamlBindingInfo parent, object value, Exception error)
+    {
+        Parent = parent;
+        Value = value;
+        ExceptionObject = error;
+    }
 
-        public object ResultOrValue { get { return Result ?? Value; } }
+    public override string ToString()
+    {
+        var start = string.IsNullOrWhiteSpace(Parent.ElementName) ? Parent.ElementTypeName : Parent.ElementName + "[" + Parent.ElementTypeName + "]";
 
-        public bool HasResult { get; private set; }
-
-        public bool IsSuccessful { get; private set; }
-
-        public Exception ExceptionObject { get; private set; }
-
-        public XamlBindingInfo Parent { get; private set; }
-
-        /// <summary>
-        /// If there was no converter, then it's just a value that was passed thru.
-        /// </summary>
-        /// <param name="value"></param>
-        public ConversionRecord(XamlBindingInfo parent, object value)
-        {
-            Parent = parent;
-            Value = value;
-            IsSuccessful = true;
-        }
-
-        /// <summary>
-        /// Value was successfully converted to the specified Result.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="result"></param>
-        public ConversionRecord(XamlBindingInfo parent, object value, object result)
-        {
-            Parent = parent;
-            Value = value;
-            Result = result;
-            HasResult = true;
-            IsSuccessful = true;
-        }
-
-        /// <summary>
-        /// There was an error converting the given value.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="error"></param>
-        public ConversionRecord(XamlBindingInfo parent, object value, Exception error)
-        {
-            Parent = parent;
-            Value = value;
-            ExceptionObject = error;
-        }
-
-        public override string ToString()
-        {
-            var start = string.IsNullOrWhiteSpace(Parent.ElementName) ? Parent.ElementTypeName : Parent.ElementName + "[" + Parent.ElementTypeName + "]";
-
-            return start + "." + Parent.PropertyName + " = " + ResultOrValue;
-        }
+        return start + "." + Parent.PropertyName + " = " + ResultOrValue;
     }
 }

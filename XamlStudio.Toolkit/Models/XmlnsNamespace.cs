@@ -5,51 +5,50 @@
 using Newtonsoft.Json;
 using System.ComponentModel;
 
-namespace XamlStudio.Toolkit.Models
+namespace XamlStudio.Toolkit.Models;
+
+public class XmlnsNamespace : IEditableObject
 {
-    public class XmlnsNamespace : IEditableObject
+    [JsonProperty("name")]
+    public string Name { get; set; }
+
+    [JsonProperty("path")]
+    public string Path { get; set; }
+
+    private bool _inEdit = false;
+    private XmlnsNamespace _original;
+
+    public XmlnsNamespace(string name, string path)
     {
-        [JsonProperty("name")]
-        public string Name { get; set; }
+        Name = name;
+        Path = path;
+    }
 
-        [JsonProperty("path")]
-        public string Path { get; set; }
-
-        private bool _inEdit = false;
-        private XmlnsNamespace _original;
-
-        public XmlnsNamespace(string name, string path)
+    public void BeginEdit()
+    {
+        if (!_inEdit)
         {
-            Name = name;
-            Path = path;
+            _original = new XmlnsNamespace(Name, Path);
+            _inEdit = true;
         }
+    }
 
-        public void BeginEdit()
+    public void CancelEdit()
+    {
+        if (_inEdit)
         {
-            if (!_inEdit)
-            {
-                _original = new XmlnsNamespace(Name, Path);
-                _inEdit = true;
-            }
+            Name = _original.Name;
+            Path = _original.Path;
+            _inEdit = false;
         }
+    }
 
-        public void CancelEdit()
+    public void EndEdit()
+    {
+        if (_inEdit)
         {
-            if (_inEdit)
-            {
-                Name = _original.Name;
-                Path = _original.Path;
-                _inEdit = false;
-            }
-        }
-
-        public void EndEdit()
-        {
-            if (_inEdit)
-            {
-                _inEdit = false;
-                _original = null;
-            }
+            _inEdit = false;
+            _original = null;
         }
     }
 }

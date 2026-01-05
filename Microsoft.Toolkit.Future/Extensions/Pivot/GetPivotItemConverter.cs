@@ -8,34 +8,33 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 
-namespace CommunityToolkit.WinUI.Extensions.Pivot.Future
+namespace CommunityToolkit.WinUI.Extensions.Pivot.Future;
+
+/// <summary>
+/// Helper to retrieve the PivotItem from the PivotHeaderItem.
+/// </summary>
+[Bindable]
+public class GetPivotItemConverter : IValueConverter
 {
-    /// <summary>
-    /// Helper to retrieve the PivotItem from the PivotHeaderItem.
-    /// </summary>
-    [Bindable]
-    public class GetPivotItemConverter : IValueConverter
+    public virtual object Convert(object value, Type targetType, object parameter, string language)
     {
-        public virtual object Convert(object value, Type targetType, object parameter, string language)
+        var pivotheader = value as PivotHeaderItem;
+
+        var panel = pivotheader?.Parent as PivotHeaderPanel;
+        var index = panel?.Children?.IndexOf(pivotheader);
+
+        var pivot = (value as DependencyObject)?.FindAscendant<Windows.UI.Xaml.Controls.Pivot>();
+
+        if (index != null)
         {
-            var pivotheader = value as PivotHeaderItem;
-
-            var panel = pivotheader?.Parent as PivotHeaderPanel;
-            var index = panel?.Children?.IndexOf(pivotheader);
-
-            var pivot = (value as DependencyObject)?.FindAscendant<Windows.UI.Xaml.Controls.Pivot>();
-
-            if (index != null)
-            {
-                return pivot?.Items[index.Value] as PivotItem;
-            }
-
-            return null;
+            return pivot?.Items[index.Value] as PivotItem;
         }
 
-        public virtual object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            throw new NotImplementedException();
-        }
+        return null;
+    }
+
+    public virtual object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        throw new NotImplementedException();
     }
 }

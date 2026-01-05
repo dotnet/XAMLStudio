@@ -16,98 +16,97 @@ using XamlStudio.Models;
 using XamlStudio.Toolkit.Helpers;
 using XamlStudio.Toolkit.Services;
 
-namespace XamlStudio.Services
+namespace XamlStudio.Services;
+
+public class LibraryService
 {
-    public class LibraryService
+    public static LibraryService Instance => Singleton<LibraryService>.Instance;
+
+    public ObservableCollection<LibraryInfo> Libraries { get; private set; } = new ObservableCollection<LibraryInfo>();
+
+    public Dictionary<string, LibraryInfo> LibrariesByNamespace { get; private set; }
+
+    private readonly AsyncLock _initializeMutex = new AsyncLock();
+    private bool _isInitialized = false;
+
+    public LibraryService()
     {
-        public static LibraryService Instance => Singleton<LibraryService>.Instance;
-
-        public ObservableCollection<LibraryInfo> Libraries { get; private set; } = new ObservableCollection<LibraryInfo>();
-
-        public Dictionary<string, LibraryInfo> LibrariesByNamespace { get; private set; }
-
-        private readonly AsyncLock _initializeMutex = new AsyncLock();
-        private bool _isInitialized = false;
-
-        public LibraryService()
-        {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            InitializeAsync();
+        InitializeAsync();
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-        }
+    }
 
-        public async Task InitializeAsync()
+    public async Task InitializeAsync()
+    {
+        using (await _initializeMutex.LockAsync())
         {
-            using (await _initializeMutex.LockAsync())
+            if (!_isInitialized)
             {
-                if (!_isInitialized)
-                {
-                    // TODO: Clean-up these initialize calls to make sure this list is centralized... (MainPage, XamlRenderService)
-                    await AppAssemblyInfo.Instance.InitializeAsync(new Assembly[] {
-                        typeof(Microsoft.UI.Xaml.Controls.NavigationView).Assembly,
-                        typeof(CommunityToolkit.WinUI.Controls.GridSplitter).Assembly,
-                        typeof(CommunityToolkit.WinUI.Controls.DockPanel).Assembly,
-                        typeof(CommunityToolkit.WinUI.Converters.BoolToVisibilityConverter).Assembly,
-                        typeof(Microsoft.Xaml.Interactivity.DataTriggerBehavior).Assembly
-                    });
+                // TODO: Clean-up these initialize calls to make sure this list is centralized... (MainPage, XamlRenderService)
+                await AppAssemblyInfo.Instance.InitializeAsync(new Assembly[] {
+                    typeof(Microsoft.UI.Xaml.Controls.NavigationView).Assembly,
+                    typeof(CommunityToolkit.WinUI.Controls.GridSplitter).Assembly,
+                    typeof(CommunityToolkit.WinUI.Controls.DockPanel).Assembly,
+                    typeof(CommunityToolkit.WinUI.Converters.BoolToVisibilityConverter).Assembly,
+                    typeof(Microsoft.Xaml.Interactivity.DataTriggerBehavior).Assembly
+                });
 
-                    var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Strings/libs.json"));
+                var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Strings/libs.json"));
 
-                    var text = await FileIO.ReadTextAsync(file);
+                var text = await FileIO.ReadTextAsync(file);
 
-                    JsonConvert.DeserializeObject<LibraryInfo[]>(text).ToList().ForEach(item => Libraries.Add(item));
+                JsonConvert.DeserializeObject<LibraryInfo[]>(text).ToList().ForEach(item => Libraries.Add(item));
 
-                    LibrariesByNamespace = Libraries.ToDictionary(item => item.Namespace);
+                LibrariesByNamespace = Libraries.ToDictionary(item => item.Namespace);
 
-                    _isInitialized = true;
-                }
+                _isInitialized = true;
             }
         }
+    }
 
-        public List<Type> GetTypesForNamespace(string ns)
+    public List<Type> GetTypesForNamespace(string ns)
+    {
+        var items = new List<Type>();
+
+        // TODO: Don't realy need this now anymore, but helps to optimize listing... thoughts?  May need specific doc link hints for Telerik
+        if (LibrariesByNamespace.TryGetValue(ns, out LibraryInfo lib) && lib.TypeHints != null && lib.TypeHints.Count > 0)
         {
-            var items = new List<Type>();
-
-            // TODO: Don't realy need this now anymore, but helps to optimize listing... thoughts?  May need specific doc link hints for Telerik
-            if (LibrariesByNamespace.TryGetValue(ns, out LibraryInfo lib) && lib.TypeHints != null && lib.TypeHints.Count > 0)
+            foreach (var tname in lib.TypeHints)
             {
-                foreach (var tname in lib.TypeHints)
+                try
                 {
-                    try
+                    var t = Type.GetType(tname, false, false);
+                    if (t != null)
                     {
-                        var t = Type.GetType(tname, false, false);
-                        if (t != null)
-                        {
-                            items.Add(t);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-
+                        items.Add(t);
                     }
                 }
-            }
-            else if (AppAssemblyInfo.Instance.TypesByNamespace.TryGetValue(ns, out var types))
-            {
-                foreach (var t in types.Where(t => t.IsSubclassOf(typeof(DependencyObject))))
+                catch (Exception ex)
                 {
-                    items.Add(t);
+
                 }
             }
-
-            return items;
         }
-
-        public string GetLinkForType(Type type, LibraryInfo info = null)
+        else if (AppAssemblyInfo.Instance.TypesByNamespace.TryGetValue(ns, out var types))
         {
-            if (info != null || LibrariesByNamespace.TryGetValue(type.Namespace, out info))
+            foreach (var t in types.Where(t => t.IsSubclassOf(typeof(DependencyObject))))
             {
-                return info.DocumentationRoot
-                           .Replace("<typefull>", type.FullName)
-                           .Replace("<type>", type.Name);
+                items.Add(t);
             }
-
-            return string.Empty;
         }
+
+        return items;
+    }
+
+    public string GetLinkForType(Type type, LibraryInfo info = null)
+    {
+        if (info != null || LibrariesByNamespace.TryGetValue(type.Namespace, out info))
+        {
+            return info.DocumentationRoot
+                       .Replace("<typefull>", type.FullName)
+                       .Replace("<type>", type.Name);
+        }
+
+        return string.Empty;
     }
 }

@@ -9,57 +9,56 @@ using XamlStudio.Models;
 using XamlStudio.Toolkit.Models;
 using XamlStudio.ViewModels;
 
-namespace XamlStudio.Views
+namespace XamlStudio.Views;
+
+/// <summary>
+/// An empty page that can be used on its own or navigated to within a Frame.
+/// </summary>
+public sealed partial class Binding : Page
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class Binding : Page
+    public MainViewModel MainViewModel { get; set; }
+
+    public XamlBindingInfo HistoryFilter
     {
-        public MainViewModel MainViewModel { get; set; }
+        get { return (XamlBindingInfo)GetValue(HistoryFilterProperty); }
+        set { SetValue(HistoryFilterProperty, value); }
+    }
 
-        public XamlBindingInfo HistoryFilter
+    // Using a DependencyProperty as the backing store for HistoryFilter.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty HistoryFilterProperty =
+        DependencyProperty.Register(nameof(HistoryFilter), typeof(XamlBindingInfo), typeof(Binding), new PropertyMetadata(null));
+
+    public Binding()
+    {
+        this.InitializeComponent();
+    }
+
+    private void ListView_ItemClick(object sender, ItemClickEventArgs e)
+    {
+        XamlBindingInfo xbi = null;
+
+        if (e.ClickedItem is ConversionRecord cr)
         {
-            get { return (XamlBindingInfo)GetValue(HistoryFilterProperty); }
-            set { SetValue(HistoryFilterProperty, value); }
+            xbi = cr.Parent;
+        }
+        else if (e.ClickedItem is XamlBindingInfo bi)
+        {
+            xbi = bi;
+
+            HistoryFilter = xbi;
+
+            BindingViewMode.SelectedValue = "History";
         }
 
-        // Using a DependencyProperty as the backing store for HistoryFilter.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty HistoryFilterProperty =
-            DependencyProperty.Register(nameof(HistoryFilter), typeof(XamlBindingInfo), typeof(Binding), new PropertyMetadata(null));
-
-        public Binding()
+        if (xbi != null)
         {
-            this.InitializeComponent();
+            // TODO: Include MainViewModel.ActiveDocumentViewModel?
+            WeakReferenceMessenger.Default.Send<NavigateToLineMessage>(new(xbi.Line));
         }
+    }
 
-        private void ListView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            XamlBindingInfo xbi = null;
-
-            if (e.ClickedItem is ConversionRecord cr)
-            {
-                xbi = cr.Parent;
-            }
-            else if (e.ClickedItem is XamlBindingInfo bi)
-            {
-                xbi = bi;
-
-                HistoryFilter = xbi;
-
-                BindingViewMode.SelectedValue = "History";
-            }
-
-            if (xbi != null)
-            {
-                // TODO: Include MainViewModel.ActiveDocumentViewModel?
-                WeakReferenceMessenger.Default.Send<NavigateToLineMessage>(new(xbi.Line));
-            }
-        }
-
-        private void Button_ClearHistoryFilter_Click(object sender, RoutedEventArgs e)
-        {
-            HistoryFilter = null;
-        }
+    private void Button_ClearHistoryFilter_Click(object sender, RoutedEventArgs e)
+    {
+        HistoryFilter = null;
     }
 }
