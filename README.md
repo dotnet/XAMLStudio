@@ -24,7 +24,8 @@ Created for WinUI XAML developers, XAML Studio helps you rapidly prototype ideas
 <p align="center">
 <a href="http://aka.ms/GetXAMLStudio">
 	<img alt="Store badge" src="docs/images/store-badge.png" width="200"/>
-</a>
+</a><br/>
+(Store Version still v1.1)
 </p>
 
 ## New Features in V2
@@ -37,6 +38,8 @@ Created for WinUI XAML developers, XAML Studio helps you rapidly prototype ideas
 - Right-Click Menu to Duplicate the Open Tab
 - Updated Libraries & Bug Fixes
 
+Learn more about these features and provide feedback on them in the [Feature Feedback](https://github.com/dotnet/XAMLStudio/discussions/categories/feature-feedback) discussion category.
+
 ## 🚀 Getting started
 
 Download [XAML Studio from the Microsoft Store](http://aka.ms/GetXAMLStudio) or follow these steps to install it manually:
@@ -45,11 +48,12 @@ Download [XAML Studio from the Microsoft Store](http://aka.ms/GetXAMLStudio) or 
 
 > [!IMPORTANT]
 > XAML Studio requires [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) or later for building and Windows 10 or newer to run.
-If you're new to building apps with WinUI and the Windows App SDK, follow the [installation instructions](https://learn.microsoft.com/windows/apps/get-started/start-here).
+If you're new to building apps with WinUI and the Windows App SDK, follow the [installation instructions](https://learn.microsoft.com/windows/apps/get-started/start-here). (Note: XAML Studio is still a UWP app, so you need the Universal Windows Platform tools as well.)
 
 **Required [Visual Studio components](https://learn.microsoft.com/windows/apps/get-started/start-here#22-required-workloads-and-components):**
 
-- Windows application development
+- Windows application development workload
+- Universal Windows Platform tools
 - Windows 17763 SDK
 
 ### 2. Clone the repository
@@ -70,19 +74,17 @@ Current work is being done on the `dev` branch, not `main`.
 
 Ensure that the `XAMLStudio` project is set as the startup project in Visual Studio.
 
-Press <kbd>F5</kbd> to run AI Dev Gallery!
+Press <kbd>F5</kbd> to run XAML Studio!
 
 > [!NOTE]
-> On ARM64-based PCs, make sure to build and run the solution as `ARM64` (and not as `x64`).
+> On ARM64-based PCs, make sure to build and run the solution as `ARM64` (and not as `x64`). However, there's currently an issue: see #14.
 
 > [!NOTE]
-> Having issues installing the app on your machine? Let us know by <a href="https://github.com/dotnet/XAMLStudio/issues">opening an issue</a> and we'll do our best to help!
+> Having issues installing the app on your machine? Let us know by <a href="https://github.com/dotnet/XAMLStudio/discussions/categories/q-a">opening a discussion</a> and we'll do our best to help!
 
 ## Contributing
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
-
-any additional questions or comments.
 
 ## 3rd Party OSS Usage
 
