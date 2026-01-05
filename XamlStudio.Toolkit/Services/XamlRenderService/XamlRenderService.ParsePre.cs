@@ -1,4 +1,8 @@
-﻿using System;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -174,7 +178,7 @@ namespace XamlStudio.Toolkit.Services
                 // Skip x:Class line
                 // Skip Application.Resources opening tag
                 if (trimmedLine.Contains("x:Class=")
-                    || trimmedLine.StartsWith("<Application.Resources>") 
+                    || trimmedLine.StartsWith("<Application.Resources>")
                     || trimmedLine.StartsWith("</Application.Resources>"))
                 {
                     // Add blank line as replacement to preserve line numbers

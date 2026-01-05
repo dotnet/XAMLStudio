@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany(".NET Foundation")]
 [assembly: AssemblyProduct("XamlStudio")]
-[assembly: AssemblyCopyright("Copyright 2025 .NET Foundation")]
+[assembly: AssemblyCopyright("Copyright 2025 .NET Foundation and Contributors")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

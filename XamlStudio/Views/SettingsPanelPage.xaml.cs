@@ -1,10 +1,13 @@
-﻿using CommunityToolkit.WinUI.Helpers;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using CommunityToolkit.WinUI.Helpers;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.Services.Store.Engagement;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.Foundation.Metadata;
 using Windows.System;
 using Windows.System.Threading;
 using Windows.UI.Popups;

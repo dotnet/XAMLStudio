@@ -606,9 +606,10 @@
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".editorconfig" />
+    <Content Include="..\NOTICE.json">
+      <Link>Strings\NOTICE.json</Link>
+    </Content>
     <Content Include="Strings\xmlns.json" />
-    <Content Include="Strings\thirdparty.json" />
     <Content Include="Strings\libs.json" />
   </ItemGroup>
   <ItemGroup>

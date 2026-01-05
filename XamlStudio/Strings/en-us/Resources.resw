@@ -866,7 +866,7 @@ a.k.a. XAML Llama 🦙</value>
     <comment>Developed By Header Text</comment>
   </data>
   <data name="SettingsPanel_About_HeaderCard.Description" xml:space="preserve">
-    <value>© 2025 .NET Foundation. All rights reserved.</value>
+    <value>© 2025 .NET Foundation and Contributors. All rights reserved.</value>
     <comment>Copyright Statement for About Settings Card</comment>
   </data>
   <data name="SettingsPanel_About_HeaderCard.Header" xml:space="preserve">

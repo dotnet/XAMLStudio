@@ -1,4 +1,8 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Controls;
 using CommunityToolkit.WinUI.Controls.Future;
@@ -146,7 +150,7 @@ public partial class Document :
             && node is XmlNodeSyntax xmlNode)
         {
             var loc = CodeEditor.Text.GetLineColumnIndex(xmlNode.Span.Start);
-            
+
             await CodeEditor.RevealPositionInCenterAsync(new Position((uint)loc.Line, (uint)loc.Column));
         }
     }

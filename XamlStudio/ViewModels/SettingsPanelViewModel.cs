@@ -1,4 +1,8 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.AppCenter.Analytics;
 using Newtonsoft.Json;
@@ -7,7 +11,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 using Windows.ApplicationModel;
 using Windows.Storage;
@@ -72,7 +75,7 @@ public partial class SettingsPanelViewModel : ObservableObject
 
     private async void LoadThirdPartyInfo()
     {
-        var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Strings/thirdparty.json"));
+        var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Strings/NOTICE.json"));
 
         var text = await FileIO.ReadTextAsync(file);
 

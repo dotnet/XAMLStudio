@@ -6,10 +6,16 @@
     <Platform Name="x86" />
   </Configurations>
   <Folder Name="/Config/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
     <File Path=".gitignore" />
+    <File Path="CODE_OF_CONDUCT.md" />
+    <File Path="CONTRIBUTING.md" />
+    <File Path="Directory.Build.props" />
     <File Path="LICENSE" />
     <File Path="nuget.config" />
     <File Path="README.md" />
+    <File Path="SECURITY.md" />
     <File Path="settings.xamlstyler" />
   </Folder>
   <Project Path="Microsoft.Toolkit.Future/Microsoft.Toolkit.Future.csproj" Id="ba818f63-02d8-4ce7-b6fb-475678144c07">
