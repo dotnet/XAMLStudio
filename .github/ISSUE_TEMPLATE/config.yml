@@ -1,0 +1,17 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions about using XAML Studio
+    url: https://github.com/dotnet/XAMLStudio/discussions/categories/q-a
+    about: I have a question about how to do something in XAML Studio.
+  - name: Show and tell
+    url: https://github.com/dotnet/XAMLStudio/discussions/categories/show-and-tell
+    about: Have something cool you did with XAML Studio? Share it with the community in Show and tell!
+  - name: New Idea?
+    url: https://github.com/dotnet/XAMLStudio/discussions/categories/ideas
+    about: Search and upvote or add a new idea to the Ideas discussion board.
+  - name: Feature Feedback
+    url: https://github.com/dotnet/XAMLStudio/discussions/categories/feature-feedback
+    about: Have feedback on new v2 features? Look for the corresponding discussion in the feature feeback forum and add a comment.
+  - name: Discord
+    url: https://discord.com/invite/ZexeU23dDr
+    about: "Join the Windows App Community Discord Server and talk to us in the #xaml-studio channel."

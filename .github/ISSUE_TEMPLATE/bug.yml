@@ -1,0 +1,94 @@
+name: Bug report
+description: Create a report to help us fix something within XAML Studio.
+labels: ["bug"]
+body:
+- type: markdown
+  attributes: 
+    value: |
+      ## Before you begin
+      🚨 **Please do not skip instructions**🚨
+      
+      This info is essential for investigating your bug report. Issues with missing information may be closed without investigation.
+      
+      If you're uncertain about a problem, find or start a [Questions & Answers](https://github.com/dotnet/XAMLStudio/discussions/categories/q-a) discussion, where you can get insight from the community regarding your issue.
+- type: textarea
+  id: description
+  validations:
+    required: true
+  attributes:
+     label: Describe the bug
+     description: A clear and concise description of what the bug is.
+- type: textarea
+  id: repro-steps
+  validations:
+    required: true
+  attributes:
+     label: Steps to reproduce
+     render: text
+     description: Provide steps to reproduce the issue, or let us know why it can't be reproduced (e.g. more complex setup, environment, dependencies, etc...)
+     placeholder: |
+        The easier we can reproduce the issue, the easier it is to understand and fix the problem. 
+        Provide repro steps, code-snippets, or a standalone project to help us understand the issue you're facing.
+        
+        For instance, provide the XAML used within XAML Studio to reproduce the issue.
+
+        Example repro steps:
+        1. Given the following environment
+        2. Go to '...'
+        3. Click on '....'
+        4. Scroll down to '....'
+        5. See error
+- type: textarea
+  id: expected-behavior
+  validations:
+    required: true
+  attributes:
+     label: Expected behavior
+     description: A clear and concise description of what you expected to happen.
+- type: textarea
+  id: screenshots
+  attributes:
+     label: Screenshots
+     description: If applicable, add screenshots to help explain your problem.
+- type: checkboxes
+  id: environment-windows-build
+  attributes:
+     label: Windows Build Number
+     description: Check one or more of the following options (if applicable)
+     options:
+       - label: Windows 10 1809 (Build 17763)
+       - label: Windows 10 1903 (Build 18362)
+       - label: Windows 10 1909 (Build 18363)
+       - label: Windows 10 2004 (Build 19041)
+       - label: Windows 10 20H2 (Build 19042)
+       - label: Windows 10 21H1 (Build 19043)
+       - label: Windows 10 21H2 (Build 19044)
+       - label: Windows 10 22H2 (Build 19045)
+       - label: Windows 11 21H2 (Build 22000)
+       - label: Windows 11 22H2 (Build 22621)
+       - label: Windows 11 23H2 (Build 22631)
+       - label: Windows 11 24H2 (Build 26100)
+       - label: Windows 11 25H2 (Build 26200)
+       - label: Windows 11 26H1 (Build 28000)
+       - label: Other (specify)
+- type: input
+  id: environment-windows-build-other-build-number
+  attributes:
+     label: Other Windows Build number
+     description: If applicable, another Windows build number not listed (such as an Insider build)
+- type: textarea
+  id: additional-context
+  attributes:
+     label: Additional context
+     description: Add any other context about the problem here.
+- type: dropdown
+  id: contribution
+  validations:
+    required: true
+  attributes:
+     label: Help us help you
+     description: Would you like to contribute a solution to this issue?
+     options:
+       - Yes, I'd like to be assigned to work on this item.
+       - Yes, but only if others can assist.
+       - No, I'm unable to contribute a solution.
