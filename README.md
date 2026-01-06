@@ -28,11 +28,16 @@ Created for WinUI XAML developers, XAML Studio helps you rapidly prototype ideas
 (Store Version still v1.1)
 </p>
 
+XAML Studio is a seed project of the [.NET Foundation](https://dotnetfoundation.org). Help us by giving us a star, participating, and contributing to the repository!
+
+[Learn more about the history of XAML Studio here](https://github.com/dotnet/XAMLStudio/discussions/26).
+
 ## New Features in V2
 
 - **New Fluent UI Design**
 - **Folder Support**: Image Loading, Design Data Loading, and More!
 - **Live Property Panel**: Edit, Inspect, and Experiment
+- **Visual Tree** and **Visual State** explorers (part of the Properties Panel)
 - More Quick Access Preview Options like Refresh, Alignment Grid, Clipping, and Theme Toggle
 - Breadcrumb XAML Navigation Bar
 - Right-Click Menu to Duplicate the Open Tab
@@ -77,7 +82,7 @@ Ensure that the `XAMLStudio` project is set as the startup project in Visual Stu
 Press <kbd>F5</kbd> to run XAML Studio!
 
 > [!NOTE]
-> On ARM64-based PCs, make sure to build and run the solution as `ARM64` (and not as `x64`). However, there's currently an issue: see #14.
+> On ARM64-based PCs, make sure to build and run the solution as `ARM64` (and not as `x64`). However, there's currently an issue: [See #14](https://github.com/dotnet/XAMLStudio/issues/14).
 
 > [!NOTE]
 > Having issues installing the app on your machine? Let us know by <a href="https://github.com/dotnet/XAMLStudio/discussions/categories/q-a">opening a discussion</a> and we'll do our best to help!
@@ -96,7 +101,7 @@ See the [NOTICE.json](NOTICE.json) for third-party attributions (as displayed in
 
 You can turn off telemetry in the Settings page under **Feedback**. Turn the **Diagnostic Data** setting to "No".
 
-No telemetry key is used/sent for builds from source. _App Center_ has been deprecated, so no telemetry is used currently, see Issue #9. Telemetry included basic information about which features were utilized, performance of the application based on document sizes, as well as crash information to help further product development. The following notice is left in case a new solution for diagnostics is used for v2.
+No telemetry key is used/sent for builds from source. _App Center_ has been deprecated, so no telemetry is used currently, see [Issue #9](https://github.com/dotnet/XAMLStudio/issues/9). Telemetry included basic information about which features were utilized, performance of the application based on document sizes, as well as crash information to help further product development. The following notice is left in case a new solution for diagnostics is used for v2.
 
 The software may collect information about you and your use of the software and send it to Microsoft. Microsoft may use this information to provide services and improve our products and services. You may turn off the telemetry as described in the repository. There are also some features in the software that may enable you and Microsoft to collect data from users of your applications. If you use these features, you must comply with applicable law, including providing appropriate notices to users of your applications together with a copy of Microsoft’s privacy statement. Our privacy statement is located at https://aka.ms/privacy. You can learn more about data collection and use in the help documentation and our privacy statement. Your use of the software operates as your consent to these practices.
 
