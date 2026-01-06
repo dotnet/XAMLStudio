@@ -360,6 +360,13 @@ public sealed partial class Document : UserControl,
                 targetPanel.Children.Add(element as UIElement);
             }
 
+            // If we're a content dialog then show it in-place
+            if (result.Element is ContentDialog contentDialog)
+            {
+                // TODO: We may want to extract the ContentDialog's content/properties and show it in a mocked-up control wrapper, as this may interfere with XAML Studio's own dialogs...
+                _ = contentDialog.ShowAsync(ContentDialogPlacement.InPlace);
+            }
+
             // Pass Reference to our Control so we can 'render' to it.
             ViewModel.PreviewerXamlRoot = targetPanel;
             ViewModel.ActualTheme = ActualTheme;
