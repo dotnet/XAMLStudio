@@ -11,7 +11,7 @@ using Windows.UI.Xaml.Data;
 namespace Microsoft.Toolkit.Future.Converters;
 
 [Bindable]
-public class CollectionContainsConverter : DependencyObject, IValueConverter // BoolToObjectConverter???
+public partial class CollectionContainsConverter : DependencyObject, IValueConverter // BoolToObjectConverter???
 {
     public IEnumerable<object> Collection
     {

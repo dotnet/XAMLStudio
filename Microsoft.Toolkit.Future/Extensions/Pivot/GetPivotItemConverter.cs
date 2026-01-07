@@ -23,7 +23,11 @@ public class GetPivotItemConverter : IValueConverter
         var panel = pivotheader?.Parent as PivotHeaderPanel;
         var index = panel?.Children?.IndexOf(pivotheader);
 
+        #if UNO
+        var pivot = (value as DependencyObject)?.FindAscendant<Microsoft.UI.Xaml.Controls.Pivot>();
+        #else
         var pivot = (value as DependencyObject)?.FindAscendant<Windows.UI.Xaml.Controls.Pivot>();
+        #endif
 
         if (index != null)
         {

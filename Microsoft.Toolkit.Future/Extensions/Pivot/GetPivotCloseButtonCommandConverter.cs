@@ -17,7 +17,11 @@ public class GetPivotCloseButtonCommandConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {
+        #if UNO
+        var pivot = (value as DependencyObject)?.FindAscendant<Microsoft.UI.Xaml.Controls.Pivot>();
+        #else
         var pivot = (value as DependencyObject)?.FindAscendant<Windows.UI.Xaml.Controls.Pivot>();
+        #endif
 
         if (pivot != null)
         {
