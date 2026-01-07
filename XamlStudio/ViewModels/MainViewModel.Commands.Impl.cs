@@ -230,7 +230,7 @@ public partial class MainViewModel
         // Remove what we had as active (otherwise, the active would be null and we'd hit an error)
         OpenFiles.RemoveAt(OpenFiles.IndexOf(document));
 
-        ActiveFile = OpenFiles.Last();
+        ActiveFile = OpenFiles.LastOrDefault();
 
         Analytics.TrackEvent("Document_Close");
 
