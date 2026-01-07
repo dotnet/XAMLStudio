@@ -643,11 +643,25 @@ public sealed partial class Document : UserControl,
         {
             if (node is IXmlElementSyntax element)
             {
-                var loc = text.GetLineColumnIndex(node.Span.Start);
+                var (line, column) = text.GetLineColumnIndex(node.Span.Start);
+                var xName = element.GetAttributeValue("Name", "x");
+                var xKey = element.GetAttributeValue("Key", "x");
+
+                // Construct a display name using the element type, x:Name, and x:Key
+                string displayName = element.Name;
+                if (xName is not null)
+                {
+                    displayName = $"{xName} ({element.Name})";
+                }
+                else if (xKey is not null)
+                {
+                    displayName = $"{xKey} ({element.Name})";
+                }
+
                 Breadcrumbs.Insert(0, new BreadcrumbInfo()
                 {
-                    Name = element.Name,
-                    Location = new Position((uint)loc.Line, (uint)loc.Column),
+                    Name = displayName,
+                    Location = new Position((uint)line, (uint)column),
                     // TODO: Put child sister nodes in a list so that can have drop-down to navigate within document?
                 });
             }
