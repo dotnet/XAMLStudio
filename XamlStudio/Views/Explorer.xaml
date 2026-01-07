@@ -31,7 +31,8 @@
                 <TextBlock HorizontalAlignment="Left"
                            VerticalAlignment="Center"
                            Style="{ThemeResource BodyTextBlockStyle}"
-                           Text="{x:Bind ((storage:StorageFile)Content).Name}" />
+                           Text="{x:Bind ((storage:StorageFile)Content).Name}"
+                           ToolTipService.ToolTip="{x:Bind ((storage:StorageFile)Content).Name}" />
             </StackPanel>
         </DataTemplate>
 
@@ -43,7 +44,8 @@
                 <TextBlock HorizontalAlignment="Left"
                            VerticalAlignment="Center"
                            Style="{ThemeResource BodyTextBlockStyle}"
-                           Text="{x:Bind ((storage:StorageFile)Content).Name}" />
+                           Text="{x:Bind ((storage:StorageFile)Content).Name}"
+                           ToolTipService.ToolTip="{x:Bind ((storage:StorageFile)Content).Name}" />
             </StackPanel>
         </DataTemplate>
 
@@ -55,7 +57,8 @@
                 <TextBlock HorizontalAlignment="Left"
                            VerticalAlignment="Center"
                            Style="{ThemeResource BodyTextBlockStyle}"
-                           Text="{x:Bind ((storage:StorageFile)Content).Name}" />
+                           Text="{x:Bind ((storage:StorageFile)Content).Name}"
+                           ToolTipService.ToolTip="{x:Bind ((storage:StorageFile)Content).Name}" />
                 <!--  Show Hover Preview of Image  -->
                 <ToolTipService.ToolTip>
                     <Image Width="128"
@@ -74,7 +77,8 @@
                 <TextBlock HorizontalAlignment="Left"
                            VerticalAlignment="Center"
                            Style="{ThemeResource BodyTextBlockStyle}"
-                           Text="{x:Bind ((storage:StorageFile)Content).Name}" />
+                           Text="{x:Bind ((storage:StorageFile)Content).Name}"
+                           ToolTipService.ToolTip="{x:Bind ((storage:StorageFile)Content).Name}" />
             </StackPanel>
         </DataTemplate>
 
@@ -84,7 +88,8 @@
                 <TextBlock HorizontalAlignment="Left"
                            VerticalAlignment="Center"
                            Style="{ThemeResource BodyTextBlockStyle}"
-                           Text="{x:Bind ((storage:StorageFolder)Content).DisplayName}" />
+                           Text="{x:Bind ((storage:StorageFolder)Content).DisplayName}"
+                           ToolTipService.ToolTip="{x:Bind ((storage:StorageFolder)Content).DisplayName}" />
             </StackPanel>
         </DataTemplate>
 
@@ -149,7 +154,8 @@
                             <TextBlock Margin="32,0"
                                        VerticalAlignment="Center"
                                        FontWeight="SemiBold"
-                                       Text="{Binding Title}" />
+                                       Text="{Binding Title}"
+                                       ToolTipService.ToolTip="{Binding Title}"/>
                             <StackPanel Grid.Column="1"
                                         ex:FrameworkElementExtensions.AncestorType="ListViewItem"
                                         Orientation="Horizontal"
