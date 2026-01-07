@@ -110,4 +110,18 @@ public class XamlLanguageProvider : CompletionItemProvider
     {
         throw new NotImplementedException();
     }
+
+    #if UNO
+    public async Task<CompletionList> ProvideCompletionItemsAsync(IModel model, Position position, CompletionContext context)
+    {
+        // Forward to the WinRT-style implementation and unwrap the result
+        var op = ProvideCompletionItemsAsync((IModel)model, (IPosition)position, context);
+        return await op.AsTask().ConfigureAwait(false);
+    }
+
+    public async Task<CompletionItem> ResolveCompletionItemAsync(IModel model, CompletionItem item)
+    {
+        throw new NotImplementedException();
+    }
+    #endif
 }
