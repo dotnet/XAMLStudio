@@ -241,7 +241,7 @@
                         </muxc:TabView.Resources>
                         <muxc:TabView.TabItemTemplate>
                             <DataTemplate x:DataType="models:XamlDocument">
-                                <muxc:TabViewItem HorizontalContentAlignment="Stretch" ContextFlyout="{StaticResource TabItemFlyout}">
+                                <muxc:TabViewItem ToolTipService.ToolTip="{x:Bind Title, Mode=OneWay}" HorizontalContentAlignment="Stretch" ContextFlyout="{StaticResource TabItemFlyout}">
                                     <muxc:TabViewItem.Header>
                                         <Grid>
                                             <Grid.ColumnDefinitions>
