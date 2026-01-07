@@ -155,7 +155,8 @@
                                        VerticalAlignment="Center"
                                        FontWeight="SemiBold"
                                        Text="{Binding Title}"
-                                       ToolTipService.ToolTip="{Binding Title}"/>
+                                       TextTrimming="CharacterEllipsis"
+                                       ToolTipService.ToolTip="{Binding DisplayPath}"/>
                             <StackPanel Grid.Column="1"
                                         ex:FrameworkElementExtensions.AncestorType="ListViewItem"
                                         Orientation="Horizontal"
