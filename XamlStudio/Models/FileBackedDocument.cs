@@ -66,13 +66,18 @@ public abstract partial class FileBackedDocument : ObservableObject
         StorageApplicationPermissions.FutureAccessList.AddOrReplace(StorageToken, BackingFile);
     }
 
-    internal async Task RestoreFileAsync()
+    internal async Task RestoreFileAsync(bool reloadContent = false)
     {
         if (BackingFile == null && !string.IsNullOrWhiteSpace(StorageToken))
         {
             try
             {
                 BackingFile = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(StorageToken);
+
+                if (reloadContent)
+                {
+                    Content = await FileIO.ReadTextAsync(BackingFile);
+                }
             }
             catch (Exception)
             {

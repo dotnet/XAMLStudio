@@ -48,7 +48,7 @@ public partial class MainViewModel : WorkspaceWindow
         foreach (var doc in docs)
         {
             // Reopen/make connection to backing OS file.
-            await doc.RestoreFileAsync();
+            await doc.RestoreFileAsync(true);
 
             // Restore Data Context File (if one).
             await doc.DataContext.RestoreFileAsync();
