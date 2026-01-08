@@ -51,7 +51,7 @@ public sealed partial class Properties : Page,
         WeakReferenceMessenger.Default.RegisterAll(this);
 
         // Check if there's a render and initialize our existing state
-        if (MainViewModel.ActiveDocumentViewModel.HasCompiled)
+        if (MainViewModel.ActiveDocumentViewModel?.HasCompiled ?? false)
         {
             Receive(new XamlRenderedMessage(MainViewModel.ActiveDocumentViewModel.Result));
         }
