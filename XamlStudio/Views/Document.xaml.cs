@@ -529,6 +529,7 @@ public sealed partial class Document : UserControl,
     }
 
     #region Share Button Code
+#if !UNO
     private readonly Lazy<CanvasDevice> _device = new Lazy<CanvasDevice>(InitCanvas);
 
     private static CanvasDevice InitCanvas()
@@ -537,11 +538,12 @@ public sealed partial class Document : UserControl,
     }
 
     private CanvasBitmap _screenshotImage;
-
+#endif
     private async void ShareButton_Click(Microsoft.UI.Xaml.Controls.SplitButton sender, Microsoft.UI.Xaml.Controls.SplitButtonClickEventArgs args)
     {
+#if !UNO
         _screenshotImage = await GetAppScreenshot();
-
+#endif
         DataTransferManager.ShowShareUI();
     }
 
@@ -552,13 +554,15 @@ public sealed partial class Document : UserControl,
 
     private async void ShareMenuPreviewOnly_Click(object sender, RoutedEventArgs e)
     {
+#if !UNO
         _screenshotImage = await GetPreviewScreenshot();
-
+#endif
         DataTransferManager.ShowShareUI();
     }
 
     private async void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
     {
+#if !UNO
         // Provide updated bitmap data using delayed rendering
         if (_screenshotImage != null)
         {
@@ -574,8 +578,9 @@ public sealed partial class Document : UserControl,
 
             deferral.Complete();
         }
+#endif
     }
-
+#if !UNO
     private async Task<CanvasBitmap> GetAppScreenshot()
     {
         var renderTarget = new RenderTargetBitmap();
@@ -601,6 +606,7 @@ public sealed partial class Document : UserControl,
         var pixels = await renderTarget.GetPixelsAsync();
         return CanvasBitmap.CreateFromBytes(_device.Value, pixels, renderTarget.PixelWidth, renderTarget.PixelHeight, DirectXPixelFormat.B8G8R8A8UIntNormalized);
     }
+#endif
     #endregion
 
     #region BreadcrumbBar Events

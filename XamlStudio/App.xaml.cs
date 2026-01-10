@@ -43,7 +43,7 @@ public sealed partial class App : Application
 
         // Deferred execution until used. Check https://msdn.microsoft.com/library/dd642331(v=vs.110).aspx for further info on Lazy<T> class.
         _activationService = new Lazy<ActivationService>(CreateActivationService);
-
+#if !UNO
         try
         {
             AppCenter.SetCountryCode(new Windows.Globalization.GeographicRegion().CodeTwoLetter);
@@ -54,6 +54,7 @@ public sealed partial class App : Application
         }
         AppCenter.Start("", typeof(Analytics));
         AppCenter.Start("", typeof(Crashes));
+#endif
     }
 
     protected override async void OnLaunched(LaunchActivatedEventArgs args)
@@ -70,12 +71,13 @@ public sealed partial class App : Application
         AppLoggerService.LogInfo($"[AppActivation] Application activated by {args.Kind}");
         await ActivationService.ActivateAsync(args);
     }
-
+#if !UNO
     protected override async void OnFileActivated(FileActivatedEventArgs args)
     {
         AppLoggerService.LogInfo($"[AppActivation] Application activated by {args.Kind}");
         await ActivationService.ActivateAsync(args);
     }
+#endif
 
     private ActivationService CreateActivationService()
     {
@@ -132,7 +134,11 @@ public sealed partial class App : Application
     /// <summary>
     /// Handles the event of an unhandles exception bubbling up all the way to the App instance.
     /// </summary>
+#if UNO
+    private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
+#else
     private void App_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+#endif
     {
         // TODO: Check if these are coming from a Render call and just ignore then.# (this is usually the case, but doesn't save us)
         e.Handled = true;

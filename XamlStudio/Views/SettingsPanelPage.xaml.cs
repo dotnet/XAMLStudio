@@ -120,7 +120,11 @@ public sealed partial class SettingsPanelPage : Page
         });
     }
 
+#if UNO
+    private void DataGrid_RowEditEnded(object sender, CommunityToolkit.WinUI.UI.Controls.DataGridRowEditEndedEventArgs e)
+#else
     private async void DataGrid_RowEditEnded(object sender, Microsoft.Toolkit.Uwp.UI.Controls.DataGridRowEditEndedEventArgs e)
+#endif
     {
         // Save Namespaces after Edit.
         await ViewModel.Settings.SaveAsync(nameof(ViewModel.Settings.KnownNamespaces));
@@ -172,7 +176,11 @@ public sealed partial class SettingsPanelPage : Page
         }
     }
 
+#if UNO
+    private void NamespaceDataGrid_PreparingCellForEdit(object sender, CommunityToolkit.WinUI.UI.Controls.DataGridPreparingCellForEditEventArgs e)
+#else
     private void NamespaceDataGrid_PreparingCellForEdit(object sender, Microsoft.Toolkit.Uwp.UI.Controls.DataGridPreparingCellForEditEventArgs e)
+#endif
     {
         if (e.EditingElement is TextBox t)
         {

@@ -62,8 +62,11 @@ public sealed partial class Properties : Page,
     }
 
 #if UNO
+    private void Properties_Unloaded(object sender, RoutedEventArgs e)
+#else
 
     private void Properties_Unloaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+#endif
     {
         if (Parent == null)
         {

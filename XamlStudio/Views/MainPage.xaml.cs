@@ -225,7 +225,11 @@ public sealed partial class MainPage : Page, IFileOpener,
         keyInfo.Reply(active);
     }
 
+#if UNO
+    private async void MainPage_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+#else
     private async void MainPage_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+#endif
     {
         // Offload from main thread to parallelize assembly loading.
         Task t = new Task(async () =>
@@ -233,9 +237,15 @@ public sealed partial class MainPage : Page, IFileOpener,
             // TODO: Clean-up these initialize calls to make sure this list is centralized...
             await AppAssemblyInfo.Instance.InitializeAsync(new Assembly[] {
                 typeof(Microsoft.UI.Xaml.Controls.NavigationView).Assembly,
+                #if UNO
+                typeof(CommunityToolkit.WinUI.UI.Controls.GridSplitter).Assembly,
+                typeof(CommunityToolkit.WinUI.UI.Controls.DockPanel).Assembly,
+                typeof(CommunityToolkit.WinUI.UI.Converters.BoolToVisibilityConverter).Assembly,
+                #else
                 typeof(CommunityToolkit.WinUI.Controls.GridSplitter).Assembly,
                 typeof(CommunityToolkit.WinUI.Controls.DockPanel).Assembly,
                 typeof(CommunityToolkit.WinUI.Converters.BoolToVisibilityConverter).Assembly,
+                #endif
                 typeof(Microsoft.Xaml.Interactivity.DataTriggerBehavior).Assembly,
             });
         });

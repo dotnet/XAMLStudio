@@ -115,8 +115,11 @@ public sealed partial class Toolbox : Page
 
         ClearSelection();
     }
-
+#if UNO
+    private void HyperlinkButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+#else
     private void HyperlinkButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+#endif
     {
         var fe = sender as FrameworkElement;
         if (fe != null)

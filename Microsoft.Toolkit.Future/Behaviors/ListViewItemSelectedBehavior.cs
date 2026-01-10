@@ -13,7 +13,7 @@ namespace CommunityToolkit.WinUI.Behaviors.Future;
 /// Behavior which allows for binding to the IsSelected property of a <see cref="ListViewItem"/>.
 /// </summary>
 #if UNO
-public class ListViewItemSelectedBehavior : CommunityToolkit.WinUI.Behaviors.BehaviorBase<FrameworkElement>
+public class ListViewItemSelectedBehavior : CommunityToolkit.WinUI.UI.Behaviors.BehaviorBase<FrameworkElement>
 #else
 public class ListViewItemSelectedBehavior : BehaviorBase<FrameworkElement>
 #endif
