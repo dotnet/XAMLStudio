@@ -72,32 +72,56 @@ public partial class DocumentViewModel : ObservableObject
 
     private static CssLineStyle _errorLineStyle = new CssLineStyle()
     {
+#if UNO
+        BackgroundColor = "#FFCA416A".ToColor()
+#else
         BackgroundColor = new SolidColorBrush("#FFCA416A".ToColor())
+#endif
     };
 
     private static CssInlineStyle _errorStyle = new CssInlineStyle()
     {
+#if UNO
+        BackgroundColor = "#FFCA416A".ToColor(),
+        ForegroundColor = "#FFFFFFFF".ToColor(),
+#else
         BackgroundColor = new SolidColorBrush("#FFCA416A".ToColor()),
         ForegroundColor = new SolidColorBrush("#FFFFFFFF".ToColor()),
+#endif
         FontWeight = FontWeights.SemiBold
     };
 
     private static CssInlineStyle _bindingStyleUnbound = new CssInlineStyle()
     {
+#if UNO
+        BackgroundColor = "#FFB4EBEF".ToColor(),
+        ForegroundColor = "#FF333333".ToColor()
+#else
         BackgroundColor = new SolidColorBrush("#FFB4EBEF".ToColor()),
         ForegroundColor = new SolidColorBrush("#FF333333".ToColor())
+#endif
     };
 
     private static CssInlineStyle _bindingStyleSuccess = new CssInlineStyle()
     {
+#if UNO
+        BackgroundColor = "#FFB9FEC1".ToColor(),
+        ForegroundColor = "#FF333333".ToColor()
+#else
         BackgroundColor = new SolidColorBrush("#FFB9FEC1".ToColor()),
         ForegroundColor = new SolidColorBrush("#FF333333".ToColor())
+#endif
     };
 
     private static CssInlineStyle _bindingStyleError = new CssInlineStyle()
     {
+#if UNO
+        BackgroundColor = "#FFFFF689".ToColor(),
+        ForegroundColor = "#FF663333".ToColor(),
+#else
         BackgroundColor = new SolidColorBrush("#FFFFF689".ToColor()),
         ForegroundColor = new SolidColorBrush("#FF663333".ToColor()),
+#endif
         FontWeight = FontWeights.SemiBold
     };
 

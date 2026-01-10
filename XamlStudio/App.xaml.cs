@@ -59,11 +59,13 @@ public sealed partial class App : Application
 
     protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
+#if !UNO
         if (!args.PrelaunchActivated)
         {
             AppLoggerService.LogInfo($"[AppActivation] Application activated by {args.Kind}");
             await ActivationService.ActivateAsync(args);
         }
+#endif
     }
 
     protected override async void OnActivated(IActivatedEventArgs args)

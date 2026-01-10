@@ -237,15 +237,9 @@ public sealed partial class MainPage : Page, IFileOpener,
             // TODO: Clean-up these initialize calls to make sure this list is centralized...
             await AppAssemblyInfo.Instance.InitializeAsync(new Assembly[] {
                 typeof(Microsoft.UI.Xaml.Controls.NavigationView).Assembly,
-                #if UNO
-                typeof(CommunityToolkit.WinUI.UI.Controls.GridSplitter).Assembly,
-                typeof(CommunityToolkit.WinUI.UI.Controls.DockPanel).Assembly,
-                typeof(CommunityToolkit.WinUI.UI.Converters.BoolToVisibilityConverter).Assembly,
-                #else
                 typeof(CommunityToolkit.WinUI.Controls.GridSplitter).Assembly,
                 typeof(CommunityToolkit.WinUI.Controls.DockPanel).Assembly,
                 typeof(CommunityToolkit.WinUI.Converters.BoolToVisibilityConverter).Assembly,
-                #endif
                 typeof(Microsoft.Xaml.Interactivity.DataTriggerBehavior).Assembly,
             });
         });

@@ -297,24 +297,7 @@
                     </DataTemplate>
                 </muxc:BreadcrumbBar.ItemTemplate>
             </muxc:BreadcrumbBar>
-            <monaco:CodeEditor x:Name="CodeEditor"
-                               Grid.Row="1"
-                               CodeLanguage="xml"
-                               Decorations="{x:Bind ViewModel.LineDecorations, Mode=OneWay}"
-                               KeyDown="CodeEditor_KeyDown"
-                               Loading="CodeEditor_Loading"
-                               OpenLinkRequested="CodeEditor_OpenLinkRequested"
-                               RequestedTheme="{x:Bind ViewModel.Settings.EditorTheme, Mode=OneWay}"
-                               Text="{x:Bind ViewModel.Document.Content, Mode=TwoWay}">
-                <i:Interaction.Behaviors>
-                    <!--<ic:EventTriggerBehavior EventName="LostFocus">
-                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.UpdateXamlCommand}" />
-                </ic:EventTriggerBehavior>-->
-                    <!--<ic:EventTriggerBehavior EventName="KeyDown">
-                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.KeyDownCommand}" />
-                </ic:EventTriggerBehavior>-->
-                </i:Interaction.Behaviors>
-            </monaco:CodeEditor>
+
         </Grid>
 
         <!--  Error Overlay  -->
@@ -334,7 +317,7 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <controls:SwitchPresenter x:Name="LoadingControl"
+        <!-- <controls:SwitchPresenter x:Name="LoadingControl"
                                   Grid.Row="0"
                                   Grid.RowSpan="3"
                                   Grid.ColumnSpan="3"
@@ -351,6 +334,6 @@
                 </Border>
             </controls:Case>
             <controls:Case Value="True" />
-        </controls:SwitchPresenter>
+        </controls:SwitchPresenter> -->
     </Grid>
 </UserControl>

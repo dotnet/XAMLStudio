@@ -41,7 +41,7 @@
                                    FontWeight="SemiBold"
                                    Text="{x:Bind}" />
                         <TextBlock Grid.Column="1">
-                            x<Run Text="{x:Bind BindingCount, Mode=OneWay}" /></TextBlock>
+                            <Run Text="{x:Bind BindingCount, Mode=OneWay}" /></TextBlock>
                     </Grid>
                     <TextBlock HorizontalAlignment="Right" Text="{x:Bind LastKnownBindingState, Mode=OneWay}" />
                     <controls:SwitchPresenter TargetType="x:Boolean" Value="{x:Bind HasConverter}">

@@ -149,9 +149,9 @@ public partial class Document :
         if (ViewModel.XamlCoordinator.TryGetXmlElement(message.Element, out var node)
             && node is XmlNodeSyntax xmlNode)
         {
-            var loc = CodeEditor.Text.GetLineColumnIndex(xmlNode.Span.Start);
+            // TODO: var loc = CodeEditor.Text.GetLineColumnIndex(xmlNode.Span.Start);
 
-            await CodeEditor.RevealPositionInCenterAsync(new Position((uint)loc.Line, (uint)loc.Column));
+            // await CodeEditor.RevealPositionInCenterAsync(new Position((uint)loc.Line, (uint)loc.Column));
         }
     }
 
@@ -225,47 +225,47 @@ public partial class Document :
     public async void Receive(AddToXamlMessage message)
     {
         // TODO: We need to be modifying the Xml Document syntax and using that to modify text vs. text itself...
-        var text = CodeEditor.Text;
-        if (ViewModel.XamlCoordinator.TryGetXmlElement(message.Element, out var node)
-            && node is XmlNodeSyntax xmlNode)
-        {
-            var loc = text.GetLineColumnIndex(xmlNode.Span.Start);
+        // TODO: var text = CodeEditor.Text;
+        // if (ViewModel.XamlCoordinator.TryGetXmlElement(message.Element, out var node)
+        //     && node is XmlNodeSyntax xmlNode)
+        // {
+        //     var loc = text.GetLineColumnIndex(xmlNode.Span.Start);
 
-            if (xmlNode is IXmlElementSyntax xmlElement)
-            {
-                var attribute = xmlElement.Attributes.FirstOrDefault((attr) => attr.Name == message.Property);
+        //     if (xmlNode is IXmlElementSyntax xmlElement)
+        //     {
+        //         var attribute = xmlElement.Attributes.FirstOrDefault((attr) => attr.Name == message.Property);
 
-                if (attribute != null)
-                {
-                    loc = text.GetLineColumnIndex(attribute.Span.Start);
-                }
-            }
+        //         if (attribute != null)
+        //         {
+        //             loc = text.GetLineColumnIndex(attribute.Span.Start);
+        //         }
+        //     }
 
-            await CodeEditor.RevealPositionInCenterAsync(new Position((uint)loc.Line, (uint)loc.Column));
+        //     await CodeEditor.RevealPositionInCenterAsync(new Position((uint)loc.Line, (uint)loc.Column));
 
-            var lines = text.Split(Environment.NewLine);
+        //     var lines = text.Split(Environment.NewLine);
 
-            var targetLine = lines[loc.Line - 1];
-            if (targetLine.Contains(message.Property))
-            {
-                var sp = targetLine.IndexOf(message.Property + "=") + message.Property.Length + 2;
-                lines[loc.Line - 1] = targetLine.Substring(0, sp) + $"{message.Value}" + targetLine.Substring(targetLine.IndexOf("\"", sp + 1));
-            }
-            else if (targetLine.Trim().EndsWith("/>"))
-            {
-                lines[loc.Line - 1] = targetLine.Substring(0, targetLine.Length - 2) + $" {message.Property}=\"{message.Value}\"/>";
-            }
-            else if (targetLine.Trim().EndsWith(">"))
-            {
-                lines[loc.Line - 1] = targetLine.Substring(0, targetLine.Length - 1) + $" {message.Property}=\"{message.Value}\">";
-            }
-            else
-            {
-                lines[loc.Line - 1] = targetLine + $" {message.Property}=\"{message.Value}\"";
-            }
+        //     var targetLine = lines[loc.Line - 1];
+        //     if (targetLine.Contains(message.Property))
+        //     {
+        //         var sp = targetLine.IndexOf(message.Property + "=") + message.Property.Length + 2;
+        //         lines[loc.Line - 1] = targetLine.Substring(0, sp) + $"{message.Value}" + targetLine.Substring(targetLine.IndexOf("\"", sp + 1));
+        //     }
+        //     else if (targetLine.Trim().EndsWith("/>"))
+        //     {
+        //         lines[loc.Line - 1] = targetLine.Substring(0, targetLine.Length - 2) + $" {message.Property}=\"{message.Value}\"/>";
+        //     }
+        //     else if (targetLine.Trim().EndsWith(">"))
+        //     {
+        //         lines[loc.Line - 1] = targetLine.Substring(0, targetLine.Length - 1) + $" {message.Property}=\"{message.Value}\">";
+        //     }
+        //     else
+        //     {
+        //         lines[loc.Line - 1] = targetLine + $" {message.Property}=\"{message.Value}\"";
+        //     }
 
-            CodeEditor.Text = string.Join(Environment.NewLine, lines);
-        }
+        //     CodeEditor.Text = string.Join(Environment.NewLine, lines);
+        // }
     }
 
     private enum DesignerMode
