@@ -80,11 +80,9 @@ public sealed partial class MainPage : Page, IFileOpener,
     }
 
     private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
-    {
-        // Get the size of the caption controls and set padding.
-        ////LeftPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayLeftInset);
-        RightPaddingColumn.Width = new GridLength(sender.SystemOverlayRightInset);
-    }
+         // Get the size of the caption controls and set padding.
+         ////LeftPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayLeftInset);
+         => RightPaddingColumn.Width = new GridLength(sender.SystemOverlayRightInset);
 
     private void Instance_OnBackgroundEntering(object sender, OnBackgroundEnteringEventArgs e)
     {
@@ -228,7 +226,7 @@ public sealed partial class MainPage : Page, IFileOpener,
     private async void MainPage_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
     {
         // Offload from main thread to parallelize assembly loading.
-        Task t = new Task(async () =>
+        Task t = new(async () =>
         {
             // TODO: Clean-up these initialize calls to make sure this list is centralized...
             await AppAssemblyInfo.Instance.InitializeAsync(new Assembly[] {
@@ -396,9 +394,7 @@ public sealed partial class MainPage : Page, IFileOpener,
     }
 
     private void DocumentTabs_TabClosing(Microsoft.UI.Xaml.Controls.TabView sender, Microsoft.UI.Xaml.Controls.TabViewTabCloseRequestedEventArgs args)
-    {
-        ViewModel.CloseActiveDocumentCommand.Execute(args.Item);
-    }
+        => ViewModel.CloseActiveDocumentCommand.Execute(args.Item);
 
     private void NavMenu_ItemInvoked(MUXC.NavigationView sender, MUXC.NavigationViewItemInvokedEventArgs args)
     {

@@ -21,7 +21,7 @@ public partial class SettingsService : ObservableObject
 {
     public static SettingsService Instance => Singleton<SettingsService>.Instance;
 
-    private readonly AsyncLock _initializeMutex = new AsyncLock();
+    private readonly AsyncLock _initializeMutex = new();
     private bool _isInitialized = false;
 
     public SettingsService()
@@ -85,13 +85,13 @@ public partial class SettingsService : ObservableObject
     }
 
     // Internal Cache
-    private static Dictionary<string, object> _settings = new Dictionary<string, object>();
+    private static Dictionary<string, object> _settings = [];
 
     public T Get<T>([CallerMemberName] string propertyName = null)
     {
         if (propertyName == null || !_settings.ContainsKey(propertyName))
         {
-            return default(T);
+            return default;
         }
 
         return (T)_settings[propertyName];

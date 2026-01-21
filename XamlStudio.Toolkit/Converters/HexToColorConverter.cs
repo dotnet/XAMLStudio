@@ -55,8 +55,5 @@ public class HexToColorConverter : IValueConverter
         return null;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, string language)
-    {
-        return Convert(value, targetType, parameter, language);
-    }
+    public object ConvertBack(object value, Type targetType, object parameter, string language) => Convert(value, targetType, parameter, language);
 }

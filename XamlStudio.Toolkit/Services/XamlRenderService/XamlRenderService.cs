@@ -39,17 +39,13 @@ public partial class XamlRenderService
     public async Task<XamlRenderResultContext> RenderAsync(string content, XamlRenderSettings settings = null)
     {
         // Use default settings if none provided.
-        if (settings == null)
-        {
-            settings = new XamlRenderSettings();
-        }
+        settings ??= new XamlRenderSettings();
 
         // Remove previous Binding Tracking
         XamlBindingWrapperManager.Instance.Clear(this.Id);
 
         // Hold all outcomes of this process in an object we'll return when done.
-        var result = new XamlRenderResultContext(content);
-        result.Bindings = Enumerable.Empty<XamlBindingInfo>();
+        var result = new XamlRenderResultContext(content) { Bindings = Enumerable.Empty<XamlBindingInfo>() };
 
         // Load extra Metadata about other available types.
         if (!AppAssemblyInfo.Instance.IsLoaded)
@@ -231,10 +227,7 @@ public partial class XamlRenderService
                                 // Merge App.xaml resources into our root element's resources.
                                 if (result.Element is FrameworkElement rootFwe)
                                 {
-                                    if (rootFwe.Resources == null)
-                                    {
-                                        rootFwe.Resources = new ResourceDictionary();
-                                    }
+                                    rootFwe.Resources ??= [];
                                     // Note: This needs to happen before element is added to the Visual Tree!
                                     // IMPORTANT!!! This doesn't work for all styling (weirdly) while under a debugger... need to file a WinUI bug...
                                     rootFwe.Resources.MergedDictionaries.Add(appResources);

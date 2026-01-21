@@ -23,20 +23,14 @@ public class NavigationViewExtensions
     /// </summary>
     /// <param name="obj">The <see cref="Windows.UI.Xaml.Controls.NavigationView"/>.</param>
     /// <returns>The selected index.</returns>
-    public static int GetSelectedIndex(NavigationView obj)
-    {
-        return (int)obj.GetValue(SelectedIndexProperty);
-    }
+    public static int GetSelectedIndex(NavigationView obj) => (int)obj.GetValue(SelectedIndexProperty);
 
     /// <summary>
     /// Sets the index of the selected <see cref="NavigationViewItem"/>.
     /// </summary>
     /// <param name="obj">The <see cref="Windows.UI.Xaml.Controls.NavigationView"/>.</param>
     /// <param name="value">The index to select.</param>
-    public static void SetSelectedIndex(NavigationView obj, int value)
-    {
-        obj.SetValue(SelectedIndexProperty, value);
-    }
+    public static void SetSelectedIndex(NavigationView obj, int value) => obj.SetValue(SelectedIndexProperty, value);
 
     /// <summary>
     /// Attached <see cref="DependencyProperty"/> for binding the selected index of a <see cref="NavigationView"/>.
@@ -48,20 +42,14 @@ public class NavigationViewExtensions
     /// </summary>
     /// <param name="obj">The <see cref="Windows.UI.Xaml.Controls.NavigationView"/>.</param>
     /// <returns>True if the settings page is selected.</returns>
-    public static bool GetIsSettingsSelected(NavigationView obj)
-    {
-        return (bool)obj.GetValue(IsSettingsSelectedProperty);
-    }
+    public static bool GetIsSettingsSelected(NavigationView obj) => (bool)obj.GetValue(IsSettingsSelectedProperty);
 
     /// <summary>
     /// Sets a value representing if the settings page is selected for the <see cref="NavigationViewItem"/>.
     /// </summary>
     /// <param name="obj">The <see cref="Windows.UI.Xaml.Controls.NavigationView"/>.</param>
     /// <param name="value">Set to True to select the settings page.</param>
-    public static void SetIsSettingsSelected(NavigationView obj, bool value)
-    {
-        obj.SetValue(IsSettingsSelectedProperty, value);
-    }
+    public static void SetIsSettingsSelected(NavigationView obj, bool value) => obj.SetValue(IsSettingsSelectedProperty, value);
 
     /// <summary>
     /// Attached <see cref="DependencyProperty"/> for selecting the Settings Page of a <see cref="NavigationView"/>.
@@ -74,20 +62,14 @@ public class NavigationViewExtensions
     /// </summary>
     /// <param name="obj">The <see cref="Windows.UI.Xaml.Controls.NavigationView"/>.</param>
     /// <returns>True if the feature is on.</returns>
-    public static bool GetCollapseOnClick(NavigationView obj)
-    {
-        return (bool)obj.GetValue(CollapseOnClickProperty);
-    }
+    public static bool GetCollapseOnClick(NavigationView obj) => (bool)obj.GetValue(CollapseOnClickProperty);
 
     /// <summary>
     /// Sets the behavior to collapse the content when clicking the already selected <see cref="NavigationViewItem"/>.
     /// </summary>
     /// <param name="obj">The <see cref="Windows.UI.Xaml.Controls.NavigationView"/>.</param>
     /// <param name="value">True to turn on this feature.</param>
-    public static void SetCollapseOnClick(NavigationView obj, bool value)
-    {
-        obj.SetValue(CollapseOnClickProperty, value);
-    }
+    public static void SetCollapseOnClick(NavigationView obj, bool value) => obj.SetValue(CollapseOnClickProperty, value);
 
     /// <summary>
     /// Attached <see cref="DependencyProperty"/> for enabling the behavior to collapse the <see cref="NavigationView"/> content when the same selected item is invoked again (click or tap).

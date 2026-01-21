@@ -27,20 +27,17 @@ public class StorageFileThumbnailConverter : IValueConverter
         if (value is StorageFile file)
         {
             var result = new BitmapImage();
-            Task t = new Task(async () =>
+            Task t = new(async () =>
             {
                 if (file.IsAvailable)
                 {
                     var thumbnail = await file.GetScaledImageAsThumbnailAsync(Windows.Storage.FileProperties.ThumbnailMode.PicturesView, 128, Windows.Storage.FileProperties.ThumbnailOptions.ResizeThumbnail);
 
-                    if (thumbnail == null)
-                    {
-                        thumbnail = await file.GetThumbnailAsync(Windows.Storage.FileProperties.ThumbnailMode.PicturesView, 128, Windows.Storage.FileProperties.ThumbnailOptions.ResizeThumbnail);
-                    }
+                    thumbnail ??= await file.GetThumbnailAsync(Windows.Storage.FileProperties.ThumbnailMode.PicturesView, 128, Windows.Storage.FileProperties.ThumbnailOptions.ResizeThumbnail);
 
                     if (thumbnail != null)
                     {
-                        InMemoryRandomAccessStream randomAccessStream = new InMemoryRandomAccessStream();
+                        InMemoryRandomAccessStream randomAccessStream = new();
                         await RandomAccessStream.CopyAsync(thumbnail, randomAccessStream);
                         randomAccessStream.Seek(0);
                         await _queue.EnqueueAsync(async () =>
@@ -67,8 +64,5 @@ public class StorageFileThumbnailConverter : IValueConverter
         return DependencyProperty.UnsetValue;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, string language)
-    {
-        throw new NotImplementedException();
-    }
+    public object ConvertBack(object value, Type targetType, object parameter, string language) => throw new NotImplementedException();
 }

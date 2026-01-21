@@ -18,10 +18,7 @@ public static class ThemeSelectorService
 
     public static ElementTheme Theme { get; set; } = ElementTheme.Default;
 
-    public static async Task InitializeAsync()
-    {
-        Theme = await LoadThemeFromSettingsAsync();
-    }
+    public static async Task InitializeAsync() => Theme = await LoadThemeFromSettingsAsync();
 
     public static async Task SetThemeAsync(ElementTheme theme)
     {
@@ -52,8 +49,5 @@ public static class ThemeSelectorService
         return cacheTheme;
     }
 
-    private static async Task SaveThemeInSettingsAsync(ElementTheme theme)
-    {
-        await ApplicationData.Current.LocalSettings.SaveAsync(SettingsKey, theme.ToString());
-    }
+    private static async Task SaveThemeInSettingsAsync(ElementTheme theme) => await ApplicationData.Current.LocalSettings.SaveAsync(SettingsKey, theme.ToString());
 }

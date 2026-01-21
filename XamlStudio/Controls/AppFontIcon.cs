@@ -16,10 +16,7 @@ public class AppFontIcon : FontIcon
     /// call ApplyTemplate. In simplest terms, this means the method is called just before a UI element 
     /// displays in your app. Override this method to influence the default post-template logic of a class.
     /// </summary>
-    protected override void OnApplyTemplate()
-    {
-        base.OnApplyTemplate();
-    }
+    protected override void OnApplyTemplate() => base.OnApplyTemplate();
 
     #region IconName (Dependency Property)
 
@@ -148,15 +145,12 @@ public static class IconGlyphValues
     /// <summary>
     /// Tries to get a unicode value out of the given icon name.
     /// </summary>
-    public static string GetIcon(IconGlyphNames icon)
-    {
-        return IconMapping.TryGetValue(icon, out string value) ? value : string.Empty;
-    }
+    public static string GetIcon(IconGlyphNames icon) => IconMapping.TryGetValue(icon, out string value) ? value : string.Empty;
 
     /// <summary>
     /// Maps the icon names into unicode values.
     /// </summary>
-    private static readonly Dictionary<IconGlyphNames, string> IconMapping = new Dictionary<IconGlyphNames, string>()
+    private static readonly Dictionary<IconGlyphNames, string> IconMapping = new()
     {
         {IconGlyphNames.Search,     "\uE721"},
         {IconGlyphNames.Work,       "\uE821"},
@@ -199,16 +193,14 @@ public static class IconSizeValues
     /// <summary>
     /// Tries to get a numercal value out of the indicated name.
     /// </summary>
-    public static double GetIconSize(IconContexts sizeName)
-    {
+    public static double GetIconSize(IconContexts sizeName) =>
         // Default Value is 16 based on ContentControlFontSize from ThemeResources
-        return SizeMapping.TryGetValue(sizeName, out double value) ? value : 16.0;
-    }
+        SizeMapping.TryGetValue(sizeName, out double value) ? value : 16.0;
 
     /// <summary>
     /// Maps the Size names to numerical values.
     /// </summary>
-    private static readonly Dictionary<IconContexts, double> SizeMapping = new Dictionary<IconContexts, double>()
+    private static readonly Dictionary<IconContexts, double> SizeMapping = new()
     {
         {IconContexts.Smaller,       10.0 },
         {IconContexts.Small,         12.0 },

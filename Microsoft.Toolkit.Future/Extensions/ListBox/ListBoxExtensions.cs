@@ -15,25 +15,13 @@ public static class ListBoxExtensions
                                             typeof(ListBoxExtensions),
                                             new PropertyMetadata(false, OnAllowDeselectionChanged));
 
-    public static bool GetAllowDeselection(DependencyObject obj)
-    {
-        return (bool)obj.GetValue(AllowDeselectionProperty);
-    }
+    public static bool GetAllowDeselection(DependencyObject obj) => (bool)obj.GetValue(AllowDeselectionProperty);
 
-    public static void SetAllowDeselection(DependencyObject obj, bool value)
-    {
-        obj.SetValue(AllowDeselectionProperty, value);
-    }
+    public static void SetAllowDeselection(DependencyObject obj, bool value) => obj.SetValue(AllowDeselectionProperty, value);
 
-    public static object GetSelectedObject(DependencyObject obj)
-    {
-        return (object)obj.GetValue(SelectedObjectProperty);
-    }
+    public static object GetSelectedObject(DependencyObject obj) => (object)obj.GetValue(SelectedObjectProperty);
 
-    public static void SetSelectedObject(DependencyObject obj, object value)
-    {
-        obj.SetValue(SelectedObjectProperty, value);
-    }
+    public static void SetSelectedObject(DependencyObject obj, object value) => obj.SetValue(SelectedObjectProperty, value);
 
     // Using a DependencyProperty as the backing store for SelectedObject.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty SelectedObjectProperty =

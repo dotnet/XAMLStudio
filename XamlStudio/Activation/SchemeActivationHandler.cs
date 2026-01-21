@@ -51,10 +51,8 @@ internal class SchemeActivationHandler : ActivationHandler<ProtocolActivatedEven
         await Task.CompletedTask;
     }
 
-    protected override bool CanHandleInternal(ProtocolActivatedEventArgs args)
-    {
+    protected override bool CanHandleInternal(ProtocolActivatedEventArgs args) =>
         // If your app has multiple handlers of ProtocolActivationEventArgs
         // use this method to determine which to use. (possibly checking args.Uri.Scheme)
-        return true;
-    }
+        true;
 }

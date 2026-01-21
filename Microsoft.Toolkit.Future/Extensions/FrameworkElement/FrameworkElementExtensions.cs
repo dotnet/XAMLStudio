@@ -12,42 +12,30 @@ namespace CommunityToolkit.WinUI.Extensions.Future;
 public static partial class FrameworkElementExtensions
 {
     public static bool GetUpdateLiveRegionChangedOnVisible(FrameworkElement obj)
-    {
-        return (bool)obj.GetValue(UpdateLiveRegionChangedOnVisibleProperty);
-    }
+        => (bool)obj.GetValue(UpdateLiveRegionChangedOnVisibleProperty);
 
     public static void SetUpdateLiveRegionChangedOnVisible(FrameworkElement obj, bool value)
-    {
-        obj.SetValue(UpdateLiveRegionChangedOnVisibleProperty, value);
-    }
+        => obj.SetValue(UpdateLiveRegionChangedOnVisibleProperty, value);
 
     // Using a DependencyProperty as the backing store for UpdateLiveRegionChangedOnVisible.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty UpdateLiveRegionChangedOnVisibleProperty =
         DependencyProperty.RegisterAttached("UpdateLiveRegionChangedOnVisible", typeof(bool), typeof(FrameworkElementExtensions), new PropertyMetadata(false, UpdateLiveRegionChangedOnVisible_Changed));
 
     public static bool GetUpdateLiveRegionChangedOnLoad(DependencyObject obj)
-    {
-        return (bool)obj.GetValue(UpdateLiveRegionChangedOnLoadProperty);
-    }
+        => (bool)obj.GetValue(UpdateLiveRegionChangedOnLoadProperty);
 
     public static void SetUpdateLiveRegionChangedOnLoad(DependencyObject obj, bool value)
-    {
-        obj.SetValue(UpdateLiveRegionChangedOnLoadProperty, value);
-    }
+        => obj.SetValue(UpdateLiveRegionChangedOnLoadProperty, value);
 
     // Using a DependencyProperty as the backing store for UpdateLiveRegionChangedOnLoad.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty UpdateLiveRegionChangedOnLoadProperty =
         DependencyProperty.RegisterAttached("UpdateLiveRegionChangedOnLoad", typeof(bool), typeof(FrameworkElementExtensions), new PropertyMetadata(false, UpdateLiveRegionChangedOnLoad_Changed));
 
     public static bool GetUpdateLiveRegionChildren(DependencyObject obj)
-    {
-        return (bool)obj.GetValue(UpdateLiveRegionChildrenProperty);
-    }
+        => (bool)obj.GetValue(UpdateLiveRegionChildrenProperty);
 
     public static void SetUpdateLiveRegionChildren(DependencyObject obj, bool value)
-    {
-        obj.SetValue(UpdateLiveRegionChildrenProperty, value);
-    }
+        => obj.SetValue(UpdateLiveRegionChildrenProperty, value);
 
     // Using a DependencyProperty as the backing store for UpdateLiveRegionChildren.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty UpdateLiveRegionChildrenProperty =

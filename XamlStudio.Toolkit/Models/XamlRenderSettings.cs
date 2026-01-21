@@ -12,7 +12,7 @@ namespace XamlStudio.Toolkit.Models;
 /// </summary>
 public class XamlRenderSettings
 {
-    private HashSet<XmlnsNamespace> _namespaces = new HashSet<XmlnsNamespace>();
+    private HashSet<XmlnsNamespace> _namespaces = [];
     /// <summary>
     /// Gets the dictionary of known namespaces to automatically try and add if missing in given content to Render.
     /// </summary>

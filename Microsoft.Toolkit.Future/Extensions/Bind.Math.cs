@@ -59,13 +59,7 @@ public static partial class Bind
         return result;
     }
 
-    public static double Divide(double value, double factor)
-    {
-        return value / factor;
-    }
+    public static double Divide(double value, double factor) => value / factor;
 
-    public static double Clamp(double value, double min, double max)
-    {
-        return Math.Min(max, Math.Max(min, value));
-    }
+    public static double Clamp(double value, double min, double max) => Math.Min(max, Math.Max(min, value));
 }

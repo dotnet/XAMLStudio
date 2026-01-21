@@ -38,10 +38,8 @@ internal class FileActivationHandler : ActivationHandler<FileActivatedEventArgs>
         await Task.CompletedTask;
     }
 
-    protected override bool CanHandleInternal(FileActivatedEventArgs args)
-    {
+    protected override bool CanHandleInternal(FileActivatedEventArgs args) =>
         // If your app has multiple handlers of FileActivationEventArgs
         // use this method to determine which to use. (possibly checking args.Files)
-        return true;
-    }
+        true;
 }

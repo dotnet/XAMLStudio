@@ -23,10 +23,10 @@ internal class FileLogger
     private const string AppLogSchemaName = "XamlStudioLog";
 
     private static bool isInitialized = false;
-    private static object lockObject = new object();
-    private static SemaphoreSlim flushSemaphore = new SemaphoreSlim(1);
+    private static object lockObject = new();
+    private static SemaphoreSlim flushSemaphore = new(1);
 
-    private static readonly Lazy<FileLogger> instance = new Lazy<FileLogger>(
+    private static readonly Lazy<FileLogger> instance = new(
         () => new FileLogger(), LazyThreadSafetyMode.ExecutionAndPublication);
 
     private ConcurrentQueue<string> plainTextMessages;
@@ -47,10 +47,7 @@ internal class FileLogger
     /// <summary>
     /// Returns the Singleton instance of <see cref="FileLogger"/>.
     /// </summary>
-    public static FileLogger Instance
-    {
-        get { return instance.Value; }
-    }
+    public static FileLogger Instance => instance.Value;
 
     private FileLogger()
     {
@@ -96,18 +93,12 @@ internal class FileLogger
     /// <summary>
     /// Handles the event of the application entering into suspension.
     /// </summary>
-    public Task OnSuspending()
-    {
-        return FlushMessagesAsync(LogFileType.All);
-    }
+    public Task OnSuspending() => FlushMessagesAsync(LogFileType.All);
 
     /// <summary>
     /// Triggers actions when the application resumes.
     /// </summary>
-    public void OnResuming()
-    {
-        InitSession();
-    }
+    public void OnResuming() => InitSession();
 
     /// <summary>
     /// Flushes all the messages currently in processing to storage area.
@@ -143,10 +134,7 @@ internal class FileLogger
     /// <summary>
     /// Handles the event when a log file is saved by <see cref="FileLoggingSession"/>
     /// </summary>
-    private async void OnLogFileGenerated(IFileLoggingSession sender, LogFileGeneratedEventArgs args)
-    {
-        await MoveLogFileToLogFolder(args.File);
-    }
+    private async void OnLogFileGenerated(IFileLoggingSession sender, LogFileGeneratedEventArgs args) => await MoveLogFileToLogFolder(args.File);
 
     /// <summary>
     /// Closes the active log session and grabs the current log file to get it stored.
@@ -176,8 +164,7 @@ internal class FileLogger
             var messagesToFlush = new Queue<string>();
             while (true)
             {
-                string logMessage;
-                if (plainTextMessages.TryDequeue(out logMessage))
+                if (plainTextMessages.TryDequeue(out string logMessage))
                 {
                     messagesToFlush.Enqueue(logMessage);
                 }
@@ -218,10 +205,7 @@ internal class FileLogger
         if (logFile != null)
         {
             StorageFolder targetFolder = logFolder;
-            if (targetFolder == null)
-            {
-                targetFolder = await GetAppLogFolderAsync();
-            }
+            targetFolder ??= await GetAppLogFolderAsync();
 
             string logFileName = GenerateLogFileName(LogFileType.EventTraceLog, DateTime.Now);
             await logFile.MoveAsync(targetFolder, logFileName, NameCollisionOption.GenerateUniqueName);
@@ -269,10 +253,7 @@ internal class FileLogger
     /// </summary>
     public async Task<StorageFolder> GetAppLogFolderAsync()
     {
-        if (logFolder == null)
-        {
-            logFolder = await ApplicationData.Current.TemporaryFolder.CreateFolderAsync(logFolderName, CreationCollisionOption.OpenIfExists);
-        }
+        logFolder ??= await ApplicationData.Current.TemporaryFolder.CreateFolderAsync(logFolderName, CreationCollisionOption.OpenIfExists);
 
         return logFolder;
     }
@@ -282,8 +263,7 @@ internal class FileLogger
     /// </summary>
     private string GetDateTimePath(DateTime date)
     {
-        string timeString = string.Empty;
-
+        string timeString;
         try
         {
             timeString = date.ToString(new DateTimeFormatInfo().SortableDateTimePattern, CultureInfo.InvariantCulture);
@@ -313,17 +293,12 @@ internal class FileLogger
     /// <summary>
     /// Gets the file type extension to use based on the <see cref="LogFileType"/>.
     /// </summary>
-    private string GetFileExtension(LogFileType fileType)
+    private string GetFileExtension(LogFileType fileType) => fileType switch
     {
-        switch (fileType)
-        {
-            case LogFileType.EventTraceLog:
-                return "etl";
-            case LogFileType.Text:
-                return "txt";
-        }
-        return "etl";
-    }
+        LogFileType.EventTraceLog => "etl",
+        LogFileType.Text => "txt",
+        _ => "etl",
+    };
 }
 
 /// <summary>

@@ -19,15 +19,13 @@ public partial class MainViewModel : WorkspaceWindow
     /// </summary>
     private int _untitledCount = 1;
 
-    public Dictionary<XamlDocument, DocumentViewModel> DocumentViewModels { get; } = new Dictionary<XamlDocument, DocumentViewModel>();
+    public Dictionary<XamlDocument, DocumentViewModel> DocumentViewModels { get; } = [];
 
     [ObservableProperty]
     public partial DocumentViewModel ActiveDocumentViewModel { get; set; }
 
     partial void OnActiveDocumentViewModelChanged(DocumentViewModel oldValue, DocumentViewModel newValue)
-    {
-        WeakReferenceMessenger.Default.Send<ActiveDocumentViewModelChangedMessage>(new(oldValue, newValue));
-    }
+        => WeakReferenceMessenger.Default.Send<ActiveDocumentViewModelChangedMessage>(new(oldValue, newValue));
 
     public SettingsPanelViewModel SettingsViewModel { get; } = new SettingsPanelViewModel();
 
@@ -66,10 +64,7 @@ public partial class MainViewModel : WorkspaceWindow
         }
 
         // If no active file was set, set it to the last one. (Rehydrate if on settings/welcome from old version).
-        if (ActiveFile == null)
-        {
-            ActiveFile = OpenFiles.Last();
-        }
+        ActiveFile ??= OpenFiles.Last();
     }
 
     private void OpenFiles_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

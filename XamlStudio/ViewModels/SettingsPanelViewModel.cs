@@ -46,7 +46,7 @@ public partial class SettingsPanelViewModel : ObservableObject
 
     public SettingsService Settings { get; } = SettingsService.Instance;
 
-    public ObservableCollection<ThirdPartyInfo> ThirdPartyLibs { get; set; } = new ObservableCollection<ThirdPartyInfo>();
+    public ObservableCollection<ThirdPartyInfo> ThirdPartyLibs { get; set; } = [];
 
     public SettingsPanelViewModel()
     {
@@ -97,13 +97,9 @@ public partial class SettingsPanelViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void DelayChanged(RangeBaseValueChangedEventArgs args)
-    {
-        Settings.AutoCompileDelay = args.NewValue;
-
-        // TODO: Need to use a ThreadPoolTimer to wait for last change?
-        ////Analytics.TrackEvent("Settings_CompileDelayChanged", new Dictionary<string, string> {
-        ////    { "Value", "" + args.NewValue },
-        ////});
-    }
+    private void DelayChanged(RangeBaseValueChangedEventArgs args) => Settings.AutoCompileDelay = args.NewValue;
+    // TODO: Need to use a ThreadPoolTimer to wait for last change?
+    ////Analytics.TrackEvent("Settings_CompileDelayChanged", new Dictionary<string, string> {
+    ////    { "Value", "" + args.NewValue },
+    ////});
 }

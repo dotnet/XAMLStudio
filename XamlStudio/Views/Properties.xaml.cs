@@ -124,10 +124,7 @@ public sealed partial class Properties : Page,
         }
     }
 
-    public void Receive(SelectedVisualElementMessage message)
-    {
-        UpdateProperties(message.Element);
-    }
+    public void Receive(SelectedVisualElementMessage message) => UpdateProperties(message.Element);
 
     public void Receive(EditorSelectedElementMessage message)
     {
@@ -156,7 +153,7 @@ public sealed partial class Properties : Page,
 
             if (VisualTreeHelper.GetChildrenCount(element) is int count && count > 0)
             {
-                List<DependencyObject> children = new();
+                List<DependencyObject> children = [];
                 for (int i = 0; i < count; i++)
                 {
                     children.Add(VisualTreeHelper.GetChild(element, i));
@@ -169,8 +166,8 @@ public sealed partial class Properties : Page,
             }
 
             // Find properties of interest...
-            List<PropertyInfo> properties = new();
-            List<PropertyInfo> unsetProperties = new();
+            List<PropertyInfo> properties = [];
+            List<PropertyInfo> unsetProperties = [];
 
             // Helper Function to Add Property Values to our List (if value is set)
             PropertyInfo AddProperty(Type type, string propName, string? group = null)
@@ -202,7 +199,7 @@ public sealed partial class Properties : Page,
 
             // TODO: Pinned...
 
-            HashSet<string> definedAttributes = new();
+            HashSet<string> definedAttributes = [];
 
             // Check if we have an associated XML element to see what we set in our Editor text
             if (xmlHint == null
@@ -216,7 +213,7 @@ public sealed partial class Properties : Page,
                 }
             }
 
-            List<string> groupOrder = new() { "- Modified -", "- Set in XAML -" };
+            List<string> groupOrder = ["- Modified -", "- Set in XAML -"];
 
             PropertyInfo unset = null;
 
@@ -255,7 +252,7 @@ public sealed partial class Properties : Page,
                                                 .OrderBy(g => groupOrder.IndexOf(g.Key)));
 
             // Check for Visual States
-            ViewModel.VisualStates = new();
+            ViewModel.VisualStates = [];
             if (element is FrameworkElement fe)
             {
                 _visualStateWatcher = new(fe);

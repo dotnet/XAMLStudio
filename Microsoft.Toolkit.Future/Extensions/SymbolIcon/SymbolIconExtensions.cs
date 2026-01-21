@@ -14,15 +14,9 @@ namespace CommunityToolkit.WinUI.Extensions.Future;
 [Bindable]
 public class SymbolIconExtensions
 {
-    public static double GetFontSize(SymbolIcon obj)
-    {
-        return (double)obj.GetValue(FontSizeProperty);
-    }
+    public static double GetFontSize(SymbolIcon obj) => (double)obj.GetValue(FontSizeProperty);
 
-    public static void SetFontSize(SymbolIcon obj, double value)
-    {
-        obj.SetValue(FontSizeProperty, value);
-    }
+    public static void SetFontSize(SymbolIcon obj, double value) => obj.SetValue(FontSizeProperty, value);
 
     // Using a DependencyProperty as the backing store for FontSize.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty FontSizeProperty =

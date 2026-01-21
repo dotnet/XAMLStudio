@@ -57,8 +57,5 @@ public sealed partial class Binding : Page
         }
     }
 
-    private void Button_ClearHistoryFilter_Click(object sender, RoutedEventArgs e)
-    {
-        HistoryFilter = null;
-    }
+    private void Button_ClearHistoryFilter_Click(object sender, RoutedEventArgs e) => HistoryFilter = null;
 }

@@ -28,7 +28,5 @@ public class GetPivotImageConverter : GetPivotItemConverter
     }
 
     public override object ConvertBack(object value, Type targetType, object parameter, string language)
-    {
-        throw new NotImplementedException();
-    }
+        => throw new NotImplementedException();
 }

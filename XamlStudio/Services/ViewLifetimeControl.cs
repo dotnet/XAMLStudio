@@ -72,10 +72,7 @@ public sealed class ViewLifetimeControl
         RegisterForEvents();
     }
 
-    public static ViewLifetimeControl CreateForCurrentView()
-    {
-        return new ViewLifetimeControl(CoreWindow.GetForCurrentThread());
-    }
+    public static ViewLifetimeControl CreateForCurrentView() => new ViewLifetimeControl(CoreWindow.GetForCurrentThread());
 
     // Signals that the view is being interacted with by another view,
     // so it shouldn't be closed even if it becomes "consolidated"
@@ -129,20 +126,11 @@ public sealed class ViewLifetimeControl
         return refCountCopy;
     }
 
-    private void RegisterForEvents()
-    {
-        ApplicationView.GetForCurrentView().Consolidated += ViewConsolidated;
-    }
+    private void RegisterForEvents() => ApplicationView.GetForCurrentView().Consolidated += ViewConsolidated;
 
-    private void UnregisterForEvents()
-    {
-        ApplicationView.GetForCurrentView().Consolidated -= ViewConsolidated;
-    }
+    private void UnregisterForEvents() => ApplicationView.GetForCurrentView().Consolidated -= ViewConsolidated;
 
-    private void ViewConsolidated(ApplicationView sender, ApplicationViewConsolidatedEventArgs e)
-    {
-        StopViewInUse();
-    }
+    private void ViewConsolidated(ApplicationView sender, ApplicationViewConsolidatedEventArgs e) => StopViewInUse();
 
     private void FinalizeRelease()
     {

@@ -28,7 +28,7 @@ public partial class FolderLocation : ObservableObject
     [NotifyPropertyChangedFor(nameof(IsInitialized))]
     public partial StorageFolder BackingFolder { get; set; }
 
-    public bool IsInitialized { get { return BackingFolder != null; } }
+    public bool IsInitialized => BackingFolder != null;
 
     public FolderLocation() { }
 

@@ -15,10 +15,10 @@ namespace CommunityToolkit.WinUI.Extensions.Future;
 /// </summary>
 public class Mouse
 {
-    private static readonly object _cursorLock = new object();
-    private static readonly CoreCursor _defaultCursor = new CoreCursor(CoreCursorType.Arrow, 1);
+    private static readonly object _cursorLock = new();
+    private static readonly CoreCursor _defaultCursor = new(CoreCursorType.Arrow, 1);
     private static readonly Dictionary<CoreCursorType, CoreCursor> _cursors =
-        new Dictionary<CoreCursorType, CoreCursor> { { CoreCursorType.Arrow, _defaultCursor } };
+        new() { { CoreCursorType.Arrow, _defaultCursor } };
 
     /// <summary>
     /// Dependency property for specifying the target <see cref="CoreCursorType"/> to be shown
@@ -32,20 +32,14 @@ public class Mouse
     /// </summary>
     /// <param name="element">Object where the selector cursor type should be shown.</param>
     /// <param name="value">Target cursor type value.</param>
-    public static void SetCursor(FrameworkElement element, CoreCursorType value)
-    {
-        element.SetValue(CursorProperty, value);
-    }
+    public static void SetCursor(FrameworkElement element, CoreCursorType value) => element.SetValue(CursorProperty, value);
 
     /// <summary>
     /// Get the current <see cref="CoreCursorType"/>.
     /// </summary>
     /// <param name="element">Object where the selector cursor type should be shown.</param>
     /// <returns>Cursor type set on target element.</returns>
-    public static CoreCursorType GetCursor(FrameworkElement element)
-    {
-        return (CoreCursorType)element.GetValue(CursorProperty);
-    }
+    public static CoreCursorType GetCursor(FrameworkElement element) => (CoreCursorType)element.GetValue(CursorProperty);
 
     private static void CursorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -97,10 +91,8 @@ public class Mouse
         Window.Current.CoreWindow.PointerCursor = cursor;
     }
 
-    private static void ElementOnUnloaded(object sender, RoutedEventArgs routedEventArgs)
-    {
+    private static void ElementOnUnloaded(object sender, RoutedEventArgs routedEventArgs) =>
         // when the element is programatically unloaded, reset the cursor back to default
         // this is necessary when click triggers immediate change in layout and PointerExited is not called
         Window.Current.CoreWindow.PointerCursor = _defaultCursor;
-    }
 }

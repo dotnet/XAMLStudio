@@ -29,9 +29,7 @@ internal class DefaultLaunchActivationHandler : ActivationHandler<LaunchActivate
         await Task.CompletedTask;
     }
 
-    protected override bool CanHandleInternal(LaunchActivatedEventArgs args)
-    {
+    protected override bool CanHandleInternal(LaunchActivatedEventArgs args) =>
         // None of the ActivationHandlers has handled the app activation
-        return NavigationService.Frame.Content == null;
-    }
+        NavigationService.Frame.Content == null;
 }

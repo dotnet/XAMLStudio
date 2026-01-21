@@ -25,7 +25,7 @@ public partial class ToolboxViewModel : ObservableObject
         IsSourceGrouped = true
     };
 
-    public ObservableCollection<Type> Favorites { get; } = new ObservableCollection<Type>();
+    public ObservableCollection<Type> Favorites { get; } = [];
 
     [ObservableProperty]
     public partial string Filter { get; set; } = string.Empty;
@@ -88,8 +88,7 @@ public partial class ToolboxViewModel : ObservableObject
     }
 
     partial void OnFilterChanged(string value)
-    {
-        LibraryView.Source = _groupedSource
+        => LibraryView.Source = _groupedSource
             .SelectMany(group => group)
             .Where(t => t.Name.Contains(value, StringComparison.OrdinalIgnoreCase) || t.Namespace.Contains(value, StringComparison.OrdinalIgnoreCase) || t.BaseType.Name.Contains(value, StringComparison.OrdinalIgnoreCase))
             .ToGroup(api => api.Namespace)
@@ -98,5 +97,4 @@ public partial class ToolboxViewModel : ObservableObject
                 .Where(t => t.Name.Contains(value, StringComparison.OrdinalIgnoreCase) || t.Namespace.Contains(value, StringComparison.OrdinalIgnoreCase) || t.BaseType.Name.Contains(value, StringComparison.OrdinalIgnoreCase))
                 .OrderBy(t => t.Name)
                 .ToGroup("Toolbox_Favorites_Header".GetLocalized()));
-    }
 }

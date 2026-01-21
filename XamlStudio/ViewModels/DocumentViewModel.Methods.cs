@@ -29,7 +29,7 @@ namespace XamlStudio.ViewModels;
 
 public partial class DocumentViewModel
 {
-    private readonly AsyncLock _renderMutex = new AsyncLock();
+    private readonly AsyncLock _renderMutex = new();
 
     // TODO: Need to offset line with location in document?
     /*private async void SelectiveRenderXaml(string content)
@@ -329,10 +329,7 @@ public partial class DocumentViewModel
         var orientation = Document.State.PreviewOrientation;
 
         // If we're set to default, go grab that value to start from
-        if (orientation == null)
-        {
-            orientation = Settings.DefaultPreviewPanePosition;
-        }
+        orientation ??= Settings.DefaultPreviewPanePosition;
 
         // Go to next enum value
         orientation = (PaneOrientation)((((int)orientation.Value) + 1) % 4);

@@ -11,7 +11,7 @@ namespace XamlStudio.Toolkit.Services;
 /// </summary>
 public static class IdGenerator
 {
-    public static object lockable = new object();
+    public static object lockable = new();
     public static int _count = 1;
 
     public static int Next()

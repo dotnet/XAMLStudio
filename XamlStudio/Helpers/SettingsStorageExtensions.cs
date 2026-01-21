@@ -17,14 +17,11 @@ namespace XamlStudio.Helpers;
 // https://docs.microsoft.com/windows/uwp/app-settings/store-and-retrieve-app-data
 public static class SettingsStorageExtensions
 {
-    private static readonly AsyncLock _saveMutex = new AsyncLock();
+    private static readonly AsyncLock _saveMutex = new();
 
     private const string FileExtension = ".json";
 
-    public static bool IsRoamingStorageAvailable(this ApplicationData appData)
-    {
-        return appData.RoamingStorageQuota == 0;
-    }
+    public static bool IsRoamingStorageAvailable(this ApplicationData appData) => appData.RoamingStorageQuota == 0;
 
     public static async Task SaveAsync<T>(this StorageFolder folder, string name, T content)
     {
@@ -59,7 +56,7 @@ public static class SettingsStorageExtensions
         {
             if (!File.Exists(Path.Combine(folder.Path, GetFileName(name))))
             {
-                return default(T);
+                return default;
             }
 
             var file = await folder.GetFileAsync($"{name}.json");
@@ -69,15 +66,9 @@ public static class SettingsStorageExtensions
         }
     }
 
-    public static async Task SaveAsync<T>(this ApplicationDataContainer settings, string key, T value)
-    {
-        settings.SaveString(key, await Json.StringifyAsync(value));
-    }
+    public static async Task SaveAsync<T>(this ApplicationDataContainer settings, string key, T value) => settings.SaveString(key, await Json.StringifyAsync(value));
 
-    public static void SaveString(this ApplicationDataContainer settings, string key, string value)
-    {
-        settings.Values[key] = value;
-    }
+    public static void SaveString(this ApplicationDataContainer settings, string key, string value) => settings.Values[key] = value;
 
     public static async Task<T> ReadAsync<T>(this ApplicationDataContainer settings, string key)
     {
@@ -86,7 +77,7 @@ public static class SettingsStorageExtensions
             return await Json.ToObjectAsync<T>((string)obj);
         }
 
-        return default(T);
+        return default;
     }
 
     public static async Task<object> ReadAsync(this ApplicationDataContainer settings, string key, Type type)
@@ -139,24 +130,17 @@ public static class SettingsStorageExtensions
         {
             using (await _saveMutex.LockAsync())
             {
-                using (IRandomAccessStream stream = await file.OpenReadAsync())
-                {
-                    using (var reader = new DataReader(stream.GetInputStreamAt(0)))
-                    {
-                        await reader.LoadAsync((uint)stream.Size);
-                        var bytes = new byte[stream.Size];
-                        reader.ReadBytes(bytes);
-                        return bytes;
-                    }
-                }
+                using IRandomAccessStream stream = await file.OpenReadAsync();
+                using var reader = new DataReader(stream.GetInputStreamAt(0));
+                await reader.LoadAsync((uint)stream.Size);
+                var bytes = new byte[stream.Size];
+                reader.ReadBytes(bytes);
+                return bytes;
             }
         }
 
         return null;
     }
 
-    private static string GetFileName(string name)
-    {
-        return string.Concat(name, FileExtension);
-    }
+    private static string GetFileName(string name) => string.Concat(name, FileExtension);
 }

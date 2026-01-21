@@ -32,82 +32,77 @@ public class XamlLanguageProvider : CompletionItemProvider
     public string[] TriggerCharacters => new string[] { ElementTrigger, CloseElementTrigger, NamespaceTrigger, AttributeValueTrigger };
 
     public IAsyncOperation<CompletionList> ProvideCompletionItemsAsync(IModel model, IPosition position, CompletionContext context)
-    {
-        return AsyncInfo.Run(async delegate (CancellationToken cancelationToken)
-        {
-            var items = new List<CompletionItem>();
-
-            // get editor content before the pointer
-            var text = await model.GetValueAsync();
-
-            // TODO: Should try and coordinate where we need this model between render, document, and here.
-            // LINK: Document.xaml.cs:UpdateBreadcrumbs
-            var _xmlRoot = Parser.ParseText(text);
-
-            var index = text.GetCharacterIndex((int)position.LineNumber, (int)position.Column);
-
-            if (index == -1)
+        => AsyncInfo.Run(async delegate (CancellationToken cancelationToken)
             {
-                return null;
-            }
+                var items = new List<CompletionItem>();
 
-            var raw_node = _xmlRoot.FindNode(index + 1);
+                // get editor content before the pointer
+                var text = await model.GetValueAsync();
 
-            var parentTagName = raw_node?.ParentElement?.Name;
+                // TODO: Should try and coordinate where we need this model between render, document, and here.
+                // LINK: Document.xaml.cs:UpdateBreadcrumbs
+                var _xmlRoot = Parser.ParseText(text);
 
-            // get list of assemblies
-            var namespaces = KnownNamespaces.Concat(XamlAutocompleteService.Instance.GetNamespaces(await model.GetValueAsync()));
+                var index = text.GetCharacterIndex((int)position.LineNumber, (int)position.Column);
 
-            if (context.TriggerCharacter == CloseElementTrigger)
-            {
-                if (index >= 1 && text[index - 1] == '<')
+                if (index == -1)
                 {
-                    // Only show suggestion if we're starting a close tag.
-                    items.Add(new CompletionItem(parentTagName, CompletionItemKind.Class));
+                    return null;
                 }
-            }
-            else if (context.TriggerCharacter == ElementTrigger)
-            {
-                // TODO: Add hint of containing element (ResourceDictionary, 
-                XamlAutocompleteService.Instance.AddDefaultSuggestions(items, KnownNamespaces);
-            }
-            else if (context.TriggerCharacter == NamespaceTrigger)
-            {
-                // TODO: Don't show these if in first tag... show suggestions from known namespaces list... (not accessible here, in App :()
-                if (!string.IsNullOrWhiteSpace(parentTagName))
+
+                var raw_node = _xmlRoot.FindNode(index + 1);
+
+                var parentTagName = raw_node?.ParentElement?.Name;
+
+                // get list of assemblies
+                var namespaces = KnownNamespaces.Concat(XamlAutocompleteService.Instance.GetNamespaces(await model.GetValueAsync()));
+
+                if (context.TriggerCharacter == CloseElementTrigger)
                 {
-                    XamlAutocompleteService.Instance.AddNamespaceSuggestions(items, parentTagName.Trim(':'), KnownNamespaces);
+                    if (index >= 1 && text[index - 1] == '<')
+                    {
+                        // Only show suggestion if we're starting a close tag.
+                        items.Add(new CompletionItem(parentTagName, CompletionItemKind.Class));
+                    }
                 }
-            }
-            else if (context.TriggerCharacter == AttributeValueTrigger)
-            {
-                if (!string.IsNullOrWhiteSpace(parentTagName))
+                else if (context.TriggerCharacter == ElementTrigger)
                 {
-                    var attribute = raw_node.FirstAncestorOrSelf<XmlAttributeSyntax>();
-
-                    XamlAutocompleteService.Instance.AddValueSuggestions(items, parentTagName, attribute?.Name);
+                    // TODO: Add hint of containing element (ResourceDictionary, 
+                    XamlAutocompleteService.Instance.AddDefaultSuggestions(items, KnownNamespaces);
                 }
-            }
-            else
-            {
-                if (!string.IsNullOrWhiteSpace(parentTagName))
+                else if (context.TriggerCharacter == NamespaceTrigger)
                 {
-                    var attribute = raw_node.FirstAncestorOrSelf<XmlAttributeSyntax>();
-
-                    // TODO: Filter out already used properties...
-                    XamlAutocompleteService.Instance.AddPropertySuggestions(items, parentTagName);
+                    // TODO: Don't show these if in first tag... show suggestions from known namespaces list... (not accessible here, in App :()
+                    if (!string.IsNullOrWhiteSpace(parentTagName))
+                    {
+                        XamlAutocompleteService.Instance.AddNamespaceSuggestions(items, parentTagName.Trim(':'), KnownNamespaces);
+                    }
                 }
-            }
+                else if (context.TriggerCharacter == AttributeValueTrigger)
+                {
+                    if (!string.IsNullOrWhiteSpace(parentTagName))
+                    {
+                        var attribute = raw_node.FirstAncestorOrSelf<XmlAttributeSyntax>();
 
-            return new CompletionList()
-            {
-                Items = items
-            };
-        });
-    }
+                        XamlAutocompleteService.Instance.AddValueSuggestions(items, parentTagName, attribute?.Name);
+                    }
+                }
+                else
+                {
+                    if (!string.IsNullOrWhiteSpace(parentTagName))
+                    {
+                        var attribute = raw_node.FirstAncestorOrSelf<XmlAttributeSyntax>();
 
-    public IAsyncOperation<CompletionItem> ResolveCompletionItemAsync(CompletionItem item)
-    {
-        throw new NotImplementedException();
-    }
+                        // TODO: Filter out already used properties...
+                        XamlAutocompleteService.Instance.AddPropertySuggestions(items, parentTagName);
+                    }
+                }
+
+                return new CompletionList()
+                {
+                    Items = items
+                };
+            });
+
+    public IAsyncOperation<CompletionItem> ResolveCompletionItemAsync(CompletionItem item) => throw new NotImplementedException();
 }

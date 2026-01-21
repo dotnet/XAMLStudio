@@ -17,7 +17,7 @@ namespace XamlStudio.Services;
 
 internal class SuspendAndResumeService : ActivationHandler<LaunchActivatedEventArgs>
 {
-    private readonly AsyncLock _suspendMutex = new AsyncLock();
+    private readonly AsyncLock _suspendMutex = new();
 
     //// TODO WTS: For more information regarding the application lifecycle and how to handle suspend and resume, please see:
     //// Documentation: https://docs.microsoft.com/windows/uwp/launch-resume/app-lifecycle
@@ -47,15 +47,9 @@ internal class SuspendAndResumeService : ActivationHandler<LaunchActivatedEventA
         }
     }
 
-    protected override async Task HandleInternalAsync(LaunchActivatedEventArgs args)
-    {
-        await RestoreStateAsync();
-    }
+    protected override async Task HandleInternalAsync(LaunchActivatedEventArgs args) => await RestoreStateAsync();
 
-    protected override bool CanHandleInternal(LaunchActivatedEventArgs args)
-    {
-        return true;
-    }
+    protected override bool CanHandleInternal(LaunchActivatedEventArgs args) => true;
 
     private async Task RestoreStateAsync()
     {
