@@ -27,9 +27,7 @@ public partial class DocumentViewModel : ObservableObject
     public partial XamlDocument Document { get; set; }
 
     partial void OnDocumentChanged(XamlDocument value)
-    {
-        HasCompiled = false; // TODO: Reset compiled flag so we can re-render, probably want to cache elements previously rendered in XamlDocument, so we can re-add on document switch
-    }
+        => HasCompiled = false; // TODO: Reset compiled flag so we can re-render, probably want to cache elements previously rendered in XamlDocument, so we can re-add on document switch
 
     /// <summary>
     /// Selected Text in the Editor
@@ -49,7 +47,7 @@ public partial class DocumentViewModel : ObservableObject
     [ObservableProperty]
     public partial XamlXmlTreeCoordinator XamlCoordinator { get; set; } = new();
 
-    private ObservableCollection<ConversionRecord> _bindingHistory = new ObservableCollection<ConversionRecord>();
+    private ObservableCollection<ConversionRecord> _bindingHistory = [];
     public AdvancedCollectionView BindingHistory
     {
         get
@@ -68,33 +66,33 @@ public partial class DocumentViewModel : ObservableObject
 
     public ElementTheme ActualTheme { get; set; }
 
-    public ObservableVector<IModelDeltaDecoration> LineDecorations { get; private set; } = new ObservableVector<IModelDeltaDecoration>();
+    public ObservableVector<IModelDeltaDecoration> LineDecorations { get; private set; } = [];
 
-    private static CssLineStyle _errorLineStyle = new CssLineStyle()
+    private static CssLineStyle _errorLineStyle = new()
     {
         BackgroundColor = new SolidColorBrush("#FFCA416A".ToColor())
     };
 
-    private static CssInlineStyle _errorStyle = new CssInlineStyle()
+    private static CssInlineStyle _errorStyle = new()
     {
         BackgroundColor = new SolidColorBrush("#FFCA416A".ToColor()),
         ForegroundColor = new SolidColorBrush("#FFFFFFFF".ToColor()),
         FontWeight = FontWeights.SemiBold
     };
 
-    private static CssInlineStyle _bindingStyleUnbound = new CssInlineStyle()
+    private static CssInlineStyle _bindingStyleUnbound = new()
     {
         BackgroundColor = new SolidColorBrush("#FFB4EBEF".ToColor()),
         ForegroundColor = new SolidColorBrush("#FF333333".ToColor())
     };
 
-    private static CssInlineStyle _bindingStyleSuccess = new CssInlineStyle()
+    private static CssInlineStyle _bindingStyleSuccess = new()
     {
         BackgroundColor = new SolidColorBrush("#FFB9FEC1".ToColor()),
         ForegroundColor = new SolidColorBrush("#FF333333".ToColor())
     };
 
-    private static CssInlineStyle _bindingStyleError = new CssInlineStyle()
+    private static CssInlineStyle _bindingStyleError = new()
     {
         BackgroundColor = new SolidColorBrush("#FFFFF689".ToColor()),
         ForegroundColor = new SolidColorBrush("#FF663333".ToColor()),

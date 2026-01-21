@@ -17,7 +17,7 @@ namespace XamlStudio.Services;
 /// </summary>
 public static class AppLoggerService
 {
-    private static readonly object locker = new object();
+    private static readonly object locker = new();
     private static FileLogger fileLogger;
     private static Guid sessionGuid;
 
@@ -38,10 +38,7 @@ public static class AppLoggerService
     /// <summary>
     /// Application session identifier gets assigned every time the application gets activated.
     /// </summary>
-    public static Guid SessionId
-    {
-        get { return sessionGuid; }
-    }
+    public static Guid SessionId => sessionGuid;
 
     /// <summary>
     /// Resets the session guid used by the app.
@@ -64,37 +61,25 @@ public static class AppLoggerService
     /// <summary>
     /// Causes the file logger to store all the messages it hasn't saved to disk.
     /// </summary>
-    public static void FlushMessages()
-    {
-        Task.Run(() => fileLogger.FlushMessagesAsync(LogFileType.All)).Wait();
-    }
+    public static void FlushMessages() => Task.Run(() => fileLogger.FlushMessagesAsync(LogFileType.All)).Wait();
 
     /// <summary>
     /// Notifies the <see cref="FileLogger"/> that the app is entering into suspension mode.
     /// </summary>
     /// <returns></returns>
-    public static Task OnSuspending()
-    {
-        return fileLogger.OnSuspending();
-    }
+    public static Task OnSuspending() => fileLogger.OnSuspending();
 
     /// <summary>
     /// NOtifies the <see cref="FileLogger"/> that the app is entering into resume mode.
     /// </summary>
-    public static void OnResuming()
-    {
-        fileLogger.OnResuming();
-    }
+    public static void OnResuming() => fileLogger.OnResuming();
 
     #region LogInfo
     /// <summary>
     /// Logs an informational message.
     /// </summary>
     /// <param name="message"></param>
-    public static void LogInfo(string message)
-    {
-        fileLogger.Log(message, LoggingLevel.Information);
-    }
+    public static void LogInfo(string message) => fileLogger.Log(message, LoggingLevel.Information);
 
     /// <summary>
     /// Logs an informational message with format.
@@ -117,33 +102,22 @@ public static class AppLoggerService
     /// Logs an error message with any acompanying exception.
     /// </summary>
     private static void LogError(string caller, string message = null, Exception ex = null, LoggingLevel logLevel = LoggingLevel.Error)
-    {
-        fileLogger.Log($"AppError[{caller}]: {message ?? string.Empty} | Exception: {ex?.ToString()}", logLevel);
-    }
+        => fileLogger.Log($"AppError[{caller}]: {message ?? string.Empty} | Exception: {ex?.ToString()}", logLevel);
 
     /// <summary>
     /// Logs an exception only.
     /// </summary>
-    public static void LogError(Exception e, [CallerMemberName] string caller = "")
-    {
-        LogError(caller: caller, message: null, ex: e);
-    }
+    public static void LogError(Exception e, [CallerMemberName] string caller = "") => LogError(caller: caller, message: null, ex: e);
 
     /// <summary>
     /// Logs an error message.
     /// </summary>
-    public static void LogError(string message, [CallerMemberName] string caller = "")
-    {
-        LogError(caller: caller, message: message, ex: null);
-    }
+    public static void LogError(string message, [CallerMemberName] string caller = "") => LogError(caller: caller, message: message, ex: null);
 
     /// <summary>
     ///  Logs an error message with exception details.
     /// </summary>
-    public static void LogError(string message, Exception e, [CallerMemberName] string caller = "")
-    {
-        LogError(caller: caller, message: message, ex: e);
-    }
+    public static void LogError(string message, Exception e, [CallerMemberName] string caller = "") => LogError(caller: caller, message: message, ex: e);
 
     #endregion
 

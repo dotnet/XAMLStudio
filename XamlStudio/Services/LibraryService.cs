@@ -22,11 +22,11 @@ public class LibraryService
 {
     public static LibraryService Instance => Singleton<LibraryService>.Instance;
 
-    public ObservableCollection<LibraryInfo> Libraries { get; private set; } = new ObservableCollection<LibraryInfo>();
+    public ObservableCollection<LibraryInfo> Libraries { get; private set; } = [];
 
     public Dictionary<string, LibraryInfo> LibrariesByNamespace { get; private set; }
 
-    private readonly AsyncLock _initializeMutex = new AsyncLock();
+    private readonly AsyncLock _initializeMutex = new();
     private bool _isInitialized = false;
 
     public LibraryService()

@@ -26,7 +26,7 @@ public sealed partial class WelcomePage : Page
     public static readonly DependencyProperty MainViewModelProperty =
         DependencyProperty.Register("MainViewModel", typeof(MainViewModel), typeof(WelcomePage), new PropertyMetadata(null));
 
-    public ObservableCollection<StorageFile> RecentFiles { get; set; } = new ObservableCollection<StorageFile>();
+    public ObservableCollection<StorageFile> RecentFiles { get; set; } = [];
 
     public WelcomePage()
     {

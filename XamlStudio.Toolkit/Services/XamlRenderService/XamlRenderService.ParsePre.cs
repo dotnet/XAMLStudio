@@ -20,8 +20,8 @@ public partial class XamlRenderService
     private const string RegexPattern_FirstTagAfterComment = @"(?!(<\?|<!))*<[^<!\?]*?>";
     private const string RegexPattern_ElementName = "<((?<Prefix>\\w+):)?(?<Type>\\w+)";
 
-    private static Regex _initialTagSearcher = new Regex(RegexPattern_FirstTagAfterComment, RegexOptions.Compiled);
-    private static Regex _elementNameSearcher = new Regex(RegexPattern_ElementName, RegexOptions.Compiled);
+    private static Regex _initialTagSearcher = new(RegexPattern_FirstTagAfterComment, RegexOptions.Compiled);
+    private static Regex _elementNameSearcher = new(RegexPattern_ElementName, RegexOptions.Compiled);
 
     /// <summary>
     /// Returns the first initial element tag after a comment.
@@ -147,11 +147,9 @@ public partial class XamlRenderService
         context.RenderedContent = content;
     }
 
-    public static Type GetTypeFromName(string typename)
-    {
+    public static Type GetTypeFromName(string typename) =>
         // TODO: Do we need to worry about conflicting names across assemblies and pass in the namespace to this function?
-        return AppAssemblyInfo.Instance.KnownTypes.FirstOrDefault(t => t.Name == typename);
-    }
+        AppAssemblyInfo.Instance.KnownTypes.FirstOrDefault(t => t.Name == typename);
 
     internal static bool IsFrameworkElement(Type type)
     {

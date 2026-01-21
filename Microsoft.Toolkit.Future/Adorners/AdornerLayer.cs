@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -16,20 +16,14 @@ namespace CommunityToolkit.WinUI.Controls.Future;
 /// </summary>
 public partial class AdornerLayer : Canvas
 {
-    public static UIElement GetXaml(FrameworkElement obj)
-    {
-        return (UIElement)obj.GetValue(XamlProperty);
-    }
+    public static UIElement GetXaml(FrameworkElement obj) => (UIElement)obj.GetValue(XamlProperty);
 
     /// <summary>
     /// Sets the <see cref="XamlProperty"/> of a <see cref="FrameworkElement"/>. Use this to attach any <see cref="UIElement"/> as an adorner to another <see cref="FrameworkElement"/>. Requires that an <see cref="AdornerLayer"/> is available in the visual tree above the adorned element.
     /// </summary>
     /// <param name="obj"></param>
     /// <param name="value"></param>
-    public static void SetXaml(FrameworkElement obj, UIElement value)
-    {
-        obj.SetValue(XamlProperty, value);
-    }
+    public static void SetXaml(FrameworkElement obj, UIElement value) => obj.SetValue(XamlProperty, value);
 
     /// <summary>
     /// Identifies the Xaml Attached Property.

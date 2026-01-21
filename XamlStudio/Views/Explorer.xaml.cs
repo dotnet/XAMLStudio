@@ -60,10 +60,12 @@ public sealed partial class Explorer : Page
     private void InitializeTreeView(FolderLocation folder)
     {
         // FYI A TreeView can have more than 1 root node. TODO: Support multiple workspaces? Or would we just separate outside the TreeView anyway?
-        muxc.TreeViewNode mainNode = new muxc.TreeViewNode();
-        mainNode.Content = folder.BackingFolder;
-        mainNode.IsExpanded = true;
-        mainNode.HasUnrealizedChildren = true;
+        muxc.TreeViewNode mainNode = new()
+        {
+            Content = folder.BackingFolder,
+            IsExpanded = true,
+            HasUnrealizedChildren = true
+        };
         FillTreeNode(mainNode);
 
         WorkspaceTreeView.RootNodes.Add(mainNode);
@@ -76,8 +78,7 @@ public sealed partial class Explorer : Page
         // Add each item as a new child node of the node that's being expanded.
 
         // Only process the node if it's a folder and has unrealized children.
-        StorageFolder folder = null;
-
+        StorageFolder folder;
         if (node.Content is StorageFolder && node.HasUnrealizedChildren == true)
         {
             folder = node.Content as StorageFolder;
@@ -99,8 +100,10 @@ public sealed partial class Explorer : Page
 
         foreach (var item in itemsList)
         {
-            var newNode = new muxc.TreeViewNode();
-            newNode.Content = item;
+            var newNode = new muxc.TreeViewNode
+            {
+                Content = item
+            };
 
             if (item is StorageFolder)
             {
@@ -160,12 +163,12 @@ public sealed partial class Explorer : Page
             case StorageFile file when ExplorerItemTemplateSelector.DataFileTypes.Contains(file.FileType.ToLower()):
                 // Insert the d:DataContext="{d:DesignData /SampleData/XAMLing.json}" attribute
                 // TODO: Should we instead explicitly update/insert this into root tag?
-                WeakReferenceMessenger.Default.Send<InsertTextMessage>(new($"d:DataContext=\"{{d:DesignData {file.Path.Replace('\\', '/').Substring(workspacePathLength)}}}\""));
+                WeakReferenceMessenger.Default.Send<InsertTextMessage>(new($"d:DataContext=\"{{d:DesignData {file.Path.Replace('\\', '/')[workspacePathLength..]}}}\""));
                 Analytics.TrackEvent("Explorer_Workspace_InsertDataContext");
                 break;
             case StorageFile file when ExplorerItemTemplateSelector.ImageFileTypes.Contains(file.FileType.ToLower()):
                 // Insert image tag into document
-                WeakReferenceMessenger.Default.Send<InsertTextMessage>(new($"<Image Source=\"{file.Path.Replace('\\', '/').Substring(workspacePathLength)}\" />"));
+                WeakReferenceMessenger.Default.Send<InsertTextMessage>(new($"<Image Source=\"{file.Path.Replace('\\', '/')[workspacePathLength..]}\" />"));
                 Analytics.TrackEvent("Explorer_Workspace_InsertImage");
                 break;
             case StorageFile file when ExplorerItemTemplateSelector.XamlFileTypes.Contains(file.FileType.ToLower()):

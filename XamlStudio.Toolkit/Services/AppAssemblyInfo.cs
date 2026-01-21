@@ -19,7 +19,7 @@ public class AppAssemblyInfo
 {
     public static AppAssemblyInfo Instance => Singleton<AppAssemblyInfo>.Instance;
 
-    private readonly AsyncLock _mutex = new AsyncLock();
+    private readonly AsyncLock _mutex = new();
     public bool IsLoaded { get; private set; }
 
     public IReadOnlyList<Assembly> LoadedAssemblies { get; private set; }
@@ -50,10 +50,11 @@ public class AppAssemblyInfo
         // Add any provided assemblies
         // Current workaround for Microsoft.UI.Xaml and this limitation:
         // https://social.msdn.microsoft.com/Forums/en-US/a78fdd8e-a108-4279-9e6b-6c87cd0a0f0f/assemblyload-of-winmd-file-possible
-        var assemblies = new HashSet<Assembly>(extraAssemblies ?? Enumerable.Empty<Assembly>());
-
-        // Add Windows Assembly
-        assemblies.Add(typeof(FrameworkElement).GetTypeInfo().Assembly); // Windows.UI.Xaml
+        var assemblies = new HashSet<Assembly>(extraAssemblies ?? Enumerable.Empty<Assembly>())
+        {
+            // Add Windows Assembly
+            typeof(FrameworkElement).GetTypeInfo().Assembly // Windows.UI.Xaml
+        };
 
         // Add Other Assemblies (Debug Only)
         var files = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFilesAsync();
@@ -102,7 +103,7 @@ public class AppAssemblyInfo
             }
             else if (!mapping.ContainsKey(type.Namespace))
             {
-                mapping[type.Namespace] = new List<Type>();
+                mapping[type.Namespace] = [];
             }
 
             mapping[type.Namespace].Add(type);

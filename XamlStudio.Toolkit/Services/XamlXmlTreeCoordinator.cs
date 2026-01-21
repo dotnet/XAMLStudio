@@ -274,7 +274,7 @@ public class XamlXmlTreeCoordinator
         }
     };
 
-    private BidirectionalDictionary<IXmlElementSyntax, DependencyObject> _treeMapper = new();
+    private BidirectionalDictionary<IXmlElementSyntax, DependencyObject> _treeMapper = [];
 
     public int Count => _treeMapper.Count;
 
@@ -286,15 +286,9 @@ public class XamlXmlTreeCoordinator
 
     public IReadOnlyCollection<IXmlElementSyntax> GetXmlElements() => _treeMapper.Keys;
 
-    public bool TryGetVisualElement(IXmlElementSyntax node, out DependencyObject element)
-    {
-        return _treeMapper.TryGetValue(node, out element);
-    }
+    public bool TryGetVisualElement(IXmlElementSyntax node, out DependencyObject element) => _treeMapper.TryGetValue(node, out element);
 
-    public bool TryGetXmlElement(DependencyObject element, out IXmlElementSyntax node)
-    {
-        return _treeMapper.Inverse.TryGetValue(element, out node);
-    }
+    public bool TryGetXmlElement(DependencyObject element, out IXmlElementSyntax node) => _treeMapper.Inverse.TryGetValue(element, out node);
 
     //// TODO: Not sure how long this takes, so maybe wrap in a Task? Though does require UIThread...hmmm
     public void Initialize(XmlDocumentSyntax docRoot, DependencyObject visualRoot)
@@ -351,10 +345,10 @@ public class XamlXmlTreeCoordinator
         // TODO: Think about or time against a DFS instead to see which is more efficient, not sure if case-by-case.
         // Or maybe if we use DFS with a limited depth, as theoretically we shouldn't have to dig far if we're snapping above
         Queue<DependencyObject> queue = new();
-        HashSet<DependencyObject> explored = new()
-        {
+        HashSet<DependencyObject> explored =
+        [
             visualNode
-        };
+        ];
         queue.Enqueue(visualNode);
         while (queue.Count > 0)
         {

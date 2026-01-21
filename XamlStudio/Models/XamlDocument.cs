@@ -38,7 +38,7 @@ public sealed partial class XamlDocument : FileBackedDocument
     public partial DocumentState State { get; set; } = new DocumentState();
 
     [JsonIgnore]
-    public string DisplayName { get { return BackingFile.DisplayName; } }
+    public string DisplayName => BackingFile.DisplayName;
 
     internal XamlDocument()
     {
@@ -55,15 +55,9 @@ public sealed partial class XamlDocument : FileBackedDocument
         Initialize();
     }
 
-    private void Initialize()
-    {
-        Id = _id; // for first set unless deserialized
-    }
+    private void Initialize() => Id = _id; // for first set unless deserialized
 
-    public override string ToString()
-    {
-        return Title;
-    }
+    public override string ToString() => Title;
 
     /// <summary>
     /// Create a XamlDocument from an existing location.

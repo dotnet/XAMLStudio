@@ -21,7 +21,7 @@ namespace XamlStudio.ViewModels;
 
 public partial class MainViewModel
 {
-    private readonly AsyncLock _openMutex = new AsyncLock();
+    private readonly AsyncLock _openMutex = new();
 
     private void CloseWelcomeScreen()
     {
@@ -64,9 +64,11 @@ public partial class MainViewModel
     [RelayCommand]
     private async Task OpenDocument()
     {
-        var picker = new FileOpenPicker();
-        picker.ViewMode = PickerViewMode.List;
-        picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+        var picker = new FileOpenPicker
+        {
+            ViewMode = PickerViewMode.List,
+            SuggestedStartLocation = PickerLocationId.DocumentsLibrary
+        };
         picker.FileTypeFilter.Add(".xaml");
         picker.FileTypeFilter.Add(".xml");
         picker.FileTypeFilter.Add(".bind");
@@ -81,9 +83,7 @@ public partial class MainViewModel
                 Documents.RemoveAt(0);
             }*/
 
-            OpenFile(file);
-
-            CloseWelcomeScreen();
+            await OpenFile(file);
 
             Analytics.TrackEvent("Document_Open");
         }
@@ -113,10 +113,7 @@ public partial class MainViewModel
         XamlDocument openDoc = OpenFiles.FirstOrDefault(f => f?.BackingFile?.Path == file.Path);
         if (openDoc != null)
         {
-            if (openDoc.ParentFolder == null)
-            {
-                openDoc.ParentFolder = workspace;
-            }
+            openDoc.ParentFolder ??= workspace;
 
             ActiveFile = openDoc;
         }
@@ -141,8 +138,10 @@ public partial class MainViewModel
     [RelayCommand]
     private async Task OpenFolderPicker()
     {
-        var picker = new FolderPicker();
-        picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+        var picker = new FolderPicker
+        {
+            SuggestedStartLocation = PickerLocationId.DocumentsLibrary
+        };
         picker.FileTypeFilter.Add("*");
 
         var folder = await picker.PickSingleFolderAsync();
@@ -261,10 +260,12 @@ public partial class MainViewModel
 
     private async Task<StorageFile> SaveFileDialog(string documentName)
     {
-        var savePicker = new FileSavePicker();
-        savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+        var savePicker = new FileSavePicker
+        {
+            SuggestedStartLocation = PickerLocationId.DocumentsLibrary
+        };
         // Dropdown of file types the user can save the file as
-        savePicker.FileTypeChoices.Add("eXtended Application Markup Language", new List<string>() { ".xaml" });
+        savePicker.FileTypeChoices.Add("eXtended Application Markup Language", [".xaml"]);
         // Default file name if the user does not type one in or select a file to replace
         savePicker.SuggestedFileName = documentName;
 
@@ -274,11 +275,11 @@ public partial class MainViewModel
     [RelayCommand]
     private async Task<bool> SaveDocument(XamlDocument document)
     {
-        StorageFile file = null;
 
         // Ensure if we can restore the file if it wasn't available on load
         await document.RestoreFileAsync();
 
+        StorageFile file;
         // Save As
         if (!document.CanSave)
         {

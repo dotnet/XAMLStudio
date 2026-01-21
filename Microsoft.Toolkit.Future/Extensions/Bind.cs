@@ -11,18 +11,9 @@ public static partial class Bind
 {
     private static ResourceLoader _resLoader = ResourceLoader.GetForCurrentView();
 
-    public static string LocalizedString(string resourceKey)
-    {
-        return _resLoader.GetString(resourceKey);
-    }
+    public static string LocalizedString(string resourceKey) => _resLoader.GetString(resourceKey);
 
-    public static Visibility NotVisible(bool value)
-    {
-        return value ? Visibility.Collapsed : Visibility.Visible;
-    }
+    public static Visibility NotVisible(bool value) => value ? Visibility.Collapsed : Visibility.Visible;
 
-    public static Visibility Visible(bool value)
-    {
-        return value ? Visibility.Visible : Visibility.Collapsed;
-    }
+    public static Visibility Visible(bool value) => value ? Visibility.Visible : Visibility.Collapsed;
 }

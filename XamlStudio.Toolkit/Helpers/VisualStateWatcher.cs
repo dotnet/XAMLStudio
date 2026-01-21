@@ -16,7 +16,7 @@ public class VisualStateWatcher
 
     public VisualStateWatcher(FrameworkElement element)
     {
-        Dictionary<string, VisualStateInfo[]> visualStateGroups = new();
+        Dictionary<string, VisualStateInfo[]> visualStateGroups = [];
 
         // Get child of the control in visual tree as that'll contain the VSM
         // and will be more expected when manipulating a control itself (as that's the element we manipulate).
@@ -33,7 +33,7 @@ public class VisualStateWatcher
                     gname = $"- Unnamed {gindex++} -";
                 }
 
-                List<VisualStateInfo> visualStates = new();
+                List<VisualStateInfo> visualStates = [];
                 foreach (var state in group.States)
                 {
                     visualStates.Add(new VisualStateInfo(state.Name, gname, state == group.CurrentState));

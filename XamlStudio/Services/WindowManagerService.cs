@@ -23,10 +23,10 @@ public class WindowManagerService
     // https://docs.microsoft.com/windows/uwp/design/layout/show-multiple-views
     private static WindowManagerService _current;
 
-    public static WindowManagerService Current => _current ?? (_current = new WindowManagerService());
+    public static WindowManagerService Current => _current ??= new WindowManagerService();
 
     // Contains all the opened secondary views.
-    public ObservableCollection<ViewLifetimeControl> SecondaryViews { get; } = new ObservableCollection<ViewLifetimeControl>();
+    public ObservableCollection<ViewLifetimeControl> SecondaryViews { get; } = [];
 
     public int MainViewId { get; private set; }
 

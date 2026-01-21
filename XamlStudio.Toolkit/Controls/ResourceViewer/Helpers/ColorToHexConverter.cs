@@ -22,8 +22,5 @@ public class ColorToHexConverter : IValueConverter
         return value;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, string language)
-    {
-        throw new NotImplementedException();
-    }
+    public object ConvertBack(object value, Type targetType, object parameter, string language) => throw new NotImplementedException();
 }

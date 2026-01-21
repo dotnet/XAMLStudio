@@ -156,9 +156,11 @@ public sealed partial class DataSources : Page,
 
     private async void Open_DataSource(object sender, RoutedEventArgs e)
     {
-        var picker = new FileOpenPicker();
-        picker.ViewMode = PickerViewMode.List;
-        picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+        var picker = new FileOpenPicker
+        {
+            ViewMode = PickerViewMode.List,
+            SuggestedStartLocation = PickerLocationId.DocumentsLibrary
+        };
         picker.FileTypeFilter.Add(".json");
 
         var file = await picker.PickSingleFileAsync();
@@ -174,11 +176,11 @@ public sealed partial class DataSources : Page,
 
     private async void Save_DataSource(object sender, RoutedEventArgs e)
     {
-        StorageFile file = null;
 
         // Ensure if we can restore the file if it wasn't available on load
         await _activeDocument.DataContext.RestoreFileAsync();
 
+        StorageFile file;
         // Save As
         if (!_activeDocument.DataContext.CanSave)
         {
@@ -236,10 +238,12 @@ public sealed partial class DataSources : Page,
 
     private async Task<StorageFile> SaveFileDialog(string documentName)
     {
-        var savePicker = new FileSavePicker();
-        savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+        var savePicker = new FileSavePicker
+        {
+            SuggestedStartLocation = PickerLocationId.DocumentsLibrary
+        };
         // Dropdown of file types the user can save the file as
-        savePicker.FileTypeChoices.Add("JavaScript Object Notation", new List<string>() { ".json" });
+        savePicker.FileTypeChoices.Add("JavaScript Object Notation", [".json"]);
         // Default file name if the user does not type one in or select a file to replace
         savePicker.SuggestedFileName = documentName;
 

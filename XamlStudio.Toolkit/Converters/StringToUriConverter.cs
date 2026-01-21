@@ -14,9 +14,8 @@ public sealed class StringToUriConverter : IValueConverter
     {
         if (value is string)
         {
-            Uri result;
 
-            if (Uri.TryCreate(value as string, UriKind.RelativeOrAbsolute, out result))
+            if (Uri.TryCreate(value as string, UriKind.RelativeOrAbsolute, out var result))
             {
                 return result;
             }
@@ -25,8 +24,5 @@ public sealed class StringToUriConverter : IValueConverter
         return null;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, string language)
-    {
-        throw new NotImplementedException();
-    }
+    public object ConvertBack(object value, Type targetType, object parameter, string language) => throw new NotImplementedException();
 }

@@ -10,13 +10,16 @@ using Windows.UI.Xaml;
 
 namespace XamlStudio.Toolkit.Models;
 
-public class XamlRenderResultContext
+/// <summary>
+/// Create a new XamlRenderResultContext for the given initial content.
+/// </summary>
+/// <param name="initialContent">Initial string passed to render.</param>
+public class XamlRenderResultContext(string initialContent)
 {
-    private readonly string _content;
     /// <summary>
     /// Original Content passed in to the <see cref="Services.XamlRenderService.RenderAsync(string)"/> call.
     /// </summary>
-    public string Content => _content;
+    public string Content { get; } = initialContent;
 
     /// <summary>
     /// Gets a value indicating if the content has a suggestion.
@@ -26,7 +29,7 @@ public class XamlRenderResultContext
     /// <summary>
     /// Content modified by pre-parser helpers with any missing xmlns elements.
     /// </summary>
-    public string SuggestedContent { get; internal set; }
+    public string SuggestedContent { get; internal set; } = initialContent;
 
     /// <summary>
     /// Content that represents the actually rendered <see cref="Element"/>.
@@ -34,7 +37,7 @@ public class XamlRenderResultContext
     /// which add missing elements or inject helpers for images, data context, and binding debugging.
     /// It is mainly intended for debugging the <see cref="Services.XamlRenderService"/> itself.
     /// </summary>
-    public string RenderedContent { get; internal set; }
+    public string RenderedContent { get; internal set; } = initialContent;
 
     /// <summary>
     /// Element rendered by <see cref="Services.XamlRenderService.RenderAsync(string)"/> or null if rendering was unsuccessful.
@@ -99,7 +102,7 @@ public class XamlRenderResultContext
     /// <summary>
     /// Gets the list of Errors found if <see cref="Services.XamlRenderService.RenderAsync(string)"/> was unsuccessful.
     /// </summary>
-    public IList<XamlExceptionRange> Errors { get; internal set; } = new List<XamlExceptionRange>();
+    public IList<XamlExceptionRange> Errors { get; internal set; } = [];
 
     /// <summary>
     /// Gets the list of Bindings found when <see cref="IsBindingDebuggingEnabled"/> is turned on.  Cleared and Populated after a call to <see cref="Services.XamlRenderService.RenderAsync(string)"/>.
@@ -110,15 +113,4 @@ public class XamlRenderResultContext
     /// Gets the list of known Namespaces found on the document.
     /// </summary>
     public XmlnsNamespace[] DetectedNamespaces { get; internal set; }
-
-    /// <summary>
-    /// Create a new XamlRenderResultContext for the given initial content.
-    /// </summary>
-    /// <param name="initialContent">Initial string passed to render.</param>
-    public XamlRenderResultContext(string initialContent)
-    {
-        _content = initialContent;
-        SuggestedContent = initialContent;
-        RenderedContent = initialContent;
-    }
 }

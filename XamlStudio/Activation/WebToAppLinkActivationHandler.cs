@@ -40,8 +40,5 @@ internal class WebToAppLinkActivationHandler : ActivationHandler<ProtocolActivat
         await Task.CompletedTask;
     }
 
-    protected override bool CanHandleInternal(ProtocolActivatedEventArgs args)
-    {
-        return args?.Uri?.Host == Host;
-    }
+    protected override bool CanHandleInternal(ProtocolActivatedEventArgs args) => args?.Uri?.Host == Host;
 }

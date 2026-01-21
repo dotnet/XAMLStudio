@@ -15,8 +15,5 @@ public class EnumValueExtension : MarkupExtension
 
     public string Member { get; set; }
 
-    protected override object ProvideValue()
-    {
-        return Enum.Parse(Type, Member);
-    }
+    protected override object ProvideValue() => Enum.Parse(Type, Member);
 }

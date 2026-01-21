@@ -19,18 +19,9 @@ internal abstract class ActivationHandler<T> : ActivationHandler
 {
     protected abstract Task HandleInternalAsync(T args);
 
-    public override async Task HandleAsync(object args)
-    {
-        await HandleInternalAsync(args as T);
-    }
+    public override async Task HandleAsync(object args) => await HandleInternalAsync(args as T);
 
-    public override bool CanHandle(object args)
-    {
-        return args is T && CanHandleInternal(args as T);
-    }
+    public override bool CanHandle(object args) => args is T t && CanHandleInternal(t);
 
-    protected virtual bool CanHandleInternal(T args)
-    {
-        return true;
-    }
+    protected virtual bool CanHandleInternal(T args) => true;
 }

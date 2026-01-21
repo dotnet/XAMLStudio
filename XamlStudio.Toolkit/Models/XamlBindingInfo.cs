@@ -38,7 +38,7 @@ public class XamlBindingInfo : INotifyPropertyChanged
 
     public uint Line { get; private set; }
     public uint Column { get; private set; }
-    public int Length { get { return this.OriginalBindingString.Length; } }
+    public int Length => this.OriginalBindingString.Length;
 
     public XAttribute PropertyAttribute { get; set; }
     public string PropertyName { get; set; }
@@ -46,7 +46,7 @@ public class XamlBindingInfo : INotifyPropertyChanged
     public string ElementName { get; set; }
 
     // TODO: Create a Binding Log window in Xaml Studio which shows all binding events and lets you group/sort/search by time, value, status (etc...)
-    public ObservableCollection<ConversionRecord> BindingHistory { get; set; } = new ObservableCollection<ConversionRecord>();
+    public ObservableCollection<ConversionRecord> BindingHistory { get; set; } = [];
 
     // TODO: Make Observable?
 
@@ -55,17 +55,17 @@ public class XamlBindingInfo : INotifyPropertyChanged
 
     public XamlRenderService Service { get; internal set; }
 
-    public DateTime FirstSetTime { get { return BindingHistory.Count == 0 ? DateTime.MinValue : BindingHistory.First().TimeStamp; } }
+    public DateTime FirstSetTime => BindingHistory.Count == 0 ? DateTime.MinValue : BindingHistory.First().TimeStamp;
 
-    public DateTime LastConvertedTime { get { return BindingHistory.Count == 0 ? DateTime.MinValue : BindingHistory.Last().TimeStamp; } }
+    public DateTime LastConvertedTime => BindingHistory.Count == 0 ? DateTime.MinValue : BindingHistory.Last().TimeStamp;
 
-    public bool HasBinded { get { return BindingHistory.Count > 0; } }
+    public bool HasBinded => BindingHistory.Count > 0;
 
-    public bool HasConverter { get { return Converter != null; } }
+    public bool HasConverter => Converter != null;
 
-    public object LastConvertedValue { get { return BindingHistory.LastOrDefault()?.Value; } }
+    public object LastConvertedValue => BindingHistory.LastOrDefault()?.Value;
 
-    public object LastConvertedResult { get { return BindingHistory.LastOrDefault()?.Result; } }
+    public object LastConvertedResult => BindingHistory.LastOrDefault()?.Result;
 
     public object LastConvertedResultOrValue
     {
@@ -82,12 +82,9 @@ public class XamlBindingInfo : INotifyPropertyChanged
         }
     }
 
-    public string LastConvertedResultOrValueString
-    {
-        get { return LastConvertedResultOrValue?.ToString() ?? string.Empty; }
-    }
+    public string LastConvertedResultOrValueString => LastConvertedResultOrValue?.ToString() ?? string.Empty;
 
-    public string LastExceptionMessage { get { return BindingHistory.LastOrDefault()?.ExceptionObject.Message; } }
+    public string LastExceptionMessage => BindingHistory.LastOrDefault()?.ExceptionObject.Message;
 
     public XamlBindingState LastKnownBindingState
     {
@@ -106,7 +103,7 @@ public class XamlBindingInfo : INotifyPropertyChanged
         }
     }
 
-    public long BindingCount { get { return BindingHistory.Count; } }
+    public long BindingCount => BindingHistory.Count;
     #endregion
 
     public XamlBindingInfo(uint line, uint column, string binding)

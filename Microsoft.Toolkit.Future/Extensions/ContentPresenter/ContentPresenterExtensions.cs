@@ -12,28 +12,20 @@ namespace CommunityToolkit.WinUI.Extensions.Future;
 public static class ContentPresenterExtensions
 {
     public static bool GetUpdateTemplateSelectorOnContentChange(ContentPresenter obj)
-    {
-        return (bool)obj.GetValue(UpdateTemplateSelectorOnContentChangeProperty);
-    }
+        => (bool)obj.GetValue(UpdateTemplateSelectorOnContentChangeProperty);
 
     public static void SetUpdateTemplateSelectorOnContentChange(ContentPresenter obj, bool value)
-    {
-        obj.SetValue(UpdateTemplateSelectorOnContentChangeProperty, value);
-    }
+        => obj.SetValue(UpdateTemplateSelectorOnContentChangeProperty, value);
 
     // Using a DependencyProperty as the backing store for UpdateTemplateSelectorOnContentChange.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty UpdateTemplateSelectorOnContentChangeProperty =
         DependencyProperty.RegisterAttached("UpdateTemplateSelectorOnContentChange", typeof(bool), typeof(ContentPresenterExtensions), new PropertyMetadata(false, OnUpdateTemplateSelectorOnContentChange));
 
     private static long GetContentChangedToken(ContentPresenter obj)
-    {
-        return (long)obj.GetValue(ContentChangedTokenProperty);
-    }
+        => (long)obj.GetValue(ContentChangedTokenProperty);
 
     private static void SetContentChangedToken(ContentPresenter obj, long value)
-    {
-        obj.SetValue(ContentChangedTokenProperty, value);
-    }
+        => obj.SetValue(ContentChangedTokenProperty, value);
 
     // Using a DependencyProperty as the backing store for ContentChangedToken.  This enables animation, styling, binding, etc...
     private static readonly DependencyProperty ContentChangedTokenProperty =

@@ -17,7 +17,7 @@ public class ConversionRecord
 
     public object Result { get; private set; }
 
-    public object ResultOrValue { get { return Result ?? Value; } }
+    public object ResultOrValue => Result ?? Value;
 
     public bool HasResult { get; private set; }
 

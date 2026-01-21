@@ -92,7 +92,7 @@ public sealed partial class Document : UserControl,
     public static readonly DependencyProperty IsSpecificPreviewSizeProperty =
         DependencyProperty.Register(nameof(IsSpecificPreviewSize), typeof(bool), typeof(Document), new PropertyMetadata(false));
 
-    public ObservableCollection<BreadcrumbInfo> Breadcrumbs = new();
+    public ObservableCollection<BreadcrumbInfo> Breadcrumbs = [];
 
     public Document()
     {
@@ -115,17 +115,14 @@ public sealed partial class Document : UserControl,
 
         // HACK: TODO: Workaround for Monaco editor not updating it's content?
         ViewModel.Document.Content = ViewModel.Document.Content + " ";
-        ViewModel.Document.Content = ViewModel.Document.Content.Substring(0, ViewModel.Document.Content.Length - 1);
+        ViewModel.Document.Content = ViewModel.Document.Content[..^1];
 
         _ = UpdateBreadcrumbs();
 
         SetPaneOrientation();
     }
 
-    private void Document_Unloaded(object sender, RoutedEventArgs e)
-    {
-        WeakReferenceMessenger.Default.UnregisterAll(this);
-    }
+    private void Document_Unloaded(object sender, RoutedEventArgs e) => WeakReferenceMessenger.Default.UnregisterAll(this);
 
     private void UnloadViewModel(DocumentViewModel model)
     {
@@ -203,10 +200,7 @@ public sealed partial class Document : UserControl,
         });
     }
 
-    public async void Receive(NavigateToLineMessage message)
-    {
-        await CodeEditor.RevealLineInCenterIfOutsideViewportAsync(message.Line);
-    }
+    public async void Receive(NavigateToLineMessage message) => await CodeEditor.RevealLineInCenterIfOutsideViewportAsync(message.Line);
 
     public void Receive(InsertTextMessage message)
     {
@@ -469,13 +463,11 @@ public sealed partial class Document : UserControl,
     }
 
     private void CodeEditor_OpenLinkRequested(WebView sender, WebViewNewWindowRequestedEventArgs args)
-    {
-        Analytics.TrackEvent("Open_Docs", new Dictionary<string, string> {
-            { "Location", "CodeEditor" },
-            { "Type", _lastHoverType?.FullName ?? "Unknown" },
-            { "Uri", args.Uri.ToString() },
-        });
-    }
+        => Analytics.TrackEvent("Open_Docs", new Dictionary<string, string> {
+                { "Location", "CodeEditor" },
+                { "Type", _lastHoverType?.FullName ?? "Unknown" },
+                { "Uri", args.Uri.ToString() },
+            });
 
     private void DocumentState_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
@@ -495,10 +487,7 @@ public sealed partial class Document : UserControl,
         var orientation = LoadedDocument.State.PreviewOrientation;
 
         // If we're set to default, go grab that value to start from
-        if (orientation == null)
-        {
-            orientation = SettingsService.Instance.DefaultPreviewPanePosition;
-        }
+        orientation ??= SettingsService.Instance.DefaultPreviewPanePosition;
 
         switch (orientation.Value)
         {
@@ -529,12 +518,9 @@ public sealed partial class Document : UserControl,
     }
 
     #region Share Button Code
-    private readonly Lazy<CanvasDevice> _device = new Lazy<CanvasDevice>(InitCanvas);
+    private readonly Lazy<CanvasDevice> _device = new(InitCanvas);
 
-    private static CanvasDevice InitCanvas()
-    {
-        return CanvasDevice.GetSharedDevice();
-    }
+    private static CanvasDevice InitCanvas() => CanvasDevice.GetSharedDevice();
 
     private CanvasBitmap _screenshotImage;
 
@@ -545,10 +531,7 @@ public sealed partial class Document : UserControl,
         DataTransferManager.ShowShareUI();
     }
 
-    private void ShareMenuEntireWindow_Click(object sender, RoutedEventArgs e)
-    {
-        ShareButton_Click(null, null);
-    }
+    private void ShareMenuEntireWindow_Click(object sender, RoutedEventArgs e) => ShareButton_Click(null, null);
 
     private async void ShareMenuPreviewOnly_Click(object sender, RoutedEventArgs e)
     {
@@ -566,7 +549,7 @@ public sealed partial class Document : UserControl,
 
             args.Request.Data.Properties.Title = "XAML Studio - " + LoadedDocument.Title;
 
-            InMemoryRandomAccessStream inMemoryStream = new InMemoryRandomAccessStream();
+            InMemoryRandomAccessStream inMemoryStream = new();
 
             await _screenshotImage.SaveAsync(inMemoryStream, CanvasBitmapFileFormat.Png); // TODO: Have Option for quality?
 
@@ -612,10 +595,7 @@ public sealed partial class Document : UserControl,
         }
     }
 
-    private void CodeEditor_SelectedRangeChanged(DependencyObject sender, DependencyProperty dp)
-    {
-        _ = UpdateBreadcrumbs();
-    }
+    private void CodeEditor_SelectedRangeChanged(DependencyObject sender, DependencyProperty dp) => _ = UpdateBreadcrumbs();
 
     private async Task UpdateBreadcrumbs()
     {

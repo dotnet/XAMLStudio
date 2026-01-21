@@ -102,16 +102,11 @@ internal class ActivationService
         yield return Singleton<FileActivationHandler>.Instance;
     }
 
-    private bool IsInteractive(object args)
-    {
-        return args is IActivatedEventArgs;
-    }
+    private bool IsInteractive(object args) => args is IActivatedEventArgs;
 
     private void Frame_Navigated(object sender, NavigationEventArgs e)
-    {
-        SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = NavigationService.CanGoBack ?
+        => SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = NavigationService.CanGoBack ?
             AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
-    }
 
     private void ActivationService_BackRequested(object sender, BackRequestedEventArgs e)
     {

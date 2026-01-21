@@ -34,17 +34,13 @@ sealed partial class App : Application
     }
 
     // Abstract CoreApplication.MainView.DispatcherQueue
-    public static DispatcherQueue DispatcherQueue
-    {
-        get
-        {
+    public static DispatcherQueue DispatcherQueue =>
 #if !WINAPPSDK
-            return CoreApplication.MainView.DispatcherQueue;
+            CoreApplication.MainView.DispatcherQueue;
 #else
-            return currentWindow.DispatcherQueue;
+            currentWindow.DispatcherQueue;
 #endif
-        }
-    }
+
 
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
@@ -101,10 +97,7 @@ sealed partial class App : Application
     /// </summary>
     /// <param name="sender">The Frame which failed navigation</param>
     /// <param name="e">Details about the navigation failure</param>
-    void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
-    {
-        throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
-    }
+    void OnNavigationFailed(object sender, NavigationFailedEventArgs e) => throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
 
     /// <summary>
     /// Invoked when application execution is being suspended.  Application state is saved

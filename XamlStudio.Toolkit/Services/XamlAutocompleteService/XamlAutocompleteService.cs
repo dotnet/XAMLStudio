@@ -20,7 +20,7 @@ public class XamlAutocompleteService
 
     private const string RegexPattern_XmlnsNamespace = @"xmlns(|:(?<Prefix>[\w-]*))=""(?<Namespace>.*)""";
 
-    private static Regex _namespaceSearcher = new Regex(RegexPattern_XmlnsNamespace, RegexOptions.Compiled);
+    private static Regex _namespaceSearcher = new(RegexPattern_XmlnsNamespace, RegexOptions.Compiled);
 
     public IEnumerable<XmlnsNamespace> GetNamespaces(string content)
     {

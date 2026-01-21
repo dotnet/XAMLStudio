@@ -24,7 +24,7 @@ public static class BindingParser
 
     // Put together our possible Property = Value clause
     private static string BindingPropertiesPattern = string.Format("({0}\\s*=\\s*{1})+", regProp, regValue);
-    private static Regex BindingPropertyExtractor = new Regex(BindingPropertiesPattern, RegexOptions.Compiled | RegexOptions.Singleline);
+    private static Regex BindingPropertyExtractor = new(BindingPropertiesPattern, RegexOptions.Compiled | RegexOptions.Singleline);
 
     private static Dictionary<string, PropertyInfo> PropertyTable =
         typeof(BindingValue).GetProperties()

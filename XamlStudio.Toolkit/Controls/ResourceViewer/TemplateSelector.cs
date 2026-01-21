@@ -21,15 +21,9 @@ public class TemplateSelector : DataTemplateSelector
     {
     }
 
-    protected override DataTemplate SelectTemplateCore(object item)
-    {
-        return LookupDataTemplate(item);
-    }
+    protected override DataTemplate SelectTemplateCore(object item) => LookupDataTemplate(item);
 
-    protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
-    {
-        return LookupDataTemplate(item);
-    }
+    protected override DataTemplate SelectTemplateCore(object item, DependencyObject container) => LookupDataTemplate(item);
 
     private DataTemplate LookupDataTemplate(object item)
     {

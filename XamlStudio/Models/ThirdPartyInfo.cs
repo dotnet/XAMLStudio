@@ -23,7 +23,7 @@ public class ThirdPartyInfo
     public string License { get; set; }
 
     [JsonIgnore]
-    public string LicenseAutomationName { get { return string.Format("License_Name_Format".GetLocalized(), License, Name); } }
+    public string LicenseAutomationName => string.Format("License_Name_Format".GetLocalized(), License, Name);
 
     [JsonProperty("license_url")]
     public string LicenseUrl { get; set; }
@@ -32,6 +32,6 @@ public class ThirdPartyInfo
     public List<string> LicenseText { get; set; }
 
     [JsonIgnore]
-    public string LicenseTextAutomationName { get { return string.Format("License_Text_Format".GetLocalized(), License, Name); } }
+    public string LicenseTextAutomationName => string.Format("License_Text_Format".GetLocalized(), License, Name);
 
 }

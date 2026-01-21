@@ -25,10 +25,7 @@ namespace XamlStudio;
 public sealed partial class App : Application
 {
     private Lazy<ActivationService> _activationService;
-    private ActivationService ActivationService
-    {
-        get { return _activationService.Value; }
-    }
+    private ActivationService ActivationService => _activationService.Value;
 
     public App()
     {
@@ -77,10 +74,7 @@ public sealed partial class App : Application
         await ActivationService.ActivateAsync(args);
     }
 
-    private ActivationService CreateActivationService()
-    {
-        return new ActivationService(this, typeof(Views.MainPage));
-    }
+    private ActivationService CreateActivationService() => new ActivationService(this, typeof(Views.MainPage));
 
     private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
     {
@@ -116,9 +110,7 @@ public sealed partial class App : Application
     /// Handles the event of extended execution being revoked.
     /// </summary>
     private void App_ExtendedExecutionRevoked(object sender, ExtendedExecutionRevokedEventArgs args)
-    {
-        AppLoggerService.LogInfo($"The request to ExtendedExecutionSession was revoked with reason {args.Reason}");
-    }
+        => AppLoggerService.LogInfo($"The request to ExtendedExecutionSession was revoked with reason {args.Reason}");
 
     /// <summary>
     /// Invoked when application execution is being resummed.

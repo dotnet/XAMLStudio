@@ -11,10 +11,7 @@ namespace XamlStudio.Toolkit.Extensions;
 
 public static class XmlExtensions
 {
-    public static XAttribute GetNamedItem(this IEnumerable<XAttribute> list, string name)
-    {
-        return list.Where(item => item.Name == name).FirstOrDefault();
-    }
+    public static XAttribute GetNamedItem(this IEnumerable<XAttribute> list, string name) => list.Where(item => item.Name == name).FirstOrDefault();
 
     public static IEnumerable<XmlNode> GetTypedEnumerator(this XmlNodeList list)
     {

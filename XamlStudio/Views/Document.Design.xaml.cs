@@ -249,15 +249,15 @@ public partial class Document :
             if (targetLine.Contains(message.Property))
             {
                 var sp = targetLine.IndexOf(message.Property + "=") + message.Property.Length + 2;
-                lines[loc.Line - 1] = targetLine.Substring(0, sp) + $"{message.Value}" + targetLine.Substring(targetLine.IndexOf("\"", sp + 1));
+                lines[loc.Line - 1] = targetLine[..sp] + $"{message.Value}" + targetLine[targetLine.IndexOf("\"", sp + 1)..];
             }
             else if (targetLine.Trim().EndsWith("/>"))
             {
-                lines[loc.Line - 1] = targetLine.Substring(0, targetLine.Length - 2) + $" {message.Property}=\"{message.Value}\"/>";
+                lines[loc.Line - 1] = targetLine[..^2] + $" {message.Property}=\"{message.Value}\"/>";
             }
             else if (targetLine.Trim().EndsWith(">"))
             {
-                lines[loc.Line - 1] = targetLine.Substring(0, targetLine.Length - 1) + $" {message.Property}=\"{message.Value}\">";
+                lines[loc.Line - 1] = targetLine[..^1] + $" {message.Property}=\"{message.Value}\">";
             }
             else
             {

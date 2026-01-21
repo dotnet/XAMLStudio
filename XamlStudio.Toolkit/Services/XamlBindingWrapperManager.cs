@@ -14,15 +14,15 @@ namespace XamlStudio.Toolkit.Services;
 /// </summary>
 public class XamlBindingWrapperManager : Dictionary<int, XamlBindingInfo>
 {
-    private readonly Dictionary<int, XamlRenderService> _renderers = new Dictionary<int, XamlRenderService>();
-    private readonly Dictionary<int, List<int>> _tracker = new Dictionary<int, List<int>>();
+    private readonly Dictionary<int, XamlRenderService> _renderers = [];
+    private readonly Dictionary<int, List<int>> _tracker = [];
 
     public static XamlBindingWrapperManager Instance => Singleton<XamlBindingWrapperManager>.Instance;
 
     public void Register(int id, XamlRenderService service)
     {
         this._renderers.Add(id, service);
-        this._tracker[id] = new List<int>();
+        this._tracker[id] = [];
     }
 
     public void AddNewBinding(int serviceId, XamlBindingInfo binding)
@@ -51,6 +51,6 @@ public class XamlBindingWrapperManager : Dictionary<int, XamlBindingInfo>
             this.Remove(binding);
         }
 
-        this._tracker[serviceId] = new List<int>();
+        this._tracker[serviceId] = [];
     }
 }

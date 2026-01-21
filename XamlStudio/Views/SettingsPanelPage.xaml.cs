@@ -180,10 +180,7 @@ public sealed partial class SettingsPanelPage : Page
         }
     }
 
-    private async Task<bool> AreAnalyticsOn()
-    {
-        return await Analytics.IsEnabledAsync();
-    }
+    private async Task<bool> AreAnalyticsOn() => await Analytics.IsEnabledAsync();
 
     public Visibility FeedbackVisibility => StoreServicesFeedbackLauncher.IsSupported() ? Visibility.Visible : Visibility.Collapsed;
 

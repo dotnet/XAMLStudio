@@ -44,7 +44,7 @@ public abstract partial class FileBackedDocument : ObservableObject
     [NotifyPropertyChangedFor(nameof(Title))]
     public partial bool HasChanged { get; set; }
 
-    public bool CanSave { get { return BackingFile != null; } }
+    public bool CanSave => BackingFile != null;
 
     public FileBackedDocument() { }
 
@@ -86,10 +86,7 @@ public abstract partial class FileBackedDocument : ObservableObject
     /// Save a file back to its backing location.
     /// </summary>
     /// <returns></returns>
-    public IAsyncOperation<bool> SaveAsync()
-    {
-        return SaveAsyncInternal().AsAsyncOperation();
-    }
+    public IAsyncOperation<bool> SaveAsync() => SaveAsyncInternal().AsAsyncOperation();
 
     private async Task<bool> SaveAsyncInternal()
     {
@@ -119,10 +116,7 @@ public abstract partial class FileBackedDocument : ObservableObject
     /// </summary>
     /// <param name="newFile">New File Storage Location.</param>
     /// <returns></returns>
-    public IAsyncOperation<bool> SaveAsAsync(StorageFile newFile)
-    {
-        return SaveAsAsyncInternal(newFile).AsAsyncOperation();
-    }
+    public IAsyncOperation<bool> SaveAsAsync(StorageFile newFile) => SaveAsAsyncInternal(newFile).AsAsyncOperation();
 
     private async Task<bool> SaveAsAsyncInternal(StorageFile newFile)
     {

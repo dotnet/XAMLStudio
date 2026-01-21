@@ -27,9 +27,9 @@ public abstract partial class WorkspaceWindow : ObservableObject
     [ObservableProperty]
     public partial bool IsWorkspaceOpen { get; set; }
 
-    public ObservableCollection<FolderLocation> WorkspaceFolders { get; private set; } = new();
+    public ObservableCollection<FolderLocation> WorkspaceFolders { get; private set; } = [];
 
-    public ObservableCollection<XamlDocument> OpenFiles { get; private set; } = new();
+    public ObservableCollection<XamlDocument> OpenFiles { get; private set; } = [];
 
     public WorkspaceWindow()
     {
@@ -38,13 +38,11 @@ public abstract partial class WorkspaceWindow : ObservableObject
 
     public abstract void Initialize();
 
-    public static WorkspaceWindow GetDefaultWorkspace()
-    {
+    public static WorkspaceWindow GetDefaultWorkspace() =>
         //SettingsService.Instance.DefaultWorkspaceFolder
         // Get Settings Folder
         // IsWorkspaceOpen = false still.
         throw new NotImplementedException();
-    }
 
     public void SetupWorkspace(StorageFolder folder)
     {
@@ -76,8 +74,5 @@ public abstract partial class WorkspaceWindow : ObservableObject
         ActiveFileChanged?.Invoke(this, newValue);
     }
 
-    partial void OnOpenActivityChanged(string value)
-    {
-        WeakReferenceMessenger.Default.Send<OpenActivityChangedMessage>(new(value));
-    }
+    partial void OnOpenActivityChanged(string value) => WeakReferenceMessenger.Default.Send<OpenActivityChangedMessage>(new(value));
 }
