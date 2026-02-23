@@ -60,7 +60,7 @@
                         <Setter Target="SplitterBar.(Grid.RowSpan)" Value="3" />
                         <Setter Target="SplitterBar.(Grid.ColumnSpan)" Value="1" />
                         <Setter Target="SplitterBar.ResizeDirection" Value="Columns" />
-                        <!-- Workaround for https://github.com/CommunityToolkit/Windows/issues/748 -->
+                        <!--  Workaround for https://github.com/CommunityToolkit/Windows/issues/748  -->
                         <Setter Target="SplitterBar.Orientation" Value="Vertical" />
 
                         <Setter Target="SplitterCommandBarLeft.(Grid.Row)" Value="0" />
@@ -109,7 +109,7 @@
                         <Setter Target="SplitterBar.(Grid.RowSpan)" Value="3" />
                         <Setter Target="SplitterBar.(Grid.ColumnSpan)" Value="1" />
                         <Setter Target="SplitterBar.ResizeDirection" Value="Columns" />
-                        <!-- Workaround for https://github.com/CommunityToolkit/Windows/issues/748 -->
+                        <!--  Workaround for https://github.com/CommunityToolkit/Windows/issues/748  -->
                         <Setter Target="SplitterBar.Orientation" Value="Vertical" />
 
                         <Setter Target="SplitterCommandBarLeft.(Grid.Row)" Value="0" />
