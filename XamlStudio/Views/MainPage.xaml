@@ -241,14 +241,16 @@
                         </muxc:TabView.Resources>
                         <muxc:TabView.TabItemTemplate>
                             <DataTemplate x:DataType="models:XamlDocument">
-                                <muxc:TabViewItem ToolTipService.ToolTip="{x:Bind DisplayPath, Mode=OneWay}" HorizontalContentAlignment="Stretch" ContextFlyout="{StaticResource TabItemFlyout}">
+                                <muxc:TabViewItem HorizontalContentAlignment="Stretch"
+                                                  ContextFlyout="{StaticResource TabItemFlyout}"
+                                                  ToolTipService.ToolTip="{x:Bind DisplayPath, Mode=OneWay}">
                                     <muxc:TabViewItem.Header>
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Text="{x:Bind Title, Mode=OneWay}" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Text="{x:Bind Title, Mode=OneWay}" TextTrimming="CharacterEllipsis" />
                                             <controls:SwitchPresenter Grid.Column="1"
                                                                       TargetType="models:SyncStatus"
                                                                       Value="{x:Bind State.RenderState, Mode=OneWay}">
