@@ -1,0 +1,175 @@
+
+# https://docs.github.com/actions/using-workflows/about-workflows
+# https://docs.github.com/actions/using-workflows/workflow-syntax-for-github-actions
+
+name: CI
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the main or release branches
+  push:
+    branches: [ main, 'dev', 'feature/*' ]
+  pull_request:
+    branches: [ main, 'dev', 'feature/*' ]
+
+  # Allows you to run this workflow manually from the Actions tab (with inputs!)
+  # https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onworkflow_dispatchinputs
+  workflow_dispatch:
+    inputs:
+      diagnostics:
+        description: 'Enable diagnostics (binlogs, dumps, etc) for this run'
+        required: false
+        default: false
+        type: boolean
+      verbosity:
+        description: 'MSBuild verbosity (quiet, minimal, normal, detailed, diagnostic)'
+        required: true
+        default: 'normal'
+        type: choice
+        options:
+          - quiet
+          - minimal
+          - normal
+          - detailed
+          - diagnostic
+      configuration:
+        description: 'Build configuration to use'
+        required: true
+        default: 'Debug'
+        type: choice
+        options:
+          - Debug
+          - Release
+  merge_group:
+
+env:
+  DOTNET_VERSION: ${{ '9.0.x' }}
+  CONFIGURATION: ${{ github.event.inputs.configuration || 'Debug' }}
+  VERBOSITY: ${{ github.event.inputs.verbosity || 'normal' }}
+  IS_MAIN: ${{ github.ref == 'refs/heads/main' }}
+  IS_PR: ${{ startsWith(github.ref, 'refs/pull/') }}
+
+jobs:
+  # Check XAML Styling before trying to do anything else as a gate
+  Xaml-Style-Check:
+    runs-on: windows-2022
+
+    steps:
+      - name: Install .NET SDK v${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v5.1.0
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout Repository
+        uses: actions/checkout@v6.0.2
+        with:
+          submodules: recursive
+
+      # Restore Tools from Manifest list in the Repository
+      - name: Restore dotnet tools
+        run: dotnet tool restore
+
+      - name: Check XAML Styling
+        run: powershell -version 5.1 -command "./ApplyXamlStyling.ps1 -Passive" -ErrorAction Stop
+
+  build:
+    needs: [Xaml-Style-Check]
+    runs-on: windows-2022
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # give UWP more room to breathe
+      - name: Configure Pagefile
+        uses: al-cheb/configure-pagefile-action@v1.5
+        with:
+          minimum-size: 32GB
+          maximum-size: 32GB
+          disk-root: "C:"
+
+      - name: Enable User-Mode Dumps collecting
+        if: (github.event.inputs.diagnostics || 'false') == 'true'
+        shell: powershell
+        run: |
+          New-Item '${{ github.workspace }}\CrashDumps' -Type Directory
+          Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps' -Name 'DumpFolder' -Type ExpandString -Value '${{ github.workspace }}\CrashDumps'
+          Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps' -Name 'DumpCount' -Type DWord -Value '10'
+          Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps' -Name 'DumpType' -Type DWord -Value '2'
+
+      - name: Install .NET SDK v${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v5.1.0
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: .NET Info (if diagnostics)
+        if: (github.event.inputs.diagnostics || 'false') == 'true'
+        run: dotnet --info
+
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout Repository
+        uses: actions/checkout@v6.0.2
+        with:
+          submodules: recursive
+
+      # Restore Tools from Manifest list in the Repository
+      - name: Restore dotnet tools
+        run: dotnet tool restore
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v2
+        with:
+          vs-version: '[17.9,)'
+
+      # Build solution
+      - name: MSBuild
+        run: >
+          msbuild.exe /restore
+          /p:Configuration=${{ env.CONFIGURATION }}
+          /p:Platform=x64
+          /m
+          ${{ github.event.inputs.diagnostics == 'true' && '/bl' || '' }}
+          /v:${{ env.VERBOSITY }}
+          XamlStudio.slnx
+
+      # Run tests
+      - name: Setup VSTest Path
+        uses: darenm/setup-vstest@3a16d909a1f3bbc65b52f8270d475d905e7d3e44
+
+      - name: Run XAML Studio Unit Tests
+        id: test-platform
+        run:  vstest.console.exe ./XamlStudio.Toolkit.UnitTests/**/XamlStudio.Toolkit.UnitTests.build.appxrecipe /Framework:FrameworkUap10 /logger:"trx;LogFileName=XamlStudio.trx" /Blame
+
+      - name: Artifact - Diagnostic Logs
+        uses: actions/upload-artifact@v6
+        if: ${{ (github.event.inputs.diagnostics || 'false') == 'true' && always() }}
+        with:
+          name: build-logs-xaml-studio
+          path: ./**/*.*log
+
+      - name: Artifact - ILC Repro
+        uses: actions/upload-artifact@v6
+        if: ${{ (github.event.inputs.diagnostics || 'false') == 'true' && always() }}
+        with:
+          name: ilc-repro
+          path: ./*.zip
+
+      # https://github.com/dorny/paths-filter#custom-processing-of-changed-files
+      - name: Detect If any Dump Files
+        id: detect-dump
+        if: always()
+        working-directory: ${{ github.workspace }}
+        run: |
+          echo "DUMP_FILE=$(Get-ChildItem .\CrashDumps\*.dmp -ErrorAction SilentlyContinue)" >> $env:GITHUB_OUTPUT
+
+      - name: Artifact - WER crash dumps
+        uses: actions/upload-artifact@v6
+        if: ${{ (github.event.inputs.diagnostics || 'false') == 'true' && always() }}
+        with:
+          name: CrashDumps-xaml-studio
+          path: '${{ github.workspace }}/CrashDumps'
+
+      - name: Analyze Dump
+        if: ${{ steps.detect-dump.outputs.DUMP_FILE != '' && (github.event.inputs.diagnostics || 'false') == 'true' && always() }}
+        run: |
+          dotnet tool install --global dotnet-dump
+          dotnet-dump analyze ${{ steps.detect-dump.outputs.DUMP_FILE }} -c "clrstack" -c "pe -lines" -c "exit"

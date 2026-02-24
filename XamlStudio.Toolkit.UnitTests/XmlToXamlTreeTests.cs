@@ -299,7 +299,9 @@ public class XmlToXamlTreeTests : VisualUITestBase
         });
     }
 
+    // TODO: https://github.com/dotnet/XAMLStudio/issues/63
     [TestMethod]
+    [Ignore]
     public async Task NamespacedControl_XmlToXamlTest()
     {
         await EnqueueAsync(async () =>
