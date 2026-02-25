@@ -651,11 +651,11 @@ public sealed partial class Document : UserControl,
                 string displayName = element.Name;
                 if (xName is not null)
                 {
-                    displayName = $"{xName} ({element.Name})";
+                    displayName = $"{xName} [{element.Name}]";
                 }
                 else if (xKey is not null)
                 {
-                    displayName = $"{xKey} ({element.Name})";
+                    displayName = $"{xKey} [{element.Name}]";
                 }
 
                 Breadcrumbs.Insert(0, new BreadcrumbInfo()
