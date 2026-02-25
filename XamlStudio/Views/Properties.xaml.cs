@@ -45,7 +45,11 @@ public sealed partial class Properties : Page,
         Unloaded += Properties_Unloaded;
     }
 
+#if UNO
+    private void Properties_Loaded(object sender, RoutedEventArgs e)
+#else
     private void Properties_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+#endif
     {
         WeakReferenceMessenger.Default.UnregisterAll(this);
         WeakReferenceMessenger.Default.RegisterAll(this);
@@ -57,7 +61,12 @@ public sealed partial class Properties : Page,
         }
     }
 
+#if UNO
+    private void Properties_Unloaded(object sender, RoutedEventArgs e)
+#else
+
     private void Properties_Unloaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+#endif
     {
         if (Parent == null)
         {

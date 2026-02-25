@@ -56,7 +56,11 @@ public static class ListBoxExtensions
         }
     }
 
+    #if UNO
+    private static void OnTapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+    #else 
     private static void OnTapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+    #endif
     {
         if (sender is ListBox listBox)
         {

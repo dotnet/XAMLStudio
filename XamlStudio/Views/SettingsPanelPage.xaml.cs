@@ -120,37 +120,43 @@ public sealed partial class SettingsPanelPage : Page
         });
     }
 
+#if UNO
+    private async void DataGrid_RowEditEnded(object sender, WinUI.TableView.TableViewCellEditEndedEventArgs e)
+#else
     private async void DataGrid_RowEditEnded(object sender, Microsoft.Toolkit.Uwp.UI.Controls.DataGridRowEditEndedEventArgs e)
+#endif
     {
         // Save Namespaces after Edit.
         await ViewModel.Settings.SaveAsync(nameof(ViewModel.Settings.KnownNamespaces));
-
+#if !UNO
         var ns = e.Row.DataContext as XmlnsNamespace;
         Analytics.TrackEvent("Settings_EditNamespaces", new Dictionary<string, string> {
             { "Location", "Toolbox" },
             { "Name", ns.Name },
             { "Path", ns.Path },
         });
+#endif
     }
 
     private void AddNamespaceButton_Click(object sender, RoutedEventArgs e)
     {
-        // Ensure grid is visible
-        KnownNamespacesExpander.IsExpanded = true;
+        // TODO: verify this
+        // // Ensure grid is visible
+        // KnownNamespacesExpander.IsExpanded = true;
 
-        // Add new Row and begin editing
-        ViewModel.Settings.KnownNamespaces.Insert(0, new Toolkit.Models.XmlnsNamespace(string.Empty, string.Empty));
+        // // Add new Row and begin editing
+        // ViewModel.Settings.KnownNamespaces.Insert(0, new Toolkit.Models.XmlnsNamespace(string.Empty, string.Empty));
 
-        _ = CompositionTargetHelper.ExecuteAfterCompositionRenderingAsync(() =>
-        {
-            NamespaceDataGrid.SelectedIndex = 0;
+        // _ = CompositionTargetHelper.ExecuteAfterCompositionRenderingAsync(() =>
+        // {
+        //     NamespaceDataGrid.SelectedIndex = 0;
 
-            NamespaceDataGrid.ScrollIntoView(NamespaceDataGrid.SelectedItem, null);
+        //     NamespaceDataGrid.ScrollIntoView(NamespaceDataGrid.SelectedItem, null);
 
-            NamespaceDataGrid.Focus(FocusState.Keyboard);
+        //     NamespaceDataGrid.Focus(FocusState.Keyboard);
 
-            NamespaceDataGrid.BeginEdit();
-        });
+        //     NamespaceDataGrid.BeginEdit();
+        // });
     }
 
     private async void RemoveNamespaceButton_Click(object sender, RoutedEventArgs e)
@@ -172,7 +178,11 @@ public sealed partial class SettingsPanelPage : Page
         }
     }
 
+#if UNO
+    private void NamespaceDataGrid_PreparingCellForEdit(object sender, WinUI.TableView.TableViewPreparingCellForEditEventArgs e)
+#else
     private void NamespaceDataGrid_PreparingCellForEdit(object sender, Microsoft.Toolkit.Uwp.UI.Controls.DataGridPreparingCellForEditEventArgs e)
+#endif
     {
         if (e.EditingElement is TextBox t)
         {

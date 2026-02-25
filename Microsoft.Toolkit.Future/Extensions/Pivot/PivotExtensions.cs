@@ -18,7 +18,11 @@ public partial class PivotExtensions
 {
     private static void InitPivotStyle(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
+        #if UNO
+        var pivot = d as Microsoft.UI.Xaml.Controls.Pivot;
+        #else
         var pivot = d as Windows.UI.Xaml.Controls.Pivot;
+        #endif
 
         if (pivot == null)
         {
@@ -31,11 +35,18 @@ public partial class PivotExtensions
 
     private static void Pivot_Loaded(object sender, RoutedEventArgs e)
     {
+        #if UNO
+        var pivot = sender as Microsoft.UI.Xaml.Controls.Pivot;
+        #else
         var pivot = sender as Windows.UI.Xaml.Controls.Pivot;
+        #endif
 
+        #if UNO
+        var panels = pivot.FindDescendants().OfType<Microsoft.UI.Xaml.Controls.Primitives.PivotHeaderPanel>().Where(panel => panel.FindAscendant<Microsoft.UI.Xaml.Controls.Pivot>() == pivot);
+        #else
         // Make sure we find the PivotHeaderPanels for just this Pivot (in case we have embedded pivots)
         var panels = pivot.FindDescendants().OfType<PivotHeaderPanel>().Where(panel => panel.FindAscendant<Windows.UI.Xaml.Controls.Pivot>() == pivot);
-
+        #endif
         var style = GetPivotHeaderItemStyle(pivot);
 
         foreach (var panel in panels)
@@ -74,7 +85,11 @@ public partial class PivotExtensions
 
     private static void IsContentVisible_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
+        #if UNO
+        var pivot = d as Microsoft.UI.Xaml.Controls.Pivot;
+        #else
         var pivot = d as Windows.UI.Xaml.Controls.Pivot;
+        #endif
 
         pivot.Loaded -= Pivot_Loaded;
         pivot.Loaded += Pivot_Loaded;
@@ -85,7 +100,11 @@ public partial class PivotExtensions
         }
     }
 
+    #if UNO
+    private static void SetContentVisible(Microsoft.UI.Xaml.Controls.Pivot pivot, bool value)
+    #else 
     private static void SetContentVisible(Windows.UI.Xaml.Controls.Pivot pivot, bool value)
+    #endif
     {
         // Make sure we find the PivotHeaderPanels for just this Pivot (in case we have embedded pivots)
         var presenter = pivot.FindDescendant("PivotItemPresenter");

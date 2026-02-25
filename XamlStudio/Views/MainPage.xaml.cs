@@ -225,7 +225,11 @@ public sealed partial class MainPage : Page, IFileOpener,
         keyInfo.Reply(active);
     }
 
+#if UNO
+    private async void MainPage_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+#else
     private async void MainPage_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+#endif
     {
         // Offload from main thread to parallelize assembly loading.
         Task t = new Task(async () =>

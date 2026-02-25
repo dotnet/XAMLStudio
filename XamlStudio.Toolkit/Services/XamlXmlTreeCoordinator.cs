@@ -60,7 +60,9 @@ public class XamlXmlTreeCoordinator
             { nameof(UIElement.RenderTransformOrigin), UIElement.RenderTransformOriginProperty },
             { nameof(UIElement.Shadow), UIElement.ShadowProperty },
             { nameof(UIElement.Transform3D), UIElement.Transform3DProperty },
-            { nameof(UIElement.Transitions), UIElement.TransitionsProperty },
+#if !UNO
+            { nameof(UIElement.Transitions), UIElement.TransitionsProperty }, // TODO: https://github.com/unoplatform/uno/issues/22288
+#endif
             { nameof(UIElement.UseLayoutRounding), UIElement.UseLayoutRoundingProperty },
             { nameof(UIElement.Visibility), UIElement.VisibilityProperty },
             { nameof(UIElement.XYFocusDownNavigationStrategy), UIElement.XYFocusDownNavigationStrategyProperty },

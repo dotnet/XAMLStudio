@@ -62,8 +62,12 @@ public class XamlLanguageProvider : CompletionItemProvider
             {
                 if (index >= 1 && text[index - 1] == '<')
                 {
+#if UNO
+                    items.Add(new CompletionItem(parentTagName, "", CompletionItemKind.Class));
+#else
                     // Only show suggestion if we're starting a close tag.
                     items.Add(new CompletionItem(parentTagName, CompletionItemKind.Class));
+#endif
                 }
             }
             else if (context.TriggerCharacter == ElementTrigger)
@@ -101,7 +105,11 @@ public class XamlLanguageProvider : CompletionItemProvider
 
             return new CompletionList()
             {
+#if UNO
+                Suggestions = items.ToArray()
+#else
                 Items = items
+#endif
             };
         });
     }
@@ -110,4 +118,18 @@ public class XamlLanguageProvider : CompletionItemProvider
     {
         throw new NotImplementedException();
     }
+
+#if UNO
+    public async Task<CompletionList> ProvideCompletionItemsAsync(IModel model, Position position, CompletionContext context)
+    {
+        // Forward to the WinRT-style implementation and unwrap the result
+        var op = ProvideCompletionItemsAsync((IModel)model, (IPosition)position, context);
+        return await op.AsTask().ConfigureAwait(false);
+    }
+
+    public async Task<CompletionItem> ResolveCompletionItemAsync(IModel model, CompletionItem item)
+    {
+        throw new NotImplementedException();
+    }
+#endif
 }

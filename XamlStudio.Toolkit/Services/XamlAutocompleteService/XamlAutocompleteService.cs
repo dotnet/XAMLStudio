@@ -62,7 +62,11 @@ public class XamlAutocompleteService
             {
                 foreach (var t in types.Where(t => t.IsSubclassOf(typeof(DependencyObject))))
                 {
+#if UNO
+                    items.Add(new CompletionItem(t.Name, "", CompletionItemKind.Class)); // TODO:
+#else
                     items.Add(new CompletionItem(t.Name, CompletionItemKind.Class));
+#endif
                 }
             }
         }
@@ -70,7 +74,11 @@ public class XamlAutocompleteService
         // Add namespace suggestions
         foreach (var ns in namespaces)
         {
+#if UNO
+            items.Add(new CompletionItem(ns.Name, "", CompletionItemKind.Module)); // TODO:
+#else
             items.Add(new CompletionItem(ns.Name, CompletionItemKind.Module));
+#endif
         }
     }
 
@@ -84,7 +92,11 @@ public class XamlAutocompleteService
             {
                 foreach (var t in types.Where(t => t.IsSubclassOf(typeof(DependencyObject))))
                 {
+#if UNO
+                    items.Add(new CompletionItem(t.Name, "", CompletionItemKind.Class));
+#else
                     items.Add(new CompletionItem(t.Name, CompletionItemKind.Class));
+#endif
                 }
             }
         }
@@ -101,8 +113,12 @@ public class XamlAutocompleteService
         {
             foreach (var property in GetDependencyProperties(type))
             {
+#if UNO
+                items.Add(new CompletionItem(property.Name.Substring(0, property.Name.Length - 8), "", CompletionItemKind.Property));
+#else
                 // Trim 'Property' off DependencyProperty name.
                 items.Add(new CompletionItem(property.Name.Substring(0, property.Name.Length - 8), CompletionItemKind.Property));
+#endif
             }
         }
     }
@@ -122,7 +138,11 @@ public class XamlAutocompleteService
             {
                 foreach (var value in Enum.GetNames(prop.PropertyType))
                 {
+#if UNO
+                    items.Add(new CompletionItem(value, "", CompletionItemKind.Value));
+#else
                     items.Add(new CompletionItem(value, CompletionItemKind.Value));
+#endif
                 }
             }
             // FontWeights...grrr

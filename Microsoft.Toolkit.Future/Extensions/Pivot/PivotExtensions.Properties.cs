@@ -20,7 +20,11 @@ public partial class PivotExtensions
     /// </summary>
     /// <param name="obj">The <see cref="Windows.UI.Xaml.Controls.Pivot"/> from which to get the associated <see cref="Style"/> instance</param>
     /// <returns>The <see cref="Style"/> instance associated with the the <see cref="Windows.UI.Xaml.Controls.Pivot"/> or null</returns>
+    #if UNO
+    public static Style GetPivotHeaderItemStyle(Microsoft.UI.Xaml.Controls.Pivot obj)
+    #else
     public static Style GetPivotHeaderItemStyle(Windows.UI.Xaml.Controls.Pivot obj)
+    #endif
     {
         return (Style)obj.GetValue(PivotHeaderItemStyleProperty);
     }
@@ -30,7 +34,11 @@ public partial class PivotExtensions
     /// </summary>
     /// <param name="obj">The <see cref="Windows.UI.Xaml.Controls.Pivot"/> to associated the <see cref="Style"/> instance to</param>
     /// <param name="value">The <see cref="Style"/> instance to bind to the <see cref="Windows.UI.Xaml.Controls.Pivot"/></param>
+    #if UNO
+    public static void SetPivotHeaderItemStyle(Microsoft.UI.Xaml.Controls.Pivot obj, Style value)
+    #else
     public static void SetPivotHeaderItemStyle(Windows.UI.Xaml.Controls.Pivot obj, Style value)
+    #endif
     {
         obj.SetValue(PivotHeaderItemStyleProperty, value);
     }
@@ -98,7 +106,11 @@ public partial class PivotExtensions
     /// </summary>
     /// <param name="obj">Pivot to get value from.</param>
     /// <returns>Command value for the MSEdgeTabStyle Close Button.</returns>
+    #if UNO
+    public static ICommand GetCloseButtonCommand(Microsoft.UI.Xaml.Controls.Pivot obj)
+    #else
     public static ICommand GetCloseButtonCommand(Windows.UI.Xaml.Controls.Pivot obj) // TODO: Should this be per PivotHeaderItem? Thinking no?
+    #endif
     {
         return (ICommand)obj.GetValue(CloseButtonCommandProperty);
     }
@@ -108,7 +120,11 @@ public partial class PivotExtensions
     /// </summary>
     /// <param name="obj">Pivot to set value for.</param>
     /// <param name="value">Command value for the MSEdgeTabStyle Close Button.</param>
+    #if UNO
+    public static void SetCloseButtonCommand(Microsoft.UI.Xaml.Controls.Pivot obj, ICommand value)
+    #else
     public static void SetCloseButtonCommand(Windows.UI.Xaml.Controls.Pivot obj, ICommand value)
+    #endif
     {
         obj.SetValue(CloseButtonCommandProperty, value);
     }
@@ -124,7 +140,11 @@ public partial class PivotExtensions
     /// </summary>
     /// <param name="obj">Pivot to get value from.</param>
     /// <returns>False is content will be hidden.</returns>
+    #if UNO
+    public static bool GetIsContentVisible(Microsoft.UI.Xaml.Controls.Pivot obj)
+    #else
     public static bool GetIsContentVisible(Windows.UI.Xaml.Controls.Pivot obj)
+    #endif
     {
         return (bool)obj.GetValue(IsContentVisibleProperty);
     }
@@ -134,7 +154,11 @@ public partial class PivotExtensions
     /// </summary>
     /// <param name="obj">Pivot to set value for.</param>
     /// <param name="value">Set to false to hide the PivotItemsPresenter.</param>
+    #if UNO
+    public static void SetIsContentVisible(Microsoft.UI.Xaml.Controls.Pivot obj, bool value)
+    #else
     public static void SetIsContentVisible(Windows.UI.Xaml.Controls.Pivot obj, bool value)
+    #endif
     {
         obj.SetValue(IsContentVisibleProperty, value);
     }

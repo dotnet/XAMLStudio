@@ -105,7 +105,7 @@ public sealed partial class Document : UserControl,
         Loaded += Document_Loaded;
         Unloaded += Document_Unloaded;
 
-        CodeEditor.RegisterPropertyChangedCallback(CodeEditor.SelectedRangeProperty, CodeEditor_SelectedRangeChanged);
+        // TODO: CodeEditor.RegisterPropertyChangedCallback(CodeEditor.SelectedRangeProperty, CodeEditor_SelectedRangeChanged);
     }
 
     private void Document_Loaded(object sender, RoutedEventArgs e)
@@ -142,7 +142,7 @@ public sealed partial class Document : UserControl,
 
         LoadedDocument = model.Document;
 
-        CodeEditor.Options.Folding = true;
+        // TODO: CodeEditor.Options.Folding = true;
 
         SetPaneOrientation();
         SetPreviewAreaTheme();
@@ -172,45 +172,46 @@ public sealed partial class Document : UserControl,
     {
         var libserv = LibraryService.Instance;
 
-        var languages = new Monaco.LanguagesHelper(CodeEditor);
+        // TODO: verify this
+        // var languages = new Monaco.LanguagesHelper(CodeEditor);
 
-        await languages.RegisterCompletionItemProviderAsync("xml", new XamlLanguageProvider()
-        {
-            KnownNamespaces = SettingsService.Instance.KnownNamespaces.ToList()
-        });
+        // await languages.RegisterCompletionItemProviderAsync("xml", new XamlLanguageProvider()
+        // {
+        //     KnownNamespaces = SettingsService.Instance.KnownNamespaces.ToList()
+        // });
 
-        await languages.RegisterHoverProviderAsync("xml", (model, position) =>
-        {
-            return AsyncInfo.Run(async delegate (CancellationToken cancelationToken)
-            {
-                var word = await model.GetWordAtPositionAsync(position);
+        // await languages.RegisterHoverProviderAsync("xml", (model, position) =>
+        // {
+        //     return AsyncInfo.Run(async delegate (CancellationToken cancelationToken)
+        //     {
+        //         var word = await model.GetWordAtPositionAsync(position);
 
-                if (word != null && !string.IsNullOrWhiteSpace(word.Word) &&
-                    XamlRenderService.GetTypeFromName(word.Word) is Type type &&
-                    libserv.LibrariesByNamespace.TryGetValue(type.Namespace, out LibraryInfo info))
-                {
-                    _lastHoverType = type;
-                    return new Hover(new string[]
-                    {
-                        "**" + word.Word + "** - [" + type.FullName + "](" +
-                            libserv.GetLinkForType(type, info)
-                        + ")"
-                    }, new Range(position.LineNumber, word.StartColumn, position.LineNumber, word.EndColumn));
-                }
+        //         if (word != null && !string.IsNullOrWhiteSpace(word.Word) &&
+        //             XamlRenderService.GetTypeFromName(word.Word) is Type type &&
+        //             libserv.LibrariesByNamespace.TryGetValue(type.Namespace, out LibraryInfo info))
+        //         {
+        //             _lastHoverType = type;
+        //             return new Hover(new string[]
+        //             {
+        //                 "**" + word.Word + "** - [" + type.FullName + "](" +
+        //                     libserv.GetLinkForType(type, info)
+        //                 + ")"
+        //             }, new Range(position.LineNumber, word.StartColumn, position.LineNumber, word.EndColumn));
+        //         }
 
-                return null;
-            });
-        });
+        //         return null;
+        //     });
+        // });
     }
 
     public async void Receive(NavigateToLineMessage message)
     {
-        await CodeEditor.RevealLineInCenterIfOutsideViewportAsync(message.Line);
+        // TODO: await CodeEditor.RevealLineInCenterIfOutsideViewportAsync(message.Line);
     }
 
     public void Receive(InsertTextMessage message)
     {
-        CodeEditor.SelectedText = message.Text;
+        // TODO:CodeEditor.SelectedText = message.Text;
 
         DispatcherQueue.GetForCurrentThread().TryEnqueue(DispatcherQueuePriority.Low, () =>
         {
@@ -236,13 +237,13 @@ public sealed partial class Document : UserControl,
 
         if (!keepcontent && newcontent.HasSuggestion)
         {
-            var pos = await CodeEditor.GetPositionAsync();
+           // TODO: var pos = await CodeEditor.GetPositionAsync();
 
             // Update our document with suggested changes.
             ViewModel.Document.Content = newcontent.SuggestedContent;
 
             // Restore cursor to where it was.
-            await CodeEditor.SetPositionAsync(pos);
+            // TODO: await CodeEditor.SetPositionAsync(pos);
         }
 
         if (!string.IsNullOrWhiteSpace(newcontent.DataContextSource))
@@ -405,7 +406,7 @@ public sealed partial class Document : UserControl,
         // That or the PropertyChanged isn't firing for somereason on SelectedText change.
         if (args.KeyCode == 116) // F5
         {
-            ViewModel.SelectedText = CodeEditor.SelectedText;
+            // TODO: ViewModel.SelectedText = CodeEditor.SelectedText;
         }
 
         // Handle Shortcuts. https://keycode.info/
@@ -529,6 +530,7 @@ public sealed partial class Document : UserControl,
     }
 
     #region Share Button Code
+#if !UNO
     private readonly Lazy<CanvasDevice> _device = new Lazy<CanvasDevice>(InitCanvas);
 
     private static CanvasDevice InitCanvas()
@@ -537,11 +539,12 @@ public sealed partial class Document : UserControl,
     }
 
     private CanvasBitmap _screenshotImage;
-
+#endif
     private async void ShareButton_Click(Microsoft.UI.Xaml.Controls.SplitButton sender, Microsoft.UI.Xaml.Controls.SplitButtonClickEventArgs args)
     {
+#if !UNO
         _screenshotImage = await GetAppScreenshot();
-
+#endif
         DataTransferManager.ShowShareUI();
     }
 
@@ -552,13 +555,15 @@ public sealed partial class Document : UserControl,
 
     private async void ShareMenuPreviewOnly_Click(object sender, RoutedEventArgs e)
     {
+#if !UNO
         _screenshotImage = await GetPreviewScreenshot();
-
+#endif
         DataTransferManager.ShowShareUI();
     }
 
     private async void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
     {
+#if !UNO
         // Provide updated bitmap data using delayed rendering
         if (_screenshotImage != null)
         {
@@ -574,8 +579,9 @@ public sealed partial class Document : UserControl,
 
             deferral.Complete();
         }
+#endif
     }
-
+#if !UNO
     private async Task<CanvasBitmap> GetAppScreenshot()
     {
         var renderTarget = new RenderTargetBitmap();
@@ -601,6 +607,7 @@ public sealed partial class Document : UserControl,
         var pixels = await renderTarget.GetPixelsAsync();
         return CanvasBitmap.CreateFromBytes(_device.Value, pixels, renderTarget.PixelWidth, renderTarget.PixelHeight, DirectXPixelFormat.B8G8R8A8UIntNormalized);
     }
+#endif
     #endregion
 
     #region BreadcrumbBar Events
@@ -608,7 +615,7 @@ public sealed partial class Document : UserControl,
     {
         if (args.Item is BreadcrumbInfo info)
         {
-            await CodeEditor.RevealPositionInCenterAsync(info.Location);
+            // TODO:await CodeEditor.RevealPositionInCenterAsync(info.Location);
         }
     }
 
@@ -619,11 +626,11 @@ public sealed partial class Document : UserControl,
 
     private async Task UpdateBreadcrumbs()
     {
-        var text = CodeEditor.Text; // This is hopefully in-sync so we don't round-trip again.
-        var position = await CodeEditor.GetPositionAsync(); // TODO: Should we just monitor and keep track of this vs. polling?
-        if (position == null) return;
+        // TODO: var text = CodeEditor.Text; // This is hopefully in-sync so we don't round-trip again.
+        // var position = await CodeEditor.GetPositionAsync(); // TODO: Should we just monitor and keep track of this vs. polling?
+        // if (position == null) return;
 
-        var index = text.GetCharacterIndex((int)position.LineNumber, (int)position.Column);
+        var index = -1; // TODO: text.GetCharacterIndex((int)position.LineNumber, (int)position.Column);
 
         if (index == -1)
         {
@@ -631,34 +638,34 @@ public sealed partial class Document : UserControl,
         }
 
         // TODO: This is expensive, we should be doing this on a debounce and more globally as the document updates to be used elsewhere for visual tree sync, etc... as part of render loop
-        var _xmlRoot = ViewModel.HasCompiled ? ViewModel.Result.XmlDocument : Parser.ParseText(text);
+        // TODO: var _xmlRoot = ViewModel.HasCompiled ? ViewModel.Result.XmlDocument : Parser.ParseText(text);
 
         Breadcrumbs.Clear();
 
-        var current = _xmlRoot.FindNode(index + 1);
+        // TODO: var current = _xmlRoot.FindNode(index + 1);
 
-        WeakReferenceMessenger.Default.Send<EditorSelectedElementMessage>(new(current.ParentElement));
+        // WeakReferenceMessenger.Default.Send<EditorSelectedElementMessage>(new(current.ParentElement));
 
-        foreach (var node in current.AncestorNodesAndSelf())
-        {
-            if (node is IXmlElementSyntax element)
-            {
-                var loc = text.GetLineColumnIndex(node.Span.Start);
-                Breadcrumbs.Insert(0, new BreadcrumbInfo()
-                {
-                    Name = element.Name,
-                    Location = new Position((uint)loc.Line, (uint)loc.Column),
-                    // TODO: Put child sister nodes in a list so that can have drop-down to navigate within document?
-                });
-            }
-        }
+        // foreach (var node in current.AncestorNodesAndSelf())
+        // {
+        //     if (node is IXmlElementSyntax element)
+        //     {
+        //         // TODO: var loc = text.GetLineColumnIndex(node.Span.Start);
+        //         // Breadcrumbs.Insert(0, new BreadcrumbInfo()
+        //         // {
+        //         //     Name = element.Name,
+        //         //     Location = new Position((uint)loc.Line, (uint)loc.Column),
+        //         //     // TODO: Put child sister nodes in a list so that can have drop-down to navigate within document?
+        //         // });
+        //     }
+        // }
 
         // Didn't want to re-write style yet, Workaround for https://github.com/microsoft/microsoft-ui-xaml/issues/7213
-        Breadcrumbs.Add(new BreadcrumbInfo()
-        {
-            Name = $"Caret @ L{position.LineNumber} Ch{position.Column}",
-            Location = position,
-        });
+        // TODO: Breadcrumbs.Add(new BreadcrumbInfo()
+        // {
+        //     Name = $"Caret @ L{position.LineNumber} Ch{position.Column}",
+        //     Location = position,
+        // });
     }
     #endregion
 
