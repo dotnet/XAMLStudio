@@ -85,6 +85,11 @@ public sealed partial class DataSources : Page,
 
     public void Receive(ActiveDocumentViewModelChangedMessage message)
     {
+        if (message.NewDocVM is null)
+        {
+            return;
+        }
+
         // Update are shadow-copy based on MainViewModel
         _activeDocument = message.NewDocVM.Document;
         ActiveDataContext = _activeDocument.DataContext;
