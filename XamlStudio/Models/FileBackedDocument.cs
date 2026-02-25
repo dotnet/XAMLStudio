@@ -25,9 +25,15 @@ public abstract partial class FileBackedDocument : ObservableObject
     /// </summary>
     public string Title
     {
-        get { return (HasChanged ? "*" : "") + field; }
-        set { SetProperty(ref field, value.Trim('*')); }
+        get => (HasChanged ? "*" : "") + field;
+        set => SetProperty(ref field, value.Trim('*'));
     }
+
+    /// <summary>
+    /// Gets the file path as displayed for tooltips
+    /// </summary>
+    [JsonIgnore]
+    public string DisplayPath => BackingFile?.Path ?? Title;
 
     //// TODO: This is effectively private, but needs to be serialized, investigate options when switching away from Newtonsoft
     public string StorageToken { get; set; }
