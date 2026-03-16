@@ -28,6 +28,8 @@ namespace XamlStudio.Views;
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
 public sealed partial class DataSources : Page,
+    IRecipient<ActiveDocumentViewModelChangedMessage>
+public sealed partial class DataSources : Page,
     IRecipient<ActiveDocumentViewModelChangedMessage>,
     IRecipient<DataSourceSetInFileMessage>
 {
@@ -79,20 +81,24 @@ public sealed partial class DataSources : Page,
         WeakReferenceMessenger.Default.UnregisterAll(this);
         WeakReferenceMessenger.Default.RegisterAll(this);
 
-        Receive(new ActiveDocumentViewModelChangedMessage(null, MainViewModel.ActiveDocumentViewModel));
+        //Receive(new ActiveDocumentViewModelChangedMessage(null, MainViewModel.ActiveDocumentViewModel));
         // TODO: How to detect/get info on if d:DesignData was used to display here if opened after render...
     }
-
     public void Receive(ActiveDocumentViewModelChangedMessage message)
     {
-        // Update are shadow-copy based on MainViewModel
-        _activeDocument = message.NewDocVM.Document;
-        ActiveDataContext = _activeDocument.DataContext;
-
-        // Toggle showing the panel if we have a remote source, though not explicitly bound as we initially open it with no url.
-        RemoteDataSourceButton.IsChecked = ActiveDataContext.IsRemote;
-        IsRenderedDataContext = false;
+        DataContext = message.Value;
     }
+
+    // public void Receive(ActiveDocumentViewModelChangedMessage message)
+    // {
+    //     // Update are shadow-copy based on MainViewModel
+    //     _activeDocument = message.NewDocVM.Document;
+    //     ActiveDataContext = _activeDocument.DataContext;
+
+    //     // Toggle showing the panel if we have a remote source, though not explicitly bound as we initially open it with no url.
+    //     RemoteDataSourceButton.IsChecked = ActiveDataContext.IsRemote;
+    //     IsRenderedDataContext = false;
+    // }
 
     public async void Receive(DataSourceSetInFileMessage message)
     {
