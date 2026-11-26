@@ -4,8 +4,10 @@
 
 using System.Collections.ObjectModel;
 using Windows.Storage;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using XamlStudio.Services;
 using XamlStudio.ViewModels;
 
@@ -35,6 +37,21 @@ public sealed partial class WelcomePage : Page
         Loaded += WelcomePage_Loaded;
 
         SettingsService.Instance.RecentFilesChanged += Instance_RecentFilesChanged;
+    }
+
+    /// <summary>
+    /// Allows the Escape key to close the Welcome page and return to the main app.
+    /// </summary>
+    /// <param name="e">Key event arguments.</param>
+    protected override void OnKeyDown(KeyRoutedEventArgs e)
+    {
+        if (e.Key == VirtualKey.Escape && MainViewModel != null)
+        {
+            MainViewModel.OpenActivity = null;
+            e.Handled = true;
+        }
+
+        base.OnKeyDown(e);
     }
 
     private async void WelcomePage_Loaded(object sender, RoutedEventArgs e)

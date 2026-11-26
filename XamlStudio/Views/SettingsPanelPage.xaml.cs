@@ -13,6 +13,7 @@ using Windows.System.Threading;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using XamlStudio.Helpers;
 using XamlStudio.Models;
 using XamlStudio.Services.Logging;
@@ -108,6 +109,22 @@ public sealed partial class SettingsPanelPage : Page
         {
             IsAnalyticsOn = await AreAnalyticsOn();
         });
+    }
+
+    /// <summary>
+    /// Allows the Escape key to close the Settings page and return to the main app.
+    /// </summary>
+    /// <param name="e">Key event arguments.</param>
+    protected override void OnKeyDown(KeyRoutedEventArgs e)
+    {
+        // Don't close the page if the key press was already handled (e.g. cancelling a cell edit in the DataGrid).
+        if (e.Key == VirtualKey.Escape && MainViewModel != null)
+        {
+            MainViewModel.OpenActivity = null;
+            e.Handled = true;
+        }
+
+        base.OnKeyDown(e);
     }
 
     private async void ButtonOpenLogFolder_Click(object sender, RoutedEventArgs e)
