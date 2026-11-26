@@ -27,6 +27,11 @@ public abstract partial class WorkspaceWindow : ObservableObject
     [ObservableProperty]
     public partial bool IsWorkspaceOpen { get; set; }
 
+    /// <summary>
+    /// Last sidebar panel that was open before switching to a full-stage page (Welcome/Settings), so it can be restored when leaving that page.
+    /// </summary>
+    public string LastOpenActivity { get; set; }
+
     public ObservableCollection<FolderLocation> WorkspaceFolders { get; private set; } = new();
 
     public ObservableCollection<XamlDocument> OpenFiles { get; private set; } = new();
@@ -79,5 +84,24 @@ public abstract partial class WorkspaceWindow : ObservableObject
     partial void OnOpenActivityChanged(string value)
     {
         WeakReferenceMessenger.Default.Send<OpenActivityChangedMessage>(new(value));
+    }
+
+    partial void OnOpenActivityChanged(string oldValue, string newValue)
+    {
+        // Remember the sidebar panel we came from when opening a full-stage page (Welcome/Settings).
+        if ((newValue == "WELCOME" || newValue == "SETTINGS") &&
+            !string.IsNullOrEmpty(oldValue) && oldValue != "WELCOME" && oldValue != "SETTINGS")
+        {
+            LastOpenActivity = oldValue;
+        }
+        // Restore the remembered panel when leaving a full-stage page, instead of landing on nothing.
+        else if (string.IsNullOrEmpty(newValue) &&
+                 (oldValue == "WELCOME" || oldValue == "SETTINGS") &&
+                 !string.IsNullOrEmpty(LastOpenActivity))
+        {
+            var restore = LastOpenActivity;
+            LastOpenActivity = null;
+            OpenActivity = restore;
+        }
     }
 }
